@@ -1,32 +1,32 @@
-import { PointerEventTypes } from "@babylonjs/core";
 import * as GUI from "@babylonjs/gui";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { BlocContainer } from "./BlocContainer";
+import type { IPointerEvent} from "babylonjs";
 
+// Cette classe permet à une control de pouvoir être drag'n'drop
 export class DragBehavior {
 
     private target: BlocContainer;
     private scene: GameScene;
 
-    constructor(target: BlocContainer, scene: GameScene) {
+    constructor(target: BlocContainer) {
         this.target = target;
-        this.scene = scene;
+        this.scene = target.getScene();
         this.init();
     }
 
+    // Init (création des lambdas responsables du comportement)
     private init(): void {
-        this.freeDrag();
-    }
-
-    private freeDrag(): void {
         let isDragging = false;
         let decalX = 0;
         let decalY = 0;
 
+        // Ajout d'une fonction qui sera appellée lorsqu'on appuie sur le control
         this.target.onPointerDownObservable.add((pointerInfo) => {
 
             const parent = this.target.parent;
 
+            // Si jamais la fonction appartient déjà à un BlocContainer (on le décroche)
             if (parent instanceof GUI.Rectangle) {
 
                 const measure = this.target._currentMeasure;
@@ -57,33 +57,30 @@ export class DragBehavior {
             }
 
             isDragging = true;
-            this.target.isPointerBlocker = false;
 
             decalX = this.target.leftInPixels - pointerInfo.x;
             decalY = this.target.topInPixels - pointerInfo.y;
-        });
 
-        this.target.onPointerUpObservable.add(() => {
-            isDragging = false;
-            this.target.isPointerBlocker = true;
-            this.scene.hoverSlot?.replaceSlot(this.target);
-        });
-
-        this.scene.scene.onPointerObservable.add((pointerInfo) => {
-            if (!isDragging) return;
-
-            if (pointerInfo.type === PointerEventTypes.POINTERMOVE) {
-                const evt = pointerInfo.event;
+            // Ajout à la scène principale de la fonction permettant de déplacer le bloc 
+            this.scene.scene.onPointerMove = (evt:IPointerEvent) => {
+                if (!isDragging) return;
                 this.target.leftInPixels = evt.x + decalX;
                 this.target.topInPixels = evt.y + decalY;
             }
 
-            if (pointerInfo.type === PointerEventTypes.POINTERUP) {
+            // Ajout à la scène principale de la fonction permettant de relacher le bloc
+            this.scene.scene.onPointerUp = (evt:IPointerEvent) => {
+                if (!isDragging) return;
                 isDragging = false;
-                this.target.isPointerBlocker = true;
                 this.scene.hoverSlot?.replaceSlot(this.target);
             }
         });
+
+        /*
+        this.target.onPointerUpObservable.add(() => {
+            isDragging = false;
+            this.scene.hoverSlot?.replaceSlot(this.target);
+        }); */
     }
 }
 

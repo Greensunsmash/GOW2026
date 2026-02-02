@@ -3,27 +3,28 @@ import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { PointerEventTypes } from "babylonjs";
 import type { BlocContainer } from "./BlocContainer";
 
+// Cette classe symbolise un slot (de BlocContainer) vide qui peut donc être remplacé
 export class EmptySlot extends GUI.Rectangle {
 
     private scene:GameScene;
     private hover:boolean= false;
     private blocParent : BlocContainer;
 
-    constructor(parent:BlocContainer, scene:GameScene) {
+
+    constructor(parent:BlocContainer) {
         super();
-        this.scene = scene;
+        this.scene = parent.getScene();
         this.blocParent = parent;
         this.background = "#383838" ;
         this.cornerRadius = 10 ;
         this.height = "40px";
         this.width = "60px";
         this.alpha = 0.3;
-        this.init(scene);
+        this.init();
     }
 
-    init(scene:GameScene):void {
-        
-        scene.scene.onPointerObservable.add((pointerInfo) => { 
+    init():void {
+        this.scene.scene.onPointerObservable.add((pointerInfo) => { 
             if (pointerInfo.type === PointerEventTypes.POINTERMOVE) {
                 const evt = pointerInfo.event;
                 if (this.getHover()) {
@@ -53,9 +54,6 @@ export class EmptySlot extends GUI.Rectangle {
         this.hover = bool;
     }
 
-    public replaceSlot(c:BlocContainer) : void {
-        if (this.parent instanceof GUI.Rectangle) this.blocParent.insertControlAt(c, this.parent);
-        
-    }
+    public replaceSlot(c:BlocContainer) : void {if (this.parent instanceof GUI.Rectangle) this.blocParent.insertControlAt(c, this.parent);}
 
 }
