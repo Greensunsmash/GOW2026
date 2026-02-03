@@ -1,4 +1,4 @@
-### AI Ouille ###
+# AI Ouille #
 
 Bienvenue sur le repo du best-seller AI-Ouille, vainqueur du désormais célèbre concours Games On Web 2026. Bon, pour l'instant j'admets qu'on y est pas exactement.
 

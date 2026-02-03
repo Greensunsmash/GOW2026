@@ -2,14 +2,15 @@ import * as GUI from "@babylonjs/gui";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { BlocContainer } from "./BlocContainer";
 import type { IPointerEvent} from "babylonjs";
+import { InstructionContainer } from "./InstructionContainer";
 
 // Cette classe permet à une control de pouvoir être drag'n'drop
 export class DragBehavior {
 
-    private target: BlocContainer;
+    private target: BlocContainer | InstructionContainer;
     private scene: GameScene;
 
-    constructor(target: BlocContainer) {
+    constructor(target: BlocContainer | InstructionContainer) {
         this.target = target;
         this.scene = target.getScene();
         this.init();
@@ -27,8 +28,7 @@ export class DragBehavior {
             const parent = this.target.parent;
 
             // Si jamais la fonction appartient déjà à un BlocContainer (on le décroche)
-            if (parent instanceof GUI.Rectangle) {
-
+            if (parent instanceof GUI.Rectangle && this.target instanceof BlocContainer) {
                 const measure = this.target._currentMeasure;
                 const absLeft = measure.left;
                 const absTop = measure.top;
@@ -56,6 +56,9 @@ export class DragBehavior {
                 this.target.topInPixels = absTop;
             }
 
+            if (parent instanceof InstructionContainer && this.target instanceof InstructionContainer) {
+                parent.removeNext();
+            }
             isDragging = true;
 
             decalX = this.target.leftInPixels - pointerInfo.x;
@@ -72,7 +75,7 @@ export class DragBehavior {
             this.scene.scene.onPointerUp = (evt:IPointerEvent) => {
                 if (!isDragging) return;
                 isDragging = false;
-                this.scene.hoverSlot?.replaceSlot(this.target);
+                if (this.target instanceof BlocContainer) this.scene.hoverSlot?.replaceIfMatch(this.target);
             }
         });
 

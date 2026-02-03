@@ -5,7 +5,6 @@ import * as GUI from "@babylonjs/gui";
 import { ValeurContainer } from "../../Containers/ValeurContainer";
 import { BooleenContainer } from "../../Containers/BooleenContainer";
 import { InstructionContainer } from "../../Containers/InstructionContainer";
-import { EmptySlot } from "../../Containers/EmptySlot";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene{
@@ -18,9 +17,14 @@ export class PlayScene extends GameScene{
 
         this.advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
     
-        new ValeurContainer(["On", "v", "ce", "a", "BabylonJS"], this.advancedTexture, this);
-        new BooleenContainer(["encule"], this.advancedTexture, this);
-        new InstructionContainer(["cher"], this.advancedTexture, this);
+        let i = new InstructionContainer(["Répéter", "v", "fois :"], this.advancedTexture, this);
+        new BooleenContainer(["", "v", " = ", "v"], this.advancedTexture, this);
+        new ValeurContainer(["10"], this.advancedTexture, this);
+        new ValeurContainer(["10"], this.advancedTexture, this);
+        let b = new InstructionContainer(["LALALAALALALALALALAL"], this.advancedTexture, this);
+        i.addNext(b);
+        
+
     }
 
     update(): void {

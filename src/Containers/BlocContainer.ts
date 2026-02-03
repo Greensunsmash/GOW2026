@@ -3,10 +3,10 @@ import { EmptySlot } from "./EmptySlot";
 import { DragBehavior } from "./DragBehavior";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 
-export type ArgsType = "VALEUR" | "BOOLEEN" | "ALL";
+export type ArgsType = "VALEUR" | "BOOLEEN" | "ALL" | "NONE";
 
 // Cette classe repésente la base d'un bloc scratch
-export abstract class BlocContainer extends GUI.Rectangle {
+export class BlocContainer extends GUI.Rectangle {
 
     private readonly container: GUI.StackPanel;
     private readonly labels: GUI.TextBlock[];
@@ -14,9 +14,16 @@ export abstract class BlocContainer extends GUI.Rectangle {
     private readonly slots: GUI.Rectangle[];
     private readonly advancedTexture: GUI.AdvancedDynamicTexture;
     private readonly scene: GameScene;
+    private readonly type : ArgsType;
 
-    constructor(list: string[], advancedTexture: GUI.AdvancedDynamicTexture, scene: GameScene) {
+    constructor(type:string, list: string[], advancedTexture: GUI.AdvancedDynamicTexture, scene: GameScene) {
         super();
+
+        switch (type) {
+            case "v": this.type = "VALEUR"; break;
+            case "b": this.type = "BOOLEEN"; break;
+            default : this.type = "NONE"; break;
+        }
 
         this.labels = [];
         this.slots = [];
@@ -33,6 +40,7 @@ export abstract class BlocContainer extends GUI.Rectangle {
 
         for (let i = 0; i < list.length; i++) {
             if (i % 2 === 0) {
+                if (list[i] === "") continue;
                 const label = new GUI.TextBlock();
                 label.text = list[i];
                 label.color = "white";
@@ -55,7 +63,7 @@ export abstract class BlocContainer extends GUI.Rectangle {
                 slotWrapper.adaptHeightToChildren = true;
                 slotWrapper.color = "transparent";
 
-                const slot = new EmptySlot(this);
+                const slot = new EmptySlot(this, this.args[this.args.length - 1]);
                 slotWrapper.addControl(slot);
 
                 this.slots.push(slotWrapper);
@@ -64,8 +72,6 @@ export abstract class BlocContainer extends GUI.Rectangle {
         }
 
         this.advancedTexture.addControl(this);
-        new DragBehavior(this);
-
         this.build();
     }
 
@@ -100,8 +106,13 @@ export abstract class BlocContainer extends GUI.Rectangle {
     public resetEmptySlot(slotWrapper: GUI.Rectangle): void {
         if (!slotWrapper) return;
 
+        let i:number;
+        for (i=0; i<this.slots.length; i++) {
+            if (slotWrapper === this.slots[i]) break;
+        }
+        console.log(i);
         slotWrapper.clearControls();
-        slotWrapper.addControl(new EmptySlot(this));
+        slotWrapper.addControl(new EmptySlot(this, this.args[i]));
     }
 
     // Getters
@@ -111,6 +122,7 @@ export abstract class BlocContainer extends GUI.Rectangle {
     public getScene(): GameScene {return this.scene;}
     public getArgs(): readonly ArgsType[] {return this.args;}
     public getLabels(): readonly GUI.TextBlock[] {return this.labels;}
+    public getType(): ArgsType {return this.type;}
 
 }
 

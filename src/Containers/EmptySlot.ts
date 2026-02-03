@@ -1,7 +1,7 @@
 import * as GUI from "@babylonjs/gui";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
-import { PointerEventTypes } from "babylonjs";
-import type { BlocContainer } from "./BlocContainer";
+import { PointerEventTypes } from "@babylonjs/core";
+import type { ArgsType, BlocContainer } from "./BlocContainer";
 
 // Cette classe symbolise un slot (de BlocContainer) vide qui peut donc être remplacé
 export class EmptySlot extends GUI.Rectangle {
@@ -9,11 +9,13 @@ export class EmptySlot extends GUI.Rectangle {
     private scene:GameScene;
     private hover:boolean= false;
     private blocParent : BlocContainer;
+    private type : ArgsType;
 
 
-    constructor(parent:BlocContainer) {
+    constructor(parent:BlocContainer, type:ArgsType) {
         super();
         this.scene = parent.getScene();
+        this.type = type;
         this.blocParent = parent;
         this.background = "#383838" ;
         this.cornerRadius = 10 ;
@@ -54,6 +56,14 @@ export class EmptySlot extends GUI.Rectangle {
         this.hover = bool;
     }
 
-    public replaceSlot(c:BlocContainer) : void {if (this.parent instanceof GUI.Rectangle) this.blocParent.insertControlAt(c, this.parent);}
+    public replaceIfMatch(c:BlocContainer) : void {
+        if (this.getType() === c.getType() || (this.getType() === "ALL" && c.getType() !== "NONE")) this.replaceSlot(c);
+    }
+    private replaceSlot(c:BlocContainer) : void {
+        if (this.parent instanceof GUI.Rectangle) this.blocParent.insertControlAt(c, this.parent);
+    }
+
+    // Getters
+    getType():ArgsType {return this.type;}
 
 }
