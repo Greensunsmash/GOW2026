@@ -3,6 +3,8 @@ import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { BlocContainer } from "./BlocContainer";
 import type { IPointerEvent} from "babylonjs";
 import { InstructionContainer } from "./InstructionContainer";
+import { EmptySlot } from "./EmptySlot";
+import { Magnet } from "./Magnet";
 
 // Cette classe permet à une control de pouvoir être drag'n'drop
 export class DragBehavior {
@@ -50,7 +52,10 @@ export class DragBehavior {
                     parentBloc.resetEmptySlot(parent);
                 }
 
-                this.target.getTexture().addControl(this.target);
+                this.target.getRoot().addControl(this.target);
+
+                //this.target.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+                //this.target.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
 
                 this.target.leftInPixels = absLeft;
                 this.target.topInPixels = absTop;
@@ -59,6 +64,7 @@ export class DragBehavior {
             if (parent instanceof InstructionContainer && this.target instanceof InstructionContainer) {
                 parent.removeNext();
             }
+
             isDragging = true;
 
             decalX = this.target.leftInPixels - pointerInfo.x;
@@ -75,7 +81,12 @@ export class DragBehavior {
             this.scene.scene.onPointerUp = (evt:IPointerEvent) => {
                 if (!isDragging) return;
                 isDragging = false;
-                if (this.target instanceof BlocContainer) this.scene.hoverSlot?.replaceIfMatch(this.target);
+                if (this.target instanceof BlocContainer) {
+                    if (this.scene.hoverSlot instanceof EmptySlot) this.scene.hoverSlot.replaceIfMatch(this.target);
+                }
+                else if (this.target instanceof InstructionContainer) {
+                    if (this.scene.hoverSlot instanceof Magnet) this.scene.hoverSlot.replaceSlot(this.target);
+                }
             }
         });
 

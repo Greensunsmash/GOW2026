@@ -2,16 +2,19 @@ import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { BlocContainer } from "./BlocContainer";
 import * as GUI from "@babylonjs/gui";
 import { DragBehavior } from "./DragBehavior";
+import { EmptySlot } from "./EmptySlot";
+import { Magnet } from "./Magnet";
 
 export class InstructionContainer extends GUI.StackPanel {
 
     // Ajouter un détecteur (rectangle ?) en dessous de l'instruction container, pour détecter lorsqu'on release qqch dedans
 
     private next : InstructionContainer | null;
+    private detector : GUI.Rectangle | null;
     private bloc : BlocContainer;
-    private texture : GUI.AdvancedDynamicTexture;
+    private root : GUI.Container;
 
-    constructor(list: string[], advancedTexture: GUI.AdvancedDynamicTexture, scene: GameScene) {
+    constructor(list: string[], root: GUI.Container, scene: GameScene) {
             super();
 
             // Setup stack panel
@@ -19,18 +22,20 @@ export class InstructionContainer extends GUI.StackPanel {
             this.adaptHeightToChildren = true;
             this.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
             this.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
-            advancedTexture.addControl(this);
+            root.addControl(this);
 
             // Create bloc
-            this.bloc = new BlocContainer("n", list, advancedTexture, scene);
+            this.bloc = new BlocContainer("n", list, root, scene);
             this.bloc.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
             this.bloc.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
-            advancedTexture.removeControl(this.bloc);
+            root.removeControl(this.bloc);
             this.addControl(this.bloc);
 
             new DragBehavior(this);
-            this.texture = advancedTexture;
+            this.root = root;
             this.next = null;
+            this.detector = new Magnet(scene, this);
+            this.addControl(this.detector);
             this.build();
         }
     
@@ -40,9 +45,15 @@ export class InstructionContainer extends GUI.StackPanel {
     }
 
     addNext(c : InstructionContainer): void {
+        if (this.detector === null) return ;
         this.next = c;
-        this.texture.removeControl(c);
+        this.root.removeControl(c);
         this.addControl(c);
+        c.left = 0;
+        c.top = 0;
+        this.removeControl(this.detector);
+        this.detector = null;
+        console.log(this.next);
     }
 
     removeNext(): void {
@@ -51,15 +62,17 @@ export class InstructionContainer extends GUI.StackPanel {
         const absLeft = measure.left;
         const absTop = measure.top;
         this.removeControl(this.next);
-        this.texture.addControl(this.next);
+        this.root.addControl(this.next);
         this.next.leftInPixels = absLeft;
         this.next.topInPixels = absTop;
         this.next = null;
+        this.detector = new Magnet(this.getScene(), this);
+        this.addControl(this.detector);
     }
 
     // GETTERS
     hasNext():boolean {return (this.next !== null);}
     getNext(): InstructionContainer | null {return this.next;}
-    getTexture():GUI.AdvancedDynamicTexture{return this.texture;}
+    getRoot():GUI.Container{return this.root;}
     getScene():GameScene{return this.bloc.getScene()};
 }

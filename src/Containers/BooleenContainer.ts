@@ -6,8 +6,8 @@ import { DragBehavior } from "./DragBehavior";
 
 export class BooleenContainer extends BlocContainer {
     
-    constructor(list: string[], advancedTexture: GUI.AdvancedDynamicTexture, scene: GameScene) {
-            super("b", list, advancedTexture, scene);
+    constructor(list: string[], root: GUI.Container, scene: GameScene) {
+            super("b", list, root, scene);
             new DragBehavior(this);
         }
     

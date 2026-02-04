@@ -12,11 +12,11 @@ export class BlocContainer extends GUI.Rectangle {
     private readonly labels: GUI.TextBlock[];
     private readonly args: ArgsType[];
     private readonly slots: GUI.Rectangle[];
-    private readonly advancedTexture: GUI.AdvancedDynamicTexture;
+    private readonly root: GUI.Container;
     private readonly scene: GameScene;
     private readonly type : ArgsType;
 
-    constructor(type:string, list: string[], advancedTexture: GUI.AdvancedDynamicTexture, scene: GameScene) {
+    constructor(type:string, list: string[], root: GUI.Container, scene: GameScene) {
         super();
 
         switch (type) {
@@ -28,8 +28,10 @@ export class BlocContainer extends GUI.Rectangle {
         this.labels = [];
         this.slots = [];
         this.args = [];
-        this.advancedTexture = advancedTexture;
+        this.root = root;
         this.scene = scene;
+        this.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+        this.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
 
         // Initialisation du container (qui contient les textes et les slots)
         this.container = new GUI.StackPanel();
@@ -71,7 +73,7 @@ export class BlocContainer extends GUI.Rectangle {
             }
         }
 
-        this.advancedTexture.addControl(this);
+        this.root.addControl(this);
         this.build();
     }
 
@@ -118,7 +120,7 @@ export class BlocContainer extends GUI.Rectangle {
     // Getters
     public getSlots(): readonly GUI.Rectangle[] {return this.slots;}
     public getContainer(): GUI.StackPanel {return this.container;}
-    public getTexture(): GUI.AdvancedDynamicTexture {return this.advancedTexture;}
+    public getRoot(): GUI.Container {return this.root;}
     public getScene(): GameScene {return this.scene;}
     public getArgs(): readonly ArgsType[] {return this.args;}
     public getLabels(): readonly GUI.TextBlock[] {return this.labels;}
