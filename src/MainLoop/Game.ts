@@ -1,4 +1,4 @@
-import { Engine, ArcRotateCamera, Vector3 } from "@babylonjs/core";
+import { Engine, ArcRotateCamera, Vector3, Viewport } from "@babylonjs/core";
 import { GameScene } from "./Scene/GameScene";
 import { PlayScene } from "./Scene/PlayScene";
 
@@ -11,8 +11,10 @@ export class Game {
         this.engine = new Engine(canvas, true);
         this.currentScene = new PlayScene(this.engine);
 
-        const camera = new ArcRotateCamera("camera", Math.PI/2, Math.PI/3, 10, Vector3.Zero(), this.currentScene.scene);
-        camera.attachControl(canvas, true);
+        const uiCamera = new ArcRotateCamera("uiCamera", Math.PI/2, Math.PI/3, 10, Vector3.Zero(), this.currentScene.scene);
+        uiCamera.attachControl(canvas, true);
+        const mapCamera = new ArcRotateCamera("mapCamera", Math.PI/2, Math.PI/3, 10, Vector3.Zero(), this.currentScene.scene);
+        mapCamera.viewport = new Viewport(0.5, 0, 0.5, 1.0);
 
         this.engine.runRenderLoop(() => {
             this.currentScene.update();
