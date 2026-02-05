@@ -9,11 +9,14 @@ import { Magnet } from "./Magnet";
 // Cette classe permet à une control de pouvoir être drag'n'drop
 export class DragBehavior {
 
-    private target: BlocContainer | InstructionContainer;
-    private scene: GameScene;
 
-    constructor(target: BlocContainer | InstructionContainer) {
+    private movable : InstructionContainer | BlocContainer; // Ce qu'on déplace réellement
+    private target : BlocContainer | InstructionContainer; // Ce qui détecte les mouvements
+    private scene : GameScene;
+
+    constructor(target: BlocContainer, movable? : InstructionContainer | BlocContainer) {
         this.target = target;
+        this.movable = movable?? target;
         this.scene = target.getScene();
         this.init();
     }
@@ -27,16 +30,18 @@ export class DragBehavior {
         // Ajout d'une fonction qui sera appellée lorsqu'on appuie sur le control
         this.target.onPointerDownObservable.add((pointerInfo) => {
 
-            const parent = this.target.parent;
+            const parent = this.movable.parent;
+            this.movable.unableSlotHovering();
+            this.movable.zIndex = 1;
 
             // Si jamais la fonction appartient déjà à un BlocContainer (on le décroche)
-            if (parent instanceof GUI.Rectangle && this.target instanceof BlocContainer) {
-                const measure = this.target._currentMeasure;
+            if (parent instanceof GUI.Rectangle && this.movable instanceof BlocContainer) {
+                const measure = this.movable._currentMeasure;
                 const absLeft = measure.left;
                 const absTop = measure.top;
 
                 let parentBloc: BlocContainer | null = null;
-                let current: GUI.Control | null = this.target.parent as GUI.Control | null;
+                let current: GUI.Control | null = this.movable.parent as GUI.Control | null;
 
                 while (current) {
                     if (current instanceof BlocContainer) {
@@ -45,56 +50,54 @@ export class DragBehavior {
                     }
                     current = current.parent as GUI.Control | null;
                 }
-                if (this.target.parent) {
-                    this.target.parent.removeControl(this.target);
+                if (this.movable.parent) {
+                    this.movable.parent.removeControl(this.movable);
                 }
                 if (parentBloc) {
                     parentBloc.resetEmptySlot(parent);
                 }
 
-                this.target.getRoot().addControl(this.target);
+                this.movable.getRoot().addControl(this.movable);
 
-                //this.target.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-                //this.target.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
-
-                this.target.leftInPixels = absLeft;
-                this.target.topInPixels = absTop;
+                this.movable.leftInPixels = absLeft;
+                this.movable.topInPixels = absTop;
             }
 
-            if (parent instanceof InstructionContainer && this.target instanceof InstructionContainer) {
+            if (parent instanceof InstructionContainer && this.movable instanceof InstructionContainer) {
                 parent.removeNext();
             }
 
             isDragging = true;
 
-            decalX = this.target.leftInPixels - pointerInfo.x;
-            decalY = this.target.topInPixels - pointerInfo.y;
+            decalX = this.movable.leftInPixels - pointerInfo.x;
+            decalY = this.movable.topInPixels - pointerInfo.y;
 
             // Ajout à la scène principale de la fonction permettant de déplacer le bloc 
             this.scene.scene.onPointerMove = (evt:IPointerEvent) => {
                 if (!isDragging) return;
-                this.target.leftInPixels = evt.x + decalX;
-                this.target.topInPixels = evt.y + decalY;
+                this.movable.leftInPixels = evt.x + decalX;
+                this.movable.topInPixels = evt.y + decalY;
             }
 
             // Ajout à la scène principale de la fonction permettant de relacher le bloc
             this.scene.scene.onPointerUp = (evt:IPointerEvent) => {
                 if (!isDragging) return;
+                this.movable.enableSlotHovering();
                 isDragging = false;
-                if (this.target instanceof BlocContainer) {
-                    if (this.scene.hoverSlot instanceof EmptySlot) this.scene.hoverSlot.replaceIfMatch(this.target);
+                if (this.movable instanceof BlocContainer) {
+                    let slot = this.scene.getHoverSlot();
+                    if (slot instanceof EmptySlot) slot.replaceIfMatch(this.movable);
                 }
-                else if (this.target instanceof InstructionContainer) {
-                    if (this.scene.hoverSlot instanceof Magnet) this.scene.hoverSlot.replaceSlot(this.target);
+                else if (this.movable instanceof InstructionContainer) {
+                    let slot = this.scene.getHoverSlot();
+                    if (slot instanceof Magnet) {
+                        slot.replaceSlot(this.movable);
+                    } else {
+                        console.log(this.scene.getHoverSlot());
+                    }
                 }
             }
         });
-
-        /*
-        this.target.onPointerUpObservable.add(() => {
-            isDragging = false;
-            this.scene.hoverSlot?.replaceSlot(this.target);
-        }); */
     }
 }
 

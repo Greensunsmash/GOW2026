@@ -1,6 +1,5 @@
 import * as GUI from "@babylonjs/gui";
 import { EmptySlot } from "./EmptySlot";
-import { DragBehavior } from "./DragBehavior";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 
 export type ArgsType = "VALEUR" | "BOOLEEN" | "ALL" | "NONE";
@@ -50,6 +49,8 @@ export class BlocContainer extends GUI.Rectangle {
                 label.resizeToFit = true;
                 label.paddingLeft = "10px";
                 label.paddingRight = "10px";
+                label.paddingTop = "10px";
+                label.paddingBottom = "10px";
 
                 this.labels.push(label);
                 this.container.addControl(label);
@@ -95,6 +96,9 @@ export class BlocContainer extends GUI.Rectangle {
             control.parent.removeControl(control);
         }
 
+        let nb:number;
+        for (nb= 0; nb<slotWrapper.children.length; nb++) slotWrapper.children[nb].dispose();
+
         slotWrapper.clearControls();
         slotWrapper.addControl(control);
 
@@ -116,6 +120,10 @@ export class BlocContainer extends GUI.Rectangle {
         slotWrapper.clearControls();
         slotWrapper.addControl(new EmptySlot(this, this.args[i]));
     }
+
+    // NE PAS TOUCHER
+    unableSlotHovering():void {}
+    enableSlotHovering():void {}
 
     // Getters
     public getSlots(): readonly GUI.Rectangle[] {return this.slots;}

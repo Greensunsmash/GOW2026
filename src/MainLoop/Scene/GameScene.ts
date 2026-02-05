@@ -6,7 +6,7 @@ import { AssetLibrary } from "../../Environment/AssetManager";
 
 export abstract class GameScene {
     public scene: Scene;
-    public hoverSlot : EmptySlot | Magnet | null = null;
+    private hoverSlot : EmptySlot | Magnet | null = null;
 
     protected drh : AssetLibrary;
 
@@ -23,4 +23,20 @@ export abstract class GameScene {
     render(): void {
         this.scene.render();
     }
+
+    // SETTERS/GETTERS
+    public setHoverSlot(c:EmptySlot | Magnet | null):boolean {
+        if (this.hoverSlot) {
+            if (c) return false; // C'est de la merde ça
+            this.hoverSlot = null;
+            return true;
+        }
+        else {
+            if (!c) console.log ("hover en théorie impossible, à comprendre"); // SI si en fait c'est compréhensible et possible
+            this.hoverSlot = c;
+            return true;
+        }
+    }
+    public getHoverSlot():EmptySlot | Magnet | null {return this.hoverSlot;}
+
 }
