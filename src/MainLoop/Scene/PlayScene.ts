@@ -9,6 +9,7 @@ import { StructureContainer } from "../../Containers/StructureContainer";
 import { Level } from "../../Environment/Level";
 import { LevelReader } from "../../Environment/LevelReader";
 import type { AssetLibrary } from "../../Environment/AssetManager";
+import { LayerMasks } from "../../shared";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene {
@@ -22,6 +23,11 @@ export class PlayScene extends GameScene {
         super(engine);
 
         this.advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+        if (this.advancedTexture.layer) {
+            this.advancedTexture.layer.layerMask = LayerMasks.UI_ONLY;
+        }   
+
         this.leftPanel = new GUI.Rectangle();
         this.leftPanel.width = "50%";
         this.leftPanel.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
@@ -41,6 +47,7 @@ export class PlayScene extends GameScene {
         
         let levelReader = new LevelReader();
         this.level = new Level(levelReader.getStructure(), this.drh, this.scene);
+        //this.level.createLevel();
     }
 
     update(): void {

@@ -1,4 +1,5 @@
-import { LoadAssetContainerAsync, TransformNode, Vector3, type AnimationGroup, type Scene } from "@babylonjs/core";
+import { LoadAssetContainerAsync, MeshBlock, MeshBuilder, TransformNode, Vector3, type AnimationGroup, type Scene } from "@babylonjs/core";
+import { LayerMasks } from "../shared";
 
 export class AssetLibrary {
     private readonly scene: Scene;
@@ -32,6 +33,7 @@ export class AssetLibrary {
             container.meshes.forEach(mesh => {
                 mesh.parent = rootMesh;
                 mesh.isVisible = true;
+                mesh.layerMask = LayerMasks.SCENE_ONLY;
             });
 
             rootMesh.setEnabled(false);
@@ -52,11 +54,24 @@ export class AssetLibrary {
         rotation: Vector3 = new Vector3(0,0,0),
         scaleFactor: number = 1.0
     ): TransformNode {
-        if (!this.assets[name])
+        /* if (!this.assets[name])
             throw new Error(`Asset '${name}' instance could not be loaded.`);
 
         let rootMesh = this.assets[name];
-        let instance = rootMesh.clone(`${name}_instance`, null);
+        let instance = rootMesh.clone(`${name}_instance`, null); */
+
+        console.log("creating instance of " + name);
+        let instance;
+        switch(name) {
+            case "wall":
+                instance = MeshBuilder.CreateBox("boxeheh");
+                break;
+            case "robot":
+                instance = MeshBuilder.CreateSphere("eheheh");
+                break;
+            default:
+                instance = MeshBuilder.CreateCylinder("eheheh");
+        }
 
         if (!instance)
             throw new Error(`Asset '${name}' instance could not be cloned.`);
@@ -66,7 +81,7 @@ export class AssetLibrary {
 
         let childMeshes = instance.getChildMeshes();
         if (childMeshes.length === 0)
-            throw new Error(`Asset '${name}' instance has no child meshes.`);
+            childMeshes = [instance];
 
         childMeshes.forEach((mesh) => (mesh.isVisible = true));
 

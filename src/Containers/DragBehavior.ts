@@ -1,7 +1,7 @@
 import * as GUI from "@babylonjs/gui";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { BlocContainer } from "./BlocContainer";
-import type { IPointerEvent} from "babylonjs";
+import type { IPointerEvent} from "@babylonjs/core";
 import { InstructionContainer } from "./InstructionContainer";
 import { EmptySlot } from "./EmptySlot";
 import { Magnet } from "./Magnet";
