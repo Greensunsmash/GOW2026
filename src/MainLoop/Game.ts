@@ -1,7 +1,7 @@
 import { Engine, ArcRotateCamera, Vector3, Viewport } from "@babylonjs/core";
 import { GameScene } from "./Scene/GameScene";
 import { PlayScene } from "./Scene/PlayScene";
-import { LayerMasks } from "../shared";
+import { LayerMasks } from "../Shared/LayerMasks";
 
 export class Game {
 

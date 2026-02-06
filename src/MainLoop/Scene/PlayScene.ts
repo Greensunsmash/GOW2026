@@ -2,14 +2,13 @@ import { Engine } from "@babylonjs/core";
 import { GameScene } from "./GameScene";
 
 import * as GUI from "@babylonjs/gui";
-import { ValeurContainer } from "../../Containers/ValeurContainer";
 import { BooleenContainer } from "../../Containers/BooleenContainer";
 import { InstructionContainer } from "../../Containers/InstructionContainer";
 import { StructureContainer } from "../../Containers/StructureContainer";
+import { ValeurContainer } from "../../Containers/ValeurContainer";
 import { Level } from "../../Environment/Level";
 import { LevelReader } from "../../Environment/LevelReader";
-import type { AssetLibrary } from "../../Environment/AssetManager";
-import { LayerMasks } from "../../shared";
+import { LayerMasks } from "../../Shared/LayerMasks";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene {
@@ -43,11 +42,9 @@ export class PlayScene extends GameScene {
         new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
         new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
         new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
-        //i.addNext(b);
         
         let levelReader = new LevelReader();
         this.level = new Level(levelReader.getStructure(), this.drh, this.scene);
-        //this.level.createLevel();
     }
 
     update(): void {

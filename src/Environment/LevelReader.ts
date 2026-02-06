@@ -16,9 +16,11 @@ export class LevelReader {
     ];
 
     constructor() {
-        this.structure = this.lines.map(line =>
-            [...line].map(char => char as State)
-        );
+        this.structure = this.lines.map((line) => {
+            return [...line].map((char) => {
+                return char as State;
+            });
+        }); 
     }
 
     public getStructure() : Map2 {

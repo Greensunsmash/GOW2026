@@ -1,8 +1,9 @@
 import { LoadAssetContainerAsync, MeshBlock, MeshBuilder, TransformNode, Vector3, type AnimationGroup, type Scene } from "@babylonjs/core";
-import { LayerMasks } from "../shared";
+import { LayerMasks } from "./LayerMasks";
 
 export class AssetLibrary {
     private readonly scene: Scene;
+    private groups: { [key: string] : number } = {};
     private assets: { [key: string]: TransformNode } = {};
     private animationGroupsByAsset: { [key: string]: AnimationGroup[] } = {};
 
@@ -48,6 +49,16 @@ export class AssetLibrary {
         }
     }
 
+    private getInGroupId(group: string) {
+        let n = this.groups[group];
+        if (n == null) {
+            this.groups[group] = 1;
+        } else {
+            this.groups[group]++;
+        }
+        return group + "-" + this.groups[group];
+    }
+
     createSingleInstance(
         name: string,
         position: Vector3,
@@ -64,18 +75,18 @@ export class AssetLibrary {
         let instance;
         switch(name) {
             case "wall":
-                instance = MeshBuilder.CreateBox("boxeheh");
+                instance = MeshBuilder.CreateBox(this.getInGroupId("wall"));
                 break;
             case "robot":
-                instance = MeshBuilder.CreateSphere("eheheh");
+                instance = MeshBuilder.CreateSphere(this.getInGroupId("robot"));
                 break;
             default:
-                instance = MeshBuilder.CreateCylinder("eheheh");
+                instance = MeshBuilder.CreateCylinder(this.getInGroupId("default"));
         }
 
         if (!instance)
             throw new Error(`Asset '${name}' instance could not be cloned.`);
-
+        console.log("right now we should have an instance of name " + instance.name);
         instance.parent = null; // mon seul parent, c'est la scène - Dalida
         instance.setEnabled(true);
 
@@ -98,6 +109,13 @@ export class AssetLibrary {
             mesh.refreshBoundingInfo({});
             const bbox = mesh.getBoundingInfo().boundingBox;
             centerOffset.addInPlace(bbox.centerWorld);
+
+            minX = Math.min(minX, bbox.minimumWorld.x);
+            maxX = Math.max(maxX, bbox.maximumWorld.x);
+            minY = Math.min(minY, bbox.minimumWorld.y);
+            maxY = Math.max(maxY, bbox.maximumWorld.y);
+            minZ = Math.min(minZ, bbox.minimumWorld.z);
+            maxZ = Math.max(maxZ, bbox.maximumWorld.z);
         });
         centerOffset.scaleInPlace(1 / childMeshes.length); 
 
