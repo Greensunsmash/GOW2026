@@ -44,17 +44,18 @@ export class EmptySlot extends GUI.Rectangle {
 
     public getHover() : boolean {return this.hover;}
     public setHover(bool:boolean) {
-        if (bool) {
-            this.background = "white";
-            this.scene.hoverSlot = this;
+            if (bool) {
+                if (this.scene.setHoverSlot(this)) {
+                    this.background = "white";
+                    this.hover = bool;
+                }
+            }
+            else {
+                this.scene.setHoverSlot(null);
+                this.background = "#383838";
+                this.hover = bool;
+            };
         }
-        else {
-            this.background = "#383838";
-            this.scene.hoverSlot = null;
-        };
-
-        this.hover = bool;
-    }
 
     public replaceIfMatch(c:BlocContainer) : void {
         if (this.getType() === c.getType() || (this.getType() === "ALL" && c.getType() !== "NONE")) this.replaceSlot(c);

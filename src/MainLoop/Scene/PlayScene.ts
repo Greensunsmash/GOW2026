@@ -8,7 +8,7 @@ import { InstructionContainer } from "../../Containers/InstructionContainer";
 import { StructureContainer } from "../../Containers/StructureContainer";
 import { Level } from "../../Environment/Level";
 import { LevelReader } from "../../Environment/LevelReader";
-import type { AssetLibrary } from "../../Environment/AssetManager";
+import { DepartContainer } from "../../Containers/DepartContainer";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene {
@@ -28,6 +28,7 @@ export class PlayScene extends GameScene {
         this.leftPanel.background = "#222222"; // Couleur de fond pour bien séparer
         this.advancedTexture.addControl(this.leftPanel);
     
+        new DepartContainer(["Au lancement du programme :"], this.leftPanel, this);
         let i = new StructureContainer(["Répéter", "v", "fois :"], this.leftPanel, this);
         new BooleenContainer(["", "v", " = ", "v"], this.leftPanel, this);
         new ValeurContainer(["10"], this.leftPanel, this);

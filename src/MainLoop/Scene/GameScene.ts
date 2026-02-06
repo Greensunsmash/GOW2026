@@ -1,5 +1,5 @@
 import * as GUI from "@babylonjs/gui";
-import { Scene, Engine, HemisphericLight, Vector3, PointerEventTypes } from "@babylonjs/core";
+import { Scene, Engine, HemisphericLight, Vector3} from "@babylonjs/core";
 import type { EmptySlot } from "../../Containers/EmptySlot";
 import type { Magnet } from "../../Containers/Magnet";
 import { AssetLibrary } from "../../Environment/AssetManager";

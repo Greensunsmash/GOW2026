@@ -61,12 +61,13 @@ export class DragBehavior {
 
                 this.movable.leftInPixels = absLeft;
                 this.movable.topInPixels = absTop;
+            } else if (parent instanceof GUI.StackPanel && this.movable instanceof InstructionContainer) {
+                if (parent.parent instanceof InstructionContainer) parent.parent.removeNext(); // Tkt gaia ça marche
+            } else { // Utile pour que le bloc soit affiché au dessus des autres
+                this.movable.getRoot().removeControl(this.movable);
+                this.movable.getRoot().addControl(this.movable);
             }
-
-            if (parent instanceof InstructionContainer && this.movable instanceof InstructionContainer) {
-                parent.removeNext();
-            }
-
+            
             isDragging = true;
 
             decalX = this.movable.leftInPixels - pointerInfo.x;
@@ -93,7 +94,7 @@ export class DragBehavior {
                     if (slot instanceof Magnet) {
                         slot.replaceSlot(this.movable);
                     } else {
-                        console.log(this.scene.getHoverSlot());
+                        //console.log(this.scene.getHoverSlot());
                     }
                 }
             }

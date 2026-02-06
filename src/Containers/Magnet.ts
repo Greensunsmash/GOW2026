@@ -1,7 +1,7 @@
 import * as GUI from "@babylonjs/gui";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { PointerEventTypes } from "@babylonjs/core";
-import type { InstructionContainer } from "./InstructionContainer";
+import { InstructionContainer } from "./InstructionContainer";
 
 export class Magnet extends GUI.Rectangle {
 
@@ -46,7 +46,16 @@ export class Magnet extends GUI.Rectangle {
         });
         }
 
-       public replaceSlot(c:InstructionContainer) : void {if (this.blocParent !== c) this.blocParent.addNext(c);}
+       public replaceSlot(c:InstructionContainer) : void {
+            if (c.isFirstOnly()) return;
+            let parent:InstructionContainer | GUI.StackPanel =this.blocParent;
+            while (true) {
+                if (parent === c) return;
+                if (!(parent.parent instanceof InstructionContainer || parent.parent instanceof GUI.StackPanel )) break;
+                parent = parent.parent;
+            }
+            if (parent instanceof InstructionContainer) parent.addNext(c);
+        }
     
         // Getters
         public getHover() : boolean {return this.hover;}
@@ -56,7 +65,7 @@ export class Magnet extends GUI.Rectangle {
                 if (this.scene.setHoverSlot(this)) {
                     this.background = "white";
                     this.hover = bool;
-                    console.log("hover :" + this);
+                    //console.log("hover :" + this);
                 }
             }
             else {
