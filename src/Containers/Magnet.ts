@@ -1,12 +1,13 @@
 import * as GUI from "@babylonjs/gui";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { PointerEventTypes } from "@babylonjs/core";
-import type { InstructionContainer } from "./InstructionContainer";
+import { InstructionContainer } from "./InstructionContainer";
 
 export class Magnet extends GUI.Rectangle {
 
     private scene:GameScene;
     private hover:boolean= false;
+    private block:boolean = false;
     private blocParent : InstructionContainer;
     //private type : ArgsType;
 
@@ -15,6 +16,7 @@ export class Magnet extends GUI.Rectangle {
         super();
         this.width = "100%";
         this.height = "30px";
+        this.isHitTestVisible = false; // Désactive les inputs sur ce control (askip)
         this.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         this.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
         this.alpha = 0.3;
@@ -43,27 +45,39 @@ export class Magnet extends GUI.Rectangle {
             }
         });
         }
-    
-        public getHover() : boolean {return this.hover;}
-        public setHover(bool:boolean) {
-            if (bool) {
-                this.background = "white";
-                this.scene.hoverSlot = this;
+
+       public replaceSlot(c:InstructionContainer) : void {
+            if (c.isFirstOnly()) return;
+            let parent:InstructionContainer | GUI.StackPanel =this.blocParent;
+            while (true) {
+                if (parent === c) return;
+                if (!(parent.parent instanceof InstructionContainer || parent.parent instanceof GUI.StackPanel )) break;
+                parent = parent.parent;
             }
-            else {
-                this.background = "#383838";
-                this.scene.hoverSlot = null;
-            };
-    
-            this.hover = bool;
+            if (parent instanceof InstructionContainer) parent.addNext(c);
         }
     
-        /*
-        public replaceIfMatch(c:BlocContainer) : void {
-            if (this.getType() === c.getType() || (this.getType() === "ALL" && c.getType() !== "NONE")) this.replaceSlot(c);
-        }*/        
-       public replaceSlot(c:InstructionContainer) : void {if (this.blocParent !== c) this.blocParent.addNext(c);}
-    
         // Getters
-        //getType():ArgsType {return this.type;}
+        public getHover() : boolean {return this.hover;}
+        public setHover(bool:boolean) {
+            if (this.block) return;
+            if (bool) {
+                if (this.scene.setHoverSlot(this)) {
+                    this.background = "white";
+                    this.hover = bool;
+                    //console.log("hover :" + this);
+                }
+            }
+            else {
+                this.scene.setHoverSlot(null);
+                this.background = "#383838";
+                this.hover = bool;
+            };
+        }
+
+        public getBlock():boolean{return this.block;}
+        public setBlock(bool:boolean):void {
+            if (bool && this.getHover()) this.setHover(false);
+            this.block = bool;
+        }
 }
