@@ -16,7 +16,7 @@ export class Magnet extends GUI.Rectangle {
         super();
         this.width = "100%";
         this.height = "30px";
-        this.isHitTestVisible = false; // Désactive les inputs sur ce control (askip)
+        this.isHitTestVisible = false; // Désactive les inputs sur ce control (askip) (non)
         this.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         this.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
         this.alpha = 0.3;

@@ -33,7 +33,7 @@ export class InstructionContainer extends GUI.Rectangle {
             this.mainContainer.adaptHeightToChildren = true;
             this.mainContainer.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
             this.mainContainer.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
-            this.mainContainer.isHitTestVisible = false; // Désactive les inputs sur ce control (askip)
+            this.mainContainer.isHitTestVisible = false; // Désactive les inputs sur ce control (askip) (non) (en vrai jsp j'en sais rien)
 
             this.addControl(this.mainContainer);
 
