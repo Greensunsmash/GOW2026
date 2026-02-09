@@ -9,6 +9,7 @@ import { ValeurContainer } from "../../Containers/ValeurContainer";
 import { Level } from "../../Environment/Level";
 import { LevelReader } from "../../Environment/LevelReader";
 import { LayerMasks } from "../../Shared/Constants";
+import { DepartContainer } from "../../Containers/DepartContainer";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene {
@@ -33,19 +34,19 @@ export class PlayScene extends GameScene {
         this._leftPanel.background = "#222222"; // Couleur de fond pour bien séparer
         this._advancedTexture.addControl(this._leftPanel);
     
-        let i = new StructureContainer(["Répéter", "v", "fois :"], this.leftPanel, this);
-        new BooleenContainer(["", "v", " = ", "v"], this.leftPanel, this);
-        new ValeurContainer(["10"], this.leftPanel, this);
-        new ValeurContainer(["10"], this.leftPanel, this);
-        new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
-        new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
-        new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
-        new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
-        new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
+        new DepartContainer(["Au financement du programme : "], this._leftPanel, this);
+        let i = new StructureContainer(["Répéter", "v", "fois :"], this._leftPanel, this);
+        new BooleenContainer(["", "v", " = ", "v"], this._leftPanel, this);
+        new ValeurContainer(["10"], this._leftPanel, this);
+        new ValeurContainer(["10"], this._leftPanel, this);
+        new InstructionContainer(["LALALAALALALALALALAL"], this._leftPanel, this);
+        new InstructionContainer(["LALALAALALALALALALAL"], this._leftPanel, this);
+        new InstructionContainer(["LALALAALALALALALALAL"], this._leftPanel, this);
+        new InstructionContainer(["LALALAALALALALALALAL"], this._leftPanel, this);
+        new InstructionContainer(["LALALAALALALALALALAL"], this._leftPanel, this);
         //i.addNext(b);
-        
-        let levelReader = new LevelReader();
-        this.level = new Level(levelReader.getStructure(), this.drh, this.scene);
+
+        this.initGameScene();
     }
 
     update(): void {
