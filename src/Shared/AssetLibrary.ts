@@ -1,7 +1,10 @@
 import { LoadAssetContainerAsync, MeshBlock, MeshBuilder, TransformNode, Vector3, type AnimationGroup, type Scene } from "@babylonjs/core";
-import { LayerMasks } from "./LayerMasks";
+import { ASSETS_ROOT, LayerMasks } from "./Constants";
+import "@babylonjs/loaders";
 
 export class AssetLibrary {
+    static MODELS_ROOT = ASSETS_ROOT + "models/";
+
     private readonly scene: Scene;
     private groups: { [key: string] : number } = {};
     private assets: { [key: string]: TransformNode } = {};
@@ -20,15 +23,14 @@ export class AssetLibrary {
     
     async loadSingleAsset(
         name: string,
-        filename: string,
-        path: string
+        filename: string
     ): Promise<TransformNode> {
         if (this.assets[name]) {
             return this.assets[name];
         }
 
         try {
-            const container = await LoadAssetContainerAsync(`${path}/${filename}`, this.scene);
+            const container = await LoadAssetContainerAsync(AssetLibrary.MODELS_ROOT + filename, this.scene);
             const rootMesh = new TransformNode(name, this.scene);
 
             container.meshes.forEach(mesh => {
@@ -44,7 +46,7 @@ export class AssetLibrary {
 
             return rootMesh;
         } catch (err) {
-            console.error(`Failed to load asset '${name}' from '${path}/${filename}'`, err);
+            console.error(`Failed to load asset '${name}' from '${AssetLibrary.MODELS_ROOT}${filename}'`, err);
             throw new Error(`Failed to load asset '${name}': ${err}`);
         }
     }
@@ -65,28 +67,14 @@ export class AssetLibrary {
         rotation: Vector3 = new Vector3(0,0,0),
         scaleFactor: number = 1.0
     ): TransformNode {
-        /* if (!this.assets[name])
+        if (!this.assets[name])
             throw new Error(`Asset '${name}' instance could not be loaded.`);
 
         let rootMesh = this.assets[name];
-        let instance = rootMesh.clone(`${name}_instance`, null); */
-
-        console.log("creating instance of " + name);
-        let instance;
-        switch(name) {
-            case "wall":
-                instance = MeshBuilder.CreateBox(this.getInGroupId("wall"));
-                break;
-            case "robot":
-                instance = MeshBuilder.CreateSphere(this.getInGroupId("robot"));
-                break;
-            default:
-                instance = MeshBuilder.CreateCylinder(this.getInGroupId("default"));
-        }
+        let instance = rootMesh.clone(`${name}_instance`, null); 
 
         if (!instance)
             throw new Error(`Asset '${name}' instance could not be cloned.`);
-        console.log("right now we should have an instance of name " + instance.name);
         instance.parent = null; // mon seul parent, c'est la scène - Dalida
         instance.setEnabled(true);
 
@@ -133,5 +121,9 @@ export class AssetLibrary {
         instance.rotation = rotation;
 
         return instance;
+    }
+
+    printLoadedAssets() {
+        console.log(this.assets);
     }
 }
