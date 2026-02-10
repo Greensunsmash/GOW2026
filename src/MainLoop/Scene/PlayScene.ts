@@ -34,16 +34,16 @@ export class PlayScene extends GameScene {
         this._leftPanel.background = "#222222"; // Couleur de fond pour bien séparer
         this._advancedTexture.addControl(this._leftPanel);
     
-        new DepartContainer(["Au financement du programme : "], this._leftPanel, this);
-        let i = new StructureContainer(["Répéter", "v", "fois :"], this._leftPanel, this);
-        new BooleenContainer(["", "v", " = ", "v"], this._leftPanel, this);
-        new ValeurContainer(["10"], this._leftPanel, this);
-        new ValeurContainer(["10"], this._leftPanel, this);
-        new InstructionContainer(["LALALAALALALALALALAL"], this._leftPanel, this);
-        new InstructionContainer(["LALALAALALALALALALAL"], this._leftPanel, this);
-        new InstructionContainer(["LALALAALALALALALALAL"], this._leftPanel, this);
-        new InstructionContainer(["LALALAALALALALALALAL"], this._leftPanel, this);
-        new InstructionContainer(["LALALAALALALALALALAL"], this._leftPanel, this);
+        new DepartContainer(["Au lancement du programme :"], this.leftPanel, this);
+        new BooleenContainer(["", "v", " = ", "v"], this.leftPanel, this);
+        new ValeurContainer(["10"], this.leftPanel, this);
+        new ValeurContainer(["10"], this.leftPanel, this);
+        new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
+        new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
+        new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
+        new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
+        new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
+        let i = new StructureContainer(["Répéter", "v", "fois :"], this.leftPanel, this);
         //i.addNext(b);
 
         this.initGameScene();
