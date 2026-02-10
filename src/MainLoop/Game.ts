@@ -1,6 +1,7 @@
 import { Engine, ArcRotateCamera, Vector3, Viewport } from "@babylonjs/core";
 import { GameScene } from "./Scene/GameScene";
 import { PlayScene } from "./Scene/PlayScene";
+import { LayerMasks } from "../Shared/Constants";
 
 export class Game {
 
@@ -12,9 +13,15 @@ export class Game {
         this.currentScene = new PlayScene(this.engine);
 
         const uiCamera = new ArcRotateCamera("uiCamera", Math.PI/2, Math.PI/3, 10, Vector3.Zero(), this.currentScene.scene);
-        uiCamera.attachControl(canvas, true);
+        uiCamera.layerMask = LayerMasks.UI_ONLY;
         const mapCamera = new ArcRotateCamera("mapCamera", Math.PI/2, Math.PI/3, 10, Vector3.Zero(), this.currentScene.scene);
         mapCamera.viewport = new Viewport(0.5, 0, 0.5, 1.0);
+        mapCamera.layerMask = LayerMasks.SCENE_ONLY;
+        mapCamera.attachControl(canvas, true);
+
+        this.currentScene.scene.activeCameras = [];
+        this.currentScene.scene.activeCameras.push(mapCamera);
+        this.currentScene.scene.activeCameras.push(uiCamera);
 
         this.engine.runRenderLoop(() => {
             this.currentScene.update();
@@ -24,13 +31,6 @@ export class Game {
         window.addEventListener("resize", () => {
             this.engine.resize();
         });
-
-        this.engine.runRenderLoop(() => {
-            this.currentScene.render();
-        });
-
-
-        window.addEventListener("resize", () => this.engine.resize());
     }
 
 

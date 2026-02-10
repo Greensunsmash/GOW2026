@@ -1,49 +1,93 @@
 import { Vector3, type Scene } from "@babylonjs/core";
-import { State, type Map2 } from "./LevelReader";
-import type { AssetLibrary } from "./AssetManager";
+import { State, type Map2, type Map3 } from "./LevelReader";
+import type { AssetLibrary } from "../Shared/AssetLibrary";
+import { Robot } from "../Entity/Robot";
+import { GridUtils, type GridPoint } from "../Shared/GridUtils";
 
 export class Level {
-    private map : Map2;
+    private map : Map3;
     private readonly drh : AssetLibrary;
     private readonly scene : Scene;
+    private robot? : Robot;
 
-    constructor(map : Map2, drh : AssetLibrary, scene : Scene) {
+    constructor(map : Map3, drh : AssetLibrary, scene : Scene) {
         this.map = map;
         this.drh = drh;
         this.scene = scene;
-    }
 
-    createLevel() {
-        for (let y = 0; y < this.map.length; y++) {
-            for (let x = 0; y < this.map[y].length; x++) {
-                let pos : Vector3 = new Vector3(x, y, 0);
-                let tile : State = this.map[y][x];
-                
-                switch(tile) {
-                    case State.RobotStart:
-                        this.createRobot(pos);
-                        break;
-                    case State.Wall:
-                        this.createWall(pos);
-                        break;
-                    default:
-                        break;
+        for (let z = 0; z < this.map.length; z++) {
+            for (let y = 0; y < this.map[z].length; y++) {
+                for (let x = 0; x < this.map[z][y].length; x++) {
+                    let gridPos : GridPoint = {x: x, y: y, z:z};
+                    /*
+                        /!\ ATTENTION
+                        Avertissement national
+                        Inversion y et z implicite (dans toWorld)
+                    */
+                    let pos : Vector3 = GridUtils.toWorld(gridPos);
+                    let tile : State = this.map[z][y][x];
+                    
+                    switch(tile) {
+                        case State.RobotStart:
+                            console.log("grid pos is " + GridUtils.toString(gridPos));
+                            console.log("world pos is " + pos.toString());
+                            this.robot = this.createRobot(gridPos, scene);
+                            break;
+                        case State.Wall:
+                            this.createWall(pos);
+                            break;
+                        case State.Ground:
+                            this.createWall(pos);
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
     }
 
-    createRobot(pos : Vector3) {
-        this.drh.createSingleInstance(
-            "robot",
-            pos
-        );
+    createRobot(gridPos : GridPoint, scene : Scene) : Robot {
+        return new Robot(this.drh, scene, this, gridPos);
     }
 
     createWall(pos : Vector3) {
+        this.drh.printLoadedAssets();
         this.drh.createSingleInstance(
             "wall",
             pos
         );
+    }
+
+    getRobot() : Robot {
+        if (!this.robot)
+            throw new Error("this level doesnt have any robot.");
+        return this.robot;
+    }
+
+    mapShape() : [number, number, number] {
+        return [this.map[0][0].length, this.map[0].length, this.map.length]; // x,y,z
+    }
+
+    isWalkable(gridPos: GridPoint) {
+        console.log("testing if " + GridUtils.toString(gridPos) + " is walkable");
+        console.log("map shape is " + this.mapShape());
+
+        if (gridPos.x < 0 || gridPos.y < 0 || gridPos.z < 0)
+            return false;
+        if (gridPos.z >= this.map.length)
+            return false;
+        if (gridPos.y >= this.map[gridPos.z].length)
+            return false;
+        if (gridPos.x >= this.map[gridPos.z][gridPos.y].length)
+            return false;
+
+        console.log("map dimensions tests passed, processing wall checked");
+        const nextState = this.map[gridPos.z][gridPos.y][gridPos.x];
+        if (nextState == State.Wall)
+            return false;
+
+        console.log("tile is walkable");
+        return true;
     }
 }

@@ -1,7 +1,12 @@
-import { LoadAssetContainerAsync, TransformNode, Vector3, type AnimationGroup, type Scene } from "@babylonjs/core";
+import { LoadAssetContainerAsync, MeshBlock, MeshBuilder, TransformNode, Vector3, type AnimationGroup, type Scene } from "@babylonjs/core";
+import { ASSETS_ROOT, LayerMasks } from "./Constants";
+import "@babylonjs/loaders";
 
 export class AssetLibrary {
+    static MODELS_ROOT = ASSETS_ROOT + "models/";
+
     private readonly scene: Scene;
+    private groups: { [key: string] : number } = {};
     private assets: { [key: string]: TransformNode } = {};
     private animationGroupsByAsset: { [key: string]: AnimationGroup[] } = {};
 
@@ -18,20 +23,20 @@ export class AssetLibrary {
     
     async loadSingleAsset(
         name: string,
-        filename: string,
-        path: string
+        filename: string
     ): Promise<TransformNode> {
         if (this.assets[name]) {
             return this.assets[name];
         }
 
         try {
-            const container = await LoadAssetContainerAsync(`${path}/${filename}`, this.scene);
+            const container = await LoadAssetContainerAsync(AssetLibrary.MODELS_ROOT + filename, this.scene);
             const rootMesh = new TransformNode(name, this.scene);
 
             container.meshes.forEach(mesh => {
                 mesh.parent = rootMesh;
                 mesh.isVisible = true;
+                mesh.layerMask = LayerMasks.SCENE_ONLY;
             });
 
             rootMesh.setEnabled(false);
@@ -41,9 +46,19 @@ export class AssetLibrary {
 
             return rootMesh;
         } catch (err) {
-            console.error(`Failed to load asset '${name}' from '${path}/${filename}'`, err);
+            console.error(`Failed to load asset '${name}' from '${AssetLibrary.MODELS_ROOT}${filename}'`, err);
             throw new Error(`Failed to load asset '${name}': ${err}`);
         }
+    }
+
+    private getInGroupId(group: string) {
+        let n = this.groups[group];
+        if (n == null) {
+            this.groups[group] = 1;
+        } else {
+            this.groups[group]++;
+        }
+        return group + "-" + this.groups[group];
     }
 
     createSingleInstance(
@@ -56,17 +71,16 @@ export class AssetLibrary {
             throw new Error(`Asset '${name}' instance could not be loaded.`);
 
         let rootMesh = this.assets[name];
-        let instance = rootMesh.clone(`${name}_instance`, null);
+        let instance = rootMesh.clone(`${name}_instance`, null); 
 
         if (!instance)
             throw new Error(`Asset '${name}' instance could not be cloned.`);
-
         instance.parent = null; // mon seul parent, c'est la scène - Dalida
         instance.setEnabled(true);
 
         let childMeshes = instance.getChildMeshes();
         if (childMeshes.length === 0)
-            throw new Error(`Asset '${name}' instance has no child meshes.`);
+            childMeshes = [instance];
 
         childMeshes.forEach((mesh) => (mesh.isVisible = true));
 
@@ -83,6 +97,13 @@ export class AssetLibrary {
             mesh.refreshBoundingInfo({});
             const bbox = mesh.getBoundingInfo().boundingBox;
             centerOffset.addInPlace(bbox.centerWorld);
+
+            minX = Math.min(minX, bbox.minimumWorld.x);
+            maxX = Math.max(maxX, bbox.maximumWorld.x);
+            minY = Math.min(minY, bbox.minimumWorld.y);
+            maxY = Math.max(maxY, bbox.maximumWorld.y);
+            minZ = Math.min(minZ, bbox.minimumWorld.z);
+            maxZ = Math.max(maxZ, bbox.maximumWorld.z);
         });
         centerOffset.scaleInPlace(1 / childMeshes.length); 
 
@@ -100,5 +121,9 @@ export class AssetLibrary {
         instance.rotation = rotation;
 
         return instance;
+    }
+
+    printLoadedAssets() {
+        console.log(this.assets);
     }
 }

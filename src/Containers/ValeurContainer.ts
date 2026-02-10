@@ -11,6 +11,7 @@ export class ValeurContainer extends BlocContainer {
     }
 
     build():void {
+        // Met le fond en blorange (F587jet27)
         this.background = "#F58727";
         super.build();
     }

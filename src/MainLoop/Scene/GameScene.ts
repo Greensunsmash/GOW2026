@@ -1,27 +1,27 @@
-import * as GUI from "@babylonjs/gui";
-import { Scene, Engine, HemisphericLight, Vector3} from "@babylonjs/core";
+import { Engine, Scene } from "@babylonjs/core";
 import type { EmptySlot } from "../../Containers/EmptySlot";
 import type { Magnet } from "../../Containers/Magnet";
-import { AssetLibrary } from "../../Environment/AssetManager";
+import { AssetLibrary } from "../../Shared/AssetLibrary";
 
 export abstract class GameScene {
     public scene: Scene;
     private hoverSlot : EmptySlot | Magnet | null = null;
 
-    protected drh : AssetLibrary;
+    protected _drh : AssetLibrary;
+    protected _isLoaded : boolean = false;
 
     constructor(engine: Engine) {
         this.scene = new Scene(engine);
-        this.drh = new AssetLibrary(this.scene);
-        new HemisphericLight("light", new Vector3(0,1,0), this.scene);
+        this._drh = new AssetLibrary(this.scene);
     }
+
 
     update(): void {
         //this.player.update();
     }
 
     render(): void {
-        this.scene.render();
+        if (this._isLoaded) this.scene.render();
     }
 
     // SETTERS/GETTERS
