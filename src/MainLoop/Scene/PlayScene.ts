@@ -29,7 +29,6 @@ export class PlayScene extends GameScene {
         this.advancedTexture.addControl(this.leftPanel);
     
         new DepartContainer(["Au lancement du programme :"], this.leftPanel, this);
-        let i = new StructureContainer(["Répéter", "v", "fois :"], this.leftPanel, this);
         new BooleenContainer(["", "v", " = ", "v"], this.leftPanel, this);
         new ValeurContainer(["10"], this.leftPanel, this);
         new ValeurContainer(["10"], this.leftPanel, this);
@@ -38,6 +37,7 @@ export class PlayScene extends GameScene {
         new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
         new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
         new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
+        let i = new StructureContainer(["Répéter", "v", "fois :"], this.leftPanel, this);
         //i.addNext(b);
         
         let levelReader = new LevelReader();

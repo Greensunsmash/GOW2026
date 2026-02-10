@@ -54,7 +54,8 @@ export class Magnet extends GUI.Rectangle {
                 if (!(parent.parent instanceof InstructionContainer || parent.parent instanceof GUI.StackPanel )) break;
                 parent = parent.parent;
             }
-            if (parent instanceof InstructionContainer) parent.addNext(c);
+            this.blocParent.addNext(c);
+
         }
     
         // Getters

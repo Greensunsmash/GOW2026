@@ -24,6 +24,7 @@ export class InstructionContainer extends GUI.Rectangle {
             this.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
             this.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
             this.isHitTestVisible = false;
+            this.thickness = 0
             root.addControl(this);
             
 
