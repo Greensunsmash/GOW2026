@@ -17,6 +17,27 @@ export class Game {
         const mapCamera = new ArcRotateCamera("mapCamera", Math.PI/2, Math.PI/3, 10, Vector3.Zero(), this.currentScene.scene);
         mapCamera.viewport = new Viewport(0.5, 0, 0.5, 1.0);
         mapCamera.layerMask = LayerMasks.SCENE_ONLY;
+
+        /*
+        const inputZone = document.createElement("div");
+        inputZone.style.position = "absolute";
+        inputZone.style.top = "0";
+        inputZone.style.right = "50%"; 
+        inputZone.style.width = "50%";
+        inputZone.style.height = "100%";
+        inputZone.style.zIndex = "10";
+
+        if (canvas.parentElement) {
+            const parentStyle = window.getComputedStyle(canvas.parentElement);
+            if (parentStyle.position === 'static') {
+                canvas.parentElement.style.position = 'relative';
+            }
+            canvas.parentElement.appendChild(inputZone);
+        } else {
+            document.body.appendChild(inputZone);
+        }
+        */
+
         mapCamera.attachControl(canvas, true);
 
         this.currentScene.scene.activeCameras = [];

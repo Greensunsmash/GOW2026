@@ -1,8 +1,8 @@
 import { Vector3, type Scene } from "@babylonjs/core";
-import { State, type Map2, type Map3 } from "./LevelReader";
-import type { AssetLibrary } from "../Shared/AssetLibrary";
 import { Robot } from "../Entity/Robot";
+import type { AssetLibrary } from "../Shared/AssetLibrary";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
+import { State, type Map3 } from "./LevelReader";
 
 export class Level {
     private map : Map3;
@@ -15,9 +15,9 @@ export class Level {
         this.drh = drh;
         this.scene = scene;
 
-        for (let z = 0; z < this.map.length; z++) {
-            for (let y = 0; y < this.map[z].length; y++) {
-                for (let x = 0; x < this.map[z][y].length; x++) {
+        for (let y = 0; y < this.map.length; y++) {
+            for (let z = 0; z < this.map[y].length; z++) {
+                for (let x = 0; x < this.map[y][z].length; x++) {
                     let gridPos : GridPoint = {x: x, y: y, z:z};
                     /*
                         /!\ ATTENTION
@@ -25,13 +25,13 @@ export class Level {
                         Inversion y et z implicite (dans toWorld)
                     */
                     let pos : Vector3 = GridUtils.toWorld(gridPos);
-                    let tile : State = this.map[z][y][x];
+                    let tile : State = this.map[y][z][x];
                     
                     switch(tile) {
                         case State.RobotStart:
                             console.log("grid pos is " + GridUtils.toString(gridPos));
                             console.log("world pos is " + pos.toString());
-                            this.robot = this.createRobot(gridPos, scene);
+                            this.robot = this.createRobot(gridPos);
                             break;
                         case State.Wall:
                             this.createWall(pos);
@@ -47,8 +47,8 @@ export class Level {
         }
     }
 
-    createRobot(gridPos : GridPoint, scene : Scene) : Robot {
-        return new Robot(this.drh, scene, this, gridPos);
+    createRobot(gridPos : GridPoint) : Robot {
+        return new Robot(this.drh, this.scene, this, gridPos);
     }
 
     createWall(pos : Vector3) {
@@ -66,7 +66,7 @@ export class Level {
     }
 
     mapShape() : [number, number, number] {
-        return [this.map[0][0].length, this.map[0].length, this.map.length]; // x,y,z
+        return [this.map[0][0].length, this.map.length, this.map[0].length]; // x,y,z
     }
 
     isWalkable(gridPos: GridPoint) {
@@ -75,15 +75,15 @@ export class Level {
 
         if (gridPos.x < 0 || gridPos.y < 0 || gridPos.z < 0)
             return false;
-        if (gridPos.z >= this.map.length)
+        if (gridPos.y >= this.map.length)
             return false;
-        if (gridPos.y >= this.map[gridPos.z].length)
+        if (gridPos.z >= this.map[gridPos.y].length)
             return false;
-        if (gridPos.x >= this.map[gridPos.z][gridPos.y].length)
+        if (gridPos.x >= this.map[gridPos.y][gridPos.z].length)
             return false;
 
         console.log("map dimensions tests passed, processing wall checked");
-        const nextState = this.map[gridPos.z][gridPos.y][gridPos.x];
+        const nextState = this.map[gridPos.y][gridPos.z][gridPos.x];
         if (nextState == State.Wall)
             return false;
 

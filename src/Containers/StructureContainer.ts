@@ -4,12 +4,13 @@ import type { GameScene } from "../MainLoop/Scene/GameScene";
 
 export class StructureContainer extends InstructionContainer {
 
-    private sideRectangle : GUI.Rectangle;
-    private downRectangle : GUI.Rectangle;
+    //private sideRectangle : GUI.Rectangle;
+    //private downRectangle : GUI.Rectangle;
 
     constructor(list: string[], root: GUI.Container, scene: GameScene) {
         super(list, root, scene);
-        
+         
+        /*
         this.sideRectangle = new GUI.Rectangle();
         this.sideRectangle.width = "10%";
         this.sideRectangle.height = "100%";
@@ -27,9 +28,10 @@ export class StructureContainer extends InstructionContainer {
         this.downRectangle.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
 
         this.addControl(this.sideRectangle);
-        this.addControl(this.downRectangle);
-    }
+        this.addControl(this.downRectangle); */
 
+    }
+    
     addNext(c : InstructionContainer): void {
         super.addNext(c);
         c.paddingLeftInPixels = 20;

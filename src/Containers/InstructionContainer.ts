@@ -8,7 +8,7 @@ export class InstructionContainer extends GUI.Rectangle {
 
     // Ajouter un détecteur (rectangle ?) en dessous de l'instruction container, pour détecter lorsqu'on release qqch dedans
 
-    private mainContainer : GUI.StackPanel;
+    protected mainContainer : GUI.StackPanel;
     private next : InstructionContainer | null;
     private detector : Magnet | null;
     protected bloc : BlocContainer;
@@ -51,7 +51,7 @@ export class InstructionContainer extends GUI.Rectangle {
             this.detector = new Magnet(scene, this);
             this.mainContainer.addControl(this.detector);
             this.build();
-        }
+    }
     
     build():void {
         this.bloc.background = "#8727F5";
@@ -63,6 +63,7 @@ export class InstructionContainer extends GUI.Rectangle {
             console.log("detctor null");
             return;
         }
+        console.log("add child");
         this.next = c;
         this.root.removeControl(c);
         this.mainContainer.addControl(c);

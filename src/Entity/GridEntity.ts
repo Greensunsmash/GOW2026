@@ -20,12 +20,12 @@ export class GridEntity {
 
     moveForward() {
         const facing = GridUtils.DIRECTIONS[this.facingIndex];
-        this.tryMove(facing.x, facing.y);
+        this.tryMove(facing.x, facing.z);
     }
 
     moveBackward() {
         const facing = GridUtils.DIRECTIONS[this.facingIndex];
-        this.tryMove(-facing.x, -facing.y);
+        this.tryMove(-facing.x, -facing.z);
     }
 
     turnRight() {
@@ -41,13 +41,13 @@ export class GridEntity {
         this.animateRotation(-Math.PI / 2);
     }
 
-    tryMove(dx: number, dy: number) {
+    tryMove(dx: number, dz: number) {
         const targetGridPos = GridUtils.add(
             this.gridPos,
             {
                 x: dx,
-                y: dy,
-                z: 0
+                y: 0,
+                z: dz
             }
         );
 

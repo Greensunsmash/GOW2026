@@ -10,4 +10,5 @@ export class DepartContainer extends InstructionContainer {
         // Met la couleur du bloc en blouge (F52795)
         this.bloc.background = "#F52795";
     }
+
 }

@@ -1,6 +1,7 @@
 import * as GUI from "@babylonjs/gui";
 import { EmptySlot } from "./EmptySlot";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
+import { Bloc } from "../Language/Bloc";
 
 export type ArgsType = "VALEUR" | "BOOLEEN" | "ALL" | "NONE";
 
@@ -121,6 +122,8 @@ export class BlocContainer extends GUI.Rectangle {
         slotWrapper.addControl(new EmptySlot(this, this.args[i]));
     }
 
+    public generateCode() : Bloc { }
+
     // NE PAS TOUCHER
     unableSlotHovering():void {}
     enableSlotHovering():void {}
@@ -133,7 +136,6 @@ export class BlocContainer extends GUI.Rectangle {
     public getArgs(): readonly ArgsType[] {return this.args;}
     public getLabels(): readonly GUI.TextBlock[] {return this.labels;}
     public getType(): ArgsType {return this.type;}
-
 }
 
 

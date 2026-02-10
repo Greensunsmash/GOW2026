@@ -19,13 +19,13 @@ export class GridUtils {
     static toGrid(pos: Vector3): GridPoint {
         return {
             x: Math.round(pos.x),
-            y: Math.round(pos.z), // z <-> y
-            z: Math.round(pos.y)
+            y: Math.round(pos.y), // z <-> y
+            z: Math.round(pos.z)
         }
     }
 
     static toWorld(gridpos: GridPoint) : Vector3 {
-        return new Vector3(gridpos.x, gridpos.z, gridpos.y); // z <-> y
+        return new Vector3(gridpos.x, gridpos.y, gridpos.z); // z <-> y
     }
 
     static equals(a: GridPoint, b: GridPoint) {
@@ -41,9 +41,9 @@ export class GridUtils {
     }
 
     static DIRECTIONS : GridPoint[] = [
-        { x: 0, y: 1, z: 0 },  // 0: HAUT 
+        { x: 0, y: 0, z: 1 },  // 0: HAUT 
         { x: 1, y: 0, z:0 },  // 1: DROITE 
-        { x: 0, y: -1, z:0 }, // 2: BAS 
+        { x: 0, y: 0, z:-1 }, // 2: BAS 
         { x: -1, y: 0, z:0 }  // 3: GAUCHE
     ];
 }

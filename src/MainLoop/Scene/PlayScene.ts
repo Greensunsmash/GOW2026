@@ -15,24 +15,24 @@ import { DepartContainer } from "../../Containers/DepartContainer";
 export class PlayScene extends GameScene {
     //private player: Player;
     
-    private _level : Level;
-    protected _advancedTexture: GUI.AdvancedDynamicTexture;
-    protected _leftPanel: GUI.Rectangle;
+    private level : Level;
+    protected advancedTexture: GUI.AdvancedDynamicTexture;
+    protected leftPanel: GUI.Rectangle;
 
     constructor(engine: Engine) {
         super(engine);
 
-        this._advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+        this.advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
-        if (this._advancedTexture.layer) {
-            this._advancedTexture.layer.layerMask = LayerMasks.UI_ONLY;
+        if (this.advancedTexture.layer) {
+            this.advancedTexture.layer.layerMask = LayerMasks.UI_ONLY;
         }   
 
-        this._leftPanel = new GUI.Rectangle();
-        this._leftPanel.width = "50%";
-        this._leftPanel.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-        this._leftPanel.background = "#222222"; // Couleur de fond pour bien séparer
-        this._advancedTexture.addControl(this._leftPanel);
+        this.leftPanel = new GUI.Rectangle();
+        this.leftPanel.width = "50%";
+        this.leftPanel.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+        this.leftPanel.background = "#222222"; // Couleur de fond pour bien séparer
+        this.advancedTexture.addControl(this.leftPanel);
     
         new DepartContainer(["Au lancement du programme :"], this.leftPanel, this);
         new BooleenContainer(["", "v", " = ", "v"], this.leftPanel, this);
@@ -61,7 +61,7 @@ export class PlayScene extends GameScene {
         const map = levelReader.getStructure();
         if (map.length == 0)
             throw new Error("level map is empty");
-        this._level = new Level(map, this._drh, this.scene);
+        this.level = new Level(map, this._drh, this.scene);
         let light = new HemisphericLight("light", new Vector3(0,1,0), this.scene);
         light.includeOnlyWithLayerMask = LayerMasks.SCENE_ONLY;
         light.intensity = 1.0;
@@ -75,5 +75,9 @@ export class PlayScene extends GameScene {
             this._drh.loadSingleAsset("robot", "robot.glb"),
             this._drh.loadSingleAsset("wall", "cube.glb")
         ]);
+    }
+
+    run() {
+        
     }
 }
