@@ -13,7 +13,7 @@ export class InstructionContainer extends GUI.Rectangle {
 
     private mainContainer : GUI.StackPanel;
     // private next : InstructionContainer | null;
-    private detector : Magnet | null;
+    // private detector : Magnet | null;
     protected bloc : BlocContainer;
     private root : GUI.Container;
     private first_only : boolean = false;
@@ -51,8 +51,8 @@ export class InstructionContainer extends GUI.Rectangle {
             new DragBehavior(this.bloc, this);
             this.root = root;
             // this.next = null;
-            this.detector = new Magnet(scene, this);
-            this.mainContainer.addControl(this.detector);
+            //this.detector = new Magnet(scene, this);
+            //this.mainContainer.addControl(this.detector);
             this.build();
         }
     
