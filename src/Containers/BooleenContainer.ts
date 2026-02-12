@@ -2,6 +2,8 @@ import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { BlocContainer } from "./BlocContainer";
 import * as GUI from "@babylonjs/gui";
 import { DragBehavior } from "./DragBehavior";
+import type { Booleen } from "../Language/Booleen/Booleen";
+import { BooleenBrut } from "../Language/Booleen/BooleenBrute";
 
 
 export class BooleenContainer extends BlocContainer {
@@ -16,6 +18,10 @@ export class BooleenContainer extends BlocContainer {
         super.build();
     }
 
+    // Par défaut renvoie un faux (en pratique, cette fonction sera toujours override)
+    public getValue(): (Booleen)[] {
+        return [new BooleenBrut(false)];
+    }
     
 
 }

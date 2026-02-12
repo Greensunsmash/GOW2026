@@ -1,10 +1,13 @@
 import * as GUI from "@babylonjs/gui";
 import { EmptySlot } from "./EmptySlot";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
+import { Valeur } from "../Language/Valeur/Valeur";
+import type { Booleen } from "../Language/Booleen/Booleen";
+import { ValeurBrute } from "../Language/Valeur/ValeurBrute";
 
 export type ArgsType = "VALEUR" | "BOOLEEN" | "ALL" | "NONE";
 
-// Cette classe repésente la base d'un bloc scratch
+// Cette classe repésente la base d'un bloc scratch. Return une liste de Valeur
 export class BlocContainer extends GUI.Rectangle {
 
     private readonly container: GUI.StackPanel;
@@ -119,6 +122,14 @@ export class BlocContainer extends GUI.Rectangle {
         console.log(i);
         slotWrapper.clearControls();
         slotWrapper.addControl(new EmptySlot(this, this.args[i]));
+    }
+
+    // Fonction de base pour récupérer la valeur, se contente de renvoyer une liste des valeurs données
+    public getValue(): (Valeur | Booleen)[] {
+        return this.slots.map((slot : GUI.Rectangle) => {
+            if (slot instanceof BlocContainer) return slot.getValue()[0]
+            return new ValeurBrute(0);  
+        })
     }
 
     // NE PAS TOUCHER

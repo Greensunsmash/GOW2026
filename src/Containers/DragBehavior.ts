@@ -23,6 +23,7 @@ export class DragBehavior {
 
     // Init (création des lambdas responsables du comportement)
     private init(): void {
+        /*
         let isDragging = false;
         let decalX = 0;
         let decalY = 0;
@@ -98,7 +99,7 @@ export class DragBehavior {
                     }
                 }
             }
-        });
+        });*/
     }
 }
 

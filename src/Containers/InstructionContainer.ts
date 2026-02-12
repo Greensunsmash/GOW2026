@@ -3,13 +3,16 @@ import { BlocContainer } from "./BlocContainer";
 import * as GUI from "@babylonjs/gui";
 import { DragBehavior } from "./DragBehavior";
 import { Magnet } from "./Magnet";
+import type { Instruction } from "../Language/Instructions/Instruction";
+import { Print } from "../Language/Instructions/Print";
+import { ValeurBrute } from "../Language/Valeur/ValeurBrute";
 
 export class InstructionContainer extends GUI.Rectangle {
 
     // Ajouter un détecteur (rectangle ?) en dessous de l'instruction container, pour détecter lorsqu'on release qqch dedans
 
     private mainContainer : GUI.StackPanel;
-    private next : InstructionContainer | null;
+    // private next : InstructionContainer | null;
     private detector : Magnet | null;
     protected bloc : BlocContainer;
     private root : GUI.Container;
@@ -47,7 +50,7 @@ export class InstructionContainer extends GUI.Rectangle {
 
             new DragBehavior(this.bloc, this);
             this.root = root;
-            this.next = null;
+            // this.next = null;
             this.detector = new Magnet(scene, this);
             this.mainContainer.addControl(this.detector);
             this.build();
@@ -57,7 +60,7 @@ export class InstructionContainer extends GUI.Rectangle {
         this.bloc.background = "#8727F5";
         this.bloc.cornerRadius = 0;
     }
-
+    /*
     addNext(c : InstructionContainer): void {
         if (this.detector === null) {
             console.log("detctor null");
@@ -71,8 +74,9 @@ export class InstructionContainer extends GUI.Rectangle {
         this.mainContainer.removeControl(this.detector);
         this.detector.dispose();
         this.detector = null;
-    }
+    } */
 
+    /*
     removeNext(): void {
         if (this.next === null) return;
         console.log("release");
@@ -86,9 +90,13 @@ export class InstructionContainer extends GUI.Rectangle {
         this.next = null;
         this.detector = new Magnet(this.getScene(), this);
         this.mainContainer.addControl(this.detector);
-    }
+    } */
+
+    // Par défaut print hello world (en pratique, cette fonction sera toujours override)
+    getInstruction(): Instruction { return new Print(new ValeurBrute("Hello World")); }
 
     // Utilisé lorsqu'on grab l'objet, pour désactiver l'hovering
+    /*
     unableSlotHovering():void {
         if (this.detector) this.detector.setBlock(true);
         else if (this.next) this.next.unableSlotHovering();
@@ -96,11 +104,11 @@ export class InstructionContainer extends GUI.Rectangle {
     enableSlotHovering():void {
         if (this.detector) this.detector.setBlock(false);
         else if (this.next) this.next.enableSlotHovering();
-    }
+    } */
 
     // GETTERS
-    hasNext():boolean {return (this.next !== null);}
-    getNext(): InstructionContainer | null {return this.next;}
+    //hasNext():boolean {return (this.next !== null);}
+    //getNext(): InstructionContainer | null {return this.next;}
     getRoot():GUI.Container{return this.root;}
     getScene():GameScene{return this.bloc.getScene()};
     isFirstOnly():boolean{return this.first_only;}
