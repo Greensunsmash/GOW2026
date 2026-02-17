@@ -19,42 +19,43 @@ export class InstructionContainer extends GUI.Rectangle {
     private first_only : boolean = false;
 
     constructor(list: string[], root: GUI.Container, scene: GameScene) {
-            super();
+        super();
 
-            // Setup main rectangle
-            this.adaptWidthToChildren = true;
-            this.adaptHeightToChildren = true;
-            this.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-            this.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
-            this.isHitTestVisible = false;
-            this.thickness = 0
-            root.addControl(this);
-            
+        // Setup main rectangle
+        this.adaptWidthToChildren = true;
+        this.adaptHeightToChildren = true;
+        this.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+        this.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
+        this.isHitTestVisible = false;
+        this.thickness = 0
+        root.addControl(this);
+        
 
-            // Setup stack panel
-            this.mainContainer = new GUI.StackPanel();
-            this.mainContainer.adaptWidthToChildren = true;
-            this.mainContainer.adaptHeightToChildren = true;
-            this.mainContainer.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-            this.mainContainer.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
-            this.mainContainer.isHitTestVisible = false; // Désactive les inputs sur ce control (askip)
+        // Setup stack panel
+        this.mainContainer = new GUI.StackPanel();
+        this.mainContainer.adaptWidthToChildren = true;
+        this.mainContainer.adaptHeightToChildren = true;
+        this.mainContainer.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+        this.mainContainer.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
+        this.mainContainer.isHitTestVisible = false; // Désactive les inputs sur ce control (askip)
 
-            this.addControl(this.mainContainer);
+        this.addControl(this.mainContainer);
 
-            // Create bloc
-            this.bloc = new BlocContainer("n", list, root, scene);
-            this.bloc.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-            this.bloc.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
-            root.removeControl(this.bloc);
-            this.mainContainer.addControl(this.bloc);
+        // Create bloc
+        this.bloc = new BlocContainer("n", list, root, scene);
+        this.bloc.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+        this.bloc.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
+        root.removeControl(this.bloc);
+        this.mainContainer.addControl(this.bloc);
 
-            new DragBehavior(this.bloc, this);
-            this.root = root;
-            // this.next = null;
-            //this.detector = new Magnet(scene, this);
-            //this.mainContainer.addControl(this.detector);
-            this.build();
-        }
+        //new DragBehavior(this.bloc, this);
+        this.root = root;
+        // this.next = null;
+        //this.detector = new Magnet(scene, this);
+        //this.mainContainer.addControl(this.detector);
+        this.build();
+
+    }
     
     build():void {
         this.bloc.background = "#8727F5";

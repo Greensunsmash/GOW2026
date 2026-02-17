@@ -6,7 +6,7 @@ import { AssetLibrary } from "../../Environment/AssetManager";
 
 export abstract class GameScene {
     public scene: Scene;
-    private hoverSlot : EmptySlot | Magnet | null = null;
+    private hoverSlot : GUI.Rectangle | null = null;
 
     protected drh : AssetLibrary;
 
@@ -25,7 +25,7 @@ export abstract class GameScene {
     }
 
     // SETTERS/GETTERS
-    public setHoverSlot(c:EmptySlot | Magnet | null):boolean {
+    public setHoverSlot(c:GUI.Rectangle | null):boolean {
         if (this.hoverSlot) {
             if (c) return false; // C'est de la merde ça
             this.hoverSlot = null;
@@ -37,6 +37,6 @@ export abstract class GameScene {
             return true;
         }
     }
-    public getHoverSlot():EmptySlot | Magnet | null {return this.hoverSlot;}
+    public getHoverSlot(): GUI.Rectangle | null {return this.hoverSlot;}
 
 }

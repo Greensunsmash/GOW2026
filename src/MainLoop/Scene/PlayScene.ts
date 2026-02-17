@@ -9,6 +9,8 @@ import { StructureContainer } from "../../Containers/StructureContainer";
 import { Level } from "../../Environment/Level";
 import { LevelReader } from "../../Environment/LevelReader";
 import { DepartContainer } from "../../Containers/DepartContainer";
+import { ListContainer } from "../../Containers/ListContainer";
+import { PointerEventTypes } from "babylonjs";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene {
@@ -27,18 +29,27 @@ export class PlayScene extends GameScene {
         this.leftPanel.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         this.leftPanel.background = "#222222"; // Couleur de fond pour bien séparer
         this.advancedTexture.addControl(this.leftPanel);
-    
-        new DepartContainer(["Au lancement du programme :"], this.leftPanel, this);
-        new BooleenContainer(["", "v", " = ", "v"], this.leftPanel, this);
-        new ValeurContainer(["10"], this.leftPanel, this);
-        new ValeurContainer(["10"], this.leftPanel, this);
-        new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
-        new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
-        new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
-        new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
-        new InstructionContainer(["LALALAALALALALALALAL"], this.leftPanel, this);
-        let i = new StructureContainer(["Répéter", "v", "fois :"], this.leftPanel, this);
+        
+        let l = new ListContainer(this.leftPanel, this);
+
+        this.scene.onPointerObservable.add((pointerInfo) => { 
+            if (pointerInfo.type === PointerEventTypes.POINTERDOWN) {
+                let evt = pointerInfo.event;
+                let rec = this.getHoverSlot();
+                if (rec instanceof ListContainer) rec.click(evt.x, evt.y);
+            }
+        });
+        //new DepartContainer(["Au lancement du programme :"], this.leftPanel, this);
+        //new BooleenContainer(["", "v", " = ", "v"], this.leftPanel, this);
+        //new ValeurContainer(["10"], this.leftPanel, this);
+        l.addInstruction(new InstructionContainer(["LALALAALALALALALALAL1"], this.leftPanel, this), 0);
+        l.addInstruction(new InstructionContainer(["LALALAALALALALALALAL2"], this.leftPanel, this), 1);
+        l.addInstruction(new InstructionContainer(["LALALAALALALALALALAL3"], this.leftPanel, this), 2);
+        l.addInstruction(new InstructionContainer(["LALALAALALALALALALAL4"], this.leftPanel, this), 3);
+        l.addInstruction(new InstructionContainer(["LALALAALALALALALALAL5"], this.leftPanel, this), 4);
+        //let i = new StructureContainer(["Répéter", "v", "fois :"], this.leftPanel, this);
         //i.addNext(b);
+        //new ValeurContainer(["10"], this.leftPanel, this);
         
         let levelReader = new LevelReader();
         this.level = new Level(levelReader.getStructure(), this.drh, this.scene);
