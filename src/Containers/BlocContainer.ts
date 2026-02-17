@@ -40,6 +40,7 @@ export class BlocContainer extends GUI.Rectangle {
         this.container.isVertical = false;
         this.container.adaptWidthToChildren = true;
         this.container.adaptHeightToChildren = true;
+        this.container.isHitTestVisible = false;
         this.addControl(this.container);
 
         for (let i = 0; i < list.length; i++) {
@@ -54,6 +55,7 @@ export class BlocContainer extends GUI.Rectangle {
                 label.paddingRight = "10px";
                 label.paddingTop = "10px";
                 label.paddingBottom = "10px";
+                label.isHitTestVisible = false;
 
                 this.labels.push(label);
                 this.container.addControl(label);
@@ -68,6 +70,7 @@ export class BlocContainer extends GUI.Rectangle {
                 slotWrapper.adaptWidthToChildren = true;
                 slotWrapper.adaptHeightToChildren = true;
                 slotWrapper.color = "transparent";
+                slotWrapper.isHitTestVisible = false;
 
                 const slot = new EmptySlot(this, this.args[this.args.length - 1]);
                 slotWrapper.addControl(slot);

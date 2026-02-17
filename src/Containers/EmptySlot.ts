@@ -11,7 +11,6 @@ export class EmptySlot extends GUI.Rectangle {
     private blocParent : BlocContainer;
     private type : ArgsType;
 
-
     constructor(parent:BlocContainer, type:ArgsType) {
         super();
         this.scene = parent.getScene();
@@ -22,6 +21,7 @@ export class EmptySlot extends GUI.Rectangle {
         this.height = "40px";
         this.width = "60px";
         this.alpha = 0.3;
+        this.isHitTestVisible = true;
         this.init();
     }
 

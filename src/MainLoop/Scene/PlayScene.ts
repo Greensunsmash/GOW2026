@@ -1,4 +1,4 @@
-import { Engine } from "@babylonjs/core";
+import { Engine, PointerEventTypes } from "@babylonjs/core";
 import { GameScene } from "./GameScene";
 
 import * as GUI from "@babylonjs/gui";
@@ -10,7 +10,6 @@ import { Level } from "../../Environment/Level";
 import { LevelReader } from "../../Environment/LevelReader";
 import { DepartContainer } from "../../Containers/DepartContainer";
 import { ListContainer } from "../../Containers/ListContainer";
-import { PointerEventTypes } from "babylonjs";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene {
@@ -32,13 +31,17 @@ export class PlayScene extends GameScene {
         
         let l = new ListContainer(this.leftPanel, this);
 
+                
+
+        /* Ca marchait correctement mais c'est très très sale et pas extensible
         this.scene.onPointerObservable.add((pointerInfo) => { 
             if (pointerInfo.type === PointerEventTypes.POINTERDOWN) {
                 let evt = pointerInfo.event;
                 let rec = this.getHoverSlot();
                 if (rec instanceof ListContainer) rec.click(evt.x, evt.y);
             }
-        });
+        });*/
+
         //new DepartContainer(["Au lancement du programme :"], this.leftPanel, this);
         //new BooleenContainer(["", "v", " = ", "v"], this.leftPanel, this);
         //new ValeurContainer(["10"], this.leftPanel, this);

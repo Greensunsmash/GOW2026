@@ -2,17 +2,18 @@ import * as GUI from "@babylonjs/gui";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { PointerEventTypes } from "@babylonjs/core";
 import { InstructionContainer } from "./InstructionContainer";
+import type { ListContainer } from "./ListContainer";
 
 export class Magnet extends GUI.Rectangle {
 
     private scene:GameScene;
     private hover:boolean= false;
     private block:boolean = false;
-    private blocParent : InstructionContainer;
+    private blocParent : ListContainer;
     //private type : ArgsType;
 
 
-    constructor(scene:GameScene, parent:InstructionContainer){
+    constructor(scene:GameScene, parent:ListContainer){
         super();
         this.width = "100%";
         this.height = "30px";
@@ -21,29 +22,11 @@ export class Magnet extends GUI.Rectangle {
         this.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
         this.alpha = 0.3;
         this.background = "#383838";
+        this.isVisible = false;
 
         this.scene = scene;
         this.blocParent = parent;
 
-        this.init();
-
-    }
-
-    init():void {
-        this.scene.scene.onPointerObservable.add((pointerInfo) => { 
-            if (pointerInfo.type === PointerEventTypes.POINTERMOVE) {
-                const evt = pointerInfo.event;
-                if (this.getHover()) {
-                    if (!this.contains(evt.x, evt.y)) {
-                        this.setHover(false);
-                    }
-                } else {
-                    if (this.contains(evt.x, evt.y)){
-                        this.setHover(true);
-                    }
-                }
-            }
-        });
     }
 
     public replaceSlot(c:InstructionContainer) : void {
@@ -60,6 +43,7 @@ export class Magnet extends GUI.Rectangle {
     }
 
     // Getters
+    /*
     public getHover() : boolean {return this.hover;}
     public setHover(bool:boolean) {
         if (this.block) return;
@@ -81,5 +65,5 @@ export class Magnet extends GUI.Rectangle {
     public setBlock(bool:boolean):void {
         if (bool && this.getHover()) this.setHover(false);
         this.block = bool;
-    }
+    }*/
 }

@@ -3,13 +3,14 @@ import { InstructionContainer } from "./InstructionContainer";
 import { Magnet } from "./Magnet";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import type { Instruction } from "../Language/Instructions/Instruction";
-import { PointerEventTypes, type IPointerEvent } from "babylonjs";
+import { PointerEventTypes, type IPointerEvent } from "@babylonjs/core";
 
 // La classe qui permet de stocker plusieurs instructions container à la suite
 export class ListContainer extends GUI.Rectangle {
 
     private root : GUI.Container;
     private list : (InstructionContainer | Magnet)[];
+    private magnet : Magnet;
     private stack : GUI.StackPanel;
     private detector : GUI.Rectangle;
     private hover : boolean = false;
@@ -20,6 +21,7 @@ export class ListContainer extends GUI.Rectangle {
         super();
         this.root = root;
         this.list = [];
+        this.isHitTestVisible = false;
 
         // Il ne faut surtout pas mettre ça sinon ça fonctionne plus mdr je déteste babylonjs
         this.adaptHeightToChildren = true;
@@ -33,6 +35,7 @@ export class ListContainer extends GUI.Rectangle {
         this.stack.adaptHeightToChildren = true;
         this.stack.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         this.stack.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
+        this.stack.isHitTestVisible = false;
 
         this.detector = new GUI.Rectangle();
         this.detector.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
@@ -40,7 +43,7 @@ export class ListContainer extends GUI.Rectangle {
         this.detector.height = "100%";
         this.detector.width = "100%";
         this.detector.alpha = 0.1;
-        this.detector.isHitTestVisible = false;
+        this.detector.isHitTestVisible = true;
 
         this.scene = scene;
 
@@ -48,8 +51,12 @@ export class ListContainer extends GUI.Rectangle {
         this.addControl(this.stack);
         this.addControl(this.detector);
 
+        this.magnet = new Magnet(this.scene, this);
+        this.list.push(this.magnet);
+        this.stack.addControl(this.magnet);
+
         this.scene.scene.onPointerObservable.add((pointerInfo) => { 
-            if (pointerInfo.type === PointerEventTypes.POINTERMOVE) {
+            if (this.detector.isHitTestVisible && pointerInfo.type === PointerEventTypes.POINTERMOVE) {
                 const evt = pointerInfo.event;
                 if (this.getHover()) {
                     if (!this.detector.contains(evt.x, evt.y)) {
@@ -63,16 +70,19 @@ export class ListContainer extends GUI.Rectangle {
             }
         });
 
-        this.onPointerDownObservable.add((pointerInfo) => this.click(pointerInfo.x, pointerInfo.y));
+        this.detector.onPointerDownObservable.add((pointerInfo) => this.click(pointerInfo.x, pointerInfo.y));
     }
 
     click(x:number, y:number) {
         let nb:number;
-
+        //console.log("click");
         for (nb=0; nb < this.list.length ; nb++) {
             if (this.list[nb].contains(x, y)) {
                 let l : ListContainer;
                 let c = this.list[nb];
+
+                
+                if (this.scene.getHoverSlot() === this) this.setHover(false);
 
                 if (nb == 0) l = this;
                 else {
@@ -84,6 +94,9 @@ export class ListContainer extends GUI.Rectangle {
                     }
                 }
 
+                l.detector.isHitTestVisible = false;
+                this.scene.setDragging(true);
+                
                 l.isDragging = true;
                 let startX = c.leftInPixels + this.leftInPixels;
                 let startY = c.topInPixels + this.topInPixels;
@@ -103,6 +116,8 @@ export class ListContainer extends GUI.Rectangle {
                 // On le relache
                 this.scene.scene.onPointerUp = (evt:IPointerEvent) => {
                     l.isDragging = false;
+                    this.scene.setDragging(false);
+                    l.detector.isHitTestVisible = true;
                 }
 
             }
@@ -140,18 +155,24 @@ export class ListContainer extends GUI.Rectangle {
         return l.map(((x:InstructionContainer) => x.getInstruction()));
     }
 
+    toggleMagnet(bool:boolean) {
+        this.magnet.isVisible = bool;
+    }
+
     // GETTERS
     getHover():boolean{return this.hover;}
     setHover(bool:boolean){
         if (bool) {
             if (this.scene.setHoverSlot(this)) {
                 this.detector.background = "white";
+                if (this.scene.isDragging()) this.toggleMagnet(true);
                 this.hover = bool;
                 //console.log("hover");
             }
         } else {
             this.scene.setHoverSlot(null);
             this.detector.background = "#383838";
+            this.toggleMagnet(false);
             this.hover = bool;
             //console.log("unhover");
         };
