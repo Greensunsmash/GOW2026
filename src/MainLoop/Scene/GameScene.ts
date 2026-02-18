@@ -9,12 +9,17 @@ export abstract class GameScene {
     public scene: Scene;
     private hoverSlot : GUI.Rectangle | null = null;
     private dragging : boolean = false;
+    public dragListeners : (() => void)[];
+    public undragListeners : (() => void)[];
+
 
     protected drh : AssetLibrary;
 
     constructor(engine: Engine) {
         this.scene = new Scene(engine);
         this.drh = new AssetLibrary(this.scene);
+        this.dragListeners = []
+        this.undragListeners = []
         new HemisphericLight("light", new Vector3(0,1,0), this.scene);
     }
 
@@ -44,8 +49,14 @@ export abstract class GameScene {
     public setDragging(bool:boolean) {
         // RAJOUTER A LISTCONTRAINER UN DRAGMODE QUI S4ACTIVE D'ICI, ET PERMET D'AGGRANDIR LE DETECTOR
         if (bool) {
+            for (let i = 0; i<this.dragListeners.length; i++) {
+                this.dragListeners[i]();
+            }
             if (this.hoverSlot instanceof ListContainer) this.hoverSlot.toggleMagnet(true);
         } else {
+            for (let i = 0; i<this.undragListeners.length; i++) {
+                this.undragListeners[i]();
+            }
             if (this.hoverSlot instanceof ListContainer) this.hoverSlot.toggleMagnet(false);
         }
         this.dragging = bool;}

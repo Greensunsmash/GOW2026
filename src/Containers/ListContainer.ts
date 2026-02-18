@@ -24,6 +24,7 @@ export class ListContainer extends GUI.Rectangle {
         this.isHitTestVisible = false;
 
         // Il ne faut surtout pas mettre ça sinon ça fonctionne plus mdr je déteste babylonjs
+        // Ah bah mtn ça fonctionne hehe
         this.adaptHeightToChildren = true;
         this.adaptWidthToChildren = true;
 
@@ -61,6 +62,18 @@ export class ListContainer extends GUI.Rectangle {
                 if (this.getHover()) {
                     if (!this.detector.contains(evt.x, evt.y)) {
                         this.setHover(false);
+                    } else if (scene.isDragging()) {
+                        let x = evt.x - this.stack.leftInPixels;
+                        let y = evt.y - this.stack.topInPixels;
+                        y = this.moveTowards(y, this.magnet.centerY, 5);
+                        if (!this.magnet.contains(x, y)) {
+                            //console.log("Recalcul");
+                            let found = false;
+                            for (let i=0; i<this.list.length; i++) {
+                                if (this.list[i].contains(x, y)) {this.moveMagnet(this.list.indexOf(this.list[i]));found = true; break;}
+                            }
+                            if (!found && this.list.indexOf(this.magnet) != this.list.length-1) this.moveMagnet(this.list.length-1);
+                        }
                     }
                 } else {
                     if (this.detector.contains(evt.x, evt.y)){
@@ -71,12 +84,21 @@ export class ListContainer extends GUI.Rectangle {
         });
 
         this.detector.onPointerDownObservable.add((pointerInfo) => this.click(pointerInfo.x, pointerInfo.y));
+
+        this.scene.dragListeners.push(() => {
+            this.stack.paddingBottom = "15px";
+        })
+
+        this.scene.undragListeners.push(() => {
+            this.stack.paddingBottom = "0px";
+        })
     }
 
     click(x:number, y:number) {
         let nb:number;
         //console.log("click");
         for (nb=0; nb < this.list.length ; nb++) {
+            if (this.list[nb] === this.magnet) continue;
             if (this.list[nb].contains(x, y)) {
                 let l : ListContainer;
                 let c = this.list[nb];
@@ -84,13 +106,19 @@ export class ListContainer extends GUI.Rectangle {
                 
                 if (this.scene.getHoverSlot() === this) this.setHover(false);
 
-                if (nb == 0) l = this;
+                if (nb == 0 || (nb == 1 && this.list.indexOf(this.magnet) == 0) ) l = this;
                 else {
                     l = new ListContainer(this.root, this.scene);
 
-                    let i:number;
-                    for (i=this.list.length-1; i>=nb; i--) {
-                        if (this.list[i] instanceof InstructionContainer) {l.addInstruction(this.list[i], 0); this.removeInstruction(this.list[i]);}
+                    const toMove = this.list.slice(nb).filter(
+                        (x) => x instanceof InstructionContainer
+                    );
+
+                    for (const item of toMove) {
+                        this.removeInstruction(item);
+                    }
+                    for (let i=toMove.length-1; i>= 0; i--) {
+                        l.addInstruction(toMove[i], 0);
                     }
                 }
 
@@ -127,19 +155,11 @@ export class ListContainer extends GUI.Rectangle {
 
     addInstruction(c: InstructionContainer, index : number) {
         if (c.parent) {c.parent.removeControl(c);}
-
-        let nb:number;
-        let memory : (InstructionContainer | Magnet)[] =[c];
-        for (nb=this.list.length-1; nb>=index; nb--) {
-            memory.push(this.list[nb]);
-            this.stack.removeControl(this.list[nb])
-            this.list.pop();
+        this.list.splice(index, 0, c);
+        this.stack.clearControls();
+        for (const control of this.list) {
+            this.stack.addControl(control);
         }
-        for (var key in memory) {
-            this.stack.addControl(memory[key]);
-            this.list.push(memory[key]);
-        }
-
     }
 
     removeInstruction(c:InstructionContainer) {
@@ -148,6 +168,28 @@ export class ListContainer extends GUI.Rectangle {
         let nb = this.list.indexOf(c);
         this.stack.removeControl(c);
         this.list.splice(nb, 1);
+    }
+
+    moveTowards(current: number, target: number, maxDelta: number): number {
+        //console.log("Towards : " + current + target);
+        if (Math.abs(target - current) <= maxDelta) {
+            //console.log(target)
+            return target;
+        }
+        //console.log( current + Math.sign(target - current) * maxDelta)
+        return current + Math.sign(target - current) * maxDelta;
+    }
+
+    moveMagnet(id: number) {
+        //console.log(id);
+        let currentIndex = this.list.indexOf(this.magnet);
+        this.list.splice(currentIndex, 1);
+        currentIndex = id;
+        this.list.splice(currentIndex, 0, this.magnet);
+        this.stack.clearControls();
+        for (const control of this.list) {
+            this.stack.addControl(control);
+        }
     }
 
     getListInstruction() : (Instruction[]) {
