@@ -144,8 +144,15 @@ export class ListContainer extends GUI.Rectangle {
                 // On le relache
                 this.scene.scene.onPointerUp = (evt:IPointerEvent) => {
                     l.isDragging = false;
-                    this.scene.setDragging(false);
-                    l.detector.isHitTestVisible = true;
+                    let gros_q = this.scene.getHoverSlot();
+                    if (gros_q instanceof ListContainer) {
+                        gros_q.mergeList(l);
+                        this.scene.setDragging(false);
+                        l.dispose();
+                    } else {
+                        this.scene.setDragging(false);
+                        l.detector.isHitTestVisible = true;
+                    }
                 }
 
             }
@@ -201,6 +208,17 @@ export class ListContainer extends GUI.Rectangle {
         this.magnet.isVisible = bool;
     }
 
+    mergeList(list:ListContainer) {
+        let new_list = list.getList().filter((x)=>x instanceof InstructionContainer);
+        let id = this.list.indexOf(this.magnet);
+
+        for (let i=0; i<new_list.length; i++) {
+            this.addInstruction(new_list[i], i+id);
+        }
+        this.root.removeControl(list);
+        list.dispose();
+    }
+
     // GETTERS
     getHover():boolean{return this.hover;}
     setHover(bool:boolean){
@@ -220,4 +238,6 @@ export class ListContainer extends GUI.Rectangle {
         };
     }
     getScene():GameScene{return this.scene;}
+    getList():(InstructionContainer | Magnet)[]{return this.list;}
+
 }
