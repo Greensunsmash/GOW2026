@@ -29,14 +29,11 @@ export class EmptySlot extends GUI.Rectangle {
         this.scene.scene.onPointerObservable.add((pointerInfo) => { 
             if (pointerInfo.type === PointerEventTypes.POINTERMOVE) {
                 const evt = pointerInfo.event;
+                const contains = this.contains(evt.x, evt.y);
                 if (this.getHover()) {
-                    if (!this.contains(evt.x, evt.y)) {
-                        this.setHover(false);
-                    }
+                    if (!contains) this.setHover(false);
                 } else {
-                    if (this.contains(evt.x, evt.y)){
-                        this.setHover(true);
-                    }
+                    if (contains) this.setHover(true);
                 }
             }
         });
@@ -44,18 +41,18 @@ export class EmptySlot extends GUI.Rectangle {
 
     public getHover() : boolean {return this.hover;}
     public setHover(bool:boolean) {
-            if (bool) {
-                if (this.scene.setHoverSlot(this)) {
-                    this.background = "white";
-                    this.hover = bool;
-                }
-            }
-            else {
-                this.scene.setHoverSlot(null);
-                this.background = "#383838";
+        if (bool) {
+            if (this.scene.setHoverSlot(this)) {
+                this.background = "white";
                 this.hover = bool;
-            };
+            }
         }
+        else {
+            this.scene.setHoverSlot(null);
+            this.background = "#383838";
+            this.hover = bool;
+        };
+    }
 
     public replaceIfMatch(c:BlocContainer) : void {
         if (this.getType() === c.getType() || (this.getType() === "ALL" && c.getType() !== "NONE")) this.replaceSlot(c);

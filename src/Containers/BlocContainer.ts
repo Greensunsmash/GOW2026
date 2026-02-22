@@ -84,7 +84,7 @@ export class BlocContainer extends GUI.Rectangle {
         this.build();
     }
 
-    // Préparations finales du rectangle (fonction destinée à être override)
+    // Préparations finales du rectangle (fonction destinée à être override (NOPE TRES MAUVAISE IDEE))
     protected build(): void {
         this.cornerRadius = 10;
         this.color = "white";
@@ -98,9 +98,7 @@ export class BlocContainer extends GUI.Rectangle {
     public insertControlAt( control: BlocContainer, slotWrapper: GUI.Rectangle): void {
         if (!slotWrapper) return;
 
-        if (control.parent) {
-            control.parent.removeControl(control);
-        }
+        if (control.parent) {control.parent.removeControl(control);}
 
         let nb:number;
         for (nb= 0; nb<slotWrapper.children.length; nb++) slotWrapper.children[nb].dispose();
@@ -122,7 +120,7 @@ export class BlocContainer extends GUI.Rectangle {
         for (i=0; i<this.slots.length; i++) {
             if (slotWrapper === this.slots[i]) break;
         }
-        console.log(i);
+        //console.log(i);
         slotWrapper.clearControls();
         slotWrapper.addControl(new EmptySlot(this, this.args[i]));
     }

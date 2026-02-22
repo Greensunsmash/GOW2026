@@ -43,9 +43,9 @@ export class PlayScene extends GameScene {
         });*/
 
         //new DepartContainer(["Au lancement du programme :"], this.leftPanel, this);
-        //new BooleenContainer(["", "v", " = ", "v"], this.leftPanel, this);
-        //new ValeurContainer(["10"], this.leftPanel, this);
-        l.addInstruction(new InstructionContainer(["LALALAALALALALALALAL1"], this.leftPanel, this), 0);
+        new BooleenContainer(["", "v", " = ", "v"], this.leftPanel, this);
+        new ValeurContainer(["10"], this.leftPanel, this);
+        l.addInstruction(new InstructionContainer(["LALALAALALALALALALAL1", "v"], this.leftPanel, this), 0);
         l.addInstruction(new InstructionContainer(["LALALAALALALALALALAL2"], this.leftPanel, this), 1);
         l.addInstruction(new InstructionContainer(["LALALAALALALALALALAL3"], this.leftPanel, this), 2);
         l.addInstruction(new InstructionContainer(["LALALAALALALALALALAL4"], this.leftPanel, this), 3);

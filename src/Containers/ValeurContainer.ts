@@ -9,7 +9,7 @@ export class ValeurContainer extends BlocContainer {
 
     constructor(list: string[], root: GUI.Container, scene: GameScene) {
         super("v", list, root, scene);
-        //new DragBehavior(this);
+        new DragBehavior(this);
     }
 
     build():void {

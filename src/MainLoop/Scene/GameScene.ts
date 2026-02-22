@@ -32,17 +32,16 @@ export abstract class GameScene {
     }
 
     // SETTERS/GETTERS
-    public setHoverSlot(c:GUI.Rectangle | null):boolean {
-        if (this.hoverSlot) {
-            if (c) return false; // C'est de la merde ça
+    public setHoverSlot(c: GUI.Rectangle | null): boolean {
+        if (c === null) {
             this.hoverSlot = null;
             return true;
         }
-        else {
-            if (!c) console.log ("hover en théorie impossible, à comprendre"); // SI si en fait c'est compréhensible et possible mais jsplus pk
-            this.hoverSlot = c;
+        if (this.hoverSlot === c) {
             return true;
         }
+        this.hoverSlot = c;
+        return true;
     }
     public getHoverSlot(): GUI.Rectangle | null {return this.hoverSlot;}
     public isDragging(): boolean{return this.dragging;}
