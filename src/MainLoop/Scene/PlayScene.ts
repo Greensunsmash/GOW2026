@@ -32,10 +32,10 @@ export class PlayScene extends GameScene {
         let l = new ListContainer(this.leftPanel, this);
         let i1 = new InstructionContainer(["Header"], this.leftPanel, this);
         let i2 = new InstructionContainer(["End"], this.leftPanel, this);
-        let s = new StructureContainer(i1, i2, 0, 1);
+        let s = new StructureContainer(l, i1, i2);
         l.addInstruction(i1, 0);
         l.addInstruction(i2, 1);
-        l.addStruct(s, 0);
+        l.addStruct(s);
         l.addInstruction(new InstructionContainer(["Contenu"], this.leftPanel, this), 1);
         l.addInstruction(new InstructionContainer(["Contenu"], this.leftPanel, this), 1);
         l.addInstruction(new InstructionContainer(["Avant"], this.leftPanel, this), 0);

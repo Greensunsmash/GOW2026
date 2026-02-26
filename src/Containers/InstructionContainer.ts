@@ -67,7 +67,7 @@ export class InstructionContainer extends GUI.Rectangle {
         let s = this.bloc; // Normalement le wrapper a un seul enfant
         if (s instanceof BlocContainer) {
             let result = s.isPointHandle(coords);
-            console.log(result);
+            //console.log(result);
             if (result && result != this.bloc) return result;
         }
         return null;

@@ -103,7 +103,6 @@ export class ListContainer extends GUI.Rectangle {
         for (nb=0; nb < this.list.length ; nb++) {
             if (this.list[nb] === this.magnet) continue;
             if (this.list[nb].contains(x, y)) {
-                
                 let c = this.list[nb] as InstructionContainer;
                 let b = c.isPointHandle(new Vector2(x, y));
                 if (b) {
@@ -119,12 +118,15 @@ export class ListContainer extends GUI.Rectangle {
                 if (nb == 0 || (nb == 1 && this.list.indexOf(this.magnet) == 0) ) l = this;
                 else {
                     l = new ListContainer(this.root, this.scene);
-                    
+                    const save = nb;
+                    const s2 = this.structureList.filter((x) => x.getQueue() === this.list[nb]);
+                    if (s2.length === 1) nb = s2[0].getHeaderID();
+
                     let s = this.structureList.filter((x) => x.contains(nb));
-                    console.log(s);
+                    //console.log(s);
                     let toMove : InstructionContainer[] = [];
                     let structToMove : StructureContainer[] = [];
-
+                    
                     if (s.length === 1) { // Si ça n'appartient qu'à une seule structure
                         toMove = this.list.slice(nb, s[0].getQueueID()).filter(
                             (x) => x instanceof InstructionContainer
@@ -141,9 +143,6 @@ export class ListContainer extends GUI.Rectangle {
                         structToMove = this.structureList.filter((x) => x.getHeaderID() >= nb );
                     }
                     
-                    for (const struct of structToMove) {
-                        this.structureList.splice(this.structureList.indexOf(struct), 1);
-                    }
                     for (const item of toMove) {
                         this.removeInstruction(item);
                     }
@@ -151,10 +150,11 @@ export class ListContainer extends GUI.Rectangle {
                         l.addInstruction(toMove[i], 0);
                     }
                     for (const struct of structToMove) {
-                        l.addStruct(struct, -nb);
+                        l.addStruct(struct);
                     }
                     l.refreshIdentation();
 
+                    nb = save;
                 }
 
                 l.detector.isHitTestVisible = false;
@@ -180,7 +180,7 @@ export class ListContainer extends GUI.Rectangle {
                 this.scene.scene.onPointerUp = (evt:IPointerEvent) => {
                     l.isDragging = false;
                     let gros_q = this.scene.getHoverSlot();
-                    if (gros_q instanceof ListContainer) {
+                    if (gros_q instanceof ListContainer && gros_q != l) {
                         gros_q.mergeList(l);
                         this.scene.setDragging(false);
                         l.dispose();
@@ -200,6 +200,7 @@ export class ListContainer extends GUI.Rectangle {
     getIndentation(id:number) {
         let sum = 0;
         for (const structure of this.structureList) {
+            //console.log("Struct : ", structure.getHeaderID(), structure.getQueueID());
             if (structure.contains(id)) sum += 20;
         }
         return sum;
@@ -211,14 +212,14 @@ export class ListContainer extends GUI.Rectangle {
         }
     }
 
-    addStruct(s:StructureContainer, index : number) {
+    addStruct(s:StructureContainer) {
         this.structureList.push(s);
-        s.add(index);
+        s.setList(this);
     }
 
     addInstruction(c: InstructionContainer, index : number) {
         if (c.parent) {c.parent.removeControl(c);}
-        for (const struct of this.structureList) struct.updateAdd(index);
+        
         this.list.splice(index, 0, c);
         this.stack.clearControls();
         for (let i=0; i<this.list.length; i++) {
@@ -231,7 +232,6 @@ export class ListContainer extends GUI.Rectangle {
     removeInstruction(c:InstructionContainer) {
         if (this.list.length <= 1) return ;
         let nb = this.list.indexOf(c);
-        for (const struct of this.structureList) struct.updateRetreat(nb);
         this.stack.removeControl(c);
         this.list.splice(nb, 1);
     }
@@ -267,14 +267,18 @@ export class ListContainer extends GUI.Rectangle {
         this.magnet.isVisible = bool;
     }
 
-    // FAUT FAIRE LE MERGE
     mergeList(list:ListContainer) {
+        if (this === list) return;
         let new_list = list.getList().filter((x)=>x instanceof InstructionContainer);
         let id = this.list.indexOf(this.magnet);
 
         for (let i=0; i<new_list.length; i++) {
             this.addInstruction(new_list[i], i+id);
         }
+        for (const struct of list.structureList) {
+            this.addStruct(struct);
+        }
+        this.refreshIdentation();
         this.root.removeControl(list);
         list.dispose();
     }
@@ -299,5 +303,6 @@ export class ListContainer extends GUI.Rectangle {
     }
     getScene():GameScene{return this.scene;}
     getList():(InstructionContainer | Magnet)[]{return this.list;}
+    getIdInstruction(i:InstructionContainer) : number{ return this.list.indexOf(i);}
 
 }
