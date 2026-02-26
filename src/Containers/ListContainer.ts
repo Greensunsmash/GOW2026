@@ -134,7 +134,12 @@ export class ListContainer extends GUI.Rectangle {
                         structToMove = this.structureList.filter((x) => x.getHeaderID() >= nb && x.getQueueID() < s[0].getQueueID());
                     } 
                     else if (s.length > 1) {
-                        console.log("Euh c'est pas encore géré sorry");
+                        s.sort((x, y) => y.getHeaderID() - x.getHeaderID());
+
+                        toMove = this.list.slice(nb, s[0].getQueueID()).filter(
+                            (x) => x instanceof InstructionContainer
+                        );
+                        structToMove = this.structureList.filter((x) => x.getHeaderID() >= nb && x.getQueueID() < s[0].getQueueID());
                     } 
                     else { // Si ça n'appartient pas à une structure
                         toMove = this.list.slice(nb).filter(
@@ -150,6 +155,7 @@ export class ListContainer extends GUI.Rectangle {
                         l.addInstruction(toMove[i], 0);
                     }
                     for (const struct of structToMove) {
+                        this.structureList.splice(this.structureList.indexOf(struct), 1);
                         l.addStruct(struct);
                     }
                     l.refreshIdentation();
