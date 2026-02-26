@@ -4,12 +4,14 @@ import { Magnet } from "./Magnet";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import type { Instruction } from "../Language/Instructions/Instruction";
 import { PointerEventTypes, Vector2, type IPointerEvent } from "@babylonjs/core";
+import type { StructureContainer } from "./StructureContainer";
 
 // La classe qui permet de stocker plusieurs instructions container à la suite
 export class ListContainer extends GUI.Rectangle {
 
     private root : GUI.Container;
     private list : (InstructionContainer | Magnet)[];
+    private structureList : StructureContainer[];
     private magnet : Magnet;
     private stack : GUI.StackPanel;
     private detector : GUI.Rectangle;
@@ -21,6 +23,7 @@ export class ListContainer extends GUI.Rectangle {
         super();
         this.root = root;
         this.list = [];
+        this.structureList = [];
         this.isHitTestVisible = false;
 
         // Il ne faut surtout pas mettre ça sinon ça fonctionne plus mdr je déteste babylonjs
@@ -116,17 +119,42 @@ export class ListContainer extends GUI.Rectangle {
                 if (nb == 0 || (nb == 1 && this.list.indexOf(this.magnet) == 0) ) l = this;
                 else {
                     l = new ListContainer(this.root, this.scene);
+                    
+                    let s = this.structureList.filter((x) => x.contains(nb));
+                    console.log(s);
+                    let toMove : InstructionContainer[] = [];
+                    let structToMove : StructureContainer[] = [];
 
-                    const toMove = this.list.slice(nb).filter(
-                        (x) => x instanceof InstructionContainer
-                    );
-
+                    if (s.length === 1) { // Si ça n'appartient qu'à une seule structure
+                        toMove = this.list.slice(nb, s[0].getQueueID()).filter(
+                            (x) => x instanceof InstructionContainer
+                        );
+                        structToMove = this.structureList.filter((x) => x.getHeaderID() >= nb && x.getQueueID() < s[0].getQueueID());
+                    } 
+                    else if (s.length > 1) {
+                        console.log("Euh c'est pas encore géré sorry");
+                    } 
+                    else { // Si ça n'appartient pas à une structure
+                        toMove = this.list.slice(nb).filter(
+                            (x) => x instanceof InstructionContainer
+                        );
+                        structToMove = this.structureList.filter((x) => x.getHeaderID() >= nb );
+                    }
+                    
+                    for (const struct of structToMove) {
+                        this.structureList.splice(this.structureList.indexOf(struct), 1);
+                    }
                     for (const item of toMove) {
                         this.removeInstruction(item);
                     }
                     for (let i=toMove.length-1; i>= 0; i--) {
                         l.addInstruction(toMove[i], 0);
                     }
+                    for (const struct of structToMove) {
+                        l.addStruct(struct, -nb);
+                    }
+                    l.refreshIdentation();
+
                 }
 
                 l.detector.isHitTestVisible = false;
@@ -169,19 +197,41 @@ export class ListContainer extends GUI.Rectangle {
 
     }
 
+    getIndentation(id:number) {
+        let sum = 0;
+        for (const structure of this.structureList) {
+            if (structure.contains(id)) sum += 20;
+        }
+        return sum;
+    }
+
+    refreshIdentation() {
+        for (let i=0; i<this.list.length; i++) { // Ca comprend le magnet mais osef, faudra l régler lui aussi
+            this.list[i].paddingLeftInPixels = this.getIndentation(i);
+        }
+    }
+
+    addStruct(s:StructureContainer, index : number) {
+        this.structureList.push(s);
+        s.add(index);
+    }
+
     addInstruction(c: InstructionContainer, index : number) {
         if (c.parent) {c.parent.removeControl(c);}
+        for (const struct of this.structureList) struct.updateAdd(index);
         this.list.splice(index, 0, c);
         this.stack.clearControls();
-        for (const control of this.list) {
-            this.stack.addControl(control);
+        for (let i=0; i<this.list.length; i++) {
+            this.list[i].paddingLeftInPixels = this.getIndentation(i);
+            this.stack.addControl(this.list[i]);
         }
+
     }
 
     removeInstruction(c:InstructionContainer) {
         if (this.list.length <= 1) return ;
-
         let nb = this.list.indexOf(c);
+        for (const struct of this.structureList) struct.updateRetreat(nb);
         this.stack.removeControl(c);
         this.list.splice(nb, 1);
     }
@@ -217,6 +267,7 @@ export class ListContainer extends GUI.Rectangle {
         this.magnet.isVisible = bool;
     }
 
+    // FAUT FAIRE LE MERGE
     mergeList(list:ListContainer) {
         let new_list = list.getList().filter((x)=>x instanceof InstructionContainer);
         let id = this.list.indexOf(this.magnet);

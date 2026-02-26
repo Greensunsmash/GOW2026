@@ -2,42 +2,44 @@ import * as GUI from "@babylonjs/gui";
 import { InstructionContainer } from "./InstructionContainer";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 
-export class StructureContainer extends InstructionContainer {
+export class StructureContainer  {
 
-    private sideRectangle : GUI.Rectangle;
-    private downRectangle : GUI.Rectangle;
+    private header : InstructionContainer;
+    private queue : InstructionContainer;
+    private headID : number;
+    private queueID : number;
 
-    constructor(list: string[], root: GUI.Container, scene: GameScene) {
-        super(list, root, scene);
-        
-        this.sideRectangle = new GUI.Rectangle();
-        this.sideRectangle.width = "10%";
-        this.sideRectangle.height = "100%";
-        this.sideRectangle.zIndex = -1;
-        this.sideRectangle.background = "#8727F5";
-        this.sideRectangle.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-        this.sideRectangle.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
-
-        this.downRectangle = new GUI.Rectangle();
-        this.downRectangle.width = "100%";
-        this.downRectangle.height = "5%";
-        this.downRectangle.zIndex = -1;
-        this.downRectangle.background = "#8727F5";
-        this.downRectangle.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-        this.downRectangle.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
-
-        this.addControl(this.sideRectangle);
-        this.addControl(this.downRectangle);
+    constructor(header:InstructionContainer, queue:InstructionContainer,first:number, last:number) {
+        this.header = header;
+        this.queue = queue;
+        this.headID = first;
+        this.queueID = last;
     }
 
-    addNext(c : InstructionContainer): void {
-        //super.addNext(c);
-        c.paddingLeftInPixels = 20;
+    public updateAdd(id:number) {
+        if (this.headID >= id) this.headID += 1;
+        if (this.queueID >= id) this.queueID += 1;
     }
 
-    removeNext(): void {
-        /*let c = this.getNext();
-        if (c !== null) c.paddingLeftInPixels = 0;
-        super.removeNext();*/
+    public updateRetreat(id:number) {
+        if (this.headID >=  id) this.headID -= 1;
+        if (this.queueID >= id) this.queueID -= 1;
     }
+
+    public contains(id:number): boolean {
+        return this.headID < id && this.queueID > id;
+    }
+
+    public add(nb:number):void {
+        this.headID = this.headID + nb;
+        this.queueID = this.queueID + nb;
+    }
+    
+
+    // GETTERS
+    public getHeader():InstructionContainer {return this.header;}
+    public getQueue():InstructionContainer {return this.queue;}
+    public getHeaderID():number{return this.headID;}
+    public getQueueID():number{return this.queueID;}
+
 }
