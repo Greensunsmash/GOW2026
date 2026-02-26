@@ -46,7 +46,6 @@ export abstract class GameScene {
     public getHoverSlot(): GUI.Rectangle | null {return this.hoverSlot;}
     public isDragging(): boolean{return this.dragging;}
     public setDragging(bool:boolean) {
-        // RAJOUTER A LISTCONTRAINER UN DRAGMODE QUI S4ACTIVE D'ICI, ET PERMET D'AGGRANDIR LE DETECTOR
         if (bool) {
             for (let i = 0; i<this.dragListeners.length; i++) {
                 this.dragListeners[i]();
@@ -58,6 +57,7 @@ export abstract class GameScene {
             }
             if (this.hoverSlot instanceof ListContainer) this.hoverSlot.toggleMagnet(false);
         }
-        this.dragging = bool;}
+        this.dragging = bool;
+    }
 
 }

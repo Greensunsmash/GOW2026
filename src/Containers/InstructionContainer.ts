@@ -6,6 +6,7 @@ import { Magnet } from "./Magnet";
 import type { Instruction } from "../Language/Instructions/Instruction";
 import { Print } from "../Language/Instructions/Print";
 import { ValeurBrute } from "../Language/Valeur/ValeurBrute";
+import type { Vector2 } from "@babylonjs/core";
 
 export class InstructionContainer extends GUI.Rectangle {
 
@@ -61,6 +62,17 @@ export class InstructionContainer extends GUI.Rectangle {
         this.bloc.background = "#8727F5";
         this.bloc.cornerRadius = 0;
     }
+
+    public isPointHandle(coords : Vector2): (GUI.Rectangle | null) {
+        let s = this.bloc; // Normalement le wrapper a un seul enfant
+        if (s instanceof BlocContainer) {
+            let result = s.isPointHandle(coords);
+            console.log(result);
+            if (result && result != this.bloc) return result;
+        }
+        return null;
+    }
+
     /*
     addNext(c : InstructionContainer): void {
         if (this.detector === null) {

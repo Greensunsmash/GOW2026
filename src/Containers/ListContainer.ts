@@ -3,7 +3,7 @@ import { InstructionContainer } from "./InstructionContainer";
 import { Magnet } from "./Magnet";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import type { Instruction } from "../Language/Instructions/Instruction";
-import { PointerEventTypes, type IPointerEvent } from "@babylonjs/core";
+import { PointerEventTypes, Vector2, type IPointerEvent } from "@babylonjs/core";
 
 // La classe qui permet de stocker plusieurs instructions container à la suite
 export class ListContainer extends GUI.Rectangle {
@@ -100,8 +100,15 @@ export class ListContainer extends GUI.Rectangle {
         for (nb=0; nb < this.list.length ; nb++) {
             if (this.list[nb] === this.magnet) continue;
             if (this.list[nb].contains(x, y)) {
+                
+                let c = this.list[nb] as InstructionContainer;
+                let b = c.isPointHandle(new Vector2(x, y));
+                if (b) {
+                    b.onPointerDownObservable.notifyObservers(new GUI.Vector2WithInfo(new Vector2(x,y)));
+                    break;
+                }
+
                 let l : ListContainer;
-                let c = this.list[nb];
 
                 
                 if (this.scene.getHoverSlot() === this) this.setHover(false);
@@ -154,6 +161,8 @@ export class ListContainer extends GUI.Rectangle {
                         l.detector.isHitTestVisible = true;
                     }
                 }
+
+                break;
 
             }
         }

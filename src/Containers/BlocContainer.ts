@@ -4,6 +4,7 @@ import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { Valeur } from "../Language/Valeur/Valeur";
 import type { Booleen } from "../Language/Booleen/Booleen";
 import { ValeurBrute } from "../Language/Valeur/ValeurBrute";
+import { Vector2 } from "@babylonjs/core";
 
 export type ArgsType = "VALEUR" | "BOOLEEN" | "ALL" | "NONE";
 
@@ -131,6 +132,18 @@ export class BlocContainer extends GUI.Rectangle {
             if (slot instanceof BlocContainer) return slot.getValue()[0]
             return new ValeurBrute(0);  
         })
+    }
+
+    public isPointHandle(coords : Vector2): (GUI.Rectangle | null) {
+        for (let i=0; i<this.slots.length; i++) {
+            let s = this.slots[i].children[0]; // Normalement le wrapper a un seul enfant
+            if (s instanceof BlocContainer) {
+                let result = s.isPointHandle(coords);
+                if (result) return result;
+            }
+        }
+        if (this.contains(coords.x, coords.y)) return this;
+        return null;
     }
 
     // NE PAS TOUCHER
