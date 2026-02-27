@@ -5,7 +5,6 @@ import { InstructionContainer } from "./InstructionContainer";
 export class DepartContainer extends InstructionContainer {
     constructor(list: string[], root: GUI.Container, scene: GameScene) {
         super(list, root, scene);
-        this.setFirstOnly(true);
         this.bloc.background = "#F52795";
     }
 }

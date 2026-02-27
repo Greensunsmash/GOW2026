@@ -124,6 +124,4 @@ export class InstructionContainer extends GUI.Rectangle {
     //getNext(): InstructionContainer | null {return this.next;}
     getRoot():GUI.Container{return this.root;}
     getScene():GameScene{return this.bloc.getScene()};
-    isFirstOnly():boolean{return this.first_only;}
-    protected setFirstOnly(bool:boolean):void{this.first_only = bool;}
 }

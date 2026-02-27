@@ -5,6 +5,7 @@ import type { GameScene } from "../MainLoop/Scene/GameScene";
 import type { Instruction } from "../Language/Instructions/Instruction";
 import { PointerEventTypes, Vector2, type IPointerEvent } from "@babylonjs/core";
 import type { StructureContainer } from "./StructureContainer";
+import { DepartContainer } from "./DepartContainer";
 
 // La classe qui permet de stocker plusieurs instructions container à la suite
 export class ListContainer extends GUI.Rectangle {
@@ -187,9 +188,14 @@ export class ListContainer extends GUI.Rectangle {
                     l.isDragging = false;
                     let gros_q = this.scene.getHoverSlot();
                     if (gros_q instanceof ListContainer && gros_q != l) {
-                        gros_q.mergeList(l);
-                        this.scene.setDragging(false);
-                        l.dispose();
+                        if ((gros_q.getMagnetID() === 0 && !gros_q.isFirst()) || (gros_q.getMagnetID()>0 && !l.isFirst())) {
+                            gros_q.mergeList(l);
+                            this.scene.setDragging(false);
+                            l.dispose();
+                        } else {
+                            this.scene.setDragging(false);
+                            l.detector.isHitTestVisible = true;
+                        }
                     } else {
                         this.scene.setDragging(false);
                         l.detector.isHitTestVisible = true;
@@ -276,7 +282,7 @@ export class ListContainer extends GUI.Rectangle {
     mergeList(list:ListContainer) {
         if (this === list) return;
         let new_list = list.getList().filter((x)=>x instanceof InstructionContainer);
-        let id = this.list.indexOf(this.magnet);
+        let id = this.getMagnetID();
 
         for (let i=0; i<new_list.length; i++) {
             this.addInstruction(new_list[i], i+id);
@@ -310,5 +316,11 @@ export class ListContainer extends GUI.Rectangle {
     getScene():GameScene{return this.scene;}
     getList():(InstructionContainer | Magnet)[]{return this.list;}
     getIdInstruction(i:InstructionContainer) : number{ return this.list.indexOf(i);}
+    isFirst(): boolean {
+        if (this.list.length > 0 && this.list[0] instanceof DepartContainer) return true;
+        if (this.list.length > 1 && this.list[0] instanceof Magnet && this.list[1] instanceof DepartContainer) return true;
+        return false;
+    }
+    getMagnetID(): number {return this.list.indexOf(this.magnet);}
 
 }

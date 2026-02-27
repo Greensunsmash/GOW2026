@@ -47,6 +47,7 @@ export class PlayScene extends GameScene {
         l.addInstruction(new InstructionContainer(["Contenu2"], this.leftPanel, this), 4);
         l.addInstruction(new InstructionContainer(["Avant"], this.leftPanel, this), 0);
         l.addInstruction(new InstructionContainer(["Après"], this.leftPanel, this), 9);
+        l.addInstruction(new DepartContainer(["Première instruction"], this.leftPanel, this), 0);
                 
 
         /* Ca marchait correctement mais c'est très très sale et pas extensible
