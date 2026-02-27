@@ -10,6 +10,12 @@ import { Level } from "../../Environment/Level";
 import { LevelReader } from "../../Environment/LevelReader";
 import { DepartContainer } from "../../Containers/DepartContainer";
 import { ListContainer } from "../../Containers/ListContainer";
+import { PourContainer } from "../../Containers/Prefabs/PourContainer";
+import { PrintContainer } from "../../Containers/Prefabs/PrintContainer";
+import { ValeurBruteContainer } from "../../Containers/Prefabs/ValeurBruteContainer";
+import { Flag } from "../../Language/Group/Depart/Flag";
+import { Print } from "../../Language/Instructions/Print";
+import { ValeurBrute } from "../../Language/Valeur/ValeurBrute";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene {
@@ -30,12 +36,27 @@ export class PlayScene extends GameScene {
         this.advancedTexture.addControl(this.leftPanel);
         
         let l = new ListContainer(this.leftPanel, this);
-        let i1 = new InstructionContainer(["Header"], this.leftPanel, this);
-        let i2 = new InstructionContainer(["End"], this.leftPanel, this);
-        let i3 = new InstructionContainer(["Header2"], this.leftPanel, this);
-        let i4 = new InstructionContainer(["End2"], this.leftPanel, this);
-        let s = new StructureContainer(l, i1, i2);
-        let s2 = new StructureContainer(l, i3, i4);
+        let pour = new PourContainer(l, this.leftPanel, this);
+        l.addInstruction(pour.getQueue(), 0);
+        l.addInstruction(new PrintContainer(this.leftPanel, this), 0);
+        l.addInstruction(pour.getHeader(), 0);
+        l.addStruct(pour);
+        l.addInstruction(new DepartContainer(["Première instruction"], this.leftPanel, this), 0);
+
+        new ValeurBruteContainer(10, this.leftPanel, this);
+        new ValeurBruteContainer(2, this.leftPanel, this);
+
+        let f = new Flag([new Print(new ValeurBrute("hehe"))]);
+        f.onLaunch();
+        f.execute([]);
+        /*
+        let l = new ListContainer(this.leftPanel, this);
+        let s = new StructureContainer(l, this.leftPanel, this);
+        let s2 = new StructureContainer(l, this.leftPanel, this);
+        let i1 = s.getHeader();
+        let i2 = s.getQueue();
+        let i3 = s2.getHeader();
+        let i4 = s2.getQueue();
         l.addInstruction(i1, 0);
         l.addInstruction(i2, 1);
         l.addStruct(s);
@@ -48,6 +69,7 @@ export class PlayScene extends GameScene {
         l.addInstruction(new InstructionContainer(["Avant"], this.leftPanel, this), 0);
         l.addInstruction(new InstructionContainer(["Après"], this.leftPanel, this), 9);
         l.addInstruction(new DepartContainer(["Première instruction"], this.leftPanel, this), 0);
+        */
                 
 
         /* Ca marchait correctement mais c'est très très sale et pas extensible

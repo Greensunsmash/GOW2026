@@ -18,8 +18,6 @@ export class ValeurContainer extends BlocContainer {
     }
 
     // Par défaut renvoie un 1 (en pratique, cette fonction sera toujours override)
-    public getValue(): (Valeur)[] {
-            return [new ValeurBrute(1)];
-        }
+    public getValue(): (Valeur)[] {return [new ValeurBrute(1)];}
 
 }

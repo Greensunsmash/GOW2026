@@ -1,11 +1,15 @@
+import * as BABYLON from "@babylonjs/core";
 import * as GUI from "@babylonjs/gui";
 import { InstructionContainer } from "./InstructionContainer";
 import { Magnet } from "./Magnet";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
-import type { Instruction } from "../Language/Instructions/Instruction";
+import { Instruction } from "../Language/Instructions/Instruction";
 import { PointerEventTypes, Vector2, type IPointerEvent } from "@babylonjs/core";
 import type { StructureContainer } from "./StructureContainer";
 import { DepartContainer } from "./DepartContainer";
+import type { Executable } from "../Language/Executable";
+import type { Group } from "../Language/Group/Group";
+import type { Launchable } from "../Language/Launchable";
 
 // La classe qui permet de stocker plusieurs instructions container à la suite
 export class ListContainer extends GUI.Rectangle {
@@ -91,11 +95,19 @@ export class ListContainer extends GUI.Rectangle {
 
         this.scene.dragListeners.push(() => {
             this.stack.paddingBottom = "15px";
-        })
+        });
 
         this.scene.undragListeners.push(() => {
             this.stack.paddingBottom = "0px";
-        })
+        });
+
+        scene.scene.onKeyboardObservable.add((kbInfo) => {
+            if (kbInfo.type === BABYLON.KeyboardEventTypes.KEYDOWN) {
+                if (kbInfo.event.key === "a" || kbInfo.event.key === "A") {
+                    console.log(this.getInstructionGroup());
+                }
+            }
+        });
     }
 
     click(x:number, y:number) {
@@ -227,6 +239,7 @@ export class ListContainer extends GUI.Rectangle {
     addStruct(s:StructureContainer) {
         this.structureList.push(s);
         s.setList(this);
+        this.refreshIdentation();
     }
 
     addInstruction(c: InstructionContainer, index : number) {
@@ -295,6 +308,40 @@ export class ListContainer extends GUI.Rectangle {
         list.dispose();
     }
 
+    getInstructionGroup() : Launchable | null {
+        let first = this.getFirst();
+        if (first) {
+            let l = first.getLaunchable(this.getInstructionList(1, this.list.length));
+            l.onLaunch();
+            l.execute([]);
+            return l;
+        }
+        return null;
+    }
+
+    getInstructionList(first:number, length:number) : Executable[] {
+        let exeGroup : Executable[] = [];
+        for (let i=first; i<length + first; i++) {
+            let instruction = this.list[i];
+            if (instruction instanceof InstructionContainer) {
+                let struct = this.checkHeaders(instruction);
+                if (struct) {
+                    let len = struct.getQueueID() - struct.getHeaderID() - 1;
+                    exeGroup.push(struct.getGroup(this.getInstructionList(struct.getHeaderID()+1, len))); 
+                    i += len + 1;
+                } else exeGroup.push(instruction.getInstruction());
+            }
+        }
+        return exeGroup;
+    }
+
+    checkHeaders(i:InstructionContainer): StructureContainer | null {
+        for (const struct of this.structureList) {
+            if (struct.getHeader() === i) return struct;
+        }
+        return null;
+    }
+
     // GETTERS
     getHover():boolean{return this.hover;}
     setHover(bool:boolean){
@@ -320,6 +367,11 @@ export class ListContainer extends GUI.Rectangle {
         if (this.list.length > 0 && this.list[0] instanceof DepartContainer) return true;
         if (this.list.length > 1 && this.list[0] instanceof Magnet && this.list[1] instanceof DepartContainer) return true;
         return false;
+    }
+    getFirst(): DepartContainer | null {
+        if (this.list.length > 0 && this.list[0] instanceof DepartContainer) return this.list[0];
+        if (this.list.length > 1 && this.list[0] instanceof Magnet && this.list[1] instanceof DepartContainer) return this.list[1];
+        return null;
     }
     getMagnetID(): number {return this.list.indexOf(this.magnet);}
 

@@ -2,6 +2,8 @@ import * as GUI from "@babylonjs/gui";
 import { InstructionContainer } from "./InstructionContainer";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import type { ListContainer } from "./ListContainer";
+import type { Executable } from "../Language/Executable";
+import { Pour } from "../Language/Group/Structure/Pour";
 
 export class StructureContainer  {
 
@@ -18,6 +20,8 @@ export class StructureContainer  {
     public contains(id:number): boolean {
         return this.getHeaderID() < id && this.getQueueID() > id;
     }
+
+    public getGroup(e:Executable[]): Executable {return new Pour(e);}
     
 
     // GETTERS / SETTERS

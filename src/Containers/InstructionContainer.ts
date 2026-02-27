@@ -106,7 +106,7 @@ export class InstructionContainer extends GUI.Rectangle {
     } */
 
     // Par défaut print hello world (en pratique, cette fonction sera toujours override)
-    getInstruction(): Instruction { return new Print(new ValeurBrute("Hello World")); }
+    getInstruction(): Instruction {return new Print(new ValeurBrute("Hello World")); }
 
     // Utilisé lorsqu'on grab l'objet, pour désactiver l'hovering
     /*
@@ -124,4 +124,5 @@ export class InstructionContainer extends GUI.Rectangle {
     //getNext(): InstructionContainer | null {return this.next;}
     getRoot():GUI.Container{return this.root;}
     getScene():GameScene{return this.bloc.getScene()};
+    getSlots():readonly GUI.Rectangle[]{return this.bloc.getSlots();}
 }
