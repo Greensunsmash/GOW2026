@@ -134,6 +134,7 @@ export class BlocContainer extends GUI.Rectangle {
         })
     }
 
+    // Renvoie si le point donné appartient à ce bloc où un bloc enfant
     public isPointHandle(coords : Vector2): (GUI.Rectangle | null) {
         for (let i=0; i<this.slots.length; i++) {
             let s = this.slots[i].children[0]; // Normalement le wrapper a un seul enfant

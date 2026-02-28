@@ -4,10 +4,11 @@ import type { IPointerEvent } from "@babylonjs/core";
 import { BlocContainer } from "./BlocContainer";
 import { EmptySlot } from "./EmptySlot";
 
+// Class permettant au blocContainer d'être déplaçable
 export class DragBehavior {
 
-    private target: BlocContainer;
-    private scene: GameScene;
+    private readonly target: BlocContainer;
+    private readonly scene: GameScene;
     private isDragging = false;
 
     constructor(target: BlocContainer) {
@@ -22,6 +23,7 @@ export class DragBehavior {
         });
     }
 
+    // Comportement de drag
     private startDrag(x: number, y: number) {
         const measure = this.target._currentMeasure;
         const startX = measure.left;
@@ -30,6 +32,7 @@ export class DragBehavior {
         const previousWrapper = this.target.parent as GUI.Rectangle;
         const previousContainer = previousWrapper?.parent?.parent as BlocContainer;
 
+        // Remets le bloc enfant de la root pour le déplacer
         if (previousContainer instanceof BlocContainer) {
             previousContainer.resetEmptySlot(previousWrapper);
         }
@@ -54,6 +57,7 @@ export class DragBehavior {
         this.scene.scene.onPointerUp = () => this.stopDrag();
     }
 
+    // Arrêt du drage
     private stopDrag() {
         this.isDragging = false;
         this.target.isHitTestVisible = true;

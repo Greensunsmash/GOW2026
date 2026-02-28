@@ -5,6 +5,7 @@ import { DragBehavior } from "./DragBehavior";
 import type { Valeur } from "../Language/Valeur/Valeur";
 import { ValeurBrute } from "../Language/Valeur/ValeurBrute";
 
+// Abstract pour tout les bloc renvoyant une valeur
 export class ValeurContainer extends BlocContainer {
 
     constructor(list: string[], root: GUI.Container, scene: GameScene) {

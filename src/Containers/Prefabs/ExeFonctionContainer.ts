@@ -21,7 +21,7 @@ export class ExeFonctionContainer extends InstructionContainer {
     getInstruction(): Instruction {
         let e = new ExeFonction(this.name);
         let slots = this.getSlots();
-        for (let i=0; i<this.nb; i++) e.addArgs((slots[0].children[0] as ValeurContainer).getValue()[0]);
+        for (let i=0; i<this.nb; i++) e.addArgs((slots[i].children[0] as ValeurContainer).getValue()[0]);
         return e;
     }
 

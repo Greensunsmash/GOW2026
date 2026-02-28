@@ -6,10 +6,10 @@ import type { ArgsType, BlocContainer } from "./BlocContainer";
 // Cette classe symbolise un slot (de BlocContainer) vide qui peut donc être remplacé
 export class EmptySlot extends GUI.Rectangle {
 
-    private scene:GameScene;
+    private readonly scene:GameScene;
+    private readonly blocParent : BlocContainer;
+    private readonly type : ArgsType;
     private hover:boolean= false;
-    private blocParent : BlocContainer;
-    private type : ArgsType;
 
     constructor(parent:BlocContainer, type:ArgsType) {
         super();
@@ -39,8 +39,14 @@ export class EmptySlot extends GUI.Rectangle {
         });
     }
 
-    public getHover() : boolean {return this.hover;}
-    public setHover(bool:boolean) {
+    // Remplace si c'est du bon type
+    public replaceIfMatch(c:BlocContainer) : void {if (this.getType() === c.getType() || (this.getType() === "ALL" && c.getType() !== "NONE")) this.replaceSlot(c);}
+    private replaceSlot(c:BlocContainer) : void {if (this.parent instanceof GUI.Rectangle) this.blocParent.insertControlAt(c, this.parent);}
+
+    // Getters
+    getType():ArgsType {return this.type;}
+    getHover() : boolean {return this.hover;}
+    setHover(bool:boolean) {
         if (bool) {
             if (this.scene.setHoverSlot(this)) {
                 this.background = "white";
@@ -53,15 +59,5 @@ export class EmptySlot extends GUI.Rectangle {
             this.hover = bool;
         };
     }
-
-    public replaceIfMatch(c:BlocContainer) : void {
-        if (this.getType() === c.getType() || (this.getType() === "ALL" && c.getType() !== "NONE")) this.replaceSlot(c);
-    }
-    private replaceSlot(c:BlocContainer) : void {
-        if (this.parent instanceof GUI.Rectangle) this.blocParent.insertControlAt(c, this.parent);
-    }
-
-    // Getters
-    getType():ArgsType {return this.type;}
 
 }

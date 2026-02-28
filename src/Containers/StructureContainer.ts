@@ -1,15 +1,15 @@
-import * as GUI from "@babylonjs/gui";
 import { InstructionContainer } from "./InstructionContainer";
-import type { GameScene } from "../MainLoop/Scene/GameScene";
 import type { ListContainer } from "./ListContainer";
 import type { Executable } from "../Language/Executable";
 import { Pour } from "../Language/Group/Structure/Pour";
 
-export class StructureContainer  {
+
+// Abstract qui représente une structure, qui est simplement des infos sur le début et la fin de la boucle
+export abstract class StructureContainer  {
 
     private l : ListContainer;
-    private header : InstructionContainer;
-    private queue : InstructionContainer;
+    private readonly header : InstructionContainer;
+    private readonly queue : InstructionContainer;
 
     constructor(l:ListContainer, header:InstructionContainer, queue:InstructionContainer) {
         this.l = l;

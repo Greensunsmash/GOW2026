@@ -1,17 +1,12 @@
 import * as GUI from "@babylonjs/gui";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
-import { PointerEventTypes } from "@babylonjs/core";
-import { InstructionContainer } from "./InstructionContainer";
 import type { ListContainer } from "./ListContainer";
 
+// C'est plus un magnet, juste le slot grisé qui s'affiche pour symboliser ou va se placer le bloc qu'on tient
 export class Magnet extends GUI.Rectangle {
 
-    private scene:GameScene;
-    private hover:boolean= false;
-    private block:boolean = false;
-    private blocParent : ListContainer;
-    //private type : ArgsType;
-
+    private readonly scene:GameScene;
+    private readonly blocParent : ListContainer;
 
     constructor(scene:GameScene, parent:ListContainer){
         super();
@@ -28,42 +23,4 @@ export class Magnet extends GUI.Rectangle {
         this.blocParent = parent;
 
     }
-
-    public replaceSlot(c:InstructionContainer) : void {
-        /*
-        if (c.isFirstOnly()) return;
-        let parent:InstructionContainer | GUI.StackPanel =this.blocParent;
-        while (true) {
-            if (parent === c) return;
-            if (!(parent.parent instanceof InstructionContainer || parent.parent instanceof GUI.StackPanel )) break;
-            parent = parent.parent;
-        }
-        this.blocParent.addNext(c);*/
-
-    }
-
-    // Getters
-    /*
-    public getHover() : boolean {return this.hover;}
-    public setHover(bool:boolean) {
-        if (this.block) return;
-        if (bool) {
-            if (this.scene.setHoverSlot(this)) {
-                this.background = "white";
-                this.hover = bool;
-                //console.log("hover :" + this);
-            }
-        }
-        else {
-            this.scene.setHoverSlot(null);
-            this.background = "#383838";
-            this.hover = bool;
-        };
-    }
-
-    public getBlock():boolean{return this.block;}
-    public setBlock(bool:boolean):void {
-        if (bool && this.getHover()) this.setHover(false);
-        this.block = bool;
-    }*/
 }

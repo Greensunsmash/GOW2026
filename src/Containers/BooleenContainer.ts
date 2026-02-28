@@ -5,8 +5,8 @@ import { DragBehavior } from "./DragBehavior";
 import type { Booleen } from "../Language/Booleen/Booleen";
 import { BooleenBrut } from "../Language/Booleen/BooleenBrute";
 
-
-export class BooleenContainer extends BlocContainer {
+// Abstract d'un bloc contenant un booleen
+export abstract class BooleenContainer extends BlocContainer {
     
     constructor(list: string[], root: GUI.Container, scene: GameScene) {
             super("b", list, root, scene);

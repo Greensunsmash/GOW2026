@@ -16,7 +16,7 @@ export class Flag extends Group implements Launchable {
         }
     }
 
-    execute(list?: Value[]): void {
+    execute(_list?: Value[]): void {
         super.execute();
     }
 
