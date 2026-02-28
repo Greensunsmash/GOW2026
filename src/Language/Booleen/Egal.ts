@@ -12,11 +12,8 @@ export class Egal extends Booleen {
         this.v2 = v2;
     }
 
-    eval(): boolean {
-        return this.v1.eval().equalsTo(this.v2.eval());
-    }
+    eval(): boolean {return this.v1.eval().equalsTo(this.v2.eval());}
 
-    onLaunch(l: Launchable): boolean {
-        return this.v1.onLaunch(l) && this.v2.onLaunch(l);
-    }
+    onLaunch(l: Launchable): boolean {return this.v1.onLaunch(l) && this.v2.onLaunch(l);}
+    
 }

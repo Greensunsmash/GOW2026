@@ -21,8 +21,8 @@ export class Pour extends Group implements Executable {
 
     execute(): void {
         const val = this.valeur.eval();
-        const nb = val.getValue();
-        if (typeof nb === "number" && Number.isInteger(nb)) {
+        if (val.getType() === "INT") {
+            const nb = val.getValue() as number;
             for (let i = 0; i < nb; i++) {
                 super.execute();
             }
@@ -30,9 +30,7 @@ export class Pour extends Group implements Executable {
     }
 
     onLaunch(l: Launchable): boolean {
-        if (this.valeur.onLaunch(l)) {
-            return super.onLaunch(l);
-        }
+        if (this.valeur.onLaunch(l)) return super.onLaunch(l);
         return false;
     }
 }

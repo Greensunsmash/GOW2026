@@ -9,8 +9,6 @@ export class SetVar extends Instruction {
     private valeur?: Valeur;
     private bool?: Booleen;
 
-    constructor(name: string, valeur: Valeur);
-    constructor(name: string, bool: Booleen);
     constructor(name: string, arg: Valeur | Booleen) {
         super();
         this.name = name;
@@ -22,12 +20,8 @@ export class SetVar extends Instruction {
     }
 
     execute(): void {
-        if (this.valeur) {
-            Memory.get().setVariable(this.name, this.valeur.eval());
-        }
-        if (this.bool) {
-            Memory.get().setVariable(this.name, this.bool.eval());
-        }
+        if (this.valeur) {Memory.get().setVariable(this.name, this.valeur.eval());}
+        if (this.bool) {Memory.get().setVariable(this.name, this.bool.eval());}
     }
 
     onLaunch(l: Launchable): boolean {

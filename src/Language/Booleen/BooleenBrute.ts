@@ -8,7 +8,5 @@ export class BooleenBrut extends Booleen {
         this.bool = bool;
     }
 
-    eval(): boolean {
-        return this.bool;
-    }
+    eval(): boolean {return this.bool;}
 }

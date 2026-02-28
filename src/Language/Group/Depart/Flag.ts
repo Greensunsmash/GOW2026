@@ -22,9 +22,7 @@ export class Flag extends Group implements Launchable {
 
     onLaunch(): boolean {
         for (const e of this.list) {
-            if (e instanceof Bloc && !e.onLaunch(this)) {
-                return false;
-            }
+            if (e instanceof Bloc && !e.onLaunch(this)) return false;
         }
         return true;
     }
