@@ -10,6 +10,7 @@ import { DepartContainer } from "./DepartContainer";
 import type { Executable } from "../Language/Executable";
 import type { Group } from "../Language/Group/Group";
 import type { Launchable } from "../Language/Launchable";
+import { FlagContainer } from "./Prefabs/FlagContainer";
 
 // La classe qui permet de stocker plusieurs instructions container à la suite
 export class ListContainer extends GUI.Rectangle {
@@ -104,7 +105,7 @@ export class ListContainer extends GUI.Rectangle {
         scene.scene.onKeyboardObservable.add((kbInfo) => {
             if (kbInfo.type === BABYLON.KeyboardEventTypes.KEYDOWN) {
                 if (kbInfo.event.key === "a" || kbInfo.event.key === "A") {
-                    console.log(this.getInstructionGroup());
+                    this.getInstructionGroup();
                 }
             }
         });
@@ -313,7 +314,7 @@ export class ListContainer extends GUI.Rectangle {
         if (first) {
             let l = first.getLaunchable(this.getInstructionList(1, this.list.length));
             l.onLaunch();
-            l.execute([]);
+            if (first instanceof FlagContainer) l.execute([]);
             return l;
         }
         return null;

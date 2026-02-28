@@ -2,19 +2,19 @@ import * as GUI from "@babylonjs/gui";
 import { ValeurContainer } from "../ValeurContainer";
 import type { GameScene } from "../../MainLoop/Scene/GameScene";
 import type { Valeur } from "../../Language/Valeur/Valeur";
-import { ValeurBrute } from "../../Language/Valeur/ValeurBrute";
+import { VarValue } from "../../Language/Valeur/VarValue";
 
-export class ValeurBruteContainer extends ValeurContainer {
+export class VarValueContainer extends ValeurContainer {
 
-    nb : number;
+    name:string;
 
     // Rajouter un InputText. En attendant on va faire comme ça
-    constructor(valeur: number, root: GUI.Container, scene: GameScene) {
-        super([valeur.toString()], root, scene);
-        this.nb = valeur;
+    constructor(name:string, root: GUI.Container, scene: GameScene) {
+        super(["Variable " + name], root, scene);
+        this.name = name;
     }
 
     public getValue(): (Valeur)[] {
-        return [new ValeurBrute(this.nb)];
+        return [new VarValue(this.name)];
     }
-}
+} 

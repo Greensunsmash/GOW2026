@@ -13,9 +13,25 @@ import { ListContainer } from "../../Containers/ListContainer";
 import { PourContainer } from "../../Containers/Prefabs/PourContainer";
 import { PrintContainer } from "../../Containers/Prefabs/PrintContainer";
 import { ValeurBruteContainer } from "../../Containers/Prefabs/ValeurBruteContainer";
+import { PlusContainer } from "../../Containers/Prefabs/PlusContainer";
 import { Flag } from "../../Language/Group/Depart/Flag";
 import { Print } from "../../Language/Instructions/Print";
 import { ValeurBrute } from "../../Language/Valeur/ValeurBrute";
+import { Pour } from "../../Language/Group/Structure/Pour";
+import { MoinsContainer } from "../../Containers/Prefabs/MoinsContainer";
+import { SiContainer } from "../../Containers/Prefabs/SiContainer";
+import { BooleenBrut } from "../../Language/Booleen/BooleenBrute";
+import { BooleenBrutContainer } from "../../Containers/Prefabs/BooleenBrutContainer";
+import { Egal } from "../../Language/Booleen/Egal";
+import { EgalContainer } from "../../Containers/Prefabs/EgalContainer";
+import { InfContainer } from "../../Containers/Prefabs/InfContainer";
+import { SupContainer } from "../../Containers/Prefabs/SupContainer";
+import { SetVarContainer } from "../../Containers/Prefabs/SetVarContainer";
+import { VarValueContainer } from "../../Containers/Prefabs/VarValueContainer";
+import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
+import { FonctionContainer } from "../../Containers/Prefabs/FonctionContainer";
+import { ExeFonction } from "../../Language/Instructions/ExeFonction";
+import { ExeFonctionContainer } from "../../Containers/Prefabs/ExeFonctionContainer";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene {
@@ -36,19 +52,40 @@ export class PlayScene extends GameScene {
         this.advancedTexture.addControl(this.leftPanel);
         
         let l = new ListContainer(this.leftPanel, this);
+        let l2 = new ListContainer(this.leftPanel, this);
+        l2.addInstruction(new FonctionContainer("Multiplication", ["x", "y"], this.leftPanel, this), 0);
         let pour = new PourContainer(l, this.leftPanel, this);
+        let si = new SiContainer(l, this.leftPanel, this);
         l.addInstruction(pour.getQueue(), 0);
+        l.addInstruction(si.getQueue(), 0);
         l.addInstruction(new PrintContainer(this.leftPanel, this), 0);
+        l.addInstruction(si.getHeader(), 0);
         l.addInstruction(pour.getHeader(), 0);
+        l.addInstruction(new SetVarContainer("x", this.leftPanel, this), 0);
         l.addStruct(pour);
-        l.addInstruction(new DepartContainer(["Première instruction"], this.leftPanel, this), 0);
+        l.addStruct(si);
+        l.addInstruction(new FlagContainer(this.leftPanel, this), 0);
+        l.addInstruction(new ExeFonctionContainer("Multiplication", 2, this.leftPanel, this), 1);
 
-        new ValeurBruteContainer(10, this.leftPanel, this);
+        new PlusContainer(this.leftPanel, this);
+        new MoinsContainer(this.leftPanel, this);
+        new ValeurBruteContainer(4, this.leftPanel, this);
+        new ValeurBruteContainer(4, this.leftPanel, this);
         new ValeurBruteContainer(2, this.leftPanel, this);
+        new ValeurBruteContainer(1, this.leftPanel, this);
 
-        let f = new Flag([new Print(new ValeurBrute("hehe"))]);
+        new BooleenBrutContainer(true, this.leftPanel, this);
+        new EgalContainer(this.leftPanel, this);
+        new InfContainer(this.leftPanel, this);
+        new SupContainer(this.leftPanel, this);
+        new VarValueContainer("x", this.leftPanel, this);
+        new VarValueContainer("y", this.leftPanel, this);
+
+        /*
+        let f = new Flag([new Pour(new Print(new ValeurBrute("hehe")), new ValeurBrute(2))]);
         f.onLaunch();
         f.execute([]);
+        */
         /*
         let l = new ListContainer(this.leftPanel, this);
         let s = new StructureContainer(l, this.leftPanel, this);
