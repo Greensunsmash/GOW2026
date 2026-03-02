@@ -19,16 +19,10 @@ export class Si extends Group implements Executable {
         }
     }
 
-    execute(): void {
-        if (this.bool.eval()) {
-            super.execute();
-        }
-    }
+    execute(): void {if (this.bool.eval()) super.execute();}
 
     onLaunch(l: Launchable): boolean {
-        if (this.bool.onLaunch(l)) {
-            return super.onLaunch(l);
-        }
+        if (this.bool.onLaunch(l)) return super.onLaunch(l);
         return false;
     }
 }

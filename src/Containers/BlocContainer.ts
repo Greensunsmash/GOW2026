@@ -1,11 +1,14 @@
 import * as GUI from "@babylonjs/gui";
 import { EmptySlot } from "./EmptySlot";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
-import { Bloc } from "../Language/Bloc";
+import { Valeur } from "../Language/Valeur/Valeur";
+import type { Booleen } from "../Language/Booleen/Booleen";
+import { ValeurBrute } from "../Language/Valeur/ValeurBrute";
+import { Vector2 } from "@babylonjs/core";
 
 export type ArgsType = "VALEUR" | "BOOLEEN" | "ALL" | "NONE";
 
-// Cette classe repésente la base d'un bloc scratch
+// Cette classe repésente la base d'un bloc scratch. Return une liste de Valeur
 export class BlocContainer extends GUI.Rectangle {
 
     private readonly container: GUI.StackPanel;
@@ -38,6 +41,7 @@ export class BlocContainer extends GUI.Rectangle {
         this.container.isVertical = false;
         this.container.adaptWidthToChildren = true;
         this.container.adaptHeightToChildren = true;
+        this.container.isHitTestVisible = false;
         this.addControl(this.container);
 
         for (let i = 0; i < list.length; i++) {
@@ -52,6 +56,7 @@ export class BlocContainer extends GUI.Rectangle {
                 label.paddingRight = "10px";
                 label.paddingTop = "10px";
                 label.paddingBottom = "10px";
+                label.isHitTestVisible = false;
 
                 this.labels.push(label);
                 this.container.addControl(label);
@@ -66,6 +71,7 @@ export class BlocContainer extends GUI.Rectangle {
                 slotWrapper.adaptWidthToChildren = true;
                 slotWrapper.adaptHeightToChildren = true;
                 slotWrapper.color = "transparent";
+                slotWrapper.isHitTestVisible = false;
 
                 const slot = new EmptySlot(this, this.args[this.args.length - 1]);
                 slotWrapper.addControl(slot);
@@ -79,7 +85,7 @@ export class BlocContainer extends GUI.Rectangle {
         this.build();
     }
 
-    // Préparations finales du rectangle (fonction destinée à être override)
+    // Préparations finales du rectangle (fonction destinée à être override (NOPE TRES MAUVAISE IDEE))
     protected build(): void {
         this.cornerRadius = 10;
         this.color = "white";
@@ -93,9 +99,7 @@ export class BlocContainer extends GUI.Rectangle {
     public insertControlAt( control: BlocContainer, slotWrapper: GUI.Rectangle): void {
         if (!slotWrapper) return;
 
-        if (control.parent) {
-            control.parent.removeControl(control);
-        }
+        if (control.parent) {control.parent.removeControl(control);}
 
         let nb:number;
         for (nb= 0; nb<slotWrapper.children.length; nb++) slotWrapper.children[nb].dispose();
@@ -117,12 +121,31 @@ export class BlocContainer extends GUI.Rectangle {
         for (i=0; i<this.slots.length; i++) {
             if (slotWrapper === this.slots[i]) break;
         }
-        console.log(i);
+        //console.log(i);
         slotWrapper.clearControls();
         slotWrapper.addControl(new EmptySlot(this, this.args[i]));
     }
 
-    public generateCode() : Bloc { }
+    // Fonction de base pour récupérer la valeur, se contente de renvoyer une liste des valeurs données
+    public getValue(): (Valeur | Booleen)[] {
+        return this.slots.map((slot : GUI.Rectangle) => {
+            if (slot instanceof BlocContainer) return slot.getValue()[0]
+            return new ValeurBrute(0);  
+        })
+    }
+
+    // Renvoie si le point donné appartient à ce bloc où un bloc enfant
+    public isPointHandle(coords : Vector2): (GUI.Rectangle | null) {
+        for (let i=0; i<this.slots.length; i++) {
+            let s = this.slots[i].children[0]; // Normalement le wrapper a un seul enfant
+            if (s instanceof BlocContainer) {
+                let result = s.isPointHandle(coords);
+                if (result) return result;
+            }
+        }
+        if (this.contains(coords.x, coords.y)) return this;
+        return null;
+    }
 
     // NE PAS TOUCHER
     unableSlotHovering():void {}

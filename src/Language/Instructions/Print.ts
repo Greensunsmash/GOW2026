@@ -9,28 +9,18 @@ export class Print extends Instruction {
 
     constructor(arg: Valeur | Booleen) {
         super();
-        if ("eval" in arg && typeof arg.eval === "function") {
-            if ((arg as Valeur).eval && !(arg as Booleen).eval) {
-                this.valeur = arg as Valeur;
-            } else {
-                this.bool = arg as Booleen;
-            }
-        }
+        if (arg instanceof Valeur) this.valeur = arg;
+        if (arg instanceof Booleen) this.bool = arg;
     }
 
     execute(): void {
-        if (this.valeur) {
-            console.log(this.valeur.eval().getValue());
-        }
-        if (this.bool) {
-            console.log(this.bool.eval());
-        }
+        if (this.valeur) console.log(this.valeur.eval().getValue());
+        if (this.bool) console.log(this.bool.eval());
     }
 
     onLaunch(l: Launchable): boolean {
-        if (this.valeur) {
-            return this.valeur.onLaunch(l);
-        }
+        if (this.valeur) return this.valeur.onLaunch(l);
+        if (this.bool) return this.bool.onLaunch(l);
         return true;
     }
 }

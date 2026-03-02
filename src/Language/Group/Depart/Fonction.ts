@@ -9,9 +9,6 @@ export class Fonction extends Group implements Launchable {
     private name: string;
     private args?: string[];
 
-    constructor(name: string);
-    constructor(name: string, e: Executable);
-    constructor(name: string, eList: Executable[]);
     constructor(name: string, eOrList?: Executable | Executable[]) {
         if (!eOrList) {
             super();
@@ -37,9 +34,7 @@ export class Fonction extends Group implements Launchable {
 
     onLaunch(): boolean {
         for (const e of this.list) {
-            if (e instanceof Bloc && !e.onLaunch(this)) {
-                return false;
-            }
+            if (e instanceof Bloc && !e.onLaunch(this)) return false;
         }
         Memory.get().setFonction(this.name, this);
         return true;

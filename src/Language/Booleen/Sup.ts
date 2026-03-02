@@ -19,7 +19,5 @@ export class Sup extends Booleen {
         return value2.infTo(value1);
     }
 
-    onLaunch(l: Launchable): boolean {
-        return this.v1.onLaunch(l) && this.v2.onLaunch(l);
-    }
+    onLaunch(l: Launchable): boolean {return this.v1.onLaunch(l) && this.v2.onLaunch(l);}
 }

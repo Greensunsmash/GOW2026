@@ -5,18 +5,11 @@ import type { Launchable } from "../Launchable";
 export abstract class Group extends Bloc {
     protected list: Executable[];
 
-    constructor();
-    constructor(e: Executable);
-    constructor(eList: Executable[]);
     constructor(eOrList?: Executable | Executable[]) {
         super();
-        if (!eOrList) {
-            this.list = [];
-        } else if (Array.isArray(eOrList)) {
-            this.list = [...eOrList];
-        } else {
-            this.list = [eOrList];
-        }
+        if (!eOrList) this.list = [];
+        else if (Array.isArray(eOrList)) this.list = [...eOrList];
+        else this.list = [eOrList];
     }
 
     execute(): void {

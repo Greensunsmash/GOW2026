@@ -56,7 +56,6 @@ export class Value {
 
     infTo(value: Value): boolean {
         switch (this.getType()) {
-
             case "INT":
                 switch (value.getType()) {
                     case "INT":
@@ -86,7 +85,6 @@ export class Value {
 
     add(value: Value): Value {
         switch (this.getType()) {
-
             case "INT":
                 switch (value.getType()) {
                     case "INT":
@@ -120,7 +118,6 @@ export class Value {
 
     substract(value: Value): Value {
         switch (this.getType()) {
-
             case "INT":
                 switch (value.getType()) {
                     case "INT":

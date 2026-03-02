@@ -2,10 +2,15 @@ import { Engine, Scene } from "@babylonjs/core";
 import type { EmptySlot } from "../../Containers/EmptySlot";
 import type { Magnet } from "../../Containers/Magnet";
 import { AssetLibrary } from "../../Shared/AssetLibrary";
+import { ListContainer } from "../../Containers/ListContainer";
 
 export abstract class GameScene {
     public scene: Scene;
-    private hoverSlot : EmptySlot | Magnet | null = null;
+    private hoverSlot : GUI.Rectangle | null = null;
+    private dragging : boolean = false;
+    public dragListeners : (() => void)[];
+    public undragListeners : (() => void)[];
+
 
     protected _drh : AssetLibrary;
     protected _isLoaded : boolean = false;
@@ -13,6 +18,9 @@ export abstract class GameScene {
     constructor(engine: Engine) {
         this.scene = new Scene(engine);
         this._drh = new AssetLibrary(this.scene);
+        this.dragListeners = []
+        this.undragListeners = []
+        //new HemisphericLight("light", new Vector3(0,1,0), this.scene);
     }
 
 
@@ -25,18 +33,32 @@ export abstract class GameScene {
     }
 
     // SETTERS/GETTERS
-    public setHoverSlot(c:EmptySlot | Magnet | null):boolean {
-        if (this.hoverSlot) {
-            if (c) return false; // C'est de la merde ça
+    public setHoverSlot(c: GUI.Rectangle | null): boolean {
+        if (c === null) {
             this.hoverSlot = null;
             return true;
         }
-        else {
-            if (!c) console.log ("hover en théorie impossible, à comprendre"); // SI si en fait c'est compréhensible et possible
-            this.hoverSlot = c;
+        if (this.hoverSlot === c) {
             return true;
         }
+        this.hoverSlot = c;
+        return true;
     }
-    public getHoverSlot():EmptySlot | Magnet | null {return this.hoverSlot;}
+    public getHoverSlot(): GUI.Rectangle | null {return this.hoverSlot;}
+    public isDragging(): boolean{return this.dragging;}
+    public setDragging(bool:boolean) {
+        if (bool) {
+            for (let i = 0; i<this.dragListeners.length; i++) {
+                this.dragListeners[i]();
+            }
+            if (this.hoverSlot instanceof ListContainer) this.hoverSlot.toggleMagnet(true);
+        } else {
+            for (let i = 0; i<this.undragListeners.length; i++) {
+                this.undragListeners[i]();
+            }
+            if (this.hoverSlot instanceof ListContainer) this.hoverSlot.toggleMagnet(false);
+        }
+        this.dragging = bool;
+    }
 
 }

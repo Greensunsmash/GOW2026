@@ -27,9 +27,7 @@ export class ExeFonction extends Instruction {
         }
     }
 
-    addArgs(valeur: Valeur): void {
-        this.list.push(valeur);
-    }
+    addArgs(valeur: Valeur): void {this.list.push(valeur);}
 
     onLaunch(l: Launchable): boolean {
         for (const v of this.list) {

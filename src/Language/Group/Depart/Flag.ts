@@ -16,15 +16,13 @@ export class Flag extends Group implements Launchable {
         }
     }
 
-    execute(list?: Value[]): void {
+    execute(_list?: Value[]): void {
         super.execute();
     }
 
     onLaunch(): boolean {
         for (const e of this.list) {
-            if (e instanceof Bloc && !e.onLaunch(this)) {
-                return false;
-            }
+            if (e instanceof Bloc && !e.onLaunch(this)) return false;
         }
         return true;
     }
