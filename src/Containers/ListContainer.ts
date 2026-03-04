@@ -70,8 +70,8 @@ export class ListContainer extends GUI.Rectangle {
             if (this.detector.isHitTestVisible && pointerInfo.type === PointerEventTypes.POINTERMOVE) {
                 const evt = pointerInfo.event;
                 if (this.getHover()) {
-                    if (!this.detector.contains(evt.x, evt.y)) {
-                        this.setHover(false);
+                    if (!this.detector.contains(evt.x, evt.y) && this.scene.getHoverList() === this) {
+                        this.scene.setHoverList(null);
                     } else if (scene.isDragging()) {
                         let x = evt.x - this.stack.leftInPixels;
                         let y = evt.y - this.stack.topInPixels;
@@ -87,7 +87,7 @@ export class ListContainer extends GUI.Rectangle {
                     }
                 } else {
                     if (this.detector.contains(evt.x, evt.y)){
-                        this.setHover(true);
+                        this.scene.setHoverList(this);
                     }
                 }
             }
@@ -128,9 +128,13 @@ export class ListContainer extends GUI.Rectangle {
 
 
                 let l : ListContainer;
-                if (this.scene.getHoverSlot() === this) this.setHover(false);
+                if (this.scene.getHoverList() === this) this.scene.setHoverList(null);
 
-                if (nb == 0 || (nb == 1 && this.list.indexOf(this.magnet) == 0) ) l = this; // On a pris le premier bloc, donc on déplace tout
+                if (nb == 0 || (nb == 1 && this.list.indexOf(this.magnet) == 0) ) {// On a pris le premier bloc, donc on déplace tout
+                    l = this;
+                    this.parent?.removeControl(this);
+                    this.root.addControl(this);
+                }
                 else { // Sinon, il va falloir séparer en 2
                     l = new ListContainer(this.root, this.scene);
 
@@ -203,7 +207,7 @@ export class ListContainer extends GUI.Rectangle {
                 // On le relache
                 this.scene.scene.onPointerUp = (_evt:IPointerEvent) => {
                     l.isDragging = false;
-                    let gros_q = this.scene.getHoverSlot();
+                    let gros_q = this.scene.getHoverList();
                     if (gros_q instanceof ListContainer && gros_q != l) {
                         if ((gros_q.getMagnetID() === 0 && !gros_q.isFirst()) || (gros_q.getMagnetID()>0 && !l.isFirst())) {
                             gros_q.mergeList(l);
@@ -351,14 +355,11 @@ export class ListContainer extends GUI.Rectangle {
     getHover():boolean{return this.hover;}
     setHover(bool:boolean){
         if (bool) {
-            if (this.scene.setHoverSlot(this)) {
-                this.detector.background = "white";
-                if (this.scene.isDragging()) this.toggleMagnet(true);
-                this.hover = bool;
-                //console.log("hover");
-            }
+            this.detector.background = "white";
+            if (this.scene.isDragging()) this.toggleMagnet(true);
+            this.hover = bool;
+            //console.log("hover");
         } else {
-            this.scene.setHoverSlot(null);
             this.detector.background = "#383838";
             this.toggleMagnet(false);
             this.hover = bool;

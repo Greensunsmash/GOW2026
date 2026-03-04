@@ -6,6 +6,8 @@ import type { ArgsType, BlocContainer } from "./BlocContainer";
 // Cette classe symbolise un slot (de BlocContainer) vide qui peut donc être remplacé
 export class EmptySlot extends GUI.Rectangle {
 
+    private static nb:number=0
+    private id:number;
     private readonly scene:GameScene;
     private readonly blocParent : BlocContainer;
     private readonly type : ArgsType;
@@ -13,6 +15,8 @@ export class EmptySlot extends GUI.Rectangle {
 
     constructor(parent:BlocContainer, type:ArgsType) {
         super();
+        this.id = EmptySlot.nb;
+        EmptySlot.nb += 1;
         this.scene = parent.getScene();
         this.type = type;
         this.blocParent = parent;
@@ -31,9 +35,9 @@ export class EmptySlot extends GUI.Rectangle {
                 const evt = pointerInfo.event;
                 const contains = this.contains(evt.x, evt.y);
                 if (this.getHover()) {
-                    if (!contains) this.setHover(false);
+                    if (!contains && this.scene.getHoverSlot() === this) this.scene.setHoverSlot(null);
                 } else {
-                    if (contains) this.setHover(true);
+                    if (contains) this.scene.setHoverSlot(this);
                 }
             }
         });
@@ -41,23 +45,25 @@ export class EmptySlot extends GUI.Rectangle {
 
     // Remplace si c'est du bon type
     public replaceIfMatch(c:BlocContainer) : void {if (this.getType() === c.getType() || (this.getType() === "ALL" && c.getType() !== "NONE")) this.replaceSlot(c);}
-    private replaceSlot(c:BlocContainer) : void {if (this.parent instanceof GUI.Rectangle) this.blocParent.insertControlAt(c, this.parent);}
+    private replaceSlot(c:BlocContainer) : void {
+        if (this.parent instanceof GUI.Rectangle) {
+            if (this.scene.getHoverSlot() === this) this.scene.setHoverSlot(null); 
+            this.blocParent.insertControlAt(c, this.parent);
+        }
+    }
 
     // Getters
     getType():ArgsType {return this.type;}
     getHover() : boolean {return this.hover;}
     setHover(bool:boolean) {
         if (bool) {
-            if (this.scene.setHoverSlot(this)) {
-                this.background = "white";
-                this.hover = bool;
-            }
-        }
-        else {
-            this.scene.setHoverSlot(null);
+            this.background = "white";
+            this.hover = bool;
+        } else {
             this.background = "#383838";
             this.hover = bool;
         };
     }
 
+    toSring():string {return "EmptySlot " + this.id.toString();}
 }
