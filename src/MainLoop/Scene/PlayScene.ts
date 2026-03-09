@@ -33,6 +33,8 @@ import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
 import { FonctionContainer } from "../../Containers/Prefabs/FonctionContainer";
 import { ExeFonction } from "../../Language/Instructions/ExeFonction";
 import { ExeFonctionContainer } from "../../Containers/Prefabs/ExeFonctionContainer";
+import { LambdaContainer } from "../../Containers/Prefabs/LambdaContainer";
+import { LambdaInstruction } from "../../Language/Instructions/LambdaInstruction";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene {
@@ -86,6 +88,7 @@ export class PlayScene extends GameScene {
         new SupContainer(this.leftPanel, this);
         new VarValueContainer("x", this.leftPanel, this);
         new VarValueContainer("y", this.leftPanel, this);
+
 
         /*
         let f = new Flag([new Pour(new Print(new ValeurBrute("hehe")), new ValeurBrute(2))]);
@@ -142,6 +145,19 @@ export class PlayScene extends GameScene {
 
     update(): void {
         //this.player.update();
+    }
+
+    async asyncInit() {
+        await this.initGameScene();
+
+        new LambdaContainer(
+            "Avancer d'une case", 
+            new LambdaInstruction(
+                () => this.level.getRobot().moveForward()
+            ), 
+            this.leftPanel, 
+            this
+        );
     }
 
     async initGameScene() {
