@@ -19,8 +19,8 @@ export abstract class GameScene {
     constructor(engine: Engine) {
         this.scene = new Scene(engine);
         this.drh = new AssetLibrary(this.scene);
-        this.dragListeners = []
-        this.undragListeners = []
+        this.dragListeners = [];
+        this.undragListeners = [];
         new HemisphericLight("light", new Vector3(0,1,0), this.scene);
     }
 
@@ -37,7 +37,7 @@ export abstract class GameScene {
         if (c === null) {
             this.hoverSlot?.setHover(false);
             this.hoverSlot = null;
-            console.log("HoverSlot : ", null);
+            //console.log("HoverSlot : ", null);
             return true;
         }
         if (this.hoverSlot === c) {
@@ -46,7 +46,7 @@ export abstract class GameScene {
         this.hoverSlot?.setHover(false);
         this.hoverSlot = c;
         this.hoverSlot.setHover(true);
-        console.log("HoverSlot : ", c.toSring());
+        //console.log("HoverSlot : ", c.toSring());
         return true;
     }
     public getHoverSlot(): EmptySlot | null {return this.hoverSlot;}
@@ -55,7 +55,7 @@ export abstract class GameScene {
         if (c === null) {
             this.hoverList?.setHover(false);
             this.hoverList = null;
-            //console.log("HoverSlot : ", null);
+            console.log("HoverList : ", null);
             return true;
         }
         if (this.hoverList === c) {
@@ -64,7 +64,7 @@ export abstract class GameScene {
         this.hoverList?.setHover(false);
         this.hoverList = c;
         this.hoverList.setHover(true);
-        //console.log("HoverSlot : ", c);
+        console.log("HoverList : ", c.toString());
         return true;
     }
     public getHoverList():ListContainer | null {return this.hoverList;}

@@ -15,10 +15,14 @@ import { FlagContainer } from "./Prefabs/FlagContainer";
 // WARNING : Une instruction ne peut être seule et doit toujours être contenue dans un ListContainer
 export class ListContainer extends GUI.Rectangle {
 
+    private static count = 0;
+    private readonly id : number;
     private readonly root : GUI.Container;
     private readonly scene : GameScene;
     private readonly stack : GUI.StackPanel;
     private readonly magnet : Magnet;
+    private pointerObserver: BABYLON.Observer<BABYLON.PointerInfo>;
+    private keyboardObserver: BABYLON.Observer<BABYLON.KeyboardInfo>;
     private readonly detector : GUI.Rectangle;
     private readonly list : (InstructionContainer | Magnet)[];
     private readonly structureList : StructureContainer[];
@@ -27,6 +31,8 @@ export class ListContainer extends GUI.Rectangle {
 
     constructor(root: GUI.Container, scene: GameScene) {
         super();
+        this.id = ListContainer.count;
+        ListContainer.count += 1;
         this.root = root;
         this.list = [];
         this.structureList = [];
@@ -66,7 +72,7 @@ export class ListContainer extends GUI.Rectangle {
         this.stack.addControl(this.magnet);
 
         // Même moi j'y comprends rien
-        this.scene.scene.onPointerObservable.add((pointerInfo) => { 
+        this.pointerObserver = this.scene.scene.onPointerObservable.add((pointerInfo) => { 
             if (this.detector.isHitTestVisible && pointerInfo.type === PointerEventTypes.POINTERMOVE) {
                 const evt = pointerInfo.event;
                 if (this.getHover()) {
@@ -99,7 +105,7 @@ export class ListContainer extends GUI.Rectangle {
         this.scene.undragListeners.push(() => {this.stack.paddingBottom = "0px";});
 
         // TEMPORAIRE, POUR DECLENCHER LE LANCEMENT
-        scene.scene.onKeyboardObservable.add((kbInfo) => {
+        this.keyboardObserver = scene.scene.onKeyboardObservable.add((kbInfo) => {
             if (kbInfo.type === BABYLON.KeyboardEventTypes.KEYDOWN) {
                 if (kbInfo.event.key === "a" || kbInfo.event.key === "A") {
                     this.getInstructionGroup();
@@ -222,7 +228,6 @@ export class ListContainer extends GUI.Rectangle {
                         l.detector.isHitTestVisible = true;
                     }
                 }
-
                 break;
 
             }
@@ -298,10 +303,14 @@ export class ListContainer extends GUI.Rectangle {
 
     // Permet de rassembler 2 listes
     mergeList(list:ListContainer) {
-        if (this === list) return;
+        if (this === list)  {
+            console.log("bah wtf");
+            return;
+        }
         let new_list = list.getList().filter((x)=>x instanceof InstructionContainer);
         let id = this.getMagnetID();
 
+        console.log("Merge : ", new_list)
         for (let i=0; i<new_list.length; i++) {
             this.addInstruction(new_list[i], i+id);
         }
@@ -310,7 +319,6 @@ export class ListContainer extends GUI.Rectangle {
         }
         this.refreshIdentation();
         this.root.removeControl(list);
-        list.dispose();
     }
 
     // Renvoie (et pour l'instant éxecute) la liste d'instructio, si elle est valide (possède un Depart)
@@ -385,4 +393,10 @@ export class ListContainer extends GUI.Rectangle {
     }
     getMagnetID(): number {return this.list.indexOf(this.magnet);}
 
+    toString():string {return "ListContainer : " + this.id.toString();}
+    dispose(): void {
+        this.scene.scene.onPointerObservable.remove(this.pointerObserver);
+        this.scene.scene.onKeyboardObservable.remove(this.keyboardObserver);
+        super.dispose();
+    }
 }
