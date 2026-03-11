@@ -66,4 +66,5 @@ export class EmptySlot extends GUI.Rectangle {
     }
 
     toSring():string {return "EmptySlot " + this.id.toString();}
+
 }

@@ -397,6 +397,9 @@ export class ListContainer extends GUI.Rectangle {
     dispose(): void {
         this.scene.scene.onPointerObservable.remove(this.pointerObserver);
         this.scene.scene.onKeyboardObservable.remove(this.keyboardObserver);
+        this.detector.dispose();
+        this.stack.dispose();
+        this.magnet.dispose();
         super.dispose();
     }
 }

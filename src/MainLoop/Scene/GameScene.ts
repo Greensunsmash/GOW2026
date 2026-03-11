@@ -55,7 +55,7 @@ export abstract class GameScene {
         if (c === null) {
             this.hoverList?.setHover(false);
             this.hoverList = null;
-            console.log("HoverList : ", null);
+            //console.log("HoverList : ", null);
             return true;
         }
         if (this.hoverList === c) {
@@ -64,7 +64,7 @@ export abstract class GameScene {
         this.hoverList?.setHover(false);
         this.hoverList = c;
         this.hoverList.setHover(true);
-        console.log("HoverList : ", c.toString());
+        //console.log("HoverList : ", c.toString());
         return true;
     }
     public getHoverList():ListContainer | null {return this.hoverList;}
