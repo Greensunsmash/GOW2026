@@ -13,7 +13,7 @@ export class Print extends Instruction {
         if (arg instanceof Booleen) this.bool = arg;
     }
 
-    execute(): void {
+    async execute(): Promise<void> {
         if (this.valeur) console.log(this.valeur.eval().getValue());
         if (this.bool) console.log(this.bool.eval());
     }

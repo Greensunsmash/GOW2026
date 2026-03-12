@@ -19,7 +19,7 @@ export class SetVar extends Instruction {
         }
     }
 
-    execute(): void {
+    async execute(): Promise<void> {
         if (this.valeur) {Memory.get().setVariable(this.name, this.valeur.eval());}
         if (this.bool) {Memory.get().setVariable(this.name, this.bool.eval());}
     }

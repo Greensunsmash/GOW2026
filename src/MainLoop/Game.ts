@@ -44,6 +44,9 @@ export class Game {
         this.currentScene.scene.activeCameras.push(mapCamera);
         this.currentScene.scene.activeCameras.push(uiCamera);
 
+        if (this.currentScene instanceof PlayScene)
+            this.currentScene.addDetachControlObservables(this.engine, mapCamera);
+
         this.engine.runRenderLoop(() => {
             this.currentScene.update();
             this.currentScene.scene.render();

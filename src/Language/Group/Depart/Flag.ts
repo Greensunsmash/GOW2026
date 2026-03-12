@@ -16,8 +16,8 @@ export class Flag extends Group implements Launchable {
         }
     }
 
-    execute(_list?: Value[]): void {
-        super.execute();
+    async execute(_list?: Value[]): Promise<void> {
+        await super.execute();
     }
 
     onLaunch(): boolean {

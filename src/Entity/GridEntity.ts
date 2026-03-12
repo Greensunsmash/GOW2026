@@ -18,30 +18,30 @@ export class GridEntity {
         this.mesh.rotation.y = this.facingIndex * (Math.PI / 2);
     }
 
-    moveForward() {
+    async moveForward() {
         const facing = GridUtils.DIRECTIONS[this.facingIndex];
-        this.tryMove(facing.x, facing.z);
+        await this.tryMove(facing.x, facing.z);
     }
 
-    moveBackward() {
+    async moveBackward() {
         const facing = GridUtils.DIRECTIONS[this.facingIndex];
-        this.tryMove(-facing.x, -facing.z);
+        await this.tryMove(-facing.x, -facing.z);
     }
 
-    turnRight() {
+    async turnRight() {
         if (this._isMoving) return;
         // 0 -> 1 -> 2 -> 3 -> 0
         this.facingIndex = (this.facingIndex + 1) % 4;
-        this.animateRotation(Math.PI / 2);
+        await this.animateRotation(Math.PI / 2);
     }
 
-    turnLeft() {
+    async turnLeft() {
         if (this._isMoving) return;
         this.facingIndex = (this.facingIndex - 1 + 4) % 4;
-        this.animateRotation(-Math.PI / 2);
+        await this.animateRotation(-Math.PI / 2);
     }
 
-    tryMove(dx: number, dz: number) {
+    async tryMove(dx: number, dz: number) {
         const targetGridPos = GridUtils.add(
             this.gridPos,
             {
@@ -52,17 +52,17 @@ export class GridEntity {
         );
 
         if (this.level.isWalkable(targetGridPos))
-            this.doMove(targetGridPos);
+            await this.doMove(targetGridPos);
     }
 
-    private doMove(targetGridPos : GridPoint) {
+    private async doMove(targetGridPos : GridPoint): Promise<void> {
         this._isMoving = true;
         this.gridPos = targetGridPos;
 
         const frameRate = 60;
         const duration = 15; 
 
-        Animation.CreateAndStartAnimation(
+        return new Promise ((resolve) => Animation.CreateAndStartAnimation(
             "slide",
             this.mesh,
             "position",
@@ -74,15 +74,16 @@ export class GridEntity {
             this.createEasing(), 
             () => {
                 this._isMoving = false; 
+                resolve();
             }
-        );
+        ));
     }
 
-    private animateRotation(relativeAngle: number) {
+    private async animateRotation(relativeAngle: number): Promise<void> {
         this._isMoving = true;
         const targetAngle = this.mesh.rotation.y + relativeAngle;
 
-        Animation.CreateAndStartAnimation(
+        return new Promise((resolve) => Animation.CreateAndStartAnimation(
             "rotate",
             this.mesh,
             "rotation.y",
@@ -95,8 +96,9 @@ export class GridEntity {
             () => { 
                 this.mesh.rotation.y = this.mesh.rotation.y % (2 * Math.PI);
                 this._isMoving = false; 
+                resolve();
             }
-        );
+        ));
     }
 
     private createEasing(): EasingFunction {

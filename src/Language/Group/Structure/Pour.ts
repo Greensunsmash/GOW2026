@@ -19,12 +19,12 @@ export class Pour extends Group implements Executable {
         }
     }
 
-    execute(): void {
+    async execute(): Promise<void> {
         const val = this.valeur.eval();
         if (val.getType() === "INT") {
             const nb = val.getValue() as number;
             for (let i = 0; i < nb; i++) {
-                super.execute();
+                await super.execute();
             }
         }
         else console.log("oups");

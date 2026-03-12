@@ -1,3 +1,3 @@
 export interface Executable {
-    execute(): void;
+    execute(): Promise<void>;
 }

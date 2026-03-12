@@ -7,6 +7,7 @@ import { Plus } from "../../Language/Valeur/Plus";
 export class PlusContainer extends ValeurContainer {
 
     // Rajouter un InputText. En attendant on va faire comme ça
+    // C'est inacceptable.
     constructor(root: GUI.Container, scene: GameScene) {
         super(["", "v", " + ", "v"], root, scene);
     }

@@ -12,9 +12,9 @@ export abstract class Group extends Bloc {
         else this.list = [eOrList];
     }
 
-    execute(): void {
+    async execute(): Promise<void> {
         for (const e of this.list) {
-            e.execute();
+            await e.execute();
         }
     }
 

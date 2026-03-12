@@ -15,15 +15,15 @@ export class ExeFonction extends Instruction {
         this.list = [];
     }
 
-    execute(): void {
+    async execute(): Promise<void> {
         const func = Memory.get().getFonction(this.name);
         if (!func) return;
 
         if (this.list.length > 0) {
             const l: Value[] = this.list.map(v => v.eval());
-            func.execute(l);
+            await func.execute(l);
         } else {
-            func.execute();
+            await func.execute();
         }
     }
 
