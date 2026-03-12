@@ -96,8 +96,11 @@ export class BlocContainer extends GUI.Rectangle {
     }
 
     // Insérer un bloc dans un slot
-    public insertControlAt( control: BlocContainer, slotWrapper: GUI.Rectangle): void {
-        if (!slotWrapper) return;
+    public insertControlAt(control: BlocContainer, slotWrapper: GUI.Rectangle): void {
+        if (!slotWrapper) {
+            console.log("Pas de Wrapper ?????????");
+            return;
+        }
 
         if (control.parent) {control.parent.removeControl(control);}
 

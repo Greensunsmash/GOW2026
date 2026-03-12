@@ -35,6 +35,8 @@ export class DragBehavior {
         // Remets le bloc enfant de la root pour le déplacer
         if (previousContainer instanceof BlocContainer) {
             previousContainer.resetEmptySlot(previousWrapper);
+        } else {
+            this.target.parent?.removeControl(this.target);
         }
         this.target.getRoot().addControl(this.target);
 
