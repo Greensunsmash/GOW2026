@@ -5,6 +5,7 @@ import { Valeur } from "../Language/Valeur/Valeur";
 import type { Booleen } from "../Language/Booleen/Booleen";
 import { ValeurBrute } from "../Language/Valeur/ValeurBrute";
 import { Vector2 } from "@babylonjs/core";
+import { InputSlot } from "./InputSlot";
 
 export type ArgsType = "VALEUR" | "BOOLEEN" | "ALL" | "NONE";
 
@@ -73,7 +74,11 @@ export class BlocContainer extends GUI.Rectangle {
                 slotWrapper.color = "transparent";
                 slotWrapper.isHitTestVisible = false;
 
-                const slot = new EmptySlot(this, this.args[this.args.length - 1]);
+                let slot;
+                if (list[i] == "b")
+                    slot = new EmptySlot(this, this.args[this.args.length - 1]);
+                else
+                    slot = new InputSlot(this, this.args[this.args.length - 1]);
                 slotWrapper.addControl(slot);
 
                 this.slots.push(slotWrapper);
@@ -132,9 +137,10 @@ export class BlocContainer extends GUI.Rectangle {
     // Fonction de base pour récupérer la valeur, se contente de renvoyer une liste des valeurs données
     public getValue(): (Valeur | Booleen)[] {
         return this.slots.map((slot : GUI.Rectangle) => {
-            if (slot instanceof BlocContainer) return slot.getValue()[0]
+            if (slot instanceof BlocContainer) return slot.getValue()[0];
+            else if (slot instanceof InputSlot) return slot.getValue();
             return new ValeurBrute(0);  
-        })
+        });
     }
 
     // Renvoie si le point donné appartient à ce bloc où un bloc enfant
@@ -142,6 +148,9 @@ export class BlocContainer extends GUI.Rectangle {
         for (let i=0; i<this.slots.length; i++) {
             let s = this.slots[i].children[0]; // Normalement le wrapper a un seul enfant
             if (s instanceof BlocContainer) {
+                let result = s.isPointHandle(coords);
+                if (result) return result;
+            } else if (s instanceof InputSlot) {
                 let result = s.isPointHandle(coords);
                 if (result) return result;
             }

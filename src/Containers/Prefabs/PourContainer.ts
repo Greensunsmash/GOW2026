@@ -5,7 +5,8 @@ import { StructureContainer } from "../StructureContainer";
 import type { GameScene } from "../../MainLoop/Scene/GameScene";
 import type { Executable } from "../../Language/Executable";
 import { Pour } from "../../Language/Group/Structure/Pour";
-import type { ValeurContainer } from "../ValeurContainer";
+import { ValeurContainer } from "../ValeurContainer";
+import { InputSlot } from "../InputSlot";
 
 export class PourContainer extends StructureContainer {
     
@@ -15,7 +16,13 @@ export class PourContainer extends StructureContainer {
 
     public getGroup(e:Executable[]): Executable {
         let slots = this.getHeader().getSlots();
-        let value = slots[0].children[0] as ValeurContainer;
-        return new Pour(e, value.getValue()[0]);
+        let value = slots[0].children[0];
+        let times;
+        if (value instanceof ValeurContainer) {
+            times = value.getValue()[0];
+        } else if (value instanceof InputSlot) {
+            times = value.getValue();
+        }
+        return new Pour(e, times);
     }
 }

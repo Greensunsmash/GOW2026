@@ -7,8 +7,8 @@ import type { ArgsType, BlocContainer } from "./BlocContainer";
 export class EmptySlot extends GUI.Rectangle {
 
     private static nb:number=0
-    private id:number;
-    private readonly scene:GameScene;
+    protected id:number;
+    protected readonly scene:GameScene;
     private readonly blocParent : BlocContainer;
     private readonly type : ArgsType;
     private hover:boolean= false;
@@ -20,8 +20,8 @@ export class EmptySlot extends GUI.Rectangle {
         this.scene = parent.getScene();
         this.type = type;
         this.blocParent = parent;
-        this.background = "#383838" ;
-        this.cornerRadius = 10 ;
+        this.background = "#383838";
+        this.cornerRadius = 10;
         this.height = "40px";
         this.width = "60px";
         this.alpha = 0.3;
@@ -29,7 +29,7 @@ export class EmptySlot extends GUI.Rectangle {
         this.init();
     }
 
-    init():void {
+    init(): void {
         this.scene.scene.onPointerObservable.add((pointerInfo) => { 
             if (pointerInfo.type === PointerEventTypes.POINTERMOVE) {
                 const evt = pointerInfo.event;
@@ -44,8 +44,12 @@ export class EmptySlot extends GUI.Rectangle {
     }
 
     // Remplace si c'est du bon type
-    public replaceIfMatch(c:BlocContainer) : void {if (this.getType() === c.getType() || (this.getType() === "ALL" && c.getType() !== "NONE")) this.replaceSlot(c);}
-    private replaceSlot(c:BlocContainer) : void {
+    public replaceIfMatch(c:BlocContainer): void {
+        if (this.getType() === c.getType() || (this.getType() === "ALL" && c.getType() !== "NONE")) 
+            this.replaceSlot(c);
+    } // spece de fou y'avait tout ca sur une seule ligne 
+    // /!\ fou
+    private replaceSlot(c:BlocContainer): void {
         if (this.parent instanceof GUI.Rectangle) {
             if (this.scene.getHoverSlot() === this) this.scene.setHoverSlot(null); 
             this.blocParent.insertControlAt(c, this.parent);
@@ -65,5 +69,6 @@ export class EmptySlot extends GUI.Rectangle {
         };
     }
 
-    toSring():string {return "EmptySlot " + this.id.toString();}
+    // y'avait écrit "tosring"  on est ou là
+    toString():string {return "EmptySlot " + this.id.toString();}
 }

@@ -1,10 +1,10 @@
+import type { Vector2 } from "@babylonjs/core";
 import * as GUI from "@babylonjs/gui";
-import type { GameScene } from "../MainLoop/Scene/GameScene";
-import { BlocContainer } from "./BlocContainer";
 import type { Instruction } from "../Language/Instructions/Instruction";
 import { Print } from "../Language/Instructions/Print";
 import { ValeurBrute } from "../Language/Valeur/ValeurBrute";
-import type { Vector2 } from "@babylonjs/core";
+import type { GameScene } from "../MainLoop/Scene/GameScene";
+import { BlocContainer } from "./BlocContainer";
 
 // Classe de base pour représenter une instruction. Contient un blocContainer pour la représentation visuelle
 export class InstructionContainer extends GUI.Rectangle {
@@ -53,11 +53,11 @@ export class InstructionContainer extends GUI.Rectangle {
 
     // Renvoie si le point donné appartient à un BlocContainer enfant (valeur ou booleen)
     public isPointHandle(coords : Vector2): (GUI.Rectangle | null) {
-        let s = this.bloc; // Normalement le wrapper a un seul enfant
+        let s: GUI.Rectangle = this.bloc; // Normalement le wrapper a un seul enfant
         if (s instanceof BlocContainer) {
             let result = s.isPointHandle(coords);
             if (result && result != this.bloc) return result;
-        }
+        } 
         return null;
     }
 

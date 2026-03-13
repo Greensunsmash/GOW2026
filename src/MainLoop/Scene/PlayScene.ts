@@ -1,56 +1,43 @@
-import { Camera, Engine, HemisphericLight, TubeBuilder, Vector3 } from "@babylonjs/core";
+import { Camera, Engine, HemisphericLight, Vector3 } from "@babylonjs/core";
 import { GameScene } from "./GameScene";
 
-import * as GUI from "@babylonjs/gui";
 import { BasicInstContainer } from "../../Containers/BasicInstContainer";
-import { ListContainer } from "../../Containers/ListContainer";
-import { BooleenBrutContainer } from "../../Containers/Prefabs/BooleenBrutContainer";
-import { EgalContainer } from "../../Containers/Prefabs/EgalContainer";
 import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
-import { InfContainer } from "../../Containers/Prefabs/InfContainer";
-import { MoinsContainer } from "../../Containers/Prefabs/MoinsContainer";
-import { PlusContainer } from "../../Containers/Prefabs/PlusContainer";
-import { PourContainer } from "../../Containers/Prefabs/PourContainer";
-import { SupContainer } from "../../Containers/Prefabs/SupContainer";
-import { ValeurBruteContainer } from "../../Containers/Prefabs/ValeurBruteContainer";
-import { VarValueContainer } from "../../Containers/Prefabs/VarValueContainer";
 import { Level } from "../../Environment/Level";
 import { LevelReader } from "../../Environment/LevelReader";
-import { MoveForwardInstuction } from "../../Language/Instructions/MoveForwardInstruction";
-import { LayerMasks } from "../../Shared/Constants";
-import type { ExecutionContext } from "../../Shared/types";
 import { MoveBackwardInstuction } from "../../Language/Instructions/MoveBackwardInstruction";
+import { MoveForwardInstuction } from "../../Language/Instructions/MoveForwardInstruction";
 import { TurnLeftInstruction } from "../../Language/Instructions/TurnLeftInstruction";
 import { TurnRightInstruction } from "../../Language/Instructions/TurnRightInstruction";
+import { LayerMasks } from "../../Shared/Constants";
+import type { ExecutionContext } from "../../Shared/types";
+import { ListContainer } from "../../Containers/ListContainer";
+import { PourContainer } from "../../Containers/Prefabs/PourContainer";
+import { SiContainer } from "../../Containers/Prefabs/SiContainer";
+import type { Container } from "@babylonjs/gui";
+import { InfContainer } from "../../Containers/Prefabs/InfContainer";
+import { SupContainer } from "../../Containers/Prefabs/SupContainer";
+import { EgalContainer } from "../../Containers/Prefabs/EgalContainer";
+import { SetVarContainer } from "../../Containers/Prefabs/SetVarContainer";
+import { VarValueContainer } from "../../Containers/Prefabs/VarValueContainer";
+import { BooleenBrutContainer } from "../../Containers/Prefabs/BooleenBrutContainer";
+import { PrintContainer } from "../../Containers/Prefabs/PrintContainer";
+import { MoinsContainer } from "../../Containers/Prefabs/MoinsContainer";
+import { PlusContainer } from "../../Containers/Prefabs/PlusContainer";
+import { FonctionContainer } from "../../Containers/Prefabs/FonctionContainer";
+import { ExeFonctionContainer } from "../../Containers/Prefabs/ExeFonctionContainer";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene {
     //private player: Player;
     
     private level : Level;
-    protected advancedTexture: GUI.AdvancedDynamicTexture;
-    protected leftPanel: GUI.Rectangle;
     private ctx: ExecutionContext;
 
     constructor(engine: Engine) {
         super(engine);
-
-        this.advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-
-        if (this.advancedTexture.layer) {
-            this.advancedTexture.layer.layerMask = LayerMasks.UI_ONLY;
-        }   
-
-        this.leftPanel = new GUI.Rectangle();
-        this.leftPanel.width = "50%";
-        this.leftPanel.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-        this.leftPanel.background = "#222222"; // Couleur de fond pour bien séparer
-        this.advancedTexture.addControl(this.leftPanel);
         
-        
-        /*
-        let l2 = new ListContainer(this.leftPanel, this);
-        l2.addInstruction(new FonctionContainer("Multiplication", ["x", "y"], this.leftPanel, this), 0);
+        /* 
         let pour = new PourContainer(l, this.leftPanel, this);
         let si = new SiContainer(l, this.leftPanel, this);
         l.addInstruction(pour.getQueue(), 0);
@@ -65,51 +52,90 @@ export class PlayScene extends GameScene {
         l.addInstruction(new ExeFonctionContainer("Multiplication", 2, this.leftPanel, this), 1)
         */
 
-        new ValeurBruteContainer(4, this.leftPanel, this);
-        new ValeurBruteContainer(4, this.leftPanel, this);
-        new ValeurBruteContainer(2, this.leftPanel, this);
-
-
-        this.asyncInit();
+        this.init();
     }
 
     update(): void {
         //this.player.update();
     }
 
-    async asyncInit() {
+    async init() {
         await this.initGameScene();
         this.ctx = {robot: this.level.getRobot()};
-        let l = new ListContainer(this.leftPanel, this);
-        let pour = new PourContainer(l, this.leftPanel, this);
-        l.addInstruction(pour.getQueue(), 0);
-        l.addInstruction(new BasicInstContainer(
+        this.setupOutilsBox();
+    }
+
+    setupOutilsBox() {
+        // Instructions (violet)
+        this.toolbox.addCategory("Instructions", "#8727F5");
+        this.toolbox.addTemplate("Instructions", (root: Container) => new BasicInstContainer(
             "Avancer d'une case", 
             new MoveForwardInstuction(this.ctx),
-            this.leftPanel, 
+            root, 
             this
-        ), 0);
-        l.addInstruction(new BasicInstContainer(
+        ));
+        this.toolbox.addTemplate("Instructions", (root: Container) => new BasicInstContainer(
             "Reculer d'une case", 
             new MoveBackwardInstuction(this.ctx),
-            this.leftPanel, 
+            root, 
             this
-        ), 0);
-        l.addInstruction(new BasicInstContainer(
+        ));
+        this.toolbox.addTemplate("Instructions", (root: Container) => new BasicInstContainer(
             "Tourner à gauche", 
             new TurnLeftInstruction(this.ctx),
-            this.leftPanel, 
+            root, 
             this
-        ), 0);
-        l.addInstruction(new BasicInstContainer(
+        ));
+        this.toolbox.addTemplate("Instructions", (root: Container) => new BasicInstContainer(
             "Tourner à droite", 
             new TurnRightInstruction(this.ctx),
-            this.leftPanel, 
+            root, 
             this
-        ), 0);
-        l.addInstruction(pour.getHeader(), 0);
-        l.addInstruction(new FlagContainer(this.leftPanel, this), 0);
-        l.addStruct(pour);
+        ));
+        this.toolbox.addTemplate("Instructions", (root: Container) => new PrintContainer(root, this));
+        this.toolbox.addTemplate("Instructions", (root: Container) => new SetVarContainer("x", root, this));
+
+        // Structures (violet)
+        this.toolbox.addCategory("Structures", "#8727F5");
+        this.toolbox.addTemplate("Structures", (root: Container) => {
+            const l = new ListContainer(root, this);
+            const pour = new PourContainer(l, root, this);
+            l.addInstruction(pour.getQueue(), 0);
+            l.addInstruction(pour.getHeader(), 0);
+            l.addStruct(pour);
+            return l;
+        }); 
+        this.toolbox.addTemplate("Structures", (root: Container) => {
+            const l = new ListContainer(root, this);
+            const si = new SiContainer(l, root, this);
+            l.addInstruction(si.getQueue(), 0);
+            l.addInstruction(si.getHeader(), 0);
+            l.addStruct(si);
+            return l;
+        });
+
+        // Booleens (orange)
+        this.toolbox.addCategory("Booléens", "#95F527", true);
+        this.toolbox.addTemplate("Booléens", (root: Container) => new BooleenBrutContainer(true, root, this));
+        this.toolbox.addTemplate("Booléens", (root: Container) => new BooleenBrutContainer(false, root, this));
+        this.toolbox.addTemplate("Booléens", (root: Container) => new InfContainer(root, this));
+        this.toolbox.addTemplate("Booléens", (root: Container) => new SupContainer(root, this));
+        this.toolbox.addTemplate("Booléens", (root: Container) => new EgalContainer(root, this));
+
+        // Variables et opérations (vert)
+        this.toolbox.addCategory("Variables et opérations", "#F58727", true);
+        this.toolbox.addTemplate("Variables et opérations", (root: Container) => new VarValueContainer("x", root, this));
+        this.toolbox.addTemplate("Variables et opérations", (root: Container) => new MoinsContainer(root, this));
+        this.toolbox.addTemplate("Variables et opérations", (root: Container) => new PlusContainer(root, this));
+
+        // Fonctions (violet puis rose)
+        this.toolbox.addCategory("Fonctions", "#F52795");
+        this.toolbox.addTemplate("Fonctions", (root: Container) => new FonctionContainer("Multiplication", ["x", "y"], root, this));
+        this.toolbox.addTemplate("Fonctions", (root: Container) => new ExeFonctionContainer("Multiplication", 2, root, this));
+
+        // Départ (rose)
+        this.toolbox.addCategory("Départ", "#F52795");
+        this.toolbox.addTemplate("Départ", (root: Container) => new FlagContainer(root, this));
 
     }
 
@@ -147,7 +173,5 @@ export class PlayScene extends GameScene {
         });
     }
 
-    run() {
-        
-    }
+    run() {}
 }

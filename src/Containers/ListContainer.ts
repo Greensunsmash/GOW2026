@@ -1,15 +1,15 @@
 import * as BABYLON from "@babylonjs/core";
+import { PointerEventTypes, Vector2, type IPointerEvent } from "@babylonjs/core";
 import * as GUI from "@babylonjs/gui";
+import type { Executable } from "../Language/Executable";
+import { Instruction } from "../Language/Instructions/Instruction";
+import type { Launchable } from "../Language/Launchable";
+import type { GameScene } from "../MainLoop/Scene/GameScene";
+import { DepartContainer } from "./DepartContainer";
 import { InstructionContainer } from "./InstructionContainer";
 import { Magnet } from "./Magnet";
-import type { GameScene } from "../MainLoop/Scene/GameScene";
-import { Instruction } from "../Language/Instructions/Instruction";
-import { PointerEventTypes, Vector2, type IPointerEvent } from "@babylonjs/core";
-import type { StructureContainer } from "./StructureContainer";
-import { DepartContainer } from "./DepartContainer";
-import type { Executable } from "../Language/Executable";
-import type { Launchable } from "../Language/Launchable";
 import { FlagContainer } from "./Prefabs/FlagContainer";
+import type { StructureContainer } from "./StructureContainer";
 
 // La classe qui permet de stocker plusieurs instructions container à la suite
 // WARNING : Une instruction ne peut être seule et doit toujours être contenue dans un ListContainer
@@ -34,6 +34,7 @@ export class ListContainer extends GUI.Rectangle {
 
         // Il ne faut surtout pas mettre ça sinon ça fonctionne plus mdr je déteste babylonjs
         // Ah bah mtn ça fonctionne hehe
+        // bien joué 
         this.adaptHeightToChildren = true;
         this.adaptWidthToChildren = true;
 
@@ -95,6 +96,7 @@ export class ListContainer extends GUI.Rectangle {
 
         this.detector.onPointerDownObservable.add((pointerInfo) => this.click(pointerInfo.x, pointerInfo.y));
 
+
         this.scene.dragListeners.push(() => {this.stack.paddingBottom = "15px";});
         this.scene.undragListeners.push(() => {this.stack.paddingBottom = "0px";});
 
@@ -109,14 +111,21 @@ export class ListContainer extends GUI.Rectangle {
     }
 
     // Appelé lorsque qu'on appuie dessus, pour démarrer le drag
-    click(x:number, y:number) {
+    click(x:number, y:number, forceStart?: boolean) {
+        console.log("wsh");
         let nb:number;
         //console.log("click");
+        console.log("list length " + this.list.length);
         for (nb=0; nb < this.list.length ; nb++) {
             if (this.list[nb] === this.magnet) continue;
-
+            console.log("past 1");
             // Sélectionne sur quel bloc on appuie
-            if (this.list[nb].contains(x, y)) {
+            console.log("list + " + nb + " lipx " + this.list[nb].leftInPixels);
+            console.log("list + " + nb + " tipx " + this.list[nb].topInPixels);
+            console.log("list + " + nb + "  w  " + this.list[nb].widthInPixels);
+            console.log("list + " + nb + "  h  " + this.list[nb].heightInPixels);
+            if (this.list[nb].contains(x, y) || forceStart) {
+                console.log("past 2/double wesh");
                 let c = this.list[nb] as InstructionContainer;
 
                 // Si jamais on a appuyé sur un Valeur/BooleenContainer, on lui transmet le drag
@@ -184,6 +193,7 @@ export class ListContainer extends GUI.Rectangle {
                     nb = save;
                 }
 
+                console.error("bip boup");
                 // On setup le drag
                 l.detector.isHitTestVisible = false;
                 this.scene.setDragging(true);
@@ -206,6 +216,14 @@ export class ListContainer extends GUI.Rectangle {
 
                 // On le relache
                 this.scene.scene.onPointerUp = (_evt:IPointerEvent) => {
+                    const toolbox = this.scene.getToolbox();
+                    if (l.isDragging && toolbox.contains(_evt.x, _evt.y)) {
+                            l.parent?.removeControl(l);
+                            l.isDragging = false;
+                            l.dispose();
+                            this.scene.setDragging(false);
+                            return;
+                    }
                     l.isDragging = false;
                     let gros_q = this.scene.getHoverList();
                     if (gros_q instanceof ListContainer && gros_q != l) {
@@ -384,5 +402,5 @@ export class ListContainer extends GUI.Rectangle {
         return null;
     }
     getMagnetID(): number {return this.list.indexOf(this.magnet);}
-
+    getDetector(): GUI.Rectangle {return this.detector;}
 }
