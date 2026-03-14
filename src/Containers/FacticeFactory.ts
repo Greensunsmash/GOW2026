@@ -4,7 +4,7 @@ export class FacticeFactory {
 
     static ultimateReaders(c: GUI.Control): GUI.Control {
         let new_superContainer;
-        console.warn("ENTERING ultimateREADERS");
+        //console.warn("ENTERING ultimateREADERS");
 
         // 1. Instanciation et copie des propriétés spécifiques au type
         if (c instanceof GUI.Rectangle) {
@@ -21,7 +21,7 @@ export class FacticeFactory {
             new_superContainer.fontSize = c.fontSize;
         } else {
             // Toujours un bon fallback !
-            console.warn(c.getClassName());
+            //console.warn(c.getClassName());
             //return new GUI.TextBlock("", "Fuck you.");
             return new GUI.Control();
         }
@@ -31,7 +31,7 @@ export class FacticeFactory {
         new_superContainer.top = c.top;
         new_superContainer.widthInPixels = c.widthInPixels;
         new_superContainer.heightInPixels = c.heightInPixels;
-        console.log("heightinpixels : " + new_superContainer.heightInPixels);
+        //console.log("heightinpixels : " + new_superContainer.heightInPixels);
         new_superContainer.horizontalAlignment = c.horizontalAlignment;
         new_superContainer.verticalAlignment = c.verticalAlignment;
         
@@ -45,7 +45,7 @@ export class FacticeFactory {
             }
         }
         
-        console.info(new_superContainer);
+        //console.info(new_superContainer);
         return new_superContainer;
     }
 }

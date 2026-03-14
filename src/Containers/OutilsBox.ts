@@ -84,7 +84,7 @@ export class OutilsBox extends Rectangle {
         const realBlock = buildBlock(newRoot);
 
         setTimeout(() => {
-            console.error("FIRST CALL TO UR");
+            //console.error("FIRST CALL TO UR");
             const facticeBlock = FacticeFactory.ultimateReaders(realBlock);
             newRoot.removeControl(realBlock);
             realBlock.dispose();
@@ -101,7 +101,7 @@ export class OutilsBox extends Rectangle {
                     realDragBlock.leftInPixels = absoluteLeft;
                     realDragBlock.topInPixels = absoluteTop;
                     //listCtn.click(evt.x, evt.y);
-                    realDragBlock.getDetector().onPointerDownObservable.add(() => console.error("You clicked on the wrong block my friend"));
+                    //realDragBlock.getDetector().onPointerDownObservable.add(() => console.error("You clicked on the wrong block my friend"));
                     //listCtn.getDetector().onPointerDownObservable.notifyObservers(new Vector2WithInfo(new Vector2(evt.x,evt.y)));
                     realDragBlock.click(evt.x, evt.y, true);
                 } else if (realDragBlock instanceof InstructionContainer) {
@@ -111,7 +111,7 @@ export class OutilsBox extends Rectangle {
                     listCtn.topInPixels = absoluteTop;
                     //listCtn.click(evt.x, evt.y);
                     
-                    listCtn.getDetector().onPointerDownObservable.add(() => console.error("You clicked on the wrong block my friend"));
+                    //listCtn.getDetector().onPointerDownObservable.add(() => console.error("You clicked on the wrong block my friend"));
                     //listCtn.getDetector().onPointerDownObservable.notifyObservers(new Vector2WithInfo(new Vector2(evt.x,evt.y)));
                     listCtn.click(evt.x, evt.y, true);
                 } else if (realDragBlock instanceof BlocContainer)  {

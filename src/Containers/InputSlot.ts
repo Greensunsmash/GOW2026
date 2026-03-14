@@ -33,16 +33,16 @@ export class InputSlot extends EmptySlot {
     }
 
     getValue(): Valeur {
-        console.error("value asked");
+        //console.error("value asked");
         let val: number | string;
         try {
             val = Number(this.textInput.text);
         } catch (err) {
             val = this.textInput.text;
         }
-        console.error("i will return :");
-        console.warn(val);
-        console.warn(typeof val);
+        //console.error("i will return :");
+        //console.warn(val);
+        //console.warn(typeof val);
         return new ValeurBrute(val);
     }
 

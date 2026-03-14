@@ -29,8 +29,8 @@ export class Level {
                     
                     switch(tile) {
                         case State.RobotStart:
-                            console.log("grid pos is " + GridUtils.toString(gridPos));
-                            console.log("world pos is " + pos.toString());
+                            //console.log("grid pos is " + GridUtils.toString(gridPos));
+                            //console.log("world pos is " + pos.toString());
                             this.robot = this.createRobot(gridPos);
                             break;
                         case State.Wall:
@@ -70,8 +70,8 @@ export class Level {
     }
 
     isWalkable(gridPos: GridPoint) {
-        console.log("testing if " + GridUtils.toString(gridPos) + " is walkable");
-        console.log("map shape is " + this.mapShape());
+        //console.log("testing if " + GridUtils.toString(gridPos) + " is walkable");
+        //console.log("map shape is " + this.mapShape());
 
         if (gridPos.x < 0 || gridPos.y < 0 || gridPos.z < 0)
             return false;
@@ -82,12 +82,12 @@ export class Level {
         if (gridPos.x >= this.map[gridPos.y][gridPos.z].length)
             return false;
 
-        console.log("map dimensions tests passed, processing wall checked");
+        //console.log("map dimensions tests passed, processing wall checked");
         const nextState = this.map[gridPos.y][gridPos.z][gridPos.x];
         if (nextState == State.Wall)
             return false;
 
-        console.log("tile is walkable");
+        //console.log("tile is walkable");
         return true;
     }
 }

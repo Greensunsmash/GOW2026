@@ -39,7 +39,7 @@ export class LevelReader {
                 });
             });
 
-            console.log("json level loaded !");
+            //console.log("json level loaded !");
 
         } catch (error) {
             console.error("gave up while trying to lead level :", error);

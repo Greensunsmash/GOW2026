@@ -14,9 +14,7 @@ export class MoveForwardInstuction extends Instruction {
         await this.ctx.robot.moveForward();
     }
 
-    onLaunch(l: Launchable): boolean {
-        if (l)
-            console.log("A LAUNCHABLE HAS BEEN TRANSMITTED. JAVASCRIPT IS WORKING.")
+    onLaunch(_l: Launchable): boolean {
         return true;
     }
 }

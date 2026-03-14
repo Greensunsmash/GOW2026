@@ -26,9 +26,7 @@ export abstract class GameScene {
         this.scene = new Scene(engine);
         this._drh = new AssetLibrary(this.scene);
         this.dragListeners = [];
-        this.dragListeners.push(() => console.log("drag queen declenchee"));
         this.undragListeners = [];
-        this.undragListeners.push(() => console.error("vous avez arrete de drag"));
         //new HemisphericLight("light", new Vector3(0,1,0), this.scene);
 
         this.advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
@@ -61,7 +59,7 @@ export abstract class GameScene {
         if (c === null) {
             this.hoverSlot?.setHover(false);
             this.hoverSlot = null;
-            console.log("HoverSlot : ", null);
+            //console.log("HoverSlot : ", null);
             return true;
         }
         if (this.hoverSlot === c) {
@@ -70,7 +68,7 @@ export abstract class GameScene {
         this.hoverSlot?.setHover(false);
         this.hoverSlot = c;
         this.hoverSlot.setHover(true);
-        console.log("HoverSlot : ", c.toString());
+        //console.log("HoverSlot : ", c.toString());
         return true;
     }
     public getHoverSlot(): EmptySlot | null {return this.hoverSlot;}

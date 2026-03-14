@@ -112,20 +112,18 @@ export class ListContainer extends GUI.Rectangle {
 
     // Appelé lorsque qu'on appuie dessus, pour démarrer le drag
     click(x:number, y:number, forceStart?: boolean) {
-        console.log("wsh");
         let nb:number;
         //console.log("click");
-        console.log("list length " + this.list.length);
         for (nb=0; nb < this.list.length ; nb++) {
             if (this.list[nb] === this.magnet) continue;
-            console.log("past 1");
             // Sélectionne sur quel bloc on appuie
+            /*
             console.log("list + " + nb + " lipx " + this.list[nb].leftInPixels);
             console.log("list + " + nb + " tipx " + this.list[nb].topInPixels);
             console.log("list + " + nb + "  w  " + this.list[nb].widthInPixels);
-            console.log("list + " + nb + "  h  " + this.list[nb].heightInPixels);
+            console.log("list + " + nb + "  h  " + this.list[nb].heightInPixels);*/
             if (this.list[nb].contains(x, y) || forceStart) {
-                console.log("past 2/double wesh");
+                //console.log("past 2/double wesh");
                 let c = this.list[nb] as InstructionContainer;
 
                 // Si jamais on a appuyé sur un Valeur/BooleenContainer, on lui transmet le drag
@@ -193,7 +191,7 @@ export class ListContainer extends GUI.Rectangle {
                     nb = save;
                 }
 
-                console.error("bip boup");
+                //console.error("bip boup");
                 // On setup le drag
                 l.detector.isHitTestVisible = false;
                 this.scene.setDragging(true);
