@@ -1,12 +1,12 @@
 import * as GUI from "@babylonjs/gui";
+import type { Executable } from "../../Language/Executable";
+import { Pour } from "../../Language/Group/Structure/Pour";
+import type { Valeur } from "../../Language/Valeur/Valeur";
+import type { GameScene } from "../../MainLoop/Scene/GameScene";
 import { InstructionContainer } from "../InstructionContainer";
 import type { ListContainer } from "../ListContainer";
 import { StructureContainer } from "../StructureContainer";
-import type { GameScene } from "../../MainLoop/Scene/GameScene";
-import type { Executable } from "../../Language/Executable";
-import { Pour } from "../../Language/Group/Structure/Pour";
-import { ValeurContainer } from "../ValeurContainer";
-import { InputSlot } from "../InputSlot";
+import { isValuable } from "../Valuable";
 
 export class PourContainer extends StructureContainer {
     
@@ -18,11 +18,10 @@ export class PourContainer extends StructureContainer {
         let slots = this.getHeader().getSlots();
         let value = slots[0].children[0];
         let times;
-        if (value instanceof ValeurContainer) {
-            times = value.getValue()[0];
-        } else if (value instanceof InputSlot) {
-            times = value.getValue();
+        if (isValuable(value)) {
+            times = value.getValue()[0] as Valeur;
+            return new Pour(e, times);
         }
-        return new Pour(e, times);
+        throw new Error("cannot launch a pour container with an invalid slot. fuck you");
     }
 }

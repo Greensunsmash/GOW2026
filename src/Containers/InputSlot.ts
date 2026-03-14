@@ -4,8 +4,9 @@ import { EmptySlot } from "./EmptySlot";
 import { Valeur } from "../Language/Valeur/Valeur";
 import { ValeurBrute } from "../Language/Valeur/ValeurBrute";
 import type { Vector2 } from "@babylonjs/core";
+import type { Valuable } from "./Valuable";
 
-export class InputSlot extends EmptySlot {
+export class InputSlot extends EmptySlot implements Valuable {
     private textInput: InputText;
 
     constructor(parent:BlocContainer, type:ArgsType) {
@@ -32,18 +33,11 @@ export class InputSlot extends EmptySlot {
         return null;
     }
 
-    getValue(): Valeur {
-        //console.error("value asked");
-        let val: number | string;
-        try {
-            val = Number(this.textInput.text);
-        } catch (err) {
-            val = this.textInput.text;
-        }
-        //console.error("i will return :");
-        //console.warn(val);
-        //console.warn(typeof val);
-        return new ValeurBrute(val);
+    getValue(): Valeur[] {
+        const raw = this.textInput.text;
+        const num = Number(raw);
+        const val = isNaN(num) || raw === "" ? raw : num;
+        return [new ValeurBrute(val)];
     }
 
     toString(): string {

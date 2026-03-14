@@ -5,6 +5,8 @@ import { DragBehavior } from "./DragBehavior";
 import { InstructionContainer } from "./InstructionContainer";
 import { ListContainer } from "./ListContainer";
 import { FacticeFactory } from "./FacticeFactory";
+import { DepartContainer } from "./DepartContainer";
+import { FlagContainer } from "./Prefabs/FlagContainer";
 
 
 export class OutilsBox extends Rectangle {
@@ -40,7 +42,7 @@ export class OutilsBox extends Rectangle {
         this.scrollViewer.addControl(this.stack);
     }
 
-    addCategory(name: string, color: string, arronding?: boolean) {
+    addCategory(shortName: string, label: string, color: string, arronding?: boolean) {
         const sp = new StackPanel();
         sp.isVertical = true;
         sp.spacing = 15;
@@ -50,7 +52,7 @@ export class OutilsBox extends Rectangle {
         sp.background = "#202020";
 
         const catLabel = new TextBlock();
-        catLabel.text = name;
+        catLabel.text = label;
         catLabel.color = "white";
         catLabel.fontSize = 14;
         catLabel.resizeToFit = true;
@@ -71,19 +73,24 @@ export class OutilsBox extends Rectangle {
         catLabelRect.addControl(catLabel);
         this.stack.addControl(catLabelRect);
 
-        this.categories.set(name, sp);
+        this.categories.set(shortName, sp);
         this.stack.addControl(sp);
     }
 
-    addTemplate(category: string, buildBlock: (root: Container) => Rectangle) {
+    addTemplate(category: string, buildBlock: (root: Container) => Rectangle | undefined) {
         const newRoot = this.categories.get(category);
         if (!newRoot) {
             console.error("cant add template to category " + category + " cause its not created");
             return;
         }
         const realBlock = buildBlock(newRoot);
+        if (!realBlock) {
+            console.log("block not build");
+            return;
+        }
 
-        setTimeout(() => {
+        // plus fiable que le timeout
+        this.scene.scene.onAfterRenderObservable.addOnce(() => {
             //console.error("FIRST CALL TO UR");
             const facticeBlock = FacticeFactory.ultimateReaders(realBlock);
             newRoot.removeControl(realBlock);
@@ -106,7 +113,12 @@ export class OutilsBox extends Rectangle {
                     realDragBlock.click(evt.x, evt.y, true);
                 } else if (realDragBlock instanceof InstructionContainer) {
                     const listCtn = new ListContainer(this.root, this.scene);
-                    listCtn.addInstruction(realDragBlock, 0);       
+                    listCtn.addInstruction(realDragBlock, 0);    
+
+                    if (realDragBlock instanceof FlagContainer) {
+                        this.scene.setGroupToRun(listCtn);
+                    }
+                    
                     listCtn.leftInPixels = absoluteLeft;
                     listCtn.topInPixels = absoluteTop;
                     //listCtn.click(evt.x, evt.y);
@@ -123,6 +135,6 @@ export class OutilsBox extends Rectangle {
                     console.error("ntm");
                 }
             })
-        }, 50);
+        });
     }
 }

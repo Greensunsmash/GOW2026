@@ -1,9 +1,9 @@
 import * as GUI from "@babylonjs/gui";
-import { InstructionContainer } from "../InstructionContainer";
-import type { GameScene } from "../../MainLoop/Scene/GameScene";
 import type { Instruction } from "../../Language/Instructions/Instruction";
-import type { ValeurContainer } from "../ValeurContainer";
 import { SetVar } from "../../Language/Instructions/SetVar";
+import type { GameScene } from "../../MainLoop/Scene/GameScene";
+import { InstructionContainer } from "../InstructionContainer";
+import { isValuable } from "../Valuable";
 
 export class SetVarContainer extends InstructionContainer {
     
@@ -15,9 +15,14 @@ export class SetVarContainer extends InstructionContainer {
     }
 
     getInstruction(): Instruction {
-        let slots = this.getSlots();
-        let value = slots[0].children[0] as ValeurContainer;
-        return new SetVar(this.name, value.getValue()[0]);
-    }
+        const slots = this.getSlots();
+        const firstChild = slots[0].children[0];
 
+        if (isValuable(firstChild)) {
+            const value = firstChild.getValue()[0];
+            return new SetVar(this.name, value);
+        }
+
+        throw new Error("Reading a value on a non-value control. Fuck you");
+    }
 }

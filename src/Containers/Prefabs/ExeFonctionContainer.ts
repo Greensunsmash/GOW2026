@@ -4,6 +4,7 @@ import type { GameScene } from "../../MainLoop/Scene/GameScene";
 import type { Instruction } from "../../Language/Instructions/Instruction";
 import type { ValeurContainer } from "../ValeurContainer";
 import { ExeFonction } from "../../Language/Instructions/ExeFonction";
+import { isValuable } from "../Valuable";
 
 export class ExeFonctionContainer extends InstructionContainer {
 
@@ -21,7 +22,11 @@ export class ExeFonctionContainer extends InstructionContainer {
     getInstruction(): Instruction {
         let e = new ExeFonction(this.name);
         let slots = this.getSlots();
-        for (let i=0; i<this.nb; i++) e.addArgs((slots[i].children[0] as ValeurContainer).getValue()[0]);
+        for (let i=0; i<this.nb; i++) {
+            const child = slots[i].children[0];
+            if (isValuable(child))
+                e.addArgs(child.getValue()[0]);
+        }
         return e;
     }
 

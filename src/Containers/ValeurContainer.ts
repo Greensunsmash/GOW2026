@@ -4,9 +4,10 @@ import * as GUI from "@babylonjs/gui";
 import { DragBehavior } from "./DragBehavior";
 import type { Valeur } from "../Language/Valeur/Valeur";
 import { ValeurBrute } from "../Language/Valeur/ValeurBrute";
+import type { Valuable } from "./Valuable";
 
 // Abstract pour tout les bloc renvoyant une valeur
-export class ValeurContainer extends BlocContainer {
+export class ValeurContainer extends BlocContainer implements Valuable {
 
     constructor(list: string[], root: GUI.Container, scene: GameScene) {
         super("v", list, root, scene);

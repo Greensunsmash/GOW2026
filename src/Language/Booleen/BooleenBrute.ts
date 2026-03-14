@@ -1,3 +1,4 @@
+import type { Launchable } from "../Launchable";
 import { Booleen } from "./Booleen";
 
 export class BooleenBrut extends Booleen {
@@ -9,4 +10,6 @@ export class BooleenBrut extends Booleen {
     }
 
     eval(): boolean {return this.bool;}
+
+    onLaunch(l: Launchable): boolean {return true;}
 }

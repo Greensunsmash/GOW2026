@@ -41,6 +41,19 @@ export class GridEntity {
         await this.animateRotation(-Math.PI / 2);
     }
 
+    obstacleAhead(): boolean {
+        const facing = GridUtils.DIRECTIONS[this.facingIndex];
+        const targetGridPos = GridUtils.add(
+            this.gridPos,
+            {
+                x: facing.x,
+                y: 0,
+                z: facing.z
+            }
+        );
+        return !this.level.isWalkable(targetGridPos);
+    }
+
     async tryMove(dx: number, dz: number) {
         const targetGridPos = GridUtils.add(
             this.gridPos,

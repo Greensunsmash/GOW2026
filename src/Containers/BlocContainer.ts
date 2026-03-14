@@ -133,14 +133,18 @@ export class BlocContainer extends GUI.Rectangle {
         }
         //console.log(i);
         slotWrapper.clearControls();
-        slotWrapper.addControl(new EmptySlot(this, this.args[i]));
+        // C'EST LA qu'il faut parfois reset par un InputSlot (ca fix le bug du coup)
+        if (this.args[i] == "BOOLEEN")
+            slotWrapper.addControl(new EmptySlot(this, this.args[i]));
+        else
+            slotWrapper.addControl(new InputSlot(this, this.args[i]));
     }
 
     // Fonction de base pour récupérer la valeur, se contente de renvoyer une liste des valeurs données
     public getValue(): (Valeur | Booleen)[] {
         return this.slots.map((slot : GUI.Rectangle) => {
             if (slot instanceof BlocContainer) return slot.getValue()[0];
-            else if (slot instanceof InputSlot) return slot.getValue();
+            else if (slot instanceof InputSlot) return slot.getValue()[0];
             return new ValeurBrute(0);  
         });
     }

@@ -5,6 +5,7 @@ import { AssetLibrary } from "../../Shared/AssetLibrary";
 import { OutilsBox } from "../../Containers/OutilsBox";
 import { AdvancedDynamicTexture, Control, Rectangle } from "@babylonjs/gui";
 import { LayerMasks } from "../../Shared/Constants";
+import type { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
 
 export abstract class GameScene {
     public scene: Scene;
@@ -21,6 +22,8 @@ export abstract class GameScene {
 
     protected _drh : AssetLibrary;
     protected _isLoaded : boolean = false;
+
+    protected groupToRun?: ListContainer;
 
     constructor(engine: Engine) {
         this.scene = new Scene(engine);
@@ -110,5 +113,23 @@ export abstract class GameScene {
     
     getToolbox() {
         return this.toolbox;
+    }
+
+    
+    setGroupToRun(l: ListContainer) {
+        this.groupToRun = l;
+    }
+
+    removeGroupToRun() {
+        this.groupToRun = undefined;
+    }
+    
+    run() {
+        if (!this.groupToRun) {
+            console.error("trying to run without any flag container");
+            return;
+        }
+
+        this.groupToRun.getInstructionGroup();
     }
 }

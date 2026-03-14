@@ -7,6 +7,7 @@ export class FlagContainer extends DepartContainer{
     constructor(root: GUI.Container, scene: GameScene) {
         super(["Première instruction"], root, scene);
         this.bloc.background = "#F52795";
+
     }
 
 }

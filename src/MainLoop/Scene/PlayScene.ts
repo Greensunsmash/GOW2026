@@ -1,31 +1,36 @@
 import { Camera, Engine, HemisphericLight, Vector3 } from "@babylonjs/core";
 import { GameScene } from "./GameScene";
 
+import { BasicBooleenContainer } from "../../Containers/BasicBooleenContainer";
 import { BasicInstContainer } from "../../Containers/BasicInstContainer";
+import { ListContainer } from "../../Containers/ListContainer";
+import { BooleenBrutContainer } from "../../Containers/Prefabs/BooleenBrutContainer";
+import { EgalContainer } from "../../Containers/Prefabs/EgalContainer";
+import { EtContainer } from "../../Containers/Prefabs/EtContainer";
+import { ExeFonctionContainer } from "../../Containers/Prefabs/ExeFonctionContainer";
 import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
+import { FonctionContainer } from "../../Containers/Prefabs/FonctionContainer";
+import { InfContainer } from "../../Containers/Prefabs/InfContainer";
+import { MoinsContainer } from "../../Containers/Prefabs/MoinsContainer";
+import { NotContainer } from "../../Containers/Prefabs/NotContainer";
+import { OuContainer } from "../../Containers/Prefabs/OuContainer";
+import { PlusContainer } from "../../Containers/Prefabs/PlusContainer";
+import { PourContainer } from "../../Containers/Prefabs/PourContainer";
+import { PrintContainer } from "../../Containers/Prefabs/PrintContainer";
+import { SetVarContainer } from "../../Containers/Prefabs/SetVarContainer";
+import { SiContainer } from "../../Containers/Prefabs/SiContainer";
+import { SupContainer } from "../../Containers/Prefabs/SupContainer";
+import { VarValueContainer } from "../../Containers/Prefabs/VarValueContainer";
 import { Level } from "../../Environment/Level";
 import { LevelReader } from "../../Environment/LevelReader";
+import { ObstacleSensor } from "../../Language/Booleen/ObstacleSensor";
 import { MoveBackwardInstuction } from "../../Language/Instructions/MoveBackwardInstruction";
 import { MoveForwardInstuction } from "../../Language/Instructions/MoveForwardInstruction";
 import { TurnLeftInstruction } from "../../Language/Instructions/TurnLeftInstruction";
 import { TurnRightInstruction } from "../../Language/Instructions/TurnRightInstruction";
 import { LayerMasks } from "../../Shared/Constants";
 import type { ExecutionContext } from "../../Shared/types";
-import { ListContainer } from "../../Containers/ListContainer";
-import { PourContainer } from "../../Containers/Prefabs/PourContainer";
-import { SiContainer } from "../../Containers/Prefabs/SiContainer";
-import type { Container } from "@babylonjs/gui";
-import { InfContainer } from "../../Containers/Prefabs/InfContainer";
-import { SupContainer } from "../../Containers/Prefabs/SupContainer";
-import { EgalContainer } from "../../Containers/Prefabs/EgalContainer";
-import { SetVarContainer } from "../../Containers/Prefabs/SetVarContainer";
-import { VarValueContainer } from "../../Containers/Prefabs/VarValueContainer";
-import { BooleenBrutContainer } from "../../Containers/Prefabs/BooleenBrutContainer";
-import { PrintContainer } from "../../Containers/Prefabs/PrintContainer";
-import { MoinsContainer } from "../../Containers/Prefabs/MoinsContainer";
-import { PlusContainer } from "../../Containers/Prefabs/PlusContainer";
-import { FonctionContainer } from "../../Containers/Prefabs/FonctionContainer";
-import { ExeFonctionContainer } from "../../Containers/Prefabs/ExeFonctionContainer";
+import { StartButton } from "../../Containers/StartButton";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene {
@@ -63,41 +68,43 @@ export class PlayScene extends GameScene {
         await this.initGameScene();
         this.ctx = {robot: this.level.getRobot()};
         this.setupOutilsBox();
+
+        new StartButton(this.leftPanel, this);
     }
 
     setupOutilsBox() {
         // Instructions (violet)
-        this.toolbox.addCategory("Instructions", "#8727F5");
-        this.toolbox.addTemplate("Instructions", (root: Container) => new BasicInstContainer(
-            "Avancer d'une case", 
-            new MoveForwardInstuction(this.ctx),
-            root, 
-            this
-        ));
-        this.toolbox.addTemplate("Instructions", (root: Container) => new BasicInstContainer(
-            "Reculer d'une case", 
-            new MoveBackwardInstuction(this.ctx),
-            root, 
-            this
-        ));
-        this.toolbox.addTemplate("Instructions", (root: Container) => new BasicInstContainer(
-            "Tourner à gauche", 
-            new TurnLeftInstruction(this.ctx),
-            root, 
-            this
-        ));
-        this.toolbox.addTemplate("Instructions", (root: Container) => new BasicInstContainer(
-            "Tourner à droite", 
-            new TurnRightInstruction(this.ctx),
-            root, 
-            this
-        ));
-        this.toolbox.addTemplate("Instructions", (root: Container) => new PrintContainer(root, this));
-        this.toolbox.addTemplate("Instructions", (root: Container) => new SetVarContainer("x", root, this));
-
+        this.toolbox.addCategory("instructions", "Instructions", "#8727F5");
+        
         // Structures (violet)
-        this.toolbox.addCategory("Structures", "#8727F5");
-        this.toolbox.addTemplate("Structures", (root: Container) => {
+        this.toolbox.addCategory("structures", "Structures", "#8727F5");
+
+        // Booléens (vert fluo)
+        this.toolbox.addCategory("booleans", "Booléens", "#95F527", true);
+
+        // Capteurs (vert fluo)
+        this.toolbox.addCategory("sensors", "Capteurs", "#95F527", true);
+
+        // Variables et opérations (orange)
+        this.toolbox.addCategory("variables", "Variables et opérations", "#F58727", true);
+
+        // Fonctions (rose/fuchsia)
+        this.toolbox.addCategory("functions", "Fonctions", "#F52795");
+
+        // Départ (rose)
+        this.toolbox.addCategory("start", "Départ", "#F52795");
+
+
+        // Instructions
+        this.toolbox.addTemplate("instructions", (root) => new BasicInstContainer("Avancer d'une case", new MoveForwardInstuction(this.ctx), root, this));
+        this.toolbox.addTemplate("instructions", (root) => new BasicInstContainer("Reculer d'une case", new MoveBackwardInstuction(this.ctx), root, this));
+        this.toolbox.addTemplate("instructions", (root) => new BasicInstContainer("Tourner à gauche", new TurnLeftInstruction(this.ctx), root, this));
+        this.toolbox.addTemplate("instructions", (root) => new BasicInstContainer("Tourner à droite", new TurnRightInstruction(this.ctx), root, this));
+        this.toolbox.addTemplate("instructions", (root) => new PrintContainer(root, this));
+        this.toolbox.addTemplate("instructions", (root) => new SetVarContainer("x", root, this));
+
+        // Structures
+        this.toolbox.addTemplate("structures", (root) => {
             const l = new ListContainer(root, this);
             const pour = new PourContainer(l, root, this);
             l.addInstruction(pour.getQueue(), 0);
@@ -105,7 +112,7 @@ export class PlayScene extends GameScene {
             l.addStruct(pour);
             return l;
         }); 
-        this.toolbox.addTemplate("Structures", (root: Container) => {
+        this.toolbox.addTemplate("structures", (root) => {
             const l = new ListContainer(root, this);
             const si = new SiContainer(l, root, this);
             l.addInstruction(si.getQueue(), 0);
@@ -114,30 +121,35 @@ export class PlayScene extends GameScene {
             return l;
         });
 
-        // Booleens (orange)
-        this.toolbox.addCategory("Booléens", "#95F527", true);
-        this.toolbox.addTemplate("Booléens", (root: Container) => new BooleenBrutContainer(true, root, this));
-        this.toolbox.addTemplate("Booléens", (root: Container) => new BooleenBrutContainer(false, root, this));
-        this.toolbox.addTemplate("Booléens", (root: Container) => new InfContainer(root, this));
-        this.toolbox.addTemplate("Booléens", (root: Container) => new SupContainer(root, this));
-        this.toolbox.addTemplate("Booléens", (root: Container) => new EgalContainer(root, this));
+        // Booléens
+        this.toolbox.addTemplate("booleans", (root) => new BooleenBrutContainer(true, root, this));
+        this.toolbox.addTemplate("booleans", (root) => new BooleenBrutContainer(false, root, this));
+        this.toolbox.addTemplate("booleans", (root) => new NotContainer(root, this));
+        this.toolbox.addTemplate("booleans", (root) => new EtContainer(root, this));
+        this.toolbox.addTemplate("booleans", (root) => new OuContainer(root, this));
+        this.toolbox.addTemplate("booleans", (root) => new InfContainer(root, this));
+        this.toolbox.addTemplate("booleans", (root) => new SupContainer(root, this));
+        this.toolbox.addTemplate("booleans", (root) => new EgalContainer(root, this));
 
-        // Variables et opérations (vert)
-        this.toolbox.addCategory("Variables et opérations", "#F58727", true);
-        this.toolbox.addTemplate("Variables et opérations", (root: Container) => new VarValueContainer("x", root, this));
-        this.toolbox.addTemplate("Variables et opérations", (root: Container) => new MoinsContainer(root, this));
-        this.toolbox.addTemplate("Variables et opérations", (root: Container) => new PlusContainer(root, this));
+        // Capteurs
+        this.toolbox.addTemplate("sensors", (root) => new BasicBooleenContainer("Il y a un obstacle", new ObstacleSensor(this.ctx), root, this));
 
-        // Fonctions (violet puis rose)
-        this.toolbox.addCategory("Fonctions", "#F52795");
-        this.toolbox.addTemplate("Fonctions", (root: Container) => new FonctionContainer("Multiplication", ["x", "y"], root, this));
-        this.toolbox.addTemplate("Fonctions", (root: Container) => new ExeFonctionContainer("Multiplication", 2, root, this));
+        // Variables et opérations
+        this.toolbox.addTemplate("variables", (root) => new VarValueContainer("x", root, this));
+        this.toolbox.addTemplate("variables", (root) => new MoinsContainer(root, this));
+        this.toolbox.addTemplate("variables", (root) => new PlusContainer(root, this));
 
-        // Départ (rose)
-        this.toolbox.addCategory("Départ", "#F52795");
-        this.toolbox.addTemplate("Départ", (root: Container) => new FlagContainer(root, this));
+        // Fonctions
+        this.toolbox.addTemplate("functions", (root) => new FonctionContainer("Multiplication", ["x", "y"], root, this));
+        this.toolbox.addTemplate("functions", (root) => new ExeFonctionContainer("Multiplication", 2, root, this));
 
-    }
+        // Départ
+        this.toolbox.addTemplate("start", (root) => {
+            if (this.groupToRun)
+                return undefined;
+            return new FlagContainer(root, this);
+        });
+}
 
     async initGameScene() {
         this.scene.getEngine().displayLoadingUI();
@@ -153,6 +165,14 @@ export class PlayScene extends GameScene {
         light.intensity = 1.0;
 
         this._isLoaded = true;
+        const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+        await sleep(1000);
+        this.scene.getEngine().loadingScreen.loadingUIText = '<span style="font-size: 50px;">VOITURE BELIER PROD.</span><br>PRESENTS';
+        await sleep(1000);
+        this.scene.getEngine().loadingScreen.loadingUIText = '<span style="font-size: 80px;">MARCO ROBO :</span>';
+        await sleep(1000);
+        this.scene.getEngine().loadingScreen.loadingUIText = '<span style="font-size: 80px;">MARCO ROBO :</span><br>A LA RECHERCHE<br>DU DEMARREUR COSMIQUE PERDU';        
+        await sleep(1000);
         this.scene.getEngine().hideLoadingUI();
     }
 
@@ -173,5 +193,5 @@ export class PlayScene extends GameScene {
         });
     }
 
-    run() {}
+
 }

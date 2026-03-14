@@ -1,14 +1,14 @@
-import * as GUI from "@babylonjs/gui";
-import type { Booleen } from "../../Language/Booleen/Booleen";
-import { Sup } from "../../Language/Booleen/Sup";
+import type { Container } from "@babylonjs/gui";
+import { Booleen } from "../../Language/Booleen/Booleen";
+import { Ou } from "../../Language/Booleen/Ou";
 import type { GameScene } from "../../MainLoop/Scene/GameScene";
 import { BooleenContainer } from "../BooleenContainer";
 import { isValuable } from "../Valuable";
 
-export class SupContainer extends BooleenContainer {
+export class OuContainer extends BooleenContainer {
 
-    constructor(root: GUI.Container, scene: GameScene) {
-        super(["", "v", " > ", "v"], root, scene);
+    constructor(root: Container, scene: GameScene) {
+        super(["", "b", " ou ", "b"], root, scene);
     }
 
     public getValue(): (Booleen)[] {
@@ -16,7 +16,9 @@ export class SupContainer extends BooleenContainer {
         const child1 = slots[0].children[0];
         const child2 = slots[1].children[0];
         if (isValuable(child1) && isValuable(child2)) {
-            return [new Sup(child1.getValue()[0], child2.getValue()[0])];
+            const b1 = child1.getValue()[0] as Booleen;
+            const b2 = child2.getValue()[0] as Booleen;
+            return [new Ou(b1, b2)];
         }
         
         throw new Error("Reading a value on a non-value control. Fuck you");

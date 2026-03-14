@@ -4,6 +4,7 @@ import type { GameScene } from "../../MainLoop/Scene/GameScene";
 import type { Instruction } from "../../Language/Instructions/Instruction";
 import { Print } from "../../Language/Instructions/Print";
 import type { ValeurContainer } from "../ValeurContainer";
+import { isValuable } from "../Valuable";
 
 export class PrintContainer extends InstructionContainer {
 
@@ -14,9 +15,15 @@ export class PrintContainer extends InstructionContainer {
     }
 
     getInstruction(): Instruction {
-        let slots = this.getSlots();
-        let value = slots[0].children[0] as ValeurContainer;
-        return new Print(value.getValue()[0]);
+        const slots = this.getSlots();
+        const firstChild = slots[0].children[0];
+
+        if (isValuable(firstChild)) {
+            const value = firstChild.getValue()[0];
+            return new Print(value);
+        }
+
+        throw new Error("Reading a value on a non-value control. Fuck you");
     }
 
 }
