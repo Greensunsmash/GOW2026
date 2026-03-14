@@ -1,6 +1,6 @@
+import type { IPointerEvent } from "@babylonjs/core";
 import * as GUI from "@babylonjs/gui";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
-import type { IPointerEvent } from "@babylonjs/core";
 import { BlocContainer } from "./BlocContainer";
 import { EmptySlot } from "./EmptySlot";
 
@@ -10,6 +10,8 @@ export class DragBehavior {
     private readonly target: BlocContainer;
     private readonly scene: GameScene;
     private isDragging = false;
+    private lastX: number = 0;
+    private lastY: number = 0;
 
     constructor(target: BlocContainer) {
         this.target = target;
@@ -18,13 +20,16 @@ export class DragBehavior {
     }
 
     private init(): void {
-        this.target.dragObservable = this.target.onPointerDownObservable.add((pointerInfo) => {
+         this.target.onPointerDownObservable.add((pointerInfo) => {
             this.startDrag(pointerInfo.x, pointerInfo.y);
         });
     }
 
     // Comportement de drag
-    private startDrag(x: number, y: number) {
+    public startDrag(x: number, y: number, coordsAbsolute?: boolean) {
+        this.lastX = x;
+        this.lastY = y;
+
         const measure = this.target._currentMeasure;
         const startX = measure.left;
         const startY = measure.top;
@@ -40,17 +45,20 @@ export class DragBehavior {
         }
         this.target.getRoot().addControl(this.target);
 
-        this.target.leftInPixels = startX;
-        this.target.topInPixels = startY;
+        if (!coordsAbsolute) {
+            this.target.leftInPixels = startX;
+            this.target.topInPixels = startY;
+        }
         this.isDragging = true;
-        const decalX = startX - x;
-        const decalY = startY - y;
+        const decalX = coordsAbsolute ? 0 : startX - x;
+        const decalY = coordsAbsolute ? 0 : startY - y;
         this.target.isHitTestVisible = false;
 
         // MOVE
         this.scene.scene.onPointerMove = (evt: IPointerEvent) => {
             if (!this.isDragging) return;
-
+            this.lastX = evt.x;
+            this.lastY = evt.y;
             this.target.leftInPixels = evt.x + decalX;
             this.target.topInPixels = evt.y + decalY;
         };
@@ -61,12 +69,17 @@ export class DragBehavior {
 
     // Arrêt du drage
     private stopDrag() {
-        this.isDragging = false;
-        this.target.isHitTestVisible = true;
-        let slot = this.scene.getHoverSlot()
-        if (slot instanceof EmptySlot) {slot.replaceIfMatch(this.target);}
         // Important : on nettoie les callbacks (je l'ai pas fait ailleurs oupsi)
         this.scene.scene.onPointerMove = undefined as any;
         this.scene.scene.onPointerUp = undefined as any;
+        this.target.isHitTestVisible = true;
+        const toolbox = this.scene.getToolbox();
+        if (this.isDragging && toolbox.contains(this.lastX, this.lastY)) {
+            this.target.parent?.removeControl(this.target);
+            this.target.dispose();
+        }
+        this.isDragging = false;
+        let slot = this.scene.getHoverSlot();
+        if (slot instanceof EmptySlot) {slot.replaceIfMatch(this.target);}
     }
 }

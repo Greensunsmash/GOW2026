@@ -3,19 +3,6 @@ import { Vector3 } from "@babylonjs/core";
 export interface GridPoint {x: number, y: number, z: number};
 
 export class GridUtils {
-    /*
-        /!\ ATTENTION !!!
-        Avertissement national : 
-        !!!! INVERSION DU Y ET DU Z !!!!!
-            pour babylon le y est l'axe vertical
-            quand on gère par layer 2d comme nous c'est horrible
-            de pas avoir les deux coordonées du plan en premier
-            donc pour pas qu'on ait vite envie de se pendre
-            sur le 5eme etage de la bu
-            j'ai inversé.
-            (et j'ai précisé partt ou ca a lieu.)
-    */
-
     static toGrid(pos: Vector3): GridPoint {
         return {
             x: Math.round(pos.x),
