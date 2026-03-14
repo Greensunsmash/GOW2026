@@ -1,3 +1,4 @@
+import * as BABYLON from "@babylonjs/core";
 import * as GUI from "@babylonjs/gui";
 import { EmptySlot } from "./EmptySlot";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
@@ -19,6 +20,7 @@ export class BlocContainer extends GUI.Rectangle {
     private readonly root: GUI.Container;
     private readonly scene: GameScene;
     private readonly type : ArgsType;
+    public dragObservable : BABYLON.Observer<GUI.Vector2WithInfo> | undefined;
 
     constructor(type:string, list: string[], root: GUI.Container, scene: GameScene) {
         super();
@@ -171,6 +173,13 @@ export class BlocContainer extends GUI.Rectangle {
     public getArgs(): readonly ArgsType[] {return this.args;}
     public getLabels(): readonly GUI.TextBlock[] {return this.labels;}
     public getType(): ArgsType {return this.type;}
+
+    dispose(): void {
+        if (this.dragObservable) this.onPointerDownObservable.remove(this.dragObservable);
+        for (const slot of this.slots) slot.dispose();
+        for (const label of this.labels) label.dispose();
+        this.container.dispose();
+    }
 }
 
 
