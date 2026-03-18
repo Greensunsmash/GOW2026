@@ -12,6 +12,7 @@ export class EmptySlot extends GUI.Rectangle {
     private readonly blocParent : BlocContainer;
     private readonly type : ArgsType;
     private hover:boolean= false;
+    private pointerObserver: Observer<PointerInfo> | null = null;
 
     constructor(parent:BlocContainer, type:ArgsType) {
         super();
@@ -30,7 +31,7 @@ export class EmptySlot extends GUI.Rectangle {
     }
 
     init(): void {
-        this.scene.scene.onPointerObservable.add((pointerInfo) => { 
+        this.pointerObserver = this.scene.scene.onPointerObservable.add((pointerInfo) => { 
             if (pointerInfo.type === PointerEventTypes.POINTERMOVE) {
                 const evt = pointerInfo.event;
                 const contains = this.contains(evt.x, evt.y);
@@ -71,4 +72,17 @@ export class EmptySlot extends GUI.Rectangle {
 
     // y'avait écrit "tosring"  on est ou là
     toString():string {return "EmptySlot " + this.id.toString();}
+
+    dispose(): void {
+        if (this.pointerObserver) {
+            this.scene.scene.onPointerObservable.remove(this.pointerObserver);
+            this.pointerObserver = null;
+        }
+        
+        if (this.scene.getHoverSlot() === this) {
+            this.scene.setHoverSlot(null);
+        }
+
+        super.dispose();
+    }
 }

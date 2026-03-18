@@ -108,13 +108,15 @@ export class ListContainer extends GUI.Rectangle {
         this.scene.undragListeners.push(() => {this.stack.paddingBottom = "0px";});
 
         // TEMPORAIRE, POUR DECLENCHER LE LANCEMENT
+        // plus besoin du coup
+        /*
         this.keyboardObserver = scene.scene.onKeyboardObservable.add((kbInfo) => {
             if (kbInfo.type === BABYLON.KeyboardEventTypes.KEYDOWN) {
                 if (kbInfo.event.key === "a" || kbInfo.event.key === "A") {
                     this.getInstructionGroup();
                 }
             }
-        });
+        }); */
     }
 
     // Appelé lorsque qu'on appuie dessus, pour démarrer le drag

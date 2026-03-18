@@ -50,6 +50,8 @@ export class DragBehavior {
             this.target.topInPixels = startY;
         }
         this.isDragging = true;
+        this.scene.setDragging(true);
+
         const decalX = coordsAbsolute ? 0 : startX - x;
         const decalY = coordsAbsolute ? 0 : startY - y;
         this.target.isHitTestVisible = false;
@@ -79,6 +81,7 @@ export class DragBehavior {
             this.target.dispose();
         }
         this.isDragging = false;
+        this.scene.setDragging(false);
         let slot = this.scene.getHoverSlot();
         if (slot instanceof EmptySlot) {slot.replaceIfMatch(this.target);}
     }
