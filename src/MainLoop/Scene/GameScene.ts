@@ -1,11 +1,10 @@
 import { Engine, Scene } from "@babylonjs/core";
+import { AdvancedDynamicTexture, Control, Rectangle } from "@babylonjs/gui";
 import { EmptySlot } from "../../Containers/EmptySlot";
 import { ListContainer } from "../../Containers/ListContainer";
+import { OutilsBox } from "../../MRGUI/OutilsBox";
 import { AssetLibrary } from "../../Shared/AssetLibrary";
-import { OutilsBox } from "../../Containers/OutilsBox";
-import { AdvancedDynamicTexture, Control, Rectangle } from "@babylonjs/gui";
 import { LayerMasks } from "../../Shared/Constants";
-import type { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
 
 export abstract class GameScene {
     public scene: Scene;
@@ -15,7 +14,7 @@ export abstract class GameScene {
     public dragListeners : (() => void)[];
     public undragListeners : (() => void)[];
 
-    protected advancedTexture: AdvancedDynamicTexture;
+    public advancedTexture: AdvancedDynamicTexture;
     protected leftPanel: Rectangle;
 
     protected toolbox: OutilsBox;
@@ -115,6 +114,9 @@ export abstract class GameScene {
         return this.toolbox;
     }
 
+    getGroupToRun() {
+        return this.groupToRun;
+    }
     
     setGroupToRun(l: ListContainer) {
         this.groupToRun = l;

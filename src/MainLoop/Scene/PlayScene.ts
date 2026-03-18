@@ -1,4 +1,4 @@
-import { Camera, Engine, HemisphericLight, Vector3 } from "@babylonjs/core";
+import { ArcRotateCamera, Camera, Engine, HemisphericLight, Vector3, Viewport } from "@babylonjs/core";
 import { GameScene } from "./GameScene";
 
 import { BasicBooleenContainer } from "../../Containers/BasicBooleenContainer";
@@ -30,7 +30,8 @@ import { TurnLeftInstruction } from "../../Language/Instructions/TurnLeftInstruc
 import { TurnRightInstruction } from "../../Language/Instructions/TurnRightInstruction";
 import { LayerMasks } from "../../Shared/Constants";
 import type { ExecutionContext } from "../../Shared/types";
-import { StartButton } from "../../Containers/StartButton";
+import { StartButton } from "../../MRGUI/StartButton";
+import { MakeABlockModal } from "../../MRGUI/MakeABlockModal";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene {
@@ -38,25 +39,11 @@ export class PlayScene extends GameScene {
     
     private level : Level;
     private ctx: ExecutionContext;
+    private uiCamera: ArcRotateCamera;
+    private mapCamera: ArcRotateCamera;
 
     constructor(engine: Engine) {
         super(engine);
-        
-        /* 
-        let pour = new PourContainer(l, this.leftPanel, this);
-        let si = new SiContainer(l, this.leftPanel, this);
-        l.addInstruction(pour.getQueue(), 0);
-        l.addInstruction(si.getQueue(), 0);
-        l.addInstruction(new PrintContainer(this.leftPanel, this), 0);
-        l.addInstruction(si.getHeader(), 0);
-        l.addInstruction(pour.getHeader(), 0);
-        l.addInstruction(new SetVarContainer("x", this.leftPanel, this), 0);
-        l.addStruct(pour);
-        l.addStruct(si);
-        l.addInstruction(new FlagContainer(this.leftPanel, this), 0);
-        l.addInstruction(new ExeFonctionContainer("Multiplication", 2, this.leftPanel, this), 1)
-        */
-
         this.init();
     }
 
@@ -66,33 +53,12 @@ export class PlayScene extends GameScene {
 
     async init() {
         await this.initGameScene();
-        this.ctx = {robot: this.level.getRobot()};
-        this.setupOutilsBox();
+        //this.setupOutilsBox();
 
         new StartButton(this.leftPanel, this);
     }
 
     setupOutilsBox() {
-        // Instructions (violet)
-        this.toolbox.addCategory("instructions", "Instructions", "#8727F5");
-        
-        // Structures (violet)
-        this.toolbox.addCategory("structures", "Structures", "#8727F5");
-
-        // Booléens (vert fluo)
-        this.toolbox.addCategory("booleans", "Booléens", "#95F527", true);
-
-        // Capteurs (vert fluo)
-        this.toolbox.addCategory("sensors", "Capteurs", "#95F527", true);
-
-        // Variables et opérations (orange)
-        this.toolbox.addCategory("variables", "Variables et opérations", "#F58727", true);
-
-        // Fonctions (rose/fuchsia)
-        this.toolbox.addCategory("functions", "Fonctions", "#F52795");
-
-        // Départ (rose)
-        this.toolbox.addCategory("start", "Départ", "#F52795");
 
 
         // Instructions
@@ -140,8 +106,13 @@ export class PlayScene extends GameScene {
         this.toolbox.addTemplate("variables", (root) => new PlusContainer(root, this));
 
         // Fonctions
-        this.toolbox.addTemplate("functions", (root) => new FonctionContainer("Multiplication", ["x", "y"], root, this));
-        this.toolbox.addTemplate("functions", (root) => new ExeFonctionContainer("Multiplication", 2, root, this));
+        this.toolbox.addButton("functions", "Créer un bloc de plastique", () => {
+            new MakeABlockModal(this.advancedTexture, (name: string, args: string[]) => {
+                console.log(" c bien " + name);
+                this.toolbox.addTemplate("functions", (root) => new FonctionContainer(name, args, root, this));
+                this.toolbox.addTemplate("functions", (root) => new ExeFonctionContainer(name, args.length, root, this));
+            });
+        });
 
         // Départ
         this.toolbox.addTemplate("start", (root) => {
@@ -153,6 +124,21 @@ export class PlayScene extends GameScene {
 
     async initGameScene() {
         this.scene.getEngine().displayLoadingUI();
+        
+        this.uiCamera = new ArcRotateCamera("uiCamera", Math.PI/2, Math.PI/3, 10, Vector3.Zero(), this.scene);
+        this.uiCamera.layerMask = LayerMasks.UI_ONLY;
+        this.mapCamera = new ArcRotateCamera("mapCamera", Math.PI/2, Math.PI/3, 10, Vector3.Zero(), this.scene);
+        this.mapCamera.viewport = new Viewport(0.5, 0, 0.5, 1.0);
+        this.mapCamera.layerMask = LayerMasks.SCENE_ONLY;
+
+        this.mapCamera.attachControl(this.scene.getEngine().getRenderingCanvas(), true);
+
+        this.scene.activeCameras = [];
+        this.scene.activeCameras.push(this.mapCamera);
+        this.scene.activeCameras.push(this.uiCamera);
+        this.addDetachControlObservables();
+
+
         await this.loadAssets();
         let levelReader = new LevelReader();
         await levelReader.loadLevel("level0.json");
@@ -160,6 +146,9 @@ export class PlayScene extends GameScene {
         if (map.length == 0)
             throw new Error("level map is empty");
         this.level = new Level(map, this._drh, this.scene);
+
+        this.ctx = {robot: this.level.getRobot()};
+        levelReader.setupToolbox(this.toolbox, this.ctx, this);
         let light = new HemisphericLight("light", new Vector3(0,1,0), this.scene);
         light.includeOnlyWithLayerMask = LayerMasks.SCENE_ONLY;
         light.intensity = 1.0;
@@ -185,13 +174,13 @@ export class PlayScene extends GameScene {
         ]);
     }
 
-    addDetachControlObservables(engine: Engine, mapCamera: Camera) {
+    addDetachControlObservables() {
         this.leftPanel.onPointerEnterObservable.add(() => {
-            mapCamera.detachControl();
+            this.mapCamera.detachControl();
         });
 
         this.leftPanel.onPointerOutObservable.add(() => {
-            mapCamera.attachControl(engine.getRenderingCanvas(), true);
+            this.mapCamera.attachControl(this.scene.getEngine().getRenderingCanvas(), true);
         });
     }
 

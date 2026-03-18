@@ -1,6 +1,6 @@
 import * as GUI from "@babylonjs/gui";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
-import { PointerEventTypes } from "@babylonjs/core";
+import { Observer, PointerEventTypes, PointerInfo } from "@babylonjs/core";
 import type { ArgsType, BlocContainer } from "./BlocContainer";
 
 // Cette classe symbolise un slot (de BlocContainer) vide qui peut donc être remplacé

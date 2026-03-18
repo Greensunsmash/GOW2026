@@ -1,18 +1,18 @@
-import { Container, Control, GUI3DManager, Rectangle, ScrollViewer, StackPanel, TextBlock } from "@babylonjs/gui";
+import { Button, Container, Control, Rectangle, ScrollViewer, StackPanel, TextBlock } from "@babylonjs/gui";
+import { BlocContainer } from "../Containers/BlocContainer";
+import { DragBehavior } from "../Containers/DragBehavior";
+import { FacticeFactory } from "../Containers/FacticeFactory";
+import { InstructionContainer } from "../Containers/InstructionContainer";
+import { ListContainer } from "../Containers/ListContainer";
+import { FlagContainer } from "../Containers/Prefabs/FlagContainer";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
-import { BlocContainer } from "./BlocContainer";
-import { DragBehavior } from "./DragBehavior";
-import { InstructionContainer } from "./InstructionContainer";
-import { ListContainer } from "./ListContainer";
-import { FacticeFactory } from "./FacticeFactory";
-import { DepartContainer } from "./DepartContainer";
-import { FlagContainer } from "./Prefabs/FlagContainer";
 
 
 export class OutilsBox extends Rectangle {
     private readonly scrollViewer: ScrollViewer;
     private readonly stack: StackPanel;
     private categories = new Map<string, StackPanel>();
+    private buttons : Button[] = [];
     private readonly scene: GameScene;
     private readonly root: Container;
 
@@ -21,7 +21,7 @@ export class OutilsBox extends Rectangle {
         this.root = root;
         this.scene = scene;
 
-        this.width = "30%";
+        this.width = "40%";
         this.height = "100%";
         this.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
         this.background = "#101010";
@@ -42,7 +42,11 @@ export class OutilsBox extends Rectangle {
         this.scrollViewer.addControl(this.stack);
     }
 
-    addCategory(shortName: string, label: string, color: string, arronding?: boolean) {
+    addCategory(shortName: string) {
+        if (this.categories.get(shortName)) {
+            return;
+        }
+
         const sp = new StackPanel();
         sp.isVertical = true;
         sp.spacing = 15;
@@ -52,10 +56,10 @@ export class OutilsBox extends Rectangle {
         sp.background = "#202020";
 
         const catLabel = new TextBlock();
-        catLabel.text = label;
         catLabel.color = "white";
         catLabel.fontSize = 14;
         catLabel.resizeToFit = true;
+        catLabel.textWrapping = true; 
         catLabel.paddingLeft = "10px";
         catLabel.paddingRight = "10px";
         catLabel.paddingTop = "10px";
@@ -63,13 +67,62 @@ export class OutilsBox extends Rectangle {
         catLabel.isHitTestVisible = false;
 
         const catLabelRect = new Rectangle();
-        catLabelRect.background = color;
         catLabelRect.adaptWidthToChildren = true;
         catLabelRect.adaptHeightToChildren = true;
         catLabelRect.isHitTestVisible = false;
         catLabelRect.thickness = 2;
-        if (arronding)
-            catLabelRect.cornerRadius = 10;
+            
+
+        switch(shortName) {
+            // Instructions (violet)
+            case "instructions":
+                catLabel.text = "Instructions";
+                catLabelRect.background = "#8727F5";
+                break;
+            
+            // Structures (violet)
+            case "structures":
+                catLabel.text = "Structures";
+                catLabelRect.background = "#8727F5";
+                break;
+
+            // Booléens (vert fluo)
+            case "booleans":
+                catLabel.text = "Booléens";
+                catLabelRect.background = "#95F527";
+                catLabelRect.cornerRadius = 10;
+                break;
+
+            // Capteurs (vert fluo)
+            case "sensors":
+                catLabel.text = "Capteurs";
+                catLabelRect.background = "#95F527";
+                catLabelRect.cornerRadius = 10;
+                break;
+
+            // Variables et opérations (orange)
+            case "variables":
+                catLabel.text =  "Variables et opérations";
+                catLabelRect.background = "#F58727";
+                catLabelRect.cornerRadius = 10;
+                break;
+
+            // Fonctions (rose/fuchsia)
+            case "functions":
+                catLabel.text = "Blocs de plastique mou";
+                catLabelRect.background = "#F52795";
+                break;
+
+            // Départ (rose)
+            case "start":
+                catLabel.text = "Départ";
+                catLabelRect.background = "#F52795";
+                break;
+            
+            default:
+                throw new Error("this category does not exist : " + shortName);
+        }
+
         catLabelRect.addControl(catLabel);
         this.stack.addControl(catLabelRect);
 
@@ -77,11 +130,39 @@ export class OutilsBox extends Rectangle {
         this.stack.addControl(sp);
     }
 
-    addTemplate(category: string, buildBlock: (root: Container) => Rectangle | undefined) {
-        const newRoot = this.categories.get(category);
+    addButton(category: string, label: string, callback: () => void) {
+        let newRoot = this.categories.get(category);
         if (!newRoot) {
-            console.error("cant add template to category " + category + " cause its not created");
-            return;
+            this.addCategory(category);
+            newRoot = this.categories.get(category);
+        }
+        
+        const btn = Button.CreateSimpleButton(label.trim(), label);
+        //btn.width = "50px";
+        btn.adaptHeightToChildren = true;
+        
+        if (btn.textBlock) {
+            btn.textBlock.resizeToFit = true;
+            btn.textBlock.textWrapping = true; 
+            btn.textBlock.paddingTop = "10px";
+            btn.textBlock.paddingBottom = "10px";
+        }
+        btn.color = "white";
+        btn.background = "#ff0000"; 
+        btn.thickness = 2;
+        btn.fontSize = 14;
+        btn.left = "15px";
+        btn.onPointerUpObservable.add(callback);
+        newRoot.addControl(btn);
+        this.buttons.push(btn);
+    }
+
+    addTemplate(category: string, buildBlock: (root: Container) => Rectangle | undefined) {
+        let newRoot = this.categories.get(category);
+        if (!newRoot) {
+            this.addCategory(category);
+            newRoot = this.categories.get(category);
+            if (!newRoot) {}
         }
         const realBlock = buildBlock(newRoot);
         if (!realBlock) {
@@ -96,6 +177,7 @@ export class OutilsBox extends Rectangle {
             newRoot.removeControl(realBlock);
             realBlock.dispose();
 
+            facticeBlock.left = "15px";
             newRoot.addControl(facticeBlock);
 
             facticeBlock.onPointerDownObservable.add((evt) => {

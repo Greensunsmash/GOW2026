@@ -1,9 +1,8 @@
-import type { GameScene } from "../MainLoop/Scene/GameScene";
-import { BlocContainer } from "./BlocContainer";
 import * as GUI from "@babylonjs/gui";
-import { DragBehavior } from "./DragBehavior";
 import type { Valeur } from "../Language/Valeur/Valeur";
 import { ValeurBrute } from "../Language/Valeur/ValeurBrute";
+import type { GameScene } from "../MainLoop/Scene/GameScene";
+import { BlocContainer } from "./BlocContainer";
 import type { Valuable } from "./Valuable";
 
 // Abstract pour tout les bloc renvoyant une valeur
