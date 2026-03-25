@@ -106,17 +106,6 @@ export class ListContainer extends GUI.Rectangle {
 
         this.scene.dragListeners.push(() => {this.stack.paddingBottom = "15px";});
         this.scene.undragListeners.push(() => {this.stack.paddingBottom = "0px";});
-
-        // TEMPORAIRE, POUR DECLENCHER LE LANCEMENT
-        // plus besoin du coup
-        /*
-        this.keyboardObserver = scene.scene.onKeyboardObservable.add((kbInfo) => {
-            if (kbInfo.type === BABYLON.KeyboardEventTypes.KEYDOWN) {
-                if (kbInfo.event.key === "a" || kbInfo.event.key === "A") {
-                    this.getInstructionGroup();
-                }
-            }
-        }); */
     }
 
     // Appelé lorsque qu'on appuie dessus, pour démarrer le drag
@@ -340,13 +329,11 @@ export class ListContainer extends GUI.Rectangle {
         this.root.removeControl(list);
     }
 
-    // Renvoie (et pour l'instant éxecute) la liste d'instructio, si elle est valide (possède un Depart)
+    // Renvoie la liste d'instructions, si elle est valide (possède un Depart)
     getInstructionGroup() : Launchable | null {
         let first = this.getFirst();
         if (first) {
             let l = first.getLaunchable(this.getInstructionList(1, this.list.length));
-            l.onLaunch();
-            if (first instanceof FlagContainer) l.execute([]);
             return l;
         }
         return null;

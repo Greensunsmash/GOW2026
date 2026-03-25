@@ -1,6 +1,8 @@
 import { Button, Container, Control, TextBlock } from "@babylonjs/gui";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 
+// Bouton "Démarrer" en bas à droite
+// Juste un bouton qui fait scene.run() quand on clique mdr
 export class StartButton extends Button {
     private readonly root: Container;
     private readonly scene: GameScene;

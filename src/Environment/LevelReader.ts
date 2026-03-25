@@ -1,7 +1,7 @@
 import type { Container } from "@babylonjs/gui";
 import type { OutilsBox } from "../MRGUI/OutilsBox";
 import { ASSETS_ROOT } from "../Shared/Constants";
-import type { BooleanBlock, CategoryFactories, ExecutionContext, InstructionBlock, SensorBlock, StructureBlock, VariableBlock } from "../Shared/types";
+import type { BooleanBlock, CategoryFactories, ExecutionContext, InstructionBlock, OpBlock, SensorBlock, StructureBlock, VariableBlock } from "../Shared/types";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { BasicInstContainer } from "../Containers/BasicInstContainer";
 import { MoveForwardInstuction } from "../Language/Instructions/MoveForwardInstruction";
@@ -144,12 +144,12 @@ export class LevelReader {
             new BasicBooleenContainer("Il y a un obstacle", new ObstacleSensor(ctx), root, scene),
         };
 
-        const variables: CategoryFactories<VariableBlock> = {
+        const ops: CategoryFactories<OpBlock> = {
             plus: (root) => new PlusContainer(root, scene),
             minus: (root) => new MoinsContainer(root, scene),
         };
 
-        return { instructions, structures, booleans, sensors, variables };
+        return { instructions, structures, booleans, sensors, ops };
     }
 
     public setupToolbox(tb: OutilsBox, ctx: ExecutionContext, scene: GameScene) {
@@ -171,12 +171,14 @@ export class LevelReader {
         if (this.blockset.includes("var_create")) {
             tb.addButton("variables", "Créer une variable", () => {
                 new CreateVarModal(scene.advancedTexture, (name: string) => {
+                    /*
                     tb.addTemplate("variables", (root) =>
                         new VarValueContainer(name, root, scene)
                     );
                     tb.addTemplate("variables", (root) =>
                         new SetVarContainer(name, root, scene)
-                    );
+                    ); */
+                    tb.addVariable(name, scene);
                 });
             });
         }

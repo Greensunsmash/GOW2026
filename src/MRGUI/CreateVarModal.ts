@@ -1,11 +1,14 @@
 import * as GUI from "@babylonjs/gui";
 
+// Bte de dialogue
+// "Créer une variable"
 export class CreateVarModal {
     constructor(
         root: GUI.AdvancedDynamicTexture, 
-        onValidate: (varName: string) => void,
-        prevName?: string
+        onValidate: (varName: string) => void, // callback, censé créer deux blocs dans la toolbox
+        prevName?: string // en cas d'edit
     ) {
+        // Voile gris derrière
         const blocker = new GUI.Rectangle("dialogBlocker");
         blocker.width = "100%";
         blocker.height = "100%";
@@ -13,6 +16,7 @@ export class CreateVarModal {
         blocker.thickness = 0;
         blocker.isPointerBlocker = true; 
         
+        // Bte de dialogue
         const window = new GUI.Rectangle("dialogWindow");
         window.width = "400px";
         //window.height = "220px";
@@ -23,9 +27,11 @@ export class CreateVarModal {
         window.color = "#555555"; 
         blocker.addControl(window);
 
+        // Panel vertical qui contiendra ts les  controles
         const panel = new GUI.StackPanel();
         window.addControl(panel);
 
+        // Titre
         const title = new GUI.TextBlock("dialogTitle", "Créer une nouvelle variable plastique");
         title.height = "50px";
         title.color = "white";
@@ -33,6 +39,7 @@ export class CreateVarModal {
         title.fontWeight = "bold";
         panel.addControl(title);
 
+        // Input nom
         const input = new GUI.InputText("dialogInput");
         input.width = "80%";
         input.height = "40px";
@@ -49,12 +56,14 @@ export class CreateVarModal {
         spacer.thickness = 0;
         panel.addControl(spacer);
 
+        // Panel horizontal des boutons
         const buttonPanel = new GUI.StackPanel();
         buttonPanel.isVertical = false;
         buttonPanel.height = "40px";
         buttonPanel.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
         panel.addControl(buttonPanel);
 
+        // Annuler
         const btnCancel = GUI.Button.CreateSimpleButton("btnCancel", "Annuler");
         btnCancel.width = "120px";
         btnCancel.height = "40px";
@@ -71,6 +80,7 @@ export class CreateVarModal {
         btnSpacer.thickness = 0;
         buttonPanel.addControl(btnSpacer);
 
+        // Valider
         const btnOk = GUI.Button.CreateSimpleButton("btnOk", "Créer");
         btnOk.width = "120px";
         btnOk.height = "40px";

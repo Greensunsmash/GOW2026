@@ -16,6 +16,13 @@ export class Memory {
         this.memoryFonctions = new Map();
     }
 
+    clear() {
+        this.values = new Map();
+        this.booleans = new Map();
+        this.fonctions = new Map();
+        this.memoryFonctions = new Map();
+    }
+
     // Singleton
     public static get(): Memory {
         if (!Memory.instance) {
@@ -31,6 +38,7 @@ export class Memory {
             this.booleans.set(name, val);
         }
     }
+    
     public getVariableValue(name: string, funcName?: string): Value {
         if (funcName && this.memoryFonctions.has(funcName)) {
             const stack = this.memoryFonctions.get(funcName)!;

@@ -155,7 +155,7 @@ export class PlayScene extends GameScene {
 
         this._isLoaded = true;
         const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-        /*
+        
         await sleep(1000);
         this.scene.getEngine().loadingScreen.loadingUIText = '<span style="font-size: 50px;">VOITURE BELIER PROD.</span><br>PRESENTS';
         await sleep(1000);
@@ -163,7 +163,7 @@ export class PlayScene extends GameScene {
         await sleep(1000);
         this.scene.getEngine().loadingScreen.loadingUIText = '<span style="font-size: 80px;">MARCO ROBO :</span><br>A LA RECHERCHE<br>DU DEMARREUR COSMIQUE PERDU';        
         await sleep(1000);
-        */
+        
         this.scene.getEngine().hideLoadingUI();
     }
 

@@ -1,0 +1,18 @@
+{
+    "layout" : [
+        [
+            "...",
+            "..."
+        ],
+        [
+            " @ ",
+            " x "
+        ]
+    ],
+    "blockset" : {
+        "instructions": [
+            "forward",
+            "backaward"
+        ]
+    }
+}

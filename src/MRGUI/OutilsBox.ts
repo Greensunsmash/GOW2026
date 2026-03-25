@@ -6,13 +6,20 @@ import { InstructionContainer } from "../Containers/InstructionContainer";
 import { ListContainer } from "../Containers/ListContainer";
 import { FlagContainer } from "../Containers/Prefabs/FlagContainer";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
+import { VarValueContainer } from "../Containers/Prefabs/VarValueContainer";
+import { SetVarContainer } from "../Containers/Prefabs/SetVarContainer";
 
-
+/*
+La bôite à boîtes,
+à gauche de l'écran.
+*/
 export class OutilsBox extends Rectangle {
     private readonly scrollViewer: ScrollViewer;
     private readonly stack: StackPanel;
     private categories = new Map<string, StackPanel>();
     private buttons : Button[] = [];
+    private vars: string[] = [];
+    private varPanel: StackPanel;
     private readonly scene: GameScene;
     private readonly root: Container;
 
@@ -42,12 +49,20 @@ export class OutilsBox extends Rectangle {
         this.scrollViewer.addControl(this.stack);
     }
 
+    // Ajoute une catégorie dans la toolbox.
+    // Crée un rectangle de titre
+    // et un stack panel pour loger les blocs de cette catégorie
+    // Fonction appelée par addTemplate() ou addButton()
+    // au cas ou la catégorie n'existe pas encore
     addCategory(shortName: string) {
         if (this.categories.get(shortName)) {
             return;
         }
 
         const sp = new StackPanel();
+        if (shortName === "variables") {
+            this.varPanel = sp;
+        }
         sp.isVertical = true;
         sp.spacing = 15;
         sp.paddingTop = "10px";
@@ -72,7 +87,9 @@ export class OutilsBox extends Rectangle {
         catLabelRect.isHitTestVisible = false;
         catLabelRect.thickness = 2;
             
-
+        // selon la catégorie,
+        // on change l'apparence
+        // du titre
         switch(shortName) {
             // Instructions (violet)
             case "instructions":
@@ -100,9 +117,16 @@ export class OutilsBox extends Rectangle {
                 catLabelRect.cornerRadius = 10;
                 break;
 
-            // Variables et opérations (orange)
+            // Variables (orange)
             case "variables":
-                catLabel.text =  "Variables et opérations";
+                catLabel.text =  "Variables";
+                catLabelRect.background = "#F58727";
+                catLabelRect.cornerRadius = 10;
+                break;
+
+            // Opérations (orange)
+            case "ops":
+                catLabel.text =  "Opérations";
                 catLabelRect.background = "#F58727";
                 catLabelRect.cornerRadius = 10;
                 break;
@@ -130,11 +154,19 @@ export class OutilsBox extends Rectangle {
         this.stack.addControl(sp);
     }
 
+    // Ajoute un bouton dans la toolbox,
+    // qui exécute callback() quand on appuie 
     addButton(category: string, label: string, callback: () => void) {
+        // si la catégorie existe pas,
+        // on la crée
         let newRoot = this.categories.get(category);
         if (!newRoot) {
             this.addCategory(category);
             newRoot = this.categories.get(category);
+            if (!newRoot) {
+                console.error("vous me faites chier");
+                return;
+            }
         }
         
         const btn = Button.CreateSimpleButton(label.trim(), label);
@@ -157,57 +189,77 @@ export class OutilsBox extends Rectangle {
         this.buttons.push(btn);
     }
 
+    // Ajoute un bloc dans la catégorie donnée
+    // plus précisémenet, prend en argument une fonction qui permet de créer ce bloc
+    // le bloc dans la toolbox sera l'équivalent factice du bloc que construit buildBlock,
+    // mais quand l'user drag depuis ce bloc factice, il obtient un bloc réel
     addTemplate(category: string, buildBlock: (root: Container) => Rectangle | undefined) {
         let newRoot = this.categories.get(category);
         if (!newRoot) {
             this.addCategory(category);
             newRoot = this.categories.get(category);
-            if (!newRoot) {}
+            if (!newRoot) {
+                console.error("vous me faites chier");
+                return;
+            }
         }
+
+        // on crée un bloc temporaire, 
+        // qui nous servira à construire le factice
         const realBlock = buildBlock(newRoot);
         if (!realBlock) {
             console.log("block not build");
             return;
         }
 
-        // plus fiable que le timeout
+        // on attend que BJS ait eu le temps de créer le bloc
+        // (onAfterRender est plus fiable que le timeout)
         this.scene.scene.onAfterRenderObservable.addOnce(() => {
-            //console.error("FIRST CALL TO UR");
+            // On crée le bloc factice
             const facticeBlock = FacticeFactory.ultimateReaders(realBlock);
+            // Et on drop le bloc de base, qui nous servait juste à ça
             newRoot.removeControl(realBlock);
             realBlock.dispose();
 
             facticeBlock.left = "15px";
             newRoot.addControl(facticeBlock);
 
+            // quand l'user va cliquer sur le bloc factice
             facticeBlock.onPointerDownObservable.add((evt) => {
+                // on build le bloc réel
                 const realDragBlock = buildBlock(this.root);
 
+                // on le place là ou état le bloc factice
+                // (_curentMeasure c pour avoir les coords. absolues)
                 const absoluteLeft = facticeBlock._currentMeasure.left;
                 const absoluteTop = facticeBlock._currentMeasure.top;
                 
+                // on agit différemment selon le type de blocs
+                // si c'est une List (donc probablement une structure)
                 if (realDragBlock instanceof ListContainer) {
+                    // on se contente de la mettre au bon endroit
                     realDragBlock.leftInPixels = absoluteLeft;
                     realDragBlock.topInPixels = absoluteTop;
-                    //listCtn.click(evt.x, evt.y);
-                    //realDragBlock.getDetector().onPointerDownObservable.add(() => console.error("You clicked on the wrong block my friend"));
-                    //listCtn.getDetector().onPointerDownObservable.notifyObservers(new Vector2WithInfo(new Vector2(evt.x,evt.y)));
+                    // et de transmettre le clic pour trigger le drag
                     realDragBlock.click(evt.x, evt.y, true);
+                // si c'est une instruction
                 } else if (realDragBlock instanceof InstructionContainer) {
+                    // on l'encadre dans une liste,
+                    // elle peut pas existe rseule
                     const listCtn = new ListContainer(this.root, this.scene);
                     listCtn.addInstruction(realDragBlock, 0);    
 
+                    // pour le bouton "démarrer",
+                    // il faut que la scène ait connaissance
+                    // du dernier FlagContainer 
                     if (realDragBlock instanceof FlagContainer) {
                         this.scene.setGroupToRun(listCtn);
                     }
                     
                     listCtn.leftInPixels = absoluteLeft;
                     listCtn.topInPixels = absoluteTop;
-                    //listCtn.click(evt.x, evt.y);
-                    
-                    //listCtn.getDetector().onPointerDownObservable.add(() => console.error("You clicked on the wrong block my friend"));
-                    //listCtn.getDetector().onPointerDownObservable.notifyObservers(new Vector2WithInfo(new Vector2(evt.x,evt.y)));
                     listCtn.click(evt.x, evt.y, true);
+                // si c'set un blocContainer
                 } else if (realDragBlock instanceof BlocContainer)  {
                     realDragBlock.leftInPixels = absoluteLeft;
                     realDragBlock.topInPixels = absoluteTop;
@@ -217,6 +269,34 @@ export class OutilsBox extends Rectangle {
                     console.error("ntm");
                 }
             })
+        });
+    }
+
+    // Ajtr une variable dans le panel "Variable"
+    addVariable(name: string, scene: GameScene) {
+        if (name in this.vars) {
+            console.error("variable already exists.");
+            return;
+        }
+
+        // on doit tenir un registre des variables dans la toolbox
+        this.vars.push(name);
+        
+        // on rebuild les composants stack panel "variables"
+        // du haut vers le bas
+        const btn = this.varPanel.getChildByType("variables", "Button");
+        this.varPanel.clearControls();
+        this.varPanel.addControl(btn);
+        // pour chaque var,
+        // on crée le container de valeur
+        // et l'instruction qui set la variable
+        this.vars.forEach((v) => {
+            this.addTemplate("variables", (root) =>
+                new VarValueContainer(v, root, scene)
+            );
+            this.addTemplate("variables", (root) =>
+                new SetVarContainer(v, root, scene)
+            );
         });
     }
 }

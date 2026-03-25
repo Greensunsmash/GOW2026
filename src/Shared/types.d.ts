@@ -1,8 +1,18 @@
 import type { Robot } from "../Entity/Robot"
 
+// Contexte d'exécution
+// Sert à transmettre aux instructions
+// des objets qui dépendent du contexte de la scène
 export type ExecutionContext = {
     robot: Robot;
 };
+
+/*
+Tous les types de blocs,
+par catégorie.
+Nous servira à construire les blocs de la toolbox
+à partir de données JSON.
+*/
 
 type InstructionBlock =
   | "forward"
@@ -25,7 +35,9 @@ type BooleanBlock =
 
 type SensorBlock = "obstacle";
 
-type VariableBlock = "var_create" | "plus" | "minus";
+type VariableBlock = "var_create";
+
+type OpBlock = "plus" | "minus";
 
 type FunctionBlock = "function_create";
 
@@ -37,10 +49,15 @@ type ToolboxBlockMap = {
   booleans: BooleanBlock;
   sensors: SensorBlock;
   variables: VariableBlock;
+  ops: OpBlock;
   functions: FunctionBlock;
   start: StartBlock;
 };
 
+// Une factory est juste un fn qui prend un GUI.Container en arg
+// pour y créer un bloc dedans
 type Factory = (root: any) => any;
 
+// Association d'un type de bloc et de la factory qui crée ce type de bloc
+// (Record c'est juste un dico en TS)
 type CategoryFactories<T extends string> = Record<T, Factory>;

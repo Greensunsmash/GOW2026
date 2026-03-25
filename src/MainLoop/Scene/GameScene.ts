@@ -5,6 +5,8 @@ import { ListContainer } from "../../Containers/ListContainer";
 import { OutilsBox } from "../../MRGUI/OutilsBox";
 import { AssetLibrary } from "../../Shared/AssetLibrary";
 import { LayerMasks } from "../../Shared/Constants";
+import { Memory } from "../../Language/Memory";
+import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
 
 export abstract class GameScene {
     public scene: Scene;
@@ -22,6 +24,7 @@ export abstract class GameScene {
     protected _drh : AssetLibrary;
     protected _isLoaded : boolean = false;
 
+    // ListContainer à exécuter dans on fait Démarrer
     protected groupToRun?: ListContainer;
 
     constructor(engine: Engine) {
@@ -29,7 +32,6 @@ export abstract class GameScene {
         this._drh = new AssetLibrary(this.scene);
         this.dragListeners = [];
         this.undragListeners = [];
-        //new HemisphericLight("light", new Vector3(0,1,0), this.scene);
 
         this.advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
@@ -44,7 +46,6 @@ export abstract class GameScene {
         this.advancedTexture.addControl(this.leftPanel);
         
         this.toolbox = new OutilsBox(this.leftPanel, this);
-
     }
 
 
@@ -114,24 +115,38 @@ export abstract class GameScene {
         return this.toolbox;
     }
 
+    // DEPRECATED
     getGroupToRun() {
         return this.groupToRun;
     }
     
+    // DEPRECATED
     setGroupToRun(l: ListContainer) {
         this.groupToRun = l;
     }
 
+    // DEPRECATED
     removeGroupToRun() {
         this.groupToRun = undefined;
     }
     
     run() {
-        if (!this.groupToRun) {
-            console.error("trying to run without any flag container");
-            return;
+        Memory.get().clear();
+        let child_list = this.leftPanel.children;
+        let start_block : ListContainer | undefined;
+
+        for (const child of child_list) {
+            if (child instanceof ListContainer) {
+                if (!child.isFirst()) continue;
+                if (child.getFirst() instanceof FlagContainer) start_block = child;
+                else if (!child.getInstructionGroup()?.onLaunch()) throw new Error("error 404 Il y a eu une erreur au lancement");
+            }
         }
 
-        this.groupToRun.getInstructionGroup();
+        if (start_block) {
+            const grp = start_block.getInstructionGroup();
+            if (grp && grp.onLaunch()) grp.execute([]);
+            else throw new Error("error 406 Il y a eu une erreur au lancement");
+        }
     }
 }

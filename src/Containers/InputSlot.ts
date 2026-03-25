@@ -18,7 +18,7 @@ export class InputSlot extends EmptySlot implements Valuable {
         this.textInput.color = "#ffffff"
         this.textInput.height = "100%";
         this.textInput.width = "100%";
-        this.textInput.isHitTestVisible = true;
+        this.textInput.isHitTestVisible = false;
         this.addControl(this.textInput);
 
         this.onPointerDownObservable.add(() => this.textInput.focus());
