@@ -1,18 +1,80 @@
 {
-    "layout" : [
-        [
-            "...",
-            "..."
-        ],
-        [
-            " @ ",
-            " x "
-        ]
-    ],
-    "blockset" : {
-        "instructions": [
-            "forward",
-            "backaward"
-        ]
-    }
+    "islands": [
+        {
+            "nb" : 1,
+            "begin_dialog" : "Bienvenue mon coco !",
+            "layouts": [
+                [
+                    ["...", "..."],
+                    [" @ ", " x "]
+                ],
+                [
+
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward"
+                ]
+            },
+            "goal": ["arrival"]
+        },
+        {
+            "nb" : 2,
+            "begin_dialog" : "Vas-y, encore plus !",
+            "layouts": [
+                [
+                    ["...", "...", "...", "..."],
+                    [" @ ", "   ", "   ", " x "]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward"
+                ]
+            },
+            "goal": ["arrival"]
+        },
+        {
+            "nb" : 3,
+            "begin_dialog" : "Tourne Francis",
+            "layouts": [
+                [
+                    [" .  ", " .  ", " .  ", " ..."],
+                    [" @  ", "    ", "    ", "   x"]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right"
+                ]
+            },
+            "goal": ["arrival"]
+        },
+        {
+            "nb" : 4,
+            "begin_dialog" : "C'est ton moment de shine",
+            "end_dialog" : "Bravo champion",
+            "layouts": [
+                [
+                    ["  .  ", "...  ", ".    ", ".....", "    .", "  ...", "  .  "],
+                    ["  @  ", "     ", "     ", "     ", "     ", "     ", "  x  "]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right"
+                ]
+            },
+            "goal": ["arrival"]
+        }
+    ]
 }
