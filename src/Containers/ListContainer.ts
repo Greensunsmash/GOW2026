@@ -23,7 +23,6 @@ export class ListContainer extends GUI.Rectangle {
     private readonly stack : GUI.StackPanel;
     private readonly magnet : Magnet;
     private pointerObserver: BABYLON.Observer<BABYLON.PointerInfo>;
-    private keyboardObserver: BABYLON.Observer<BABYLON.KeyboardInfo>;
     private readonly detector : GUI.Rectangle;
     private readonly list : (InstructionContainer | Magnet)[];
     private readonly structureList : StructureContainer[];
@@ -402,11 +401,7 @@ export class ListContainer extends GUI.Rectangle {
 
     toString():string {return "ListContainer : " + this.id.toString();}
     dispose(): void {
-        if (this.getFirst() instanceof FlagContainer) {
-            this.scene.removeGroupToRun();
-        }
         this.scene.scene.onPointerObservable.remove(this.pointerObserver);
-        this.scene.scene.onKeyboardObservable.remove(this.keyboardObserver);
         this.detector.dispose();
         this.stack.dispose();
         this.magnet.dispose();

@@ -116,8 +116,6 @@ export class PlayScene extends GameScene {
 
         // Départ
         this.toolbox.addTemplate("start", (root) => {
-            if (this.groupToRun)
-                return undefined;
             return new FlagContainer(root, this);
         });
 }

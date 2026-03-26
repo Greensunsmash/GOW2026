@@ -200,7 +200,6 @@ export class LevelReader {
         // Start (cas spécial)
         if (this.blockset.includes("start")) {
             tb.addTemplate("start", (root) => {
-                if (scene.getGroupToRun()) return undefined;
                 return new FlagContainer(root, scene);
             });
         }

@@ -247,14 +247,7 @@ export class OutilsBox extends Rectangle {
                     // on l'encadre dans une liste,
                     // elle peut pas existe rseule
                     const listCtn = new ListContainer(this.root, this.scene);
-                    listCtn.addInstruction(realDragBlock, 0);    
-
-                    // pour le bouton "démarrer",
-                    // il faut que la scène ait connaissance
-                    // du dernier FlagContainer 
-                    if (realDragBlock instanceof FlagContainer) {
-                        this.scene.setGroupToRun(listCtn);
-                    }
+                    listCtn.addInstruction(realDragBlock, 0);
                     
                     listCtn.leftInPixels = absoluteLeft;
                     listCtn.topInPixels = absoluteTop;
