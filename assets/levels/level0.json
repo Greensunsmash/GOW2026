@@ -1,6 +1,10 @@
 {
-    "layout": [
+  "islands": [
+    {
+      "nb": 1,
+      "layouts": [
         [
+          [
             "........",
             "........",
             "........",
@@ -9,8 +13,8 @@
             "........",
             "........",
             "........"
-        ],
-        [
+          ],
+          [
             "########",
             "# #    #",
             "#   @  #",
@@ -19,44 +23,47 @@
             "#   #  #",
             "#      #",
             "########"
+          ]
         ]
-    ],
-    "blockset": {
+      ],
+      "blockset": {
         "instructions": [
-            "forward",
-            "backward",
-            "left",
-            "right",
-            "print"
+          "forward",
+          "backward",
+          "left",
+          "right",
+          "print"
         ],
         "structures": [
-            "for",
-            "if"
+          "for",
+          "if"
         ],
         "booleans": [
-            "true",
-            "false",
-            "not",
-            "and",
-            "or",
-            "inf",
-            "sup",
-            "eq"
+          "true",
+          "false",
+          "not",
+          "and",
+          "or",
+          "inf",
+          "sup",
+          "eq"
         ],
         "sensors": [
-            "obstacle"
+          "obstacle"
         ],
         "variables": [
-            "var_create",
-            "plus",
-            "minus"
+          "var_create",
+          "plus",
+          "minus"
         ],
         "functions": [
-            "function_create"
+          "function_create"
         ],
         "start": [
-            "start"
+          "start"
         ]
-    },
-    "goal": ["arrival"]
+      },
+      "goal": ["arrival"]
+    }
+  ]
 }

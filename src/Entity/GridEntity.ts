@@ -119,4 +119,14 @@ export class GridEntity {
         ease.setEasingMode(EasingFunction.EASINGMODE_EASEINOUT);
         return ease;
     }
+
+    public dispose() {
+        if (this.mesh) {
+            this.mesh.dispose();
+            this.mesh = null as any;
+        }
+        this.level = null as any;
+        this.gridPos = null as any;
+        this._isMoving = false;
+    }
 }

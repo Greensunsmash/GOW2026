@@ -42,12 +42,15 @@ export const State = {
 export type State = typeof State[keyof typeof State];
 export type Map2 = State[][];
 export type Map3 = Map2[];
+export type IslandMap = Map3[]; // La map d'une ile, c'est la liste des maps de ses feuilles
+export type IslandBlockset = string[]; // Chaque ile à son propre blockset, qui est la liste des ses blocs
 
 export class LevelReader {
     static LEVELS_ROOT = ASSETS_ROOT + "levels/";
 
-    private structure : Map3 = [];
-    private blockset: string[] = [];
+    private nb_islands : number = 0;
+    private structure : IslandMap[] = [];
+    private blockset: IslandBlockset[] = [];
 
     constructor() {}
 
@@ -71,11 +74,18 @@ export class LevelReader {
                 throw new Error(`cant load level : ${response.statusText}`);
             }
             const data = await response.json();
+            const list: any[] = data.islands;
+            this.nb_islands = list.length;
 
-            const layers: string[] = data.layout;
-
-            this.structure = this.readLayers(layers);
-            this.blockset = Object.values(data.blockset).flat() as string[];
+            for (const island of list) {
+                const leafs: string[][] = island.layouts;
+                const map : IslandMap = []
+                for (const leaf of leafs) {
+                    map.push(this.readLayers(leaf));
+                }
+                this.structure.push(map);
+                this.blockset.push(Object.values(island.blockset).flat() as IslandBlockset);
+            }
 
             //console.log("json level loaded !");
 
@@ -85,8 +95,8 @@ export class LevelReader {
         }
     }
 
-    public getStructure() : Map3 {
-        return this.structure;
+    public getIsland(nb:number) : IslandMap {
+        return this.structure[nb];
     }
 
     private createFactories(ctx: ExecutionContext, scene: GameScene) {
@@ -152,13 +162,13 @@ export class LevelReader {
         return { instructions, structures, booleans, sensors, ops };
     }
 
-    public setupToolbox(tb: OutilsBox, ctx: ExecutionContext, scene: GameScene) {
+    public setupToolbox(nb : number, tb: OutilsBox, ctx: ExecutionContext, scene: GameScene) {
         const factories = this.createFactories(ctx, scene);
 
         for (const category in factories) {
             const cat = category as keyof typeof factories;
 
-            for (const block of this.blockset as any[]) {
+            for (const block of this.blockset[nb] as any[]) {
                 const factory = factories[cat][block as any];
 
                 if (factory) {
@@ -168,7 +178,7 @@ export class LevelReader {
         }
 
         // Bouton var (cas spécial)
-        if (this.blockset.includes("var_create")) {
+        if (this.blockset[nb].includes("var_create")) {
             tb.addButton("variables", "Créer une variable", () => {
                 new CreateVarModal(scene.advancedTexture, (name: string) => {
                     /*
@@ -184,7 +194,7 @@ export class LevelReader {
         }
 
         // Bouton fonction (cas spécial)
-        if (this.blockset.includes("function_create")) {
+        if (this.blockset[nb].includes("function_create")) {
             tb.addButton("functions", "Créer un bloc de plastique", () => {
                 new MakeABlockModal(scene.advancedTexture, (name: string, args: string[]) => {
                     tb.addTemplate("functions", (root) =>
@@ -198,7 +208,7 @@ export class LevelReader {
         }
 
         // Start (cas spécial)
-        if (this.blockset.includes("start")) {
+        if (this.blockset[nb].includes("start")) {
             tb.addTemplate("start", (root) => {
                 return new FlagContainer(root, scene);
             });

@@ -1,4 +1,4 @@
-import { Vector3, type Scene } from "@babylonjs/core";
+import { TransformNode, Vector3, type Scene } from "@babylonjs/core";
 import { Robot } from "../Entity/Robot";
 import type { AssetLibrary } from "../Shared/AssetLibrary";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
@@ -9,6 +9,7 @@ export class Level {
     private readonly drh : AssetLibrary;
     private readonly scene : Scene;
     private robot? : Robot;
+    private meshes : TransformNode[] = [];
 
     constructor(map : Map3, drh : AssetLibrary, scene : Scene) {
         this.map = map;
@@ -29,15 +30,13 @@ export class Level {
                     
                     switch(tile) {
                         case State.RobotStart:
-                            //console.log("grid pos is " + GridUtils.toString(gridPos));
-                            //console.log("world pos is " + pos.toString());
                             this.robot = this.createRobot(gridPos);
                             break;
                         case State.Wall:
-                            this.createWall(pos);
+                            this.meshes.push(this.createWall(pos));
                             break;
                         case State.Ground:
-                            this.createWall(pos);
+                            this.meshes.push(this.createWall(pos));
                             break;
                         default:
                             break;
@@ -51,12 +50,8 @@ export class Level {
         return new Robot(this.drh, this.scene, this, gridPos);
     }
 
-    createWall(pos : Vector3) {
-        this.drh.printLoadedAssets();
-        this.drh.createSingleInstance(
-            "wall",
-            pos
-        );
+    createWall(pos : Vector3) : TransformNode {
+        return this.drh.createSingleInstance("wall",pos);
     }
 
     getRobot() : Robot {
@@ -89,5 +84,19 @@ export class Level {
 
         //console.log("tile is walkable");
         return true;
+    }
+
+    public dispose() {
+        // Dispose le robot
+        if (this.robot) {
+            this.robot.dispose();
+            this.robot = undefined;
+        }
+
+        for (const mesh of this.meshes) {
+            mesh.dispose();
+        }
+
+        this.map = [] as Map3;
     }
 }

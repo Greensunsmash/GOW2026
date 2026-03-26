@@ -20,7 +20,6 @@ export class AssetLibrary {
         }
     }
 
-    
     async loadSingleAsset(
         name: string,
         filename: string
@@ -126,4 +125,5 @@ export class AssetLibrary {
     printLoadedAssets() {
         console.log(this.assets);
     }
+
 }

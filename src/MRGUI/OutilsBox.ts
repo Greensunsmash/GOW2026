@@ -22,6 +22,7 @@ export class OutilsBox extends Rectangle {
     private varPanel: StackPanel;
     private readonly scene: GameScene;
     private readonly root: Container;
+    private templateRegistry = new Map<string, Set<string>>();
 
     constructor(root: Container, scene: GameScene) {
         super();
@@ -204,6 +205,13 @@ export class OutilsBox extends Rectangle {
             }
         }
 
+        // Partie pour ignorer l'instruction si le template a déjà été ajouté
+        const key = buildBlock.toString();
+        if (!this.templateRegistry.has(category)) this.templateRegistry.set(category, new Set());
+        const registry = this.templateRegistry.get(category)!;
+        if (registry.has(key)) return;
+        registry.add(key);
+
         // on crée un bloc temporaire, 
         // qui nous servira à construire le factice
         const realBlock = buildBlock(newRoot);
@@ -291,5 +299,22 @@ export class OutilsBox extends Rectangle {
                 new SetVarContainer(v, root, scene)
             );
         });
+    }
+
+    public clear() {
+        // Supprimer tous les blocs présents dans la scène (sauf la toolbox)
+        const children = [...this.root.children];
+        for (const child of children) {
+            if (child !== this) {
+                this.root.removeControl(child);
+                child.dispose();
+            }
+        }
+        this.categories.clear();
+        this.stack.clearControls();
+        this.vars = [];
+        this.buttons = [];
+        this.varPanel = undefined as any;
+        this.templateRegistry.clear();
     }
 }
