@@ -1,4 +1,4 @@
-import type { ExecutionContext } from "../../Shared/types";
+import type { ExecutionContext } from "../../MainLoop/ExecutionContext";
 import type { Launchable } from "../Launchable";
 import { Instruction } from "./Instruction";
 

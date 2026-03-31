@@ -14,7 +14,6 @@ export class PlayScene extends GameScene {
     private levelReader: LevelReader;
     private currentIsland: number = 0;
 
-    private level : Level;
     private ctx: ExecutionContext;
     private uiCamera: ArcRotateCamera;
     private mapCamera: ArcRotateCamera;
@@ -63,13 +62,7 @@ export class PlayScene extends GameScene {
         this.levelReader = new LevelReader();
         await this.levelReader.loadLevel("level1.json");
         this.loadIsland(0);
-        /*
-        if (map.length == 0)
-            throw new Error("level map is empty");
-        this.level = new Level(map, this._drh, this.scene);
 
-        this.ctx = {robot: this.level.getRobot()};
-        this.levelReader.setupToolbox(0, this.toolbox, this.ctx, this); */
         let light = new HemisphericLight("light", new Vector3(0,1,0), this.scene);
         light.includeOnlyWithLayerMask = LayerMasks.SCENE_ONLY;
         light.intensity = 1.0;
@@ -104,7 +97,6 @@ export class PlayScene extends GameScene {
         else this.ctx = new ExecutionContext(this.level.getRobot(), this);
 
         const new_goal = this.levelReader.getGoal(index);
-        console.log(new_goal)
         switch (new_goal.name) {
             case "arrival" :
                 const flagPos = this.level.findStatePos(State.Flag);

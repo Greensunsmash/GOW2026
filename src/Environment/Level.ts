@@ -51,15 +51,15 @@ export class Level {
         }
     }
 
-    createRobot(gridPos : GridPoint) : Robot {
+    private createRobot(gridPos : GridPoint) : Robot {
         return new Robot(this.drh, this.scene, this, gridPos);
     }
 
-    createWall(pos : Vector3) : TransformNode {
+    private createWall(pos : Vector3) : TransformNode {
         return this.drh.createSingleInstance("wall",pos);
     }
 
-    createFlag(pos : Vector3) : TransformNode {
+    private createFlag(pos : Vector3) : TransformNode {
         const r = Math.random();
         if (r > .5) 
             return this.drh.createSingleInstance("pill", pos);
@@ -67,17 +67,17 @@ export class Level {
             return this.drh.createSingleInstance("heart", pos);
     }
 
-    getRobot() : Robot {
+    private getRobot() : Robot {
         if (!this.robot)
             throw new Error("this level doesnt have any robot.");
         return this.robot;
     }
 
-    mapShape() : [number, number, number] {
+    private mapShape() : [number, number, number] {
         return [this.map[0][0].length, this.map.length, this.map[0].length]; // x,y,z
     }
 
-    isWalkable(gridPos: GridPoint) {
+    public isWalkable(gridPos: GridPoint) {
         //console.log("testing if " + GridUtils.toString(gridPos) + " is walkable");
         //console.log("map shape is " + this.mapShape());
 
@@ -99,7 +99,7 @@ export class Level {
         return true;
     }
 
-    findStatePos(state: State) : GridPoint | null {
+    public findStatePos(state: State) : GridPoint | null {
         for (let z = 0; z < this.map.length; z++) {
             const layer = this.map[z];
 
@@ -116,6 +116,10 @@ export class Level {
 
         return null; // aucun state trouvé
     }   
+    
+    public reinitLevel() {
+        this.robot?.reinit();
+    }
 
     public dispose() {
         // Dispose le robot

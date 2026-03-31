@@ -29,7 +29,7 @@ import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { ASSETS_ROOT } from "../Shared/Constants";
 import type { BooleanBlock, CategoryFactories, InstructionBlock, OpBlock, SensorBlock, StructureBlock } from "../Shared/types";
 
-export const State = {
+export const State = { // Proposition, avoir différents symboles pour différetentes orientations : L = robot left, R = robot right etc
     Empty: " ",
     RobotStart: "@",
     Wall: "#",
@@ -175,7 +175,7 @@ export class LevelReader {
             const cat = category as keyof typeof factories;
 
             for (const block of this.blockset[nb] as any[]) {
-                const factory = factories[cat][block as any];
+                const factory = (factories[cat] as any)[block];
 
                 if (factory) {
                     tb.addTemplate(cat, factory);

@@ -4,6 +4,8 @@ import { GridUtils, type GridPoint } from "../Shared/GridUtils";
 import type { Level } from "../Environment/Level";
 
 export class GridEntity {
+    protected readonly initPos : GridPoint;
+    protected readonly initRotation : number;
     protected mesh : TransformNode;
     protected gridPos : GridPoint;
     protected level : Level;
@@ -15,9 +17,11 @@ export class GridEntity {
     constructor(drh : AssetLibrary, assetName : string, level : Level, gridPos : GridPoint) {
         this.level = level;
         this.gridPos = gridPos;
+        this.initPos = gridPos;
         const pos : Vector3 = GridUtils.toWorld(gridPos);
         this.mesh = drh.createSingleInstance(assetName, pos);
-        this.mesh.rotation.y = this.facingIndex * (Math.PI / 2);
+        this.initRotation = this.facingIndex;
+        this.mesh.rotation.y = this.initRotation * (Math.PI / 2);
     }
 
     async moveForward() {
@@ -127,6 +131,13 @@ export class GridEntity {
 
     public getGridPos(): GridPoint {
         return this.gridPos;
+    }
+
+    public reinit() {
+        this.mesh.position = GridUtils.toWorld(this.initPos);
+        this.mesh.rotation.y = this.initRotation * (Math.PI / 2);
+        this.facingIndex = this.initRotation;
+        this.gridPos = this.initPos;
     }
 
     public dispose() {
