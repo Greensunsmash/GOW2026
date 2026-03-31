@@ -1,11 +1,5 @@
 import type { Robot } from "../Entity/Robot"
 
-// Contexte d'exécution
-// Sert à transmettre aux instructions
-// des objets qui dépendent du contexte de la scène
-export type ExecutionContext = {
-    robot: Robot;
-};
 
 /*
 Tous les types de blocs,

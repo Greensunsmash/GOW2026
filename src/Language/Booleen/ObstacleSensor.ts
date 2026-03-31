@@ -11,7 +11,7 @@ export class ObstacleSensor extends Booleen {
     }
 
     eval(): boolean {
-        return this.ctx.robot.obstacleAhead();
+        return this.ctx.getRobot().obstacleAhead();
     }
 
     onLaunch(l: Launchable): boolean {return true;}

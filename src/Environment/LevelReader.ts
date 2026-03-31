@@ -1,41 +1,40 @@
-import type { Container } from "@babylonjs/gui";
-import type { OutilsBox } from "../MRGUI/OutilsBox";
-import { ASSETS_ROOT } from "../Shared/Constants";
-import type { BooleanBlock, CategoryFactories, ExecutionContext, InstructionBlock, OpBlock, SensorBlock, StructureBlock, VariableBlock } from "../Shared/types";
-import type { GameScene } from "../MainLoop/Scene/GameScene";
-import { BasicInstContainer } from "../Containers/BasicInstContainer";
-import { MoveForwardInstuction } from "../Language/Instructions/MoveForwardInstruction";
-import { MoinsContainer } from "../Containers/Prefabs/MoinsContainer";
-import { PlusContainer } from "../Containers/Prefabs/PlusContainer";
-import { VarValueContainer } from "../Containers/Prefabs/VarValueContainer";
-import { ObstacleSensor } from "../Language/Booleen/ObstacleSensor";
 import { BasicBooleenContainer } from "../Containers/BasicBooleenContainer";
-import { EgalContainer } from "../Containers/Prefabs/EgalContainer";
-import { SupContainer } from "../Containers/Prefabs/SupContainer";
-import { InfContainer } from "../Containers/Prefabs/InfContainer";
-import { OuContainer } from "../Containers/Prefabs/OuContainer";
-import { EtContainer } from "../Containers/Prefabs/EtContainer";
-import { NotContainer } from "../Containers/Prefabs/NotContainer";
-import { BooleenBrutContainer } from "../Containers/Prefabs/BooleenBrutContainer";
-import { PourContainer } from "../Containers/Prefabs/PourContainer";
+import { BasicInstContainer } from "../Containers/BasicInstContainer";
 import { ListContainer } from "../Containers/ListContainer";
-import { SiContainer } from "../Containers/Prefabs/SiContainer";
-import { SetVarContainer } from "../Containers/Prefabs/SetVarContainer";
-import { PrintContainer } from "../Containers/Prefabs/PrintContainer";
-import { TurnRightInstruction } from "../Language/Instructions/TurnRightInstruction";
-import { TurnLeftInstruction } from "../Language/Instructions/TurnLeftInstruction";
-import { MoveBackwardInstuction } from "../Language/Instructions/MoveBackwardInstruction";
-import { FlagContainer } from "../Containers/Prefabs/FlagContainer";
-import { MakeABlockModal } from "../MRGUI/MakeABlockModal";
-import { FonctionContainer } from "../Containers/Prefabs/FonctionContainer";
+import { BooleenBrutContainer } from "../Containers/Prefabs/BooleenBrutContainer";
+import { EgalContainer } from "../Containers/Prefabs/EgalContainer";
+import { EtContainer } from "../Containers/Prefabs/EtContainer";
 import { ExeFonctionContainer } from "../Containers/Prefabs/ExeFonctionContainer";
+import { FlagContainer } from "../Containers/Prefabs/FlagContainer";
+import { FonctionContainer } from "../Containers/Prefabs/FonctionContainer";
+import { InfContainer } from "../Containers/Prefabs/InfContainer";
+import { MoinsContainer } from "../Containers/Prefabs/MoinsContainer";
+import { NotContainer } from "../Containers/Prefabs/NotContainer";
+import { OuContainer } from "../Containers/Prefabs/OuContainer";
+import { PlusContainer } from "../Containers/Prefabs/PlusContainer";
+import { PourContainer } from "../Containers/Prefabs/PourContainer";
+import { PrintContainer } from "../Containers/Prefabs/PrintContainer";
+import { SiContainer } from "../Containers/Prefabs/SiContainer";
+import { SupContainer } from "../Containers/Prefabs/SupContainer";
+import { ObstacleSensor } from "../Language/Booleen/ObstacleSensor";
+import { MoveBackwardInstuction } from "../Language/Instructions/MoveBackwardInstruction";
+import { MoveForwardInstuction } from "../Language/Instructions/MoveForwardInstruction";
+import { TurnLeftInstruction } from "../Language/Instructions/TurnLeftInstruction";
+import { TurnRightInstruction } from "../Language/Instructions/TurnRightInstruction";
 import { CreateVarModal } from "../MRGUI/CreateVarModal";
+import { MakeABlockModal } from "../MRGUI/MakeABlockModal";
+import type { OutilsBox } from "../MRGUI/OutilsBox";
+import type { ExecutionContext, Goal } from "../MainLoop/ExecutionContext";
+import type { GameScene } from "../MainLoop/Scene/GameScene";
+import { ASSETS_ROOT } from "../Shared/Constants";
+import type { BooleanBlock, CategoryFactories, InstructionBlock, OpBlock, SensorBlock, StructureBlock } from "../Shared/types";
 
 export const State = {
     Empty: " ",
     RobotStart: "@",
     Wall: "#",
     Ground: ".",
+    Flag: "x",
     GodHimself: "^"
 } as const;
 
@@ -51,6 +50,7 @@ export class LevelReader {
     private nb_islands : number = 0;
     private structure : IslandMap[] = [];
     private blockset: IslandBlockset[] = [];
+    private goals: Goal[] = [];
 
     constructor() {}
 
@@ -85,6 +85,8 @@ export class LevelReader {
                 }
                 this.structure.push(map);
                 this.blockset.push(Object.values(island.blockset).flat() as IslandBlockset);
+                
+                this.goals.push(island.goal);
             }
 
             //console.log("json level loaded !");
@@ -93,6 +95,10 @@ export class LevelReader {
             console.error("gave up while trying to lead level :", error);
             this.structure = []; 
         }
+    }
+
+    public getGoal(nb: number): Goal {
+        return this.goals[nb];
     }
 
     public getIsland(nb:number) : IslandMap {

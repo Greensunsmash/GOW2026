@@ -11,7 +11,7 @@ export class MoveForwardInstuction extends Instruction {
     }
 
     async execute(): Promise<void> {
-        await this.ctx.robot.moveForward();
+        await this.ctx.getRobot().moveForward();
     }
 
     onLaunch(_l: Launchable): boolean {

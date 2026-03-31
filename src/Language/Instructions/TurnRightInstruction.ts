@@ -11,7 +11,7 @@ export class TurnRightInstruction extends Instruction {
     }
 
     async execute(): Promise<void> {
-        await this.ctx.robot.turnRight();
+        await this.ctx.getRobot().turnRight();
     }
 
     onLaunch(l: Launchable): boolean {

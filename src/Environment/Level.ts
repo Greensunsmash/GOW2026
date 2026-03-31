@@ -1,4 +1,4 @@
-import { TransformNode, Vector3, type Scene } from "@babylonjs/core";
+import { MaterialGreasedLineDefines, TransformNode, Vector3, type Scene } from "@babylonjs/core";
 import { Robot } from "../Entity/Robot";
 import type { AssetLibrary } from "../Shared/AssetLibrary";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
@@ -30,13 +30,18 @@ export class Level {
                     
                     switch(tile) {
                         case State.RobotStart:
+                            console.log("creating a new robot, at " + GridUtils.toString(gridPos));
                             this.robot = this.createRobot(gridPos);
+                            console.log("robot pos is really " + GridUtils.toString(this.robot.getGridPos()));
                             break;
                         case State.Wall:
                             this.meshes.push(this.createWall(pos));
                             break;
                         case State.Ground:
                             this.meshes.push(this.createWall(pos));
+                            break;
+                        case State.Flag:
+                            this.meshes.push(this.createFlag(pos));
                             break;
                         default:
                             break;
@@ -52,6 +57,14 @@ export class Level {
 
     createWall(pos : Vector3) : TransformNode {
         return this.drh.createSingleInstance("wall",pos);
+    }
+
+    createFlag(pos : Vector3) : TransformNode {
+        const r = Math.random();
+        if (r > .5) 
+            return this.drh.createSingleInstance("pill", pos);
+        else
+            return this.drh.createSingleInstance("heart", pos);
     }
 
     getRobot() : Robot {
@@ -85,6 +98,24 @@ export class Level {
         //console.log("tile is walkable");
         return true;
     }
+
+    findStatePos(state: State) : GridPoint | null {
+        for (let z = 0; z < this.map.length; z++) {
+            const layer = this.map[z];
+
+            for (let y = 0; y < layer.length; y++) {
+                const row = layer[y];
+
+                for (let x = 0; x < row.length; x++) {
+                    if (row[x] === state) {
+                        return { x:x, y:z, z:y };
+                    }
+                }
+            }
+        }
+
+        return null; // aucun state trouvé
+    }   
 
     public dispose() {
         // Dispose le robot

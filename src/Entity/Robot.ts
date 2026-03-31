@@ -7,6 +7,7 @@ import type { GridPoint } from "../Shared/GridUtils";
 export class Robot extends GridEntity {
     private speed : number = 0.1;
 
+
     constructor(drh : AssetLibrary, scene : Scene, level : Level, gridPos : GridPoint) {
        super(drh, "robot", level, gridPos);
        this.setupInput(scene);

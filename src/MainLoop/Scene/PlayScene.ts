@@ -2,10 +2,11 @@ import { KeyboardEventTypes } from "@babylonjs/core";
 import { ArcRotateCamera, Engine, HemisphericLight, Vector3, Viewport } from "@babylonjs/core";
 import { GameScene } from "./GameScene";
 import { Level } from "../../Environment/Level";
-import { LevelReader } from "../../Environment/LevelReader";
+import { LevelReader, State } from "../../Environment/LevelReader";
 import { LayerMasks } from "../../Shared/Constants";
-import type { ExecutionContext } from "../../Shared/types";
 import { StartButton } from "../../MRGUI/StartButton";
+import { GridUtils } from "../../Shared/GridUtils";
+import { ExecutionContext, type Goal } from "../ExecutionContext";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene {
@@ -98,7 +99,25 @@ export class PlayScene extends GameScene {
 
         const map = island[0];
         this.level = new Level(map, this._drh, this.scene);
-        this.ctx = { robot: this.level.getRobot() };
+
+        if (this.ctx) this.ctx.newLevel(this.level.getRobot());
+        else this.ctx = new ExecutionContext(this.level.getRobot(), this);
+
+        const new_goal = this.levelReader.getGoal(index);
+        console.log(new_goal)
+        switch (new_goal.name) {
+            case "arrival" :
+                const flagPos = this.level.findStatePos(State.Flag);
+                if (flagPos)
+                    new_goal.args = {flagPos: flagPos}; 
+                else
+                    throw new Error("cant set an arrival goal without any flag in the leaf map !");
+                break;
+            default :
+                throw new Error("Goal Inconnu");
+        }
+        this.ctx.setGoal(new_goal);
+
         this.levelReader.setupToolbox(index, this.toolbox, this.ctx, this);
     }
 
@@ -122,7 +141,9 @@ export class PlayScene extends GameScene {
     async loadAssets() {    
         await Promise.all([
             this._drh.loadSingleAsset("robot", "robot.glb"),
-            this._drh.loadSingleAsset("wall", "cube.glb")
+            this._drh.loadSingleAsset("wall", "cube.glb"),
+            this._drh.loadSingleAsset("pill", "pill.glb"),
+            this._drh.loadSingleAsset("heart", "heart.01.glb"),
         ]);
     }
 

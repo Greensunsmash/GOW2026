@@ -45,7 +45,6 @@ export abstract class GameScene {
         this.toolbox = new OutilsBox(this.leftPanel, this);
     }
 
-
     update(): void {
         //this.player.update();
     }

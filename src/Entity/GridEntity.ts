@@ -9,6 +9,8 @@ export class GridEntity {
     protected level : Level;
     protected facingIndex: number = 0;
     protected _isMoving : boolean = false;
+    
+    public posListeners: ((pos: GridPoint) => void)[] = [];
 
     constructor(drh : AssetLibrary, assetName : string, level : Level, gridPos : GridPoint) {
         this.level = level;
@@ -87,6 +89,9 @@ export class GridEntity {
             this.createEasing(), 
             () => {
                 this._isMoving = false; 
+                for (let i = 0; i < this.posListeners.length; i++) {
+                    this.posListeners[i](targetGridPos);
+                }
                 resolve();
             }
         ));
@@ -118,6 +123,10 @@ export class GridEntity {
         const ease = new CubicEase();
         ease.setEasingMode(EasingFunction.EASINGMODE_EASEINOUT);
         return ease;
+    }
+
+    public getGridPos(): GridPoint {
+        return this.gridPos;
     }
 
     public dispose() {

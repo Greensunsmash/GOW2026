@@ -11,7 +11,7 @@ export class MoveBackwardInstuction extends Instruction {
     }
 
     async execute(): Promise<void> {
-        await this.ctx.robot.moveBackward();
+        await this.ctx.getRobot().moveBackward();
     }
 
     onLaunch(l: Launchable): boolean {
