@@ -13,7 +13,7 @@ export class MoveBackwardInstuction extends Instruction {
 
     async execute(): Promise<void> {
         await this.ctx.getRobot().moveBackward();
-        Memory.get().pushCall("backward");
+        Memory.get().instructionCalled("backward");
     }
 
     onLaunch(_l: Launchable): boolean {

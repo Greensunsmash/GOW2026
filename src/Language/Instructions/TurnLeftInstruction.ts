@@ -13,7 +13,7 @@ export class TurnLeftInstruction extends Instruction {
 
     async execute(): Promise<void> {
         await this.ctx.getRobot().turnLeft();
-        Memory.get().pushCall("left");
+        Memory.get().instructionCalled("left");
     }
 
     onLaunch(_l: Launchable): boolean {

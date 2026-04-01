@@ -13,7 +13,7 @@ export class TurnRightInstruction extends Instruction {
 
     async execute(): Promise<void> {
         await this.ctx.getRobot().turnRight();
-        Memory.get().pushCall("right");
+        Memory.get().instructionCalled("right");
     }
 
     onLaunch(_l: Launchable): boolean {
