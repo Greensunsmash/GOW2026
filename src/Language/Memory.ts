@@ -111,15 +111,24 @@ export class Memory {
         this.historyID += 1;
     }
     public endFonction(name: string): void {
-        if (this.callStack.length > 0) this.history.push({type:"END", name:name, frame:this.callStack.pop()});}
+        if (this.callStack.length > 0) {
+            this.history.push({type:"END", name:name, frame:this.callStack.pop()});
+            this.historyID += 1;
+        }
+    }
 
-    public instructionCalled(name:string) {this.history.push({type:"INSTRUCTION", name:name});}
+    public instructionCalled(name:string) {
+        this.history.push({type:"INSTRUCTION", name:name});
+        this.historyID += 1;
+    }
     
-    public stepBack() {
+    public stepBack() : void | string {
+        console.log(this.historyID);
         if (this.historyID > 0) {
-            switch (this.history[this.historyID-1].type){
+            this.historyID -= 1;
+            switch (this.history[this.historyID].type){
                 case "VALSET": {// On remet la variable à sa valeur d'avant / on suppr
-                    const action = this.history[this.historyID-1] as ValSetAction;
+                    const action = this.history[this.historyID] as ValSetAction;
                     if (this.callStack.length > 0) {
                         const frame = this.callStack[this.callStack.length - 1];
                         
@@ -134,24 +143,23 @@ export class Memory {
                     };
                     break;
                 case "BOOLSET": {
-                    const action = this.history[this.historyID-1] as BoolSetAction;
+                    const action = this.history[this.historyID] as BoolSetAction;
                     if (!this.booleans.has(action.name) ) throw new Error("History Error, la variable " + action.name + " n'existe pas !");
                     if (action.last_value) this.booleans.set(action.name, action.last_value);
                     else this.booleans.delete(action.name);
                     };
                     break;
                 case "END":{
-                    const action = this.history[this.historyID-1] as EndCallAction;
+                    const action = this.history[this.historyID] as EndCallAction;
                     if (action.frame) this.callStack.push(action.frame);
                     };
                     break;
                 case "INSTRUCTION": {
-                    const action = this.history[this.historyID-1] as DefinedAction;
-                    // Je ne sais pas trop quoi en faire pour l'instant
+                    const action = this.history[this.historyID] as DefinedAction;
+                    return action.name;
                     };
-                    break;
                 case "CALL":{
-                    const action = this.history[this.historyID-1] as CallAction;
+                    const action = this.history[this.historyID] as CallAction;
                     if (this.callStack.length == 0) throw new Error("History Error, il n'y a pas de frame");
                     if (this.callStack[this.callStack.length -1].funcName != action.name) throw new Error("History Error, ce n'est pas la bonne frame");
                     this.callStack.pop();
@@ -163,5 +171,11 @@ export class Memory {
 
     // GETTERS
     public getHistory():Action[] {return this.history;}
+
+    // PRINT
+    public static print():void {
+        const mem = Memory.get();
+        console.log("Memory :", mem.callStack, mem.history, mem.historyID)
+    }
 }
 

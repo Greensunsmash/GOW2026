@@ -35,9 +35,16 @@ export class PlayScene extends GameScene {
             console.log("key event", kbInfo.event.key);
             if (kbInfo.type == KeyboardEventTypes.KEYUP) {
                 if (kbInfo.event.key == "ArrowRight") {
-                    console.log("left");
+                    console.log("right");
                     this.nextIsland();
+                } else if (kbInfo.event.key == "ArrowLeft") {
+                    console.log("left");
+                    this.previousIsland();
+                } else if (kbInfo.event.key == "b") {
+                    console.log("backward");
+                    this.ctx.stepBack();
                 }
+                
             }
         });
     }
