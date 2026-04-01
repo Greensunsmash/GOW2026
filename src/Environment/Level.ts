@@ -95,6 +95,13 @@ export class Level {
         if (nextState == State.Wall)
             return false;
 
+        // On marche que sur du sol owww
+        if (gridPos.y - 1 >= 0) {
+            const nextStateBelow = this.map[gridPos.y - 1][gridPos.z][gridPos.x];
+            if (nextStateBelow != State.Ground)
+                return false;
+        }
+
         //console.log("tile is walkable");
         return true;
     }

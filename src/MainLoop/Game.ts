@@ -18,6 +18,12 @@ export class Game {
         this.engine.loadingScreen = loading;
     }
 
+    /*
+    On peut pas rendre de constructeur async,
+    du coup de ce que j'ai compris,
+    faut créer un async Create et du coup on fait await game.Create au lieu de new Game
+    Comme ça on est sur que ce chenapan attend !
+    */
     static async Create(canvas: HTMLCanvasElement): Promise<Game> {
         const game = new Game(canvas);
         
