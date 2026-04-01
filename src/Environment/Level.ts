@@ -67,7 +67,7 @@ export class Level {
             return this.drh.createSingleInstance("heart", pos);
     }
 
-    private getRobot() : Robot {
+    public getRobot() : Robot {
         if (!this.robot)
             throw new Error("this level doesnt have any robot.");
         return this.robot;

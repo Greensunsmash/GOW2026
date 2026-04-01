@@ -1,9 +1,14 @@
 import * as GUI from "@babylonjs/gui";
+import { ModalWindow } from "./ModalWindow";
+import { BaseHSpacer, BaseVSpacer } from "../misc/BaseSpacers";
+import { CancelButton } from "../buttons/CancelButton";
+import { OkButton } from "../buttons/OkButton";
+import { BaseButton } from "../buttons/BaseButton";
 
 
 // Boite de dialogue
 // "Créer un bloc"
-export class MakeABlockModal {
+export class MakeABlockModal extends ModalWindow {
     private args: string[] = [];
     private argsPanel: GUI.StackPanel;
 
@@ -13,36 +18,7 @@ export class MakeABlockModal {
         prevName?: string, // en cas d'édition
         prevArgs?: string[] // pareil
     ) {
-        // Voile gris derrière
-        const blocker = new GUI.Rectangle("dialogBlocker");
-        blocker.width = "100%";
-        blocker.height = "100%";
-        blocker.background = "rgba(0, 0, 0, 0.6)"; 
-        blocker.thickness = 0;
-        blocker.isPointerBlocker = true; 
-        
-        // La fenêtre proprement dite
-        const window = new GUI.Rectangle("dialogWindow");
-        window.width = "400px";
-        //window.height = "220px";
-        window.adaptHeightToChildren = true;
-        window.background = "#2b2b2b";
-        window.cornerRadius = 10;
-        window.thickness = 2;
-        window.color = "#555555"; 
-        blocker.addControl(window);
-
-        // Le panel vertical qui contiendr les contrôles
-        const panel = new GUI.StackPanel();
-        window.addControl(panel);
-
-        // Titre
-        const title = new GUI.TextBlock("dialogTitle", "Créer un nouveau bloc de PVC");
-        title.height = "50px";
-        title.color = "white";
-        title.fontSize = 22;
-        title.fontWeight = "bold";
-        panel.addControl(title);
+        super(root, "Créer un nouveau bloc");
 
         // Input nom du bloc
         const input = new GUI.InputText("dialogInput");
@@ -54,13 +30,10 @@ export class MakeABlockModal {
         input.placeholderColor = "gray";
         input.focusedBackground = "#2a2a2a";
         if (prevName) input.text = prevName;
-        panel.addControl(input);
+        this.panel.addControl(input);
 
         // Spacer
-        const spacer = new GUI.Rectangle();
-        spacer.height = "30px";
-        spacer.thickness = 0;
-        panel.addControl(spacer);
+        this.panel.addControl(new BaseVSpacer());
 
         // Panel des arguments
         // Géré par la fonction updateArgsView(),
@@ -68,63 +41,40 @@ export class MakeABlockModal {
         this.argsPanel = new GUI.StackPanel();
         if (prevArgs) this.args = prevArgs; // en cas d'edit 
         this.updateArgsView();
-        panel.addControl(this.argsPanel);
+        this.panel.addControl(this.argsPanel);
 
         // Encore un spacer
-        const spacer2 = new GUI.Rectangle();
-        spacer2.height = "30px";
-        spacer2.thickness = 0;
-        panel.addControl(spacer2);
+        this.panel.addControl(new BaseVSpacer());
 
         // Panel des 2 boutons du bas
         const buttonPanel = new GUI.StackPanel();
         buttonPanel.isVertical = false;
         buttonPanel.height = "40px";
         buttonPanel.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-        panel.addControl(buttonPanel);
+        this.panel.addControl(buttonPanel);
 
         //// Btn annuler
-        const btnCancel = GUI.Button.CreateSimpleButton("btnCancel", "Annuler");
-        btnCancel.width = "120px";
-        btnCancel.height = "40px";
-        btnCancel.color = "white";
-        btnCancel.background = "#d32f2f"; 
-        btnCancel.cornerRadius = 5;
-        btnCancel.onPointerUpObservable.add(() => {
-            blocker.dispose(); 
+        const btnCancel = new CancelButton(() => {
+            this.blocker.dispose(); 
         });
         buttonPanel.addControl(btnCancel);
 
         ///// Spacer
-        const btnSpacer = new GUI.Rectangle();
-        btnSpacer.width = "20px";
-        btnSpacer.thickness = 0;
-        buttonPanel.addControl(btnSpacer);
+        buttonPanel.addControl(new BaseHSpacer());
 
         ///// Bouton OK
-        const btnOk = GUI.Button.CreateSimpleButton("btnOk", "Créer");
-        btnOk.width = "120px";
-        btnOk.height = "40px";
-        btnOk.color = "white";
-        btnOk.background = "#4caf50"; 
-        btnOk.cornerRadius = 5;
-        btnOk.onPointerUpObservable.add(() => {
+        const btnOk =new OkButton(() => {
             const blockName = input.text.trim();
             if (blockName !== "") {
                 // pour être SURE de pas avoir d'arguments vides
                 const cleanArgs = this.args.filter(a => a.trim() !== "");
                 onValidate(blockName, cleanArgs);
-                blocker.dispose(); 
+                this.blocker.dispose(); 
             }
         });
         buttonPanel.addControl(btnOk);
 
-        const spacer3 = new GUI.Rectangle();
-        spacer3.height = "10px";
-        spacer3.thickness = 0;
-        panel.addControl(spacer3);
-
-        root.addControl(blocker);
+        this.panel.addControl(new BaseVSpacer());
         
         input.focus();
     }
@@ -182,18 +132,13 @@ export class MakeABlockModal {
         });
 
         // Btn ajouter
-        const btnAddArg = GUI.Button.CreateSimpleButton("btnAddArg", "+ trou");
-        btnAddArg.width = "120px";
-        btnAddArg.height = "40px";
-        btnAddArg.color = "white";
-        btnAddArg.background = "#d32f2f"; 
-        btnAddArg.cornerRadius = 5;
-        btnAddArg.onPointerUpObservable.add(() => {
+        const btnAddArg = new BaseButton("btnAddArg", "+ trou", () => {
             this.args.push(""); 
             // Comme il y a un nouvel élément dans this.args,
             // updateArgsView() créera une nouvelle ligner
             this.updateArgsView();
         });
+        btnAddArg.background = "#d32f2f"; 
         this.argsPanel.addControl(btnAddArg);
     }
 

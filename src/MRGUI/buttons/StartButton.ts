@@ -1,5 +1,5 @@
 import { Button, Container, Control, TextBlock } from "@babylonjs/gui";
-import type { GameScene } from "../MainLoop/Scene/GameScene";
+import type { GameScene } from "../../MainLoop/Scene/GameScene";
 
 // Bouton "Démarrer" en bas à droite
 // Juste un bouton qui fait scene.run() quand on clique mdr

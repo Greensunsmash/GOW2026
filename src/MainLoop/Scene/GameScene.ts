@@ -8,36 +8,29 @@ import { LayerMasks } from "../../Shared/Constants";
 import { Memory } from "../../Language/Memory";
 import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
 import type { Level } from "../../Environment/Level";
+import { BaseScene } from "./BaseScene";
 
-export abstract class GameScene {
-    public scene: Scene;
+export abstract class GameScene extends BaseScene {
     private hoverSlot : EmptySlot | null = null;
     private hoverList : ListContainer | null = null;
     private dragging : boolean = false;
     public dragListeners : (() => void)[];
     public undragListeners : (() => void)[];
-
-    public advancedTexture: AdvancedDynamicTexture;
     protected leftPanel: Rectangle;
 
     protected toolbox: OutilsBox;
 
-    private level : Level;
+    protected level : Level;
 
     protected _drh : AssetLibrary;
     protected _isLoaded : boolean = false;
 
     constructor(engine: Engine) {
-        this.scene = new Scene(engine);
+        super(engine);
+
         this._drh = new AssetLibrary(this.scene);
         this.dragListeners = [];
         this.undragListeners = [];
-
-        this.advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
-
-        if (this.advancedTexture.layer) {
-            this.advancedTexture.layer.layerMask = LayerMasks.UI_ONLY;
-        }   
 
         this.leftPanel = new Rectangle();
         this.leftPanel.width = "50%";
@@ -48,6 +41,7 @@ export abstract class GameScene {
         this.toolbox = new OutilsBox(this.leftPanel, this);
     }
 
+    init(): void {}
 
     update(): void {
         //this.player.update();

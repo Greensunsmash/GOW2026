@@ -4,7 +4,7 @@ import { GameScene } from "./GameScene";
 import { Level } from "../../Environment/Level";
 import { LevelReader, State } from "../../Environment/LevelReader";
 import { LayerMasks } from "../../Shared/Constants";
-import { StartButton } from "../../MRGUI/StartButton";
+import { StartButton } from "../../MRGUI/buttons/StartButton";
 import { GridUtils } from "../../Shared/GridUtils";
 import { ExecutionContext, type Goal } from "../ExecutionContext";
 //import { Player } from "../entities/Player";
@@ -27,8 +27,8 @@ export class PlayScene extends GameScene {
         //this.player.update();
     }
 
-    async init() {
-        await this.initGameScene();
+    async init(levelName: string | undefined = "level1.json") {
+        await this.initGameScene(levelName);
 
         new StartButton(this.leftPanel, this);
         this.scene.onKeyboardObservable.add((kbInfo) =>{
@@ -42,7 +42,7 @@ export class PlayScene extends GameScene {
         });
     }
 
-    async initGameScene() {
+    async initGameScene(levelName: string) {
         this.scene.getEngine().displayLoadingUI();
         
         this.uiCamera = new ArcRotateCamera("uiCamera", Math.PI/2, Math.PI/3, 10, Vector3.Zero(), this.scene);
@@ -60,7 +60,7 @@ export class PlayScene extends GameScene {
         
         await this.loadAssets();
         this.levelReader = new LevelReader();
-        await this.levelReader.loadLevel("level1.json");
+        await this.levelReader.loadLevel(levelName);
         this.loadIsland(0);
 
         let light = new HemisphericLight("light", new Vector3(0,1,0), this.scene);
@@ -68,16 +68,6 @@ export class PlayScene extends GameScene {
         light.intensity = 1.0;
 
         this._isLoaded = true;
-        const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-        
-        await sleep(1000);
-        this.scene.getEngine().loadingScreen.loadingUIText = '<span style="font-size: 50px;">VOITURE BELIER PROD.</span><br>PRESENTS';
-        await sleep(1000);
-        this.scene.getEngine().loadingScreen.loadingUIText = '<span style="font-size: 80px;">MARCO ROBO :</span>';
-        await sleep(1000);
-        this.scene.getEngine().loadingScreen.loadingUIText = '<span style="font-size: 80px;">MARCO ROBO :</span><br>A LA RECHERCHE<br>DU DEMARREUR COSMIQUE PERDU';        
-        await sleep(1000);
-        
         this.scene.getEngine().hideLoadingUI();
     }
 

@@ -1,0 +1,6 @@
+{
+  "levels": [
+    {"file": "level0.json", "name": "La zone en personne"},
+    {"file": "level1.json", "name": "Une intro bien assaisonnée"}
+  ] 
+}

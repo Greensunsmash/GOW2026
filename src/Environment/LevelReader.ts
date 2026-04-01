@@ -21,8 +21,8 @@ import { MoveBackwardInstuction } from "../Language/Instructions/MoveBackwardIns
 import { MoveForwardInstuction } from "../Language/Instructions/MoveForwardInstruction";
 import { TurnLeftInstruction } from "../Language/Instructions/TurnLeftInstruction";
 import { TurnRightInstruction } from "../Language/Instructions/TurnRightInstruction";
-import { CreateVarModal } from "../MRGUI/CreateVarModal";
-import { MakeABlockModal } from "../MRGUI/MakeABlockModal";
+import { CreateVarModal } from "../MRGUI/windows/CreateVarModal";
+import { MakeABlockModal } from "../MRGUI/windows/MakeABlockModal";
 import type { OutilsBox } from "../MRGUI/OutilsBox";
 import type { ExecutionContext, Goal } from "../MainLoop/ExecutionContext";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
@@ -44,6 +44,8 @@ export type Map3 = Map2[];
 export type IslandMap = Map3[]; // La map d'une ile, c'est la liste des maps de ses feuilles
 export type IslandBlockset = string[]; // Chaque ile à son propre blockset, qui est la liste des ses blocs
 
+export type LevelIndexEntry = {name: string, file: string};
+
 export class LevelReader {
     static LEVELS_ROOT = ASSETS_ROOT + "levels/";
 
@@ -51,6 +53,12 @@ export class LevelReader {
     private structure : IslandMap[] = [];
     private blockset: IslandBlockset[] = [];
     private goals: Goal[] = [];
+
+    static async getLevelList(): Promise<LevelIndexEntry[]> {
+        const res = await fetch(LevelReader.LEVELS_ROOT + "index.json");
+        const data = await res.json();
+        return data.levels;
+    }
 
     constructor() {}
 
@@ -104,6 +112,10 @@ export class LevelReader {
     public getIsland(nb:number) : IslandMap {
         return this.structure[nb];
     }
+
+    
+    /* Faudra que je bouge les trois du dessous,
+    ca fait un peu trop de logique pour juste un LevelReader peut être... */
 
     private createFactories(ctx: ExecutionContext, scene: GameScene) {
         const instructions: CategoryFactories<InstructionBlock> = {
