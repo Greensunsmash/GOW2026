@@ -1,0 +1,24 @@
+{
+    "islands": [
+        {
+            "nb" : 1,
+            "begin_dialog" : "A l'aide !",
+            "layouts": [
+                [
+                    ["...", "..."],
+                    [" @ ", " x "]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward"
+                ],
+                "start" : [
+                    "start"
+                ]
+            },
+            "goal":{"name": "arrival"}
+        }
+    ]
+}

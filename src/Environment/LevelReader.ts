@@ -185,10 +185,8 @@ export class LevelReader {
 
         for (const category in factories) {
             const cat = category as keyof typeof factories;
-
             for (const block of this.blockset[nb] as any[]) {
                 const factory = (factories[cat] as any)[block];
-
                 if (factory) {
                     tb.addTemplate(cat, factory);
                 }
@@ -199,13 +197,6 @@ export class LevelReader {
         if (this.blockset[nb].includes("var_create")) {
             tb.addButton("variables", "Créer une variable", () => {
                 new CreateVarModal(scene.advancedTexture, (name: string) => {
-                    /*
-                    tb.addTemplate("variables", (root) =>
-                        new VarValueContainer(name, root, scene)
-                    );
-                    tb.addTemplate("variables", (root) =>
-                        new SetVarContainer(name, root, scene)
-                    ); */
                     tb.addVariable(name, scene);
                 });
             });

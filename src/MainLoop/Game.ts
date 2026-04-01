@@ -27,16 +27,7 @@ export class Game {
     static async Create(canvas: HTMLCanvasElement): Promise<Game> {
         const game = new Game(canvas);
         
-        //const scene = new PlayScene(game.engine);
-        const scene = new LevelSelectScene(game.engine);
-        //await scene.init();
-        await scene.init(async (levelName: string) => {
-            const newScene = new PlayScene(game.engine);
-            await newScene.init(levelName);
-            game.switchScene(newScene);
-        });
-        
-        game.currentScene = scene;
+        await game.switchToLevelSelect();
 
         game.engine.runRenderLoop(() => {
             game.currentScene.update();
@@ -50,7 +41,28 @@ export class Game {
         return game;
     }
 
-    public async switchScene(scene: GameScene) {
+    public async switchToLevelSelect() {
+        const scene = new LevelSelectScene(this.engine);
+        //await scene.init();
+        await scene.init(
+            async (levelName: string) => {
+                const newScene = new PlayScene(this.engine);
+                await newScene.init(
+                    levelName,
+                    () => {
+                        this.switchToLevelSelect();
+                    },
+                    () => {
+                        this.switchToLevelSelect();
+                    }
+                );
+                await this.switchScene(newScene);
+            }
+        );
+        this.switchScene(scene);
+    }
+
+    public async switchScene(scene: BaseScene) {
         if (this.currentScene) {
             this.currentScene.scene.dispose();
         }

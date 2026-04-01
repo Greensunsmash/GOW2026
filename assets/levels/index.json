@@ -1,6 +1,7 @@
 {
   "levels": [
     {"file": "level0.json", "name": "La zone en personne"},
-    {"file": "level1.json", "name": "Une intro bien assaisonnée"}
+    {"file": "level1.json", "name": "Une intro bien assaisonnée"},
+    {"file": "level2.json", "name": "Pitié Gaïa commit quand tu pars (+c'est faux ça crash pas)"}
   ] 
 }

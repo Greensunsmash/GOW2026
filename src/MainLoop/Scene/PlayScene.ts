@@ -1,4 +1,4 @@
-import { KeyboardEventTypes } from "@babylonjs/core";
+import { KeyboardEventTypes, ThinBlackAndWhitePostProcess } from "@babylonjs/core";
 import { ArcRotateCamera, Engine, HemisphericLight, Vector3, Viewport } from "@babylonjs/core";
 import { GameScene } from "./GameScene";
 import { Level } from "../../Environment/Level";
@@ -7,6 +7,8 @@ import { LayerMasks } from "../../Shared/Constants";
 import { StartButton } from "../../MRGUI/buttons/StartButton";
 import { GridUtils } from "../../Shared/GridUtils";
 import { ExecutionContext, type Goal } from "../ExecutionContext";
+import { StackPanel } from "@babylonjs/gui";
+import { QuitButton } from "../../MRGUI/buttons/QuitButton";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene {
@@ -18,6 +20,9 @@ export class PlayScene extends GameScene {
     private uiCamera: ArcRotateCamera;
     private mapCamera: ArcRotateCamera;
 
+    private onLevelGaveup?: () => void;
+    private onLevelWon?: () => void; 
+
     constructor(engine: Engine) {
         super(engine);
         this.init();
@@ -27,10 +32,19 @@ export class PlayScene extends GameScene {
         //this.player.update();
     }
 
-    async init(levelName: string | undefined = "level1.json") {
+    async init(levelName: string | undefined = "level1.json", onLevelGaveup?: () => void, onLevelWon?: () => void) {
         await this.initGameScene(levelName);
 
-        new StartButton(this.leftPanel, this);
+        this.advancedTexture.addControl(
+            new StartButton(this.leftPanel, () => this.run())
+        );
+        this.advancedTexture.addControl(
+            new QuitButton(this.leftPanel, () => {
+                if (onLevelGaveup) 
+                    onLevelGaveup();
+            })
+        );
+
         this.scene.onKeyboardObservable.add((kbInfo) =>{
             console.log("key event", kbInfo.event.key);
             if (kbInfo.type == KeyboardEventTypes.KEYUP) {
@@ -40,6 +54,9 @@ export class PlayScene extends GameScene {
                 }
             }
         });
+
+        this.onLevelGaveup = onLevelGaveup;
+        this.onLevelWon = onLevelWon;
     }
 
     async initGameScene(levelName: string) {
@@ -108,6 +125,8 @@ export class PlayScene extends GameScene {
 
         if (next >= (this.levelReader as any).structure.length) {
             console.log("Dernière île atteinte");
+            if (this.onLevelWon) 
+                this.onLevelWon();
             return;
         }
 
