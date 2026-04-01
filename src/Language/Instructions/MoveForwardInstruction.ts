@@ -1,5 +1,6 @@
 import type { ExecutionContext } from "../../MainLoop/ExecutionContext";
 import type { Launchable } from "../Launchable";
+import { Memory } from "../Memory";
 import { Instruction } from "./Instruction";
 
 export class MoveForwardInstuction extends Instruction {
@@ -12,6 +13,7 @@ export class MoveForwardInstuction extends Instruction {
 
     async execute(): Promise<void> {
         await this.ctx.getRobot().moveForward();
+        Memory.get().pushCall("forward");
     }
 
     onLaunch(_l: Launchable): boolean {

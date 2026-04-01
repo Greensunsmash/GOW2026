@@ -60,7 +60,7 @@ export class PlayScene extends GameScene {
         
         await this.loadAssets();
         this.levelReader = new LevelReader();
-        await this.levelReader.loadLevel("level1.json");
+        await this.levelReader.loadLevel("level0.json");
         this.loadIsland(0);
 
         let light = new HemisphericLight("light", new Vector3(0,1,0), this.scene);
