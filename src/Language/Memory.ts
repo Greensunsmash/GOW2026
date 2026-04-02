@@ -12,11 +12,13 @@ type ValSetAction = {
     type : "VALSET";
     name: string;
     last_value : Value | undefined; 
+    new_value : Value
 };
 type BoolSetAction = {
     type : "BOOLSET";
     name: string;
     last_value :  boolean | undefined; 
+    new_value : boolean
 };
 type DefinedAction = { // Fonctions prédéfinies (donc inversables)
     type : "INSTRUCTION"
@@ -76,14 +78,14 @@ export class Memory {
         if (val instanceof Value) {
             if (this.callStack.length > 0) {
                 const frame = this.callStack[this.callStack.length - 1];
-                this.history.push({type:"VALSET", name:name, last_value:frame.variables.get(name)});
+                this.history.push({type:"VALSET", name:name, last_value:frame.variables.get(name), new_value : val});
                 frame.variables.set(name, val);
             } else {
-                this.history.push({type:"VALSET", name:name, last_value:this.values.get(name)});
+                this.history.push({type:"VALSET", name:name, last_value:this.values.get(name), new_value : val});
                 this.values.set(name, val);
             }
         } else {
-            this.history.push({type:"BOOLSET", name:name, last_value:this.booleans.get(name)});
+            this.history.push({type:"BOOLSET", name:name, last_value:this.booleans.get(name), new_value : val});
             this.booleans.set(name, val);
         }
         this.historyID += 1;
@@ -166,6 +168,41 @@ export class Memory {
                     };
                     break;
             }
+        }
+    }
+    public nextStep() : void | string {
+        if (this.historyID < this.history.length) {
+            switch (this.history[this.historyID].type) {
+                case "VALSET" : {
+                    const action = this.history[this.historyID] as ValSetAction;
+                    if (this.callStack.length > 0) {
+                        const frame = this.callStack[this.callStack.length - 1];
+                        frame.variables.set(action.name, action.new_value);
+                    } else this.values.set(action.name, action.new_value);
+                    };
+                    break;
+                case "BOOLSET" : {
+                    const action = this.history[this.historyID] as BoolSetAction;
+                    this.booleans.set(action.name, action.new_value);
+                    };
+                    break;
+                case "END" : {
+                    if (this.callStack.length = 0) throw new Error("History Error, il n'y a pas de frame");
+                    this.callStack.pop();
+                    };
+                    break;
+                case "INSTRUCTION" : {
+                    const action = this.history[this.historyID] as DefinedAction;
+                    this.historyID += 1;
+                    return action.name;
+                    };
+                case "CALL" : {
+                    const action = this.history[this.historyID] as CallAction;
+                    this.callStack.push({funcName:action.name, variables:action.variables});
+                    }
+            } 
+            
+            this.historyID += 1;
         }
     }
 

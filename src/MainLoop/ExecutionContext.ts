@@ -47,7 +47,7 @@ export class ExecutionContext {
         switch (this.memory.stepBack()) {
             case "forward": 
                 this.getRobot().moveBackward();
-                console.log("f");
+                console.log("b");
                 break;
             case "backward": 
                 this.getRobot().moveForward();
@@ -60,6 +60,28 @@ export class ExecutionContext {
             case "right": 
                 this.getRobot().turnLeft();
                 console.log("l");
+                break;
+        }
+        Memory.print();
+    }
+
+    public nextStep() {
+        switch (this.memory.nextStep()) {
+            case "forward": 
+                this.getRobot().moveForward();
+                console.log("f");
+                break;
+            case "backward": 
+                this.getRobot().moveBackward();
+                console.log("b");
+                break;
+            case "left": 
+                this.getRobot().turnLeft();
+                console.log("l");
+                break;
+            case "right": 
+                this.getRobot().turnRight();
+                console.log("r");
                 break;
         }
         Memory.print();

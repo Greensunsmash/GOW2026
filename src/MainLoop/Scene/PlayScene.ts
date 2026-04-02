@@ -41,8 +41,11 @@ export class PlayScene extends GameScene {
                     console.log("left");
                     this.previousIsland();
                 } else if (kbInfo.event.key == "b") {
-                    console.log("backward");
+                    console.log("stepback");
                     this.ctx.stepBack();
+                } else if (kbInfo.event.key == "f") {
+                    console.log("nextstep");
+                    this.ctx.nextStep();
                 }
                 
             }
