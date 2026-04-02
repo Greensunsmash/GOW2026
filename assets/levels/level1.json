@@ -33,6 +33,9 @@
                 "instructions": [
                     "forward",
                     "backward"
+                ],
+                "start" : [
+                    "start"
                 ]
             },
             "goal":{"name": "arrival"}
@@ -52,6 +55,9 @@
                     "backward",
                     "left",
                     "right"
+                ],
+                "start" : [
+                    "start"
                 ]
             },
             "goal":{"name": "arrival"}
@@ -72,6 +78,9 @@
                     "backward",
                     "left",
                     "right"
+                ],
+                "start" : [
+                    "start"
                 ]
             },
             "goal":{"name": "arrival"}
