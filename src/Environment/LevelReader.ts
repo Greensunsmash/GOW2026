@@ -52,6 +52,7 @@ export class LevelReader {
     private nb_islands : number = 0;
     private structure : IslandMap[] = [];
     private blockset: IslandBlockset[] = [];
+    private blockLimit: (number | null)[] = [];
     private goals: Goal[] = [];
 
     static async getLevelList(): Promise<LevelIndexEntry[]> {
@@ -93,6 +94,10 @@ export class LevelReader {
                 }
                 this.structure.push(map);
                 this.blockset.push(Object.values(island.blockset).flat() as IslandBlockset);
+                if (island.block_limitation)
+                    this.blockLimit.push(island.block_limitation);
+                else
+                    this.blockLimit.push(null);
                 
                 this.goals.push(island.goal);
             }
@@ -222,5 +227,7 @@ export class LevelReader {
                 return new FlagContainer(root, scene);
             });
         }
+
+        tb.setBlockLimit(this.blockLimit[nb]);
     }
 }

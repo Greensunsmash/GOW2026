@@ -23,6 +23,7 @@ export class OutilsBox extends Rectangle {
     private readonly scene: GameScene;
     private readonly root: Container;
     private templateRegistry = new Map<string, Set<string>>();
+    private blockLimit: number | null = null;
 
     constructor(root: Container, scene: GameScene) {
         super();
@@ -206,11 +207,12 @@ export class OutilsBox extends Rectangle {
         }
 
         // Partie pour ignorer l'instruction si le template a déjà été ajouté
+        /* jsuis dsl...
         const key = buildBlock.toString();
         if (!this.templateRegistry.has(category)) this.templateRegistry.set(category, new Set());
         const registry = this.templateRegistry.get(category)!;
         if (registry.has(key)) return;
-        registry.add(key);
+        registry.add(key); */
 
         // on crée un bloc temporaire, 
         // qui nous servira à construire le factice
@@ -234,6 +236,13 @@ export class OutilsBox extends Rectangle {
 
             // quand l'user va cliquer sur le bloc factice
             facticeBlock.onPointerDownObservable.add((evt) => {
+                if (this.blockLimit) {
+                    console.log("block count is " + this.scene.blockCount);
+                    if (this.scene.blockCount >= this.blockLimit)
+                        return;
+                }
+
+                this.scene.blockCount++;
                 // on build le bloc réel
                 const realDragBlock = buildBlock(this.root);
 
@@ -301,6 +310,11 @@ export class OutilsBox extends Rectangle {
         });
     }
 
+    public setBlockLimit(limit: number | null) {
+        console.log("tb block limit set to " + limit);
+        this.blockLimit = limit;
+    }
+
     public clear() {
         // Supprimer tous les blocs présents dans la scène (sauf la toolbox)
         const children = [...this.root.children];
@@ -310,6 +324,7 @@ export class OutilsBox extends Rectangle {
                 child.dispose();
             }
         }
+        this.scene.blockCount = 0;
         this.categories.clear();
         this.stack.clearControls();
         this.vars = [];

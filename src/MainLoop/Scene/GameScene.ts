@@ -9,6 +9,9 @@ import { Memory } from "../../Language/Memory";
 import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
 import type { Level } from "../../Environment/Level";
 import { BaseScene } from "./BaseScene";
+import { Instruction } from "../../Language/Instructions/Instruction";
+import { InstructionContainer } from "../../Containers/InstructionContainer";
+import { BlocContainer } from "../../Containers/BlocContainer";
 
 export abstract class GameScene extends BaseScene {
     private hoverSlot : EmptySlot | null = null;
@@ -16,6 +19,7 @@ export abstract class GameScene extends BaseScene {
     private dragging : boolean = false;
     public dragListeners : (() => void)[];
     public undragListeners : (() => void)[];
+    public blockCount: number = 0;
     protected leftPanel: Rectangle;
 
     protected toolbox: OutilsBox;

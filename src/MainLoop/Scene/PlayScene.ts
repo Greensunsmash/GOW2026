@@ -117,6 +117,7 @@ export class PlayScene extends GameScene {
         }
         this.ctx.setGoal(new_goal);
 
+        this.toolbox.clear();
         this.levelReader.setupToolbox(index, this.toolbox, this.ctx, this);
     }
 

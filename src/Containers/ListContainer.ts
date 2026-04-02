@@ -216,6 +216,7 @@ export class ListContainer extends GUI.Rectangle {
                             l.parent?.removeControl(l);
                             l.isDragging = false;
                             l.dispose();
+                            this.scene.blockCount--;
                             this.scene.setDragging(false);
                             return;
                     }
