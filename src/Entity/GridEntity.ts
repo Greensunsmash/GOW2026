@@ -24,30 +24,32 @@ export class GridEntity {
         this.mesh.rotation.y = this.initRotation * (Math.PI / 2);
     }
 
-    async moveForward() {
+    async moveForward(force : boolean = false) {
         const facing = GridUtils.DIRECTIONS[this.facingIndex];
-        await this.tryMove(facing.x, facing.z);
+        await this.tryMove(facing.x, facing.z, force);
     }
 
-    async moveBackward() {
+    async moveBackward(force : boolean = false) {
         const facing = GridUtils.DIRECTIONS[this.facingIndex];
-        await this.tryMove(-facing.x, -facing.z);
+        await this.tryMove(-facing.x, -facing.z, force);
     }
 
-    async turnRight() {
+    async turnRight(force : boolean = false) {
         if (this._isMoving) return;
         // 0 -> 1 -> 2 -> 3 -> 0
         this.facingIndex = (this.facingIndex + 1) % 4;
-        await this.animateRotation(Math.PI / 2);
+        if (force) this.forceRotation(Math.PI / 2);
+        else await this.animateRotation(Math.PI / 2);
     }
 
-    async turnLeft() {
+    async turnLeft(force : boolean = false) {
         if (this._isMoving) return;
         this.facingIndex = (this.facingIndex - 1 + 4) % 4;
-        await this.animateRotation(-Math.PI / 2);
+        if (force) this.forceRotation(-Math.PI);
+        else await this.animateRotation(-Math.PI / 2);
     }
 
-    obstacleAhead(): boolean {
+    public obstacleAhead(): boolean {
         const facing = GridUtils.DIRECTIONS[this.facingIndex];
         const targetGridPos = GridUtils.add(
             this.gridPos,
@@ -60,18 +62,13 @@ export class GridEntity {
         return !this.level.isWalkable(targetGridPos);
     }
 
-    async tryMove(dx: number, dz: number) {
-        const targetGridPos = GridUtils.add(
-            this.gridPos,
-            {
-                x: dx,
-                y: 0,
-                z: dz
-            }
-        );
+    protected async tryMove(dx: number, dz: number, force : boolean = false) {
+        const targetGridPos = GridUtils.add(this.gridPos, {x: dx, y: 0, z: dz});
 
-        if (this.level.isWalkable(targetGridPos))
-            await this.doMove(targetGridPos);
+        if (force) {
+            if (this.level.isWalkable(targetGridPos)) this.forceMove(targetGridPos);
+            else throw new Error("Error: Attempted to force a crash into the wall");
+        } else if (this.level.isWalkable(targetGridPos)) await this.doMove(targetGridPos);
     }
 
     private async doMove(targetGridPos : GridPoint): Promise<void> {
@@ -101,6 +98,11 @@ export class GridEntity {
         ));
     }
 
+    private forceMove(targetGridPos : GridPoint) : void {
+        this.gridPos = targetGridPos;
+        this.mesh.position = GridUtils.toWorld(targetGridPos);
+    }
+
     private async animateRotation(relativeAngle: number): Promise<void> {
         this._isMoving = true;
         const targetAngle = this.mesh.rotation.y + relativeAngle;
@@ -121,6 +123,10 @@ export class GridEntity {
                 resolve();
             }
         ));
+    }
+
+    private forceRotation(relativeAngle: number): void {
+        this.mesh.rotation.y = this.mesh.rotation.y + relativeAngle;
     }
 
     private createEasing(): EasingFunction {
