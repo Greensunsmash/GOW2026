@@ -237,7 +237,7 @@ export class OutilsBox extends Rectangle {
             // quand l'user va cliquer sur le bloc factice
             facticeBlock.onPointerDownObservable.add((evt) => {
                 if (this.blockLimit) {
-                    console.log("block count is " + this.scene.blockCount);
+                    //console.log("block count is " + this.scene.blockCount);
                     if (this.scene.blockCount >= this.blockLimit)
                         return;
                 }
