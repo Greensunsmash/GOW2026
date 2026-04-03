@@ -63,7 +63,14 @@ export class GridEntity {
     }
 
     protected async tryMove(dx: number, dz: number, force : boolean = false) {
-        const targetGridPos = GridUtils.add(this.gridPos, {x: dx, y: 0, z: dz});
+        const targetGridPos = GridUtils.add(
+            this.gridPos,  
+            {               // je me battrais jusqu'à la mort
+                x: dx,      
+                y: 0, 
+                z: dz
+            }
+        );
 
         if (force) {
             if (this.level.isWalkable(targetGridPos)) this.forceMove(targetGridPos);
