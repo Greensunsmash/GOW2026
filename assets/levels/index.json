@@ -2,6 +2,7 @@
   "levels": [
     {"file": "level0.json", "name": "La zone en personne"},
     {"file": "level1.json", "name": "Une intro bien assaisonnée"},
-    {"file": "level2.json", "name": "A tester juste après avoir debug"}
+    {"file": "level2.json", "name": "A tester juste après avoir debug"},
+    {"file": "test_leaf.json", "name": "Eh ! t'as pas une feuille ?"}
   ] 
 }

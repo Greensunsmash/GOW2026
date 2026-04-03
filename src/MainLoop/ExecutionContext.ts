@@ -34,7 +34,7 @@ export class ExecutionContext {
             case "arrival":
                 this.robot.posListeners.push((pos: GridPoint) => {
                     if (GridUtils.equals(pos, goal.args.flagPos)) {
-                        this.scene.nextIsland();
+                        this.scene.nextLeaf();
                     }
                 });
                 break;
