@@ -132,5 +132,7 @@ export abstract class GameScene extends BaseScene {
             if (grp && grp.onLaunch()) grp.execute([]);
             else throw new Error("error 406 Il y a eu une erreur au lancement");
         }
+
+        console.log(Memory.get().getHistory());
     }
 }

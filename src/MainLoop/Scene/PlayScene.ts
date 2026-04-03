@@ -47,16 +47,26 @@ export class PlayScene extends GameScene {
         this.scene.onKeyboardObservable.add((kbInfo) =>{
             console.log("key event", kbInfo.event.key);
             if (kbInfo.type == KeyboardEventTypes.KEYUP) {
-                if (kbInfo.event.key === "ArrowRight") {
-                    console.log("left");
-                    this.nextIsland();
-                } else if (kbInfo.event.key === "l") {
+                if (kbInfo.event.key === "l") {
                     console.log("nextleaf");
                     this.nextLeaf();
                 } else if (kbInfo.event.key === "p") {
                     console.log("prevleaf");
                     this.previousLeaf();
+                } else if (kbInfo.event.key == "ArrowRight") {
+                    console.log("right");
+                    this.nextIsland();
+                } else if (kbInfo.event.key == "ArrowLeft") {
+                    console.log("left");
+                    this.previousIsland();
+                } else if (kbInfo.event.key == "b") {
+                    console.log("stepback");
+                    this.ctx.stepBack();
+                } else if (kbInfo.event.key == "f") {
+                    console.log("nextstep");
+                    this.ctx.nextStep();
                 }
+                
             }
         });
 

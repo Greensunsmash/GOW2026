@@ -21,15 +21,15 @@ export class ExecutionContext {
         this.memory = Memory.get();
     }
 
-    getRobot(): Robot {
+    public getRobot(): Robot {
         return this.robot;
     }
 
-    newLevel(robot: Robot) {
+    public newLevel(robot: Robot) {
         this.robot = robot;
     }
 
-    setGoal(goal: Goal) {
+    public setGoal(goal: Goal) {
         switch (goal.name) {
             case "arrival":
                 this.robot.posListeners.push((pos: GridPoint) => {
@@ -41,5 +41,49 @@ export class ExecutionContext {
             default:
                 break;
         }
+    }
+
+    public stepBack() {
+        switch (this.memory.stepBack()) {
+            case "forward": 
+                this.getRobot().moveBackward(true);
+                console.log("b");
+                break;
+            case "backward": 
+                this.getRobot().moveForward(true);
+                console.log("f");
+                break;
+            case "left": 
+                this.getRobot().turnRight(true);
+                console.log("r");
+                break;
+            case "right": 
+                this.getRobot().turnLeft(true);
+                console.log("l");
+                break;
+        }
+        Memory.print();
+    }
+
+    public nextStep() {
+        switch (this.memory.nextStep()) {
+            case "forward": 
+                this.getRobot().moveForward(true);
+                console.log("f");
+                break;
+            case "backward": 
+                this.getRobot().moveBackward(true);
+                console.log("b");
+                break;
+            case "left": 
+                this.getRobot().turnLeft(true);
+                console.log("l");
+                break;
+            case "right": 
+                this.getRobot().turnRight(true);
+                console.log("r");
+                break;
+        }
+        Memory.print();
     }
 }

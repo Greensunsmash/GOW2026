@@ -1,5 +1,6 @@
-import type { ExecutionContext } from "../../Shared/types";
+import type { ExecutionContext } from "../../MainLoop/ExecutionContext";
 import type { Launchable } from "../Launchable";
+import { Memory } from "../Memory";
 import { Instruction } from "./Instruction";
 
 export class MoveBackwardInstuction extends Instruction {
@@ -12,9 +13,10 @@ export class MoveBackwardInstuction extends Instruction {
 
     async execute(): Promise<void> {
         await this.ctx.getRobot().moveBackward();
+        Memory.get().instructionCalled("backward");
     }
 
-    onLaunch(l: Launchable): boolean {
+    onLaunch(_l: Launchable): boolean {
         return true;
     }
 }

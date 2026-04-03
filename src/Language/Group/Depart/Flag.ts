@@ -3,6 +3,7 @@ import type { Executable } from "../../Executable";
 import type { Launchable } from "../../Launchable";
 import { Value } from "../../Valeur/Value";
 import { Bloc } from "../../Bloc";
+import { Memory } from "../../Memory";
 
 export class Flag extends Group implements Launchable {
     
@@ -18,6 +19,7 @@ export class Flag extends Group implements Launchable {
 
     async execute(_list?: Value[]): Promise<void> {
         await super.execute();
+        console.log(Memory.get().getHistory());
     }
 
     onLaunch(): boolean {
