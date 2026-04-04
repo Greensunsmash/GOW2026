@@ -113,26 +113,5 @@ export abstract class GameScene extends BaseScene {
         return this.toolbox;
     }
     
-    run() {
-        Memory.get().clear();
-        this.level.reinitLevel();
-        let child_list = this.leftPanel.children;
-        let start_block : ListContainer | undefined;
-
-        for (const child of child_list) {
-            if (child instanceof ListContainer) {
-                if (!child.isFirst()) continue;
-                if (child.getFirst() instanceof FlagContainer) start_block = child;
-                else if (!child.getInstructionGroup()?.onLaunch()) throw new Error("error 404 Il y a eu une erreur au lancement");
-            }
-        }
-
-        if (start_block) {
-            const grp = start_block.getInstructionGroup();
-            if (grp && grp.onLaunch()) grp.execute([]);
-            else throw new Error("error 406 Il y a eu une erreur au lancement");
-        }
-
-        console.log(Memory.get().getHistory());
-    }
+    
 }

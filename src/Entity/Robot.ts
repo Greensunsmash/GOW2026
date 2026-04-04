@@ -33,10 +33,10 @@ export class Robot extends GridEntity {
                             ✨ ROTATEZ !! ✨
                 */
 
-                if (key === "z") this.moveForward();
-                if (key === "s") this.moveBackward();
-                if (key === "d") this.turnRight();
-                if (key === "q") this.turnLeft();
+                if (key === "z") this.visualMoveForward();
+                if (key === "s") this.visualMoveBackward();
+                if (key === "d") this.visualTurnRight();
+                if (key === "q") this.visualTurnLeft();
             }
         });
     }

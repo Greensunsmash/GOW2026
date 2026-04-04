@@ -1,7 +1,7 @@
 import type { Robot } from "../Entity/Robot";
 import type { PlayScene } from "./Scene/PlayScene";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
-import { Memory } from "../Language/Memory";
+import { Memory, type stepInfo } from "../Language/Memory";
 
 export type GoalName = "arrival";
 
@@ -44,46 +44,58 @@ export class ExecutionContext {
     }
 
     public stepBack() {
-        switch (this.memory.stepBack()) {
+        const stepInfo: stepInfo = this.memory.stepBack();
+        if (stepInfo.empty) {
+            console.log("no further step back");
+            return false;
+        }
+        switch (stepInfo.instName) {
             case "forward": 
-                this.getRobot().moveBackward(true);
+                this.getRobot().visualMoveBackward(true);
                 console.log("b");
                 break;
             case "backward": 
-                this.getRobot().moveForward(true);
+                this.getRobot().visualMoveForward(true);
                 console.log("f");
                 break;
             case "left": 
-                this.getRobot().turnRight(true);
+                this.getRobot().visualTurnRight(true);
                 console.log("r");
                 break;
             case "right": 
-                this.getRobot().turnLeft(true);
+                this.getRobot().visualTurnLeft(true);
                 console.log("l");
                 break;
         }
         Memory.print();
+        return true;
     }
 
-    public nextStep() {
-        switch (this.memory.nextStep()) {
+    public async nextStep(instantMove: boolean = true): Promise<boolean> {
+        const stepInfo: stepInfo = this.memory.nextStep();
+        if (stepInfo.empty) {
+            console.log("no further step");
+            return false;
+        }
+        switch (stepInfo.instName) {
             case "forward": 
-                this.getRobot().moveForward(true);
+                await this.getRobot().visualMoveForward(instantMove);
                 console.log("f");
                 break;
             case "backward": 
-                this.getRobot().moveBackward(true);
+                await this.getRobot().visualMoveBackward(instantMove);
                 console.log("b");
                 break;
             case "left": 
-                this.getRobot().turnLeft(true);
+                await this.getRobot().visualTurnLeft(instantMove);
                 console.log("l");
                 break;
             case "right": 
-                this.getRobot().turnRight(true);
+                await this.getRobot().visualTurnRight(instantMove);
                 console.log("r");
                 break;
         }
         Memory.print();
+        return true;
     }
 }

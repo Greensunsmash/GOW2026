@@ -36,6 +36,10 @@ type EndCallAction = {
     frame : StackFrame | undefined
 }
 
+export type stepInfo = {
+    empty: boolean;
+    instName?: string;
+}
 
 export class Memory {
     private static instance: Memory;
@@ -88,7 +92,7 @@ export class Memory {
             this.history.push({type:"BOOLSET", name:name, last_value:this.booleans.get(name), new_value : val});
             this.booleans.set(name, val);
         }
-        this.historyID += 1;
+        //this.historyID += 1;
     }
     public getVariableValue(name: string): Value {
         for (let i = this.callStack.length - 1; i >= 0; i--) {
@@ -110,21 +114,21 @@ export class Memory {
         if (this.callStack.length >= 100) throw new Error("stack overflow");
         this.callStack.push({funcName: name, variables: map});
         this.history.push({type:"CALL", name:name, variables:map});
-        this.historyID += 1;
+        //this.historyID += 1;
     }
     public endFonction(name: string): void {
         if (this.callStack.length > 0) {
             this.history.push({type:"END", name:name, frame:this.callStack.pop()});
-            this.historyID += 1;
+            //this.historyID += 1;
         }
     }
 
     public instructionCalled(name:string) {
         this.history.push({type:"INSTRUCTION", name:name});
-        this.historyID += 1;
+        //this.historyID += 1;
     }
     
-    public stepBack() : void | string {
+    public stepBack() : stepInfo {
         console.log(this.historyID);
         if (this.historyID > 0) {
             this.historyID -= 1;
@@ -158,7 +162,7 @@ export class Memory {
                     break;
                 case "INSTRUCTION": {
                     const action = this.history[this.historyID] as DefinedAction;
-                    return action.name;
+                    return {empty: false, instName: action.name};
                     };
                 case "CALL":{
                     const action = this.history[this.historyID] as CallAction;
@@ -168,9 +172,11 @@ export class Memory {
                     };
                     break;
             }
+            return {empty: false};
         }
+        return {empty: true};
     }
-    public nextStep() : void | string {
+    public nextStep() : stepInfo {
         if (this.historyID < this.history.length) {
             switch (this.history[this.historyID].type) {
                 case "VALSET" : {
@@ -194,7 +200,7 @@ export class Memory {
                 case "INSTRUCTION" : {
                     const action = this.history[this.historyID] as DefinedAction;
                     this.historyID += 1;
-                    return action.name;
+                    return {empty: false, instName: action.name};
                     };
                 case "CALL" : {
                     const action = this.history[this.historyID] as CallAction;
@@ -203,7 +209,9 @@ export class Memory {
             } 
             
             this.historyID += 1;
+            return {empty: false};
         }
+        return {empty: true};
     }
 
     // GETTERS

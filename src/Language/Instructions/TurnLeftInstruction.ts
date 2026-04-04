@@ -12,7 +12,7 @@ export class TurnLeftInstruction extends Instruction {
     }
 
     async execute(): Promise<void> {
-        await this.ctx.getRobot().turnLeft();
+        this.ctx.getRobot().logicalTurnLeft();
         Memory.get().instructionCalled("left");
     }
 

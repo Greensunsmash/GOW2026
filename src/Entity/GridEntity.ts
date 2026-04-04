@@ -7,52 +7,70 @@ export class GridEntity {
     protected readonly initPos : GridPoint;
     protected readonly initRotation : number;
     protected mesh : TransformNode;
-    protected gridPos : GridPoint;
+
+    // Coordonnées logiques (compilation)
+    protected logicalGridPos: GridPoint;
+    protected logicalFacingIndex: number = 0;
+
+    // Coordonnées visuelles (exécution de la trace que y a dans Memory)
+    protected visualGridPos : GridPoint;
+    protected visualFacingIndex: number = 0;
+
     protected level : Level;
-    protected facingIndex: number = 0;
     protected _isMoving : boolean = false;
     
     public posListeners: ((pos: GridPoint) => void)[] = [];
 
     constructor(drh : AssetLibrary, assetName : string, level : Level, gridPos : GridPoint) {
         this.level = level;
-        this.gridPos = gridPos;
+        this.logicalGridPos = gridPos;
+        this.visualGridPos = gridPos;
         this.initPos = gridPos;
         const pos : Vector3 = GridUtils.toWorld(gridPos);
         this.mesh = drh.createSingleInstance(assetName, pos);
-        this.initRotation = this.facingIndex;
+        this.initRotation = this.visualFacingIndex;
         this.mesh.rotation.y = this.initRotation * (Math.PI / 2);
     }
 
-    async moveForward(force : boolean = false) {
-        const facing = GridUtils.DIRECTIONS[this.facingIndex];
-        await this.tryMove(facing.x, facing.z, force);
+    // Fonctions LOGIQUES (utiles pour la compilation)
+
+    public logicalMoveForward() {
+        const facing = GridUtils.DIRECTIONS[this.logicalFacingIndex];
+        this.tryLogicalMove(facing.x, facing.z);
     }
 
-    async moveBackward(force : boolean = false) {
-        const facing = GridUtils.DIRECTIONS[this.facingIndex];
-        await this.tryMove(-facing.x, -facing.z, force);
+    public logicalMoveBackward() {
+        const facing = GridUtils.DIRECTIONS[this.logicalFacingIndex];
+        this.tryLogicalMove(-facing.x, -facing.z);
     }
 
-    async turnRight(force : boolean = false) {
-        if (this._isMoving) return;
+    protected tryLogicalMove(dx: number, dz: number) {
+        const targetGridPos = GridUtils.add(
+            this.logicalGridPos,  
+            {               // je me battrais jusqu'à la mort
+                x: dx,      
+                y: 0, 
+                z: dz
+            }
+        );
+
+        if (this.level.isWalkable(targetGridPos)) 
+            this.logicalGridPos = targetGridPos;
+    }
+
+    public logicalTurnRight() {
         // 0 -> 1 -> 2 -> 3 -> 0
-        this.facingIndex = (this.facingIndex + 1) % 4;
-        if (force) this.forceRotation(Math.PI / 2);
-        else await this.animateRotation(Math.PI / 2);
+        this.logicalFacingIndex = (this.logicalFacingIndex + 1) % 4;
     }
 
-    async turnLeft(force : boolean = false) {
-        if (this._isMoving) return;
-        this.facingIndex = (this.facingIndex - 1 + 4) % 4;
-        if (force) this.forceRotation(-Math.PI);
-        else await this.animateRotation(-Math.PI / 2);
+    public logicalTurnLeft() {
+        this.logicalFacingIndex = (this.logicalFacingIndex - 1 + 4) % 4;
     }
 
     public obstacleAhead(): boolean {
-        const facing = GridUtils.DIRECTIONS[this.facingIndex];
+        const facing = GridUtils.DIRECTIONS[this.logicalFacingIndex];
         const targetGridPos = GridUtils.add(
-            this.gridPos,
+            this.logicalGridPos,
             {
                 x: facing.x,
                 y: 0,
@@ -62,9 +80,36 @@ export class GridEntity {
         return !this.level.isWalkable(targetGridPos);
     }
 
-    protected async tryMove(dx: number, dz: number, force : boolean = false) {
+    // Déplacements/rotations VISUELS
+
+    async visualMoveForward(force : boolean = false) {
+        const facing = GridUtils.DIRECTIONS[this.visualFacingIndex];
+        await this.tryVisualMove(facing.x, facing.z, force);
+    }
+
+    async visualMoveBackward(force : boolean = false) {
+        const facing = GridUtils.DIRECTIONS[this.visualFacingIndex];
+        await this.tryVisualMove(-facing.x, -facing.z, force);
+    }
+
+    async visualTurnRight(force : boolean = false) {
+        if (this._isMoving) return;
+        // 0 -> 1 -> 2 -> 3 -> 0
+        this.visualFacingIndex = (this.visualFacingIndex + 1) % 4;
+        if (force) this.forceRotation(Math.PI / 2);
+        else await this.animateRotation(Math.PI / 2);
+    }
+
+    async visualTurnLeft(force : boolean = false) {
+        if (this._isMoving) return;
+        this.visualFacingIndex = (this.visualFacingIndex - 1 + 4) % 4;
+        if (force) this.forceRotation(-Math.PI);
+        else await this.animateRotation(-Math.PI / 2);
+    }
+
+    protected async tryVisualMove(dx: number, dz: number, force : boolean = false) {
         const targetGridPos = GridUtils.add(
-            this.gridPos,  
+            this.visualGridPos,  
             {               // je me battrais jusqu'à la mort
                 x: dx,      
                 y: 0, 
@@ -75,12 +120,12 @@ export class GridEntity {
         if (force) {
             if (this.level.isWalkable(targetGridPos)) this.forceMove(targetGridPos);
             else throw new Error("Error: Attempted to force a crash into the wall");
-        } else if (this.level.isWalkable(targetGridPos)) await this.doMove(targetGridPos);
+        } else if (this.level.isWalkable(targetGridPos)) await this.doVisualMove(targetGridPos);
     }
 
-    private async doMove(targetGridPos : GridPoint): Promise<void> {
+    private async doVisualMove(targetGridPos : GridPoint): Promise<void> {
         this._isMoving = true;
-        this.gridPos = targetGridPos;
+        this.visualGridPos = targetGridPos;
 
         const frameRate = 60;
         const duration = 15; 
@@ -106,7 +151,7 @@ export class GridEntity {
     }
 
     private forceMove(targetGridPos : GridPoint) : void {
-        this.gridPos = targetGridPos;
+        this.visualGridPos = targetGridPos;
         this.mesh.position = GridUtils.toWorld(targetGridPos);
     }
 
@@ -142,15 +187,15 @@ export class GridEntity {
         return ease;
     }
 
-    public getGridPos(): GridPoint {
-        return this.gridPos;
+    public getVisualGridPos(): GridPoint {
+        return this.visualGridPos;
     }
 
     public reinit() {
         this.mesh.position = GridUtils.toWorld(this.initPos);
         this.mesh.rotation.y = this.initRotation * (Math.PI / 2);
-        this.facingIndex = this.initRotation;
-        this.gridPos = this.initPos;
+        this.visualFacingIndex = this.initRotation;
+        this.visualGridPos = this.initPos;
     }
 
     public dispose() {
@@ -159,7 +204,7 @@ export class GridEntity {
             this.mesh = null as any;
         }
         this.level = null as any;
-        this.gridPos = null as any;
+        this.visualGridPos = null as any;
         this._isMoving = false;
     }
 }

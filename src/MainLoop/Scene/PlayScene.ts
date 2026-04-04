@@ -6,6 +6,9 @@ import { StartButton } from "../../MRGUI/buttons/StartButton";
 import { LayerMasks } from "../../Shared/Constants";
 import { ExecutionContext } from "../ExecutionContext";
 import { GameScene } from "./GameScene";
+import { Memory } from "../../Language/Memory";
+import { ListContainer } from "../../Containers/ListContainer";
+import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene {
@@ -198,5 +201,37 @@ export class PlayScene extends GameScene {
         this.leftPanel.onPointerOutObservable.add(() => {
             this.mapCamera.attachControl(this.scene.getEngine().getRenderingCanvas(), true);
         });
+    }
+
+    public run() {
+        Memory.get().clear();
+        this.level.reinitLevel();
+
+        // "Compilation" :
+        // on remplit l'history avec les instructions visuelles à éxécuter
+
+        let child_list = this.leftPanel.children;
+        let start_block : ListContainer | undefined;
+
+        for (const child of child_list) {
+            if (child instanceof ListContainer) {
+                if (!child.isFirst()) continue;
+                if (child.getFirst() instanceof FlagContainer) start_block = child;
+                else if (!child.getInstructionGroup()?.onLaunch()) throw new Error("error 404 Il y a eu une erreur au lancement");
+            }
+        }
+
+        if (start_block) {
+            const grp = start_block.getInstructionGroup();
+            if (grp && grp.onLaunch()) grp.execute([]);
+            else throw new Error("error 406 Il y a eu une erreur au lancement");
+        }
+
+        console.log(Memory.get().getHistory());
+
+        // Exécution (évidemment c pas fini)
+
+        while (this.ctx.nextStep());
+        // et du coup à partir de là c ultra facile de faire du step by step complet
     }
 }

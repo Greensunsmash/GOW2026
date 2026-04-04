@@ -1,4 +1,4 @@
-import { MaterialGreasedLineDefines, TransformNode, Vector3, type Scene } from "@babylonjs/core";
+import { TransformNode, Vector3, type Scene } from "@babylonjs/core";
 import { Robot } from "../Entity/Robot";
 import type { AssetLibrary } from "../Shared/AssetLibrary";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
@@ -32,7 +32,7 @@ export class Level {
                         case State.RobotStart:
                             console.log("creating a new robot, at " + GridUtils.toString(gridPos));
                             this.robot = this.createRobot(gridPos);
-                            console.log("robot pos is really " + GridUtils.toString(this.robot.getGridPos()));
+                            console.log("robot pos is really " + GridUtils.toString(this.robot.getVisualGridPos()));
                             break;
                         case State.Wall:
                             this.meshes.push(this.createWall(pos));
