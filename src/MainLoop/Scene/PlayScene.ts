@@ -203,7 +203,7 @@ export class PlayScene extends GameScene {
         });
     }
 
-    public run() {
+    public async run() {
         Memory.get().clear();
         this.level.reinitLevel();
 
@@ -231,7 +231,7 @@ export class PlayScene extends GameScene {
 
         // Exécution (évidemment c pas fini)
 
-        while (this.ctx.nextStep());
+        while (await this.ctx.nextStep(false));
         // et du coup à partir de là c ultra facile de faire du step by step complet
     }
 }
