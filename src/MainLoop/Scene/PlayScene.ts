@@ -25,6 +25,8 @@ export class PlayScene extends GameScene {
     private onLevelGaveup?: () => void;
     private onLevelWon?: () => void; 
 
+    private canRun: boolean = true;
+
     constructor(engine: Engine) {
         super(engine);
         this.init();
@@ -108,6 +110,7 @@ export class PlayScene extends GameScene {
 
     public loadLeaf(index: number) {
         this.currentLeaf = index;
+        this.canRun = false; // hop on arrete d'exécuter
 
         if (this.level) this.level.dispose();
 
@@ -206,6 +209,7 @@ export class PlayScene extends GameScene {
     public async run() {
         Memory.get().clear();
         this.level.reinitLevel();
+        this.canRun = true;
 
         // "Compilation" :
         // on remplit l'history avec les instructions visuelles à éxécuter
@@ -231,7 +235,7 @@ export class PlayScene extends GameScene {
 
         // Exécution (évidemment c pas fini)
 
-        while (await this.ctx.nextStep(false));
+        while (await this.ctx.nextStep(false) && this.canRun);
         // et du coup à partir de là c ultra facile de faire du step by step complet
     }
 }
