@@ -36,7 +36,7 @@ type EndCallAction = {
     frame : StackFrame | undefined
 }
 
-export type stepInfo = {
+export type StepInfo = {
     empty: boolean;
     instName?: string;
 }
@@ -128,7 +128,7 @@ export class Memory {
         //this.historyID += 1;
     }
     
-    public stepBack() : stepInfo {
+    public stepBack() : StepInfo {
         console.log(this.historyID);
         if (this.historyID > 0) {
             this.historyID -= 1;
@@ -176,7 +176,7 @@ export class Memory {
         }
         return {empty: true};
     }
-    public nextStep() : stepInfo {
+    public nextStep() : StepInfo {
         if (this.historyID < this.history.length) {
             switch (this.history[this.historyID].type) {
                 case "VALSET" : {

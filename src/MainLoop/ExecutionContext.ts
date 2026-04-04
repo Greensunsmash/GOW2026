@@ -1,7 +1,7 @@
 import type { Robot } from "../Entity/Robot";
 import type { PlayScene } from "./Scene/PlayScene";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
-import { Memory, type stepInfo } from "../Language/Memory";
+import { Memory, type StepInfo } from "../Language/Memory";
 
 export type GoalName = "arrival";
 
@@ -44,7 +44,7 @@ export class ExecutionContext {
     }
 
     public stepBack() {
-        const stepInfo: stepInfo = this.memory.stepBack();
+        const stepInfo: StepInfo = this.memory.stepBack();
         if (stepInfo.empty) {
             console.log("no further step back");
             return false;
@@ -72,7 +72,7 @@ export class ExecutionContext {
     }
 
     public async nextStep(instantMove: boolean = true): Promise<boolean> {
-        const stepInfo: stepInfo = this.memory.nextStep();
+        const stepInfo: StepInfo = this.memory.nextStep();
         if (stepInfo.empty) {
             console.log("no further step");
             return false;
