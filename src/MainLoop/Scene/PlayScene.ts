@@ -1,4 +1,4 @@
-import { ArcRotateCamera, Engine, HemisphericLight, KeyboardEventTypes, Vector3, Viewport } from "@babylonjs/core";
+import { ArcRotateCamera, Engine, HemisphericLight, KeyboardEventTypes, tonemapPixelShader, Vector3, Viewport } from "@babylonjs/core";
 import { Level } from "../../Environment/Level";
 import { LevelReader, State, type IslandMap } from "../../Environment/LevelReader";
 import { QuitButton } from "../../MRGUI/buttons/QuitButton";
@@ -48,6 +48,8 @@ export class PlayScene extends GameScene {
                 this.leftPanel,
                 () => this.ctx.stepBack(),
                 () => this.ctx.nextStep(),
+                () => this.previousLeaf(),
+                () => this.nextLeaf(true),
                 () => this.dryAttempt(),
                 () => this.attemptAllLeafs()
             )
@@ -145,17 +147,26 @@ export class PlayScene extends GameScene {
         this.ctx.setGoal(new_goal);
     }
 
-    public nextLeaf() {
+    public nextLeaf(manual: boolean = false) {
         const next = this.currentLeaf + 1;
 
         if (next >= this.currentIslandMap.length) {
             console.log("Dernière feuille atteinte");
-            new OneButtonModal(
-                this.advancedTexture, 
-                "Ile terminée !",
-                "Continuer",
-                () => this.nextIsland()
-            );
+            if (!manual) {
+                new OneButtonModal(
+                    this.advancedTexture, 
+                    "Ile terminée !",
+                    "Continuer",
+                    () => this.nextIsland()
+                );
+            } else {
+                new OneButtonModal(
+                    this.advancedTexture, 
+                    "Dernière feuille",
+                    "Fermer",
+                    () => {}
+                );
+            }
             return;
         }
 
@@ -164,7 +175,15 @@ export class PlayScene extends GameScene {
 
     public previousLeaf() {
         const prev = this.currentLeaf - 1;
-        if (prev < 0) return;
+        if (prev < 0) {
+            new OneButtonModal(
+                this.advancedTexture, 
+                "Plus d'autre feuille",
+                "Fermer",
+                () => {}
+            );
+            return;
+        }
         this.loadLeaf(prev);
     }
 

@@ -1,8 +1,9 @@
 // CD c'est pour la nostalge
 // Playbar c'est pour barre de lecture
 
-import { Container, Control, StackPanel, type AdvancedDynamicTexture } from "@babylonjs/gui";
+import { Container, Control, StackPanel } from "@babylonjs/gui";
 import { BaseButton } from "./buttons/BaseButton";
+import { BaseVSpacer } from "./misc/BaseSpacers";
 
 // Une lecture ? Pas de pb, j'ai la barre
 export class CDPlaybar extends StackPanel {
@@ -10,6 +11,8 @@ export class CDPlaybar extends StackPanel {
         root: Container,
         onPrev: () => void,
         onNext: () => void,
+        onPrevLeaf: () => void,
+        onNextLeaf: () => void,
         onDryAttempt: () => void,
         onFullAttempt: () => void
     ) {
@@ -24,7 +27,10 @@ export class CDPlaybar extends StackPanel {
 
         this.addControl(new BaseButton("prev", "Reculer", () => onPrev()));
         this.addControl(new BaseButton("next", "Avancer", () => onNext()));
-        this.addControl(new BaseButton("dryattempt", "Test 1 feuille", () => onDryAttempt()));
         this.addControl(new BaseButton("fullattempt", "Vrai essai", () => onFullAttempt()));
+        this.addControl(new BaseVSpacer());
+
+        this.addControl(new BaseButton("prevleaf", "- feuille", () => onPrevLeaf()));
+        this.addControl(new BaseButton("nextleaf", "+ feuille", () => onNextLeaf()));
     }
 }
