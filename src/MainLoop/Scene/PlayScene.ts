@@ -9,6 +9,8 @@ import { GameScene } from "./GameScene";
 import { Memory } from "../../Language/Memory";
 import { ListContainer } from "../../Containers/ListContainer";
 import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
+import { OneButtonModal } from "../../MRGUI/windows/OneButtonModal";
+import { CDPlaybar } from "../../MRGUI/CDPlaybar";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene {
@@ -26,6 +28,7 @@ export class PlayScene extends GameScene {
     private onLevelWon?: () => void; 
 
     private canRun: boolean = true;
+    private dryAttemptMode: boolean = false;
 
     constructor(engine: Engine) {
         super(engine);
@@ -39,8 +42,15 @@ export class PlayScene extends GameScene {
     async init(levelName: string | undefined = "level1.json", onLevelGaveup?: () => void, onLevelWon?: () => void) {
         await this.initGameScene(levelName);
 
-        this.advancedTexture.addControl(
-            new StartButton(this.leftPanel, () => this.run())
+        this.leftPanel.addControl(
+            //new StartButton(this.leftPanel, () => this.attemptAllLeafs())
+            new CDPlaybar(
+                this.leftPanel,
+                () => this.ctx.stepBack(),
+                () => this.ctx.nextStep(),
+                () => this.dryAttempt(),
+                () => this.attemptAllLeafs()
+            )
         );
         this.advancedTexture.addControl(
             new QuitButton(this.leftPanel, () => {
@@ -140,7 +150,12 @@ export class PlayScene extends GameScene {
 
         if (next >= this.currentIslandMap.length) {
             console.log("Dernière feuille atteinte");
-            this.nextIsland();
+            new OneButtonModal(
+                this.advancedTexture, 
+                "Ile terminée !",
+                "Continuer",
+                () => this.nextIsland()
+            );
             return;
         }
 
@@ -173,8 +188,12 @@ export class PlayScene extends GameScene {
 
         if (next >= (this.levelReader as any).structure.length) {
             console.log("Dernière île atteinte");
-            if (this.onLevelWon) 
-                this.onLevelWon();
+            new OneButtonModal(
+                this.advancedTexture,
+                "Niveau réussi !",
+                "Menu",
+                () => {if (this.onLevelWon) this.onLevelWon()}
+            );
             return;
         }
 
@@ -210,6 +229,7 @@ export class PlayScene extends GameScene {
         Memory.get().clear();
         this.level.reinitLevel();
         this.canRun = true;
+        const prevLeafIndex = this.currentLeaf;
 
         // "Compilation" :
         // on remplit l'history avec les instructions visuelles à éxécuter
@@ -237,5 +257,36 @@ export class PlayScene extends GameScene {
 
         while (await this.ctx.nextStep(false) && this.canRun);
         // et du coup à partir de là c ultra facile de faire du step by step complet
+
+        if (this.canRun && this.currentLeaf == prevLeafIndex) {
+            new OneButtonModal(
+                this.advancedTexture,
+                "Objectif non atteint",
+                "Réessayer",
+                () => {}
+            );
+        }
+    }
+
+    public stopRun() {
+        this.canRun = false;
+    }
+
+    public async attemptAllLeafs() {
+        if (this.currentLeaf != 0)
+            this.loadLeaf(0);
+        this.dryAttemptMode = false;
+        await this.run();
+    }
+
+    public async dryAttempt() {
+        console.log("scene.dryAttempt");
+        this.dryAttemptMode = true;
+        await this.run();
+        this.dryAttemptMode = false;
+    }
+
+    public isDryAttempt(): boolean {
+        return this.dryAttemptMode;
     }
 }

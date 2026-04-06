@@ -2,6 +2,7 @@ import type { Robot } from "../Entity/Robot";
 import type { PlayScene } from "./Scene/PlayScene";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
 import { Memory, type StepInfo } from "../Language/Memory";
+import { OneButtonModal } from "../MRGUI/windows/OneButtonModal";
 
 export type GoalName = "arrival";
 
@@ -26,7 +27,24 @@ export class ExecutionContext {
     }
 
     public newLevel(robot: Robot) {
+        this.robot.posListeners = [];
         this.robot = robot;
+    }
+
+    private onGoalReached() {
+        this.scene.stopRun();
+        if (this.scene.isDryAttempt()) {
+            console.log("dry attempt success");
+            new OneButtonModal(
+                this.scene.advancedTexture,
+                "Objectif atteint",
+                "Fermer",
+                () => {}
+            );
+        } else {
+            this.scene.nextLeaf();
+            this.scene.run();
+        }
     }
 
     public setGoal(goal: Goal) {
@@ -34,7 +52,8 @@ export class ExecutionContext {
             case "arrival":
                 this.robot.posListeners.push((pos: GridPoint) => {
                     if (GridUtils.equals(pos, goal.args.flagPos)) {
-                        this.scene.nextLeaf();
+                        console.log("here");
+                        this.onGoalReached();
                     }
                 });
                 break;

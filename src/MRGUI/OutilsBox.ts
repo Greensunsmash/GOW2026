@@ -8,6 +8,7 @@ import { FlagContainer } from "../Containers/Prefabs/FlagContainer";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { VarValueContainer } from "../Containers/Prefabs/VarValueContainer";
 import { SetVarContainer } from "../Containers/Prefabs/SetVarContainer";
+import { OneButtonModal } from "./windows/OneButtonModal";
 
 /*
 La bôite à boîtes,
@@ -238,8 +239,15 @@ export class OutilsBox extends Rectangle {
             facticeBlock.onPointerDownObservable.add((evt) => {
                 if (this.blockLimit) {
                     //console.log("block count is " + this.scene.blockCount);
-                    if (this.scene.blockCount >= this.blockLimit)
+                    if (this.scene.blockCount >= this.blockLimit) {
+                        new OneButtonModal(
+                            this.scene.advancedTexture,
+                            `Limite de ${this.scene.blockCount} blocs atteinte`,
+                            "J'ai compris",
+                            () => {}
+                        );
                         return;
+                    }
                 }
 
                 this.scene.blockCount++;

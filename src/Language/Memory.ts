@@ -130,7 +130,7 @@ export class Memory {
     
     public stepBack() : StepInfo {
         console.log(this.historyID);
-        if (this.historyID > 0) {
+        while (this.historyID > 0) {
             this.historyID -= 1;
             switch (this.history[this.historyID].type){
                 case "VALSET": {// On remet la variable à sa valeur d'avant / on suppr
@@ -172,12 +172,15 @@ export class Memory {
                     };
                     break;
             }
-            return {empty: false};
+            //return {empty: false};
         }
         return {empty: true};
     }
     public nextStep() : StepInfo {
-        if (this.historyID < this.history.length) {
+        // on boucle, pour ne s'arreter que quand on 
+        // trouve une instruction "REELLE" (sur le robot)
+        // sinon ca cassait les sructures
+        while (this.historyID < this.history.length) {
             switch (this.history[this.historyID].type) {
                 case "VALSET" : {
                     const action = this.history[this.historyID] as ValSetAction;
@@ -193,7 +196,8 @@ export class Memory {
                     };
                     break;
                 case "END" : {
-                    if (this.callStack.length = 0) throw new Error("History Error, il n'y a pas de frame");
+                    // jvais tattraper t'avais fait une condition avec un "="
+                    if (this.callStack.length === 0) throw new Error("History Error, il n'y a pas de frame");
                     this.callStack.pop();
                     };
                     break;
@@ -209,7 +213,7 @@ export class Memory {
             } 
             
             this.historyID += 1;
-            return {empty: false};
+            //return {empty: false};
         }
         return {empty: true};
     }
