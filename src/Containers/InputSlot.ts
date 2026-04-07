@@ -20,6 +20,7 @@ export class InputSlot extends EmptySlot implements Valuable {
         this.textInput.height = "100%";
         this.textInput.width = "100%";
         this.textInput.isHitTestVisible = false;
+        this.textInput.isPointerBlocker = true;
         this.addControl(this.textInput);
 
         this.clickObserver = this.onPointerDownObservable.add(() => {
@@ -58,7 +59,7 @@ export class InputSlot extends EmptySlot implements Valuable {
     dispose(): void {
         this.scene.dragListeners = this.scene.dragListeners.filter(l => l !== this.dragObserver);
         this.scene.undragListeners = this.scene.undragListeners.filter(l => l !== this.undragObserver);
-        if (this.clickObserver) this.onPointerClickObservable.remove(this.clickObserver);
+        if (this.clickObserver) this.onPointerDownObservable.remove(this.clickObserver);
         this.textInput.dispose();
         super.dispose();
     }

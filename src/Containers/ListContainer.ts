@@ -213,6 +213,10 @@ export class ListContainer extends GUI.Rectangle {
 
                 // On le relache
                 this.scene.scene.onPointerUp = (_evt: IPointerEvent) => {
+                    // j'ai rajouté ça du coup
+                    this.scene.scene.onPointerMove = undefined as any;
+                    this.scene.scene.onPointerUp = undefined as any;
+
                     const toolbox = this.scene.getToolbox();
                     if (l.isDragging && toolbox.contains(_evt.x, _evt.y)) {
                         l.parent?.removeControl(l);

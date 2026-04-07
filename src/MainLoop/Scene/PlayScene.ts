@@ -1,4 +1,4 @@
-import { ArcRotateCamera, Color3, CubeTexture, DirectionalLight, Engine, IblShadowsRenderPipeline, KeyboardEventTypes, MeshBuilder, PBRMaterial, ShadowGenerator, Vector3, Viewport } from "@babylonjs/core";
+import { ArcRotateCamera, Color3, CubeTexture, DefaultRenderingPipeline, DirectionalLight, Engine, IblShadowsRenderPipeline, KeyboardEventTypes, MeshBuilder, PBRMaterial, ShadowGenerator, Vector3, Viewport } from "@babylonjs/core";
 import { ListContainer } from "../../Containers/ListContainer";
 import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
 import { Level } from "../../Environment/Level";
@@ -112,6 +112,7 @@ export class PlayScene extends GameScene {
         this.fillBelow();
         this.setupSkybox();
         this.setupShadows();
+        this.setupThePipeToTheline();
 
         await this.loadAssets();
         this.levelReader = new LevelReader();
@@ -131,8 +132,8 @@ export class PlayScene extends GameScene {
 
         const waterMat = new PBRMaterial("waterMat", this.scene);
         waterMat.albedoColor = new Color3(0.01, 0.05, 0.08);
-        waterMat.alpha = 0.6; 
-        waterMat.metallic = 0.0; 
+        waterMat.alpha = 0.6;
+        waterMat.metallic = 0.0;
         waterMat.roughness = 0.1;
 
         ground.material = waterMat;
@@ -151,7 +152,21 @@ export class PlayScene extends GameScene {
     }
 
     private setupShadows() {
-        
+        // ca marchait pas bien du cp j'ai enlevé
+    }
+
+    private setupThePipeToTheline() {
+        const pipeline = new DefaultRenderingPipeline(
+            "defaultPipeline",
+            true, // Active le HDR
+            this.scene,
+            [this.mapCamera]
+        );
+
+        pipeline.samples = 4; 
+        pipeline.bloomEnabled = true;
+        pipeline.bloomThreshold = 0.8;
+        pipeline.bloomWeight = 0.3; 
     }
 
     public async loadLeaf(index: number) {
@@ -251,7 +266,7 @@ export class PlayScene extends GameScene {
                 this.advancedTexture,
                 beginDialog,
                 "Let's go",
-                () => {}
+                () => { }
             );
         }
     }
