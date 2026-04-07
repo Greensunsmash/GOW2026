@@ -10,8 +10,9 @@ import { Memory } from "../../Language/Memory";
 import { ListContainer } from "../../Containers/ListContainer";
 import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
 import { OneButtonModal } from "../../MRGUI/windows/OneButtonModal";
-import { CDPlaybar } from "../../MRGUI/CDPlaybar";
+import { CDPlaybar } from "../../MRGUI/mainscreen/CDPlaybar";
 import { TurnLeftInstruction } from "../../Language/Instructions/TurnLeftInstruction";
+import { MainNavigator } from "../../MRGUI/mainscreen/MainNavigator";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene {
@@ -26,13 +27,24 @@ export class PlayScene extends GameScene {
     private mapCamera: ArcRotateCamera;
 
     private onLevelGaveup?: () => void;
-    private onLevelWon?: () => void; 
+    private onLevelWon?: () => void;
 
     private canRun: boolean = true;
     private dryAttemptMode: boolean = false;
 
+    private mainNav: MainNavigator;
+
     constructor(engine: Engine) {
         super(engine);
+        this.mainNav = new MainNavigator(
+            this.leftPanel,
+            () => this.ctx.stepBack(),
+            () => this.ctx.nextStep(),
+            () => this.previousLeaf(),
+            () => this.nextLeaf(true),
+            () => this.dryAttempt(),
+            () => this.attemptAllLeafs()
+        );
         this.init();
     }
 
@@ -43,26 +55,15 @@ export class PlayScene extends GameScene {
     async init(levelName: string | undefined = "level1.json", onLevelGaveup?: () => void, onLevelWon?: () => void) {
         await this.initGameScene(levelName);
 
-        this.advancedTexture.addControl(
-            //new StartButton(this.leftPanel, () => this.attemptAllLeafs())
-            new CDPlaybar(
-                this.leftPanel,
-                () => this.ctx.stepBack(),
-                () => this.ctx.nextStep(),
-                () => this.previousLeaf(),
-                () => this.nextLeaf(true),
-                () => this.dryAttempt(),
-                () => this.attemptAllLeafs()
-            )
-        );
+        this.advancedTexture.addControl(this.mainNav);
         this.advancedTexture.addControl(
             new QuitButton(this.leftPanel, () => {
-                if (onLevelGaveup) 
+                if (onLevelGaveup)
                     onLevelGaveup();
             })
         );
 
-        this.scene.onKeyboardObservable.add((kbInfo) =>{
+        this.scene.onKeyboardObservable.add((kbInfo) => {
             console.log("key event", kbInfo.event.key);
             if (kbInfo.type == KeyboardEventTypes.KEYUP) {
                 if (kbInfo.event.key === "l") {
@@ -84,7 +85,7 @@ export class PlayScene extends GameScene {
                     console.log("nextstep");
                     this.ctx.nextStep();
                 }
-                
+
             }
         });
 
@@ -94,10 +95,10 @@ export class PlayScene extends GameScene {
 
     async initGameScene(levelName: string) {
         this.scene.getEngine().displayLoadingUI();
-        
-        this.uiCamera = new ArcRotateCamera("uiCamera", Math.PI/2, Math.PI/3, 10, Vector3.Zero(), this.scene);
+
+        this.uiCamera = new ArcRotateCamera("uiCamera", Math.PI / 2, Math.PI / 3, 10, Vector3.Zero(), this.scene);
         this.uiCamera.layerMask = LayerMasks.UI_ONLY;
-        this.mapCamera = new ArcRotateCamera("mapCamera", Math.PI/2, Math.PI/3, 10, Vector3.Zero(), this.scene);
+        this.mapCamera = new ArcRotateCamera("mapCamera", Math.PI / 2, Math.PI / 3, 10, Vector3.Zero(), this.scene);
         this.mapCamera.viewport = new Viewport(0.5, 0, 0.5, 1.0);
         this.mapCamera.layerMask = LayerMasks.SCENE_ONLY;
 
@@ -107,13 +108,13 @@ export class PlayScene extends GameScene {
         this.scene.activeCameras.push(this.mapCamera);
         this.scene.activeCameras.push(this.uiCamera);
         this.addDetachControlObservables();
-        
+
         await this.loadAssets();
         this.levelReader = new LevelReader();
         await this.levelReader.loadLevel(levelName);
         await this.loadIsland(0);
 
-        let light = new HemisphericLight("light", new Vector3(0,1,0), this.scene);
+        let light = new HemisphericLight("light", new Vector3(0, 1, 0), this.scene);
         light.includeOnlyWithLayerMask = LayerMasks.SCENE_ONLY;
         light.intensity = 1.0;
 
@@ -122,6 +123,8 @@ export class PlayScene extends GameScene {
     }
 
     public async loadLeaf(index: number) {
+        this.mainNav.updateLeafIndicator(`Feuille ${index + 1}/${this.currentIslandMap.length}`)
+
         this.currentLeaf = index;
         this.canRun = false; // hop on arrete d'exécuter
 
@@ -136,19 +139,19 @@ export class PlayScene extends GameScene {
 
         const new_goal = this.levelReader.getGoal(this.currentIsland);
         switch (new_goal.name) {
-            case "arrival" :
+            case "arrival":
                 const flagPos = this.level.findStatePos(State.Flag);
                 if (flagPos)
-                    new_goal.args = {flagPos: flagPos}; 
+                    new_goal.args = { flagPos: flagPos };
                 else
                     throw new Error("cant set an arrival goal without any flag in the leaf map !");
                 break;
-            default :
+            default:
                 throw new Error("Goal Inconnu");
         }
         this.ctx.setGoal(new_goal);
     }
- 
+
     // Renvoie true si on a bien changé de leaf,
     // false si on était deja a la derniere
     public async nextLeaf(manual: boolean = false): Promise<boolean> {
@@ -158,17 +161,17 @@ export class PlayScene extends GameScene {
             console.log("Dernière feuille atteinte");
             if (!manual) {
                 new OneButtonModal(
-                    this.advancedTexture, 
+                    this.advancedTexture,
                     "Ile terminée !",
                     "Continuer",
                     async () => await this.nextIsland()
                 );
             } else {
                 new OneButtonModal(
-                    this.advancedTexture, 
+                    this.advancedTexture,
                     "Dernière feuille",
                     "Fermer",
-                    () => {}
+                    () => { }
                 );
             }
             return false;
@@ -182,10 +185,10 @@ export class PlayScene extends GameScene {
         const prev = this.currentLeaf - 1;
         if (prev < 0) {
             new OneButtonModal(
-                this.advancedTexture, 
+                this.advancedTexture,
                 "Plus d'autre feuille",
                 "Fermer",
-                () => {}
+                () => { }
             );
             return;
         }
@@ -205,6 +208,8 @@ export class PlayScene extends GameScene {
         this.toolbox.clear();
         //this.ctx = new ExecutionContext(this.level.getRobot(), this);
         this.levelReader.setupToolbox(index, this.toolbox, this.ctx, this);
+
+        this.mainNav.buildNavigator(this.currentIslandMap.length >= 2);
     }
 
     public async nextIsland() {
@@ -216,7 +221,7 @@ export class PlayScene extends GameScene {
                 this.advancedTexture,
                 "Niveau réussi !",
                 "Menu",
-                () => {if (this.onLevelWon) this.onLevelWon()}
+                () => { if (this.onLevelWon) this.onLevelWon() }
             );
             return;
         }
@@ -230,7 +235,7 @@ export class PlayScene extends GameScene {
         await this.loadIsland(prev);
     }
 
-    async loadAssets() {    
+    async loadAssets() {
         await Promise.all([
             this._drh.loadSingleAsset("robot", "robot.glb"),
             this._drh.loadSingleAsset("wall", "cube.glb"),
@@ -259,7 +264,7 @@ export class PlayScene extends GameScene {
         // on remplit l'history avec les instructions visuelles à éxécuter
 
         let child_list = this.leftPanel.children;
-        let start_block : ListContainer | undefined;
+        let start_block: ListContainer | undefined;
 
         for (const child of child_list) {
             if (child instanceof ListContainer) {
@@ -287,7 +292,7 @@ export class PlayScene extends GameScene {
                 this.advancedTexture,
                 "Objectif non atteint",
                 "Réessayer",
-                () => {}
+                () => { }
             );
         }
     }

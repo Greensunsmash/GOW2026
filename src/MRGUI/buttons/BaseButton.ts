@@ -3,10 +3,10 @@ import { Button, TextBlock } from "@babylonjs/gui";
 export class BaseButton extends Button {
     public mrTextBlock: TextBlock; 
 
-    constructor(name: string, label: string, callback: () => void) {
+    constructor(name: string, label: string, callback: () => void, width: number = 120, height: number = 40) {
         super(name);
-        this.width = "120px";
-        this.height = "40px";
+        this.widthInPixels = width;
+        this.heightInPixels = height;
         this.color = "white";
         this.background = "#0000ff";
         this.cornerRadius = 5;
@@ -20,7 +20,6 @@ export class BaseButton extends Button {
 
 export class LargeButton extends BaseButton {
     constructor(name: string, label: string, callback: () => void) {
-        super(name, label, callback);
-        this.width = "300px";
+        super(name, label, callback, 300);
     }
 }

@@ -196,6 +196,8 @@ export class GridEntity {
         this.mesh.rotation.y = this.initRotation * (Math.PI / 2);
         this.visualFacingIndex = this.initRotation;
         this.visualGridPos = this.initPos;
+        this.logicalFacingIndex = this.initRotation;
+        this.logicalGridPos = this.initPos;
     }
 
     public dispose() {
