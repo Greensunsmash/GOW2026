@@ -15,7 +15,9 @@ export class Level {
         this.map = map;
         this.drh = drh;
         this.scene = scene;
+    }
 
+    public async init() {
         for (let y = 0; y < this.map.length; y++) {
             for (let z = 0; z < this.map[y].length; z++) {
                 for (let x = 0; x < this.map[y][z].length; x++) {

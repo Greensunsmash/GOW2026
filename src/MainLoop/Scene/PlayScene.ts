@@ -11,6 +11,7 @@ import { ListContainer } from "../../Containers/ListContainer";
 import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
 import { OneButtonModal } from "../../MRGUI/windows/OneButtonModal";
 import { CDPlaybar } from "../../MRGUI/CDPlaybar";
+import { TurnLeftInstruction } from "../../Language/Instructions/TurnLeftInstruction";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene {
@@ -42,7 +43,7 @@ export class PlayScene extends GameScene {
     async init(levelName: string | undefined = "level1.json", onLevelGaveup?: () => void, onLevelWon?: () => void) {
         await this.initGameScene(levelName);
 
-        this.leftPanel.addControl(
+        this.advancedTexture.addControl(
             //new StartButton(this.leftPanel, () => this.attemptAllLeafs())
             new CDPlaybar(
                 this.leftPanel,
@@ -110,7 +111,7 @@ export class PlayScene extends GameScene {
         await this.loadAssets();
         this.levelReader = new LevelReader();
         await this.levelReader.loadLevel(levelName);
-        this.loadIsland(0);
+        await this.loadIsland(0);
 
         let light = new HemisphericLight("light", new Vector3(0,1,0), this.scene);
         light.includeOnlyWithLayerMask = LayerMasks.SCENE_ONLY;
@@ -120,7 +121,7 @@ export class PlayScene extends GameScene {
         this.scene.getEngine().hideLoadingUI();
     }
 
-    public loadLeaf(index: number) {
+    public async loadLeaf(index: number) {
         this.currentLeaf = index;
         this.canRun = false; // hop on arrete d'exécuter
 
@@ -128,6 +129,7 @@ export class PlayScene extends GameScene {
 
         const map = this.currentIslandMap[index];
         this.level = new Level(map, this._drh, this.scene);
+        await this.level.init();
 
         if (this.ctx) this.ctx.newLevel(this.level.getRobot());
         else this.ctx = new ExecutionContext(this.level.getRobot(), this);
@@ -146,8 +148,10 @@ export class PlayScene extends GameScene {
         }
         this.ctx.setGoal(new_goal);
     }
-
-    public nextLeaf(manual: boolean = false) {
+ 
+    // Renvoie true si on a bien changé de leaf,
+    // false si on était deja a la derniere
+    public async nextLeaf(manual: boolean = false): Promise<boolean> {
         const next = this.currentLeaf + 1;
 
         if (next >= this.currentIslandMap.length) {
@@ -157,7 +161,7 @@ export class PlayScene extends GameScene {
                     this.advancedTexture, 
                     "Ile terminée !",
                     "Continuer",
-                    () => this.nextIsland()
+                    async () => await this.nextIsland()
                 );
             } else {
                 new OneButtonModal(
@@ -167,13 +171,14 @@ export class PlayScene extends GameScene {
                     () => {}
                 );
             }
-            return;
+            return false;
         }
 
-        this.loadLeaf(next);
+        await this.loadLeaf(next);
+        return true;
     }
 
-    public previousLeaf() {
+    public async previousLeaf() {
         const prev = this.currentLeaf - 1;
         if (prev < 0) {
             new OneButtonModal(
@@ -184,10 +189,10 @@ export class PlayScene extends GameScene {
             );
             return;
         }
-        this.loadLeaf(prev);
+        await this.loadLeaf(prev);
     }
 
-    public loadIsland(index: number) {
+    public async loadIsland(index: number) {
         const island = this.levelReader.getIsland(index);
         if (!island || island.length === 0) {
             throw new Error("Island not found or empty");
@@ -195,14 +200,14 @@ export class PlayScene extends GameScene {
         this.currentIsland = index;
         this.currentIslandMap = island;
 
-        this.loadLeaf(0);
+        await this.loadLeaf(0);
 
         this.toolbox.clear();
-        this.ctx = new ExecutionContext(this.level.getRobot(), this);
+        //this.ctx = new ExecutionContext(this.level.getRobot(), this);
         this.levelReader.setupToolbox(index, this.toolbox, this.ctx, this);
     }
 
-    public nextIsland() {
+    public async nextIsland() {
         const next = this.currentIsland + 1;
 
         if (next >= (this.levelReader as any).structure.length) {
@@ -216,13 +221,13 @@ export class PlayScene extends GameScene {
             return;
         }
 
-        this.loadIsland(next);
+        await this.loadIsland(next);
     }
 
-    public previousIsland() {
+    public async previousIsland() {
         const prev = this.currentIsland - 1;
         if (prev < 0) return;
-        this.loadIsland(prev);
+        await this.loadIsland(prev);
     }
 
     async loadAssets() {    
@@ -292,10 +297,11 @@ export class PlayScene extends GameScene {
     }
 
     public async attemptAllLeafs() {
-        if (this.currentLeaf != 0)
-            this.loadLeaf(0);
+        if (this.currentLeaf != 0) {
+            await this.loadLeaf(0);
+        }
         this.dryAttemptMode = false;
-        await this.run();
+        this.scene.onAfterRenderObservable.addOnce(async () => await this.run());
     }
 
     public async dryAttempt() {

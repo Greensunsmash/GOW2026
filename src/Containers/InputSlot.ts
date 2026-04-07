@@ -1,15 +1,16 @@
-import { InputText } from "@babylonjs/gui";
+import { InputText, Vector2WithInfo } from "@babylonjs/gui";
 import type { ArgsType, BlocContainer } from "./BlocContainer";
 import { EmptySlot } from "./EmptySlot";
 import { Valeur } from "../Language/Valeur/Valeur";
 import { ValeurBrute } from "../Language/Valeur/ValeurBrute";
-import type { Vector2 } from "@babylonjs/core";
+import type { Observer, Vector2 } from "@babylonjs/core";
 import type { Valuable } from "./Valuable";
 
 export class InputSlot extends EmptySlot implements Valuable {
     private textInput: InputText;
     private dragObserver: () => void;
     private undragObserver: () => void;
+    private clickObserver: Observer<Vector2WithInfo>;
 
     constructor(parent:BlocContainer, type:ArgsType) {
         super(parent, type);
@@ -21,7 +22,7 @@ export class InputSlot extends EmptySlot implements Valuable {
         this.textInput.isHitTestVisible = false;
         this.addControl(this.textInput);
 
-        this.onPointerDownObservable.add(() => this.textInput.focus());
+        this.clickObserver = this.onPointerDownObservable.add(() => this.textInput.focus());
         this.dragObserver = () => { if (this.textInput) this.textInput.isHitTestVisible = false; };
         this.undragObserver = () => { if (this.textInput) this.textInput.isHitTestVisible = true; };
         
@@ -53,6 +54,7 @@ export class InputSlot extends EmptySlot implements Valuable {
     dispose(): void {
         this.scene.dragListeners = this.scene.dragListeners.filter(l => l !== this.dragObserver);
         this.scene.undragListeners = this.scene.undragListeners.filter(l => l !== this.undragObserver);
+        if (this.clickObserver) this.onPointerClickObservable.remove(this.clickObserver);
         this.textInput.dispose();
         super.dispose();
     }

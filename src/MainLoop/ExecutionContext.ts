@@ -31,7 +31,7 @@ export class ExecutionContext {
         this.robot = robot;
     }
 
-    private onGoalReached() {
+    private async onGoalReached() {
         this.scene.stopRun();
         if (this.scene.isDryAttempt()) {
             console.log("dry attempt success");
@@ -42,8 +42,12 @@ export class ExecutionContext {
                 () => {}
             );
         } else {
-            this.scene.nextLeaf();
-            this.scene.run();
+            const isAnotherLeafLeft = await this.scene.nextLeaf();
+            // si je mets pas ce delay ca marche pas..
+            // a investiguer 
+            //await new Promise((rs, rj) => setTimeout(rs, 500));
+            if (isAnotherLeafLeft)
+                this.scene.scene.onAfterRenderObservable.addOnce(async () => await this.scene.run());
         }
     }
 
