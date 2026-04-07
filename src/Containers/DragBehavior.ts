@@ -20,7 +20,7 @@ export class DragBehavior {
     }
 
     private init(): void {
-         this.target.onPointerDownObservable.add((pointerInfo) => {
+        this.target.onPointerDownObservable.add((pointerInfo) => {
             this.startDrag(pointerInfo.x, pointerInfo.y);
         });
     }
