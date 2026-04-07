@@ -60,7 +60,8 @@
                     "obstacle"
                 ],
                 "structures": [
-                    "if"
+                    "if",
+                    "for"
                 ],
                 "start" : [
                     "start"

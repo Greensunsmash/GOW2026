@@ -94,6 +94,10 @@ export class ExecutionContext {
         return true;
     }
 
+    public stepToFirst() {
+        while (this.stepBack());
+    }
+
     public async nextStep(instantMove: boolean = true): Promise<boolean> {
         const stepInfo: StepInfo = this.memory.nextStep();
         if (stepInfo.empty) {
@@ -120,5 +124,9 @@ export class ExecutionContext {
         }
         Memory.print();
         return true;
+    }
+
+    public async stepToLast() {
+        while (await this.nextStep(true));
     }
 }

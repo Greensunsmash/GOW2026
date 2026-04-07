@@ -1,17 +1,20 @@
-import { TransformNode, Vector3, type Scene } from "@babylonjs/core";
+import { Color3, CubeTexture, MeshBuilder, PBRMaterial, StandardMaterial, Texture, TransformNode, Vector3, type Scene } from "@babylonjs/core";
 import { Robot } from "../Entity/Robot";
 import type { AssetLibrary } from "../Shared/AssetLibrary";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
 import { State, type Map3 } from "./LevelReader";
+import "babylonjs-materials";
+import { WaterMaterial } from "babylonjs-materials";
+import { ASSETS_ROOT, LayerMasks } from "../Shared/Constants";
 
 export class Level {
-    private map : Map3;
-    private readonly drh : AssetLibrary;
-    private readonly scene : Scene;
-    private robot? : Robot;
-    private meshes : TransformNode[] = [];
+    private map: Map3;
+    private readonly drh: AssetLibrary;
+    private readonly scene: Scene;
+    private robot?: Robot;
+    private meshes: TransformNode[] = [];
 
-    constructor(map : Map3, drh : AssetLibrary, scene : Scene) {
+    constructor(map: Map3, drh: AssetLibrary, scene: Scene) {
         this.map = map;
         this.drh = drh;
         this.scene = scene;
@@ -21,16 +24,16 @@ export class Level {
         for (let y = 0; y < this.map.length; y++) {
             for (let z = 0; z < this.map[y].length; z++) {
                 for (let x = 0; x < this.map[y][z].length; x++) {
-                    let gridPos : GridPoint = {x: x, y: y, z:z};
+                    let gridPos: GridPoint = { x: x, y: y, z: z };
                     /*
                         /!\ ATTENTION
                         Avertissement national
                         Inversion y et z implicite (dans toWorld)
                     */
-                    let pos : Vector3 = GridUtils.toWorld(gridPos);
-                    let tile : State = this.map[y][z][x];
-                    
-                    switch(tile) {
+                    let pos: Vector3 = GridUtils.toWorld(gridPos);
+                    let tile: State = this.map[y][z][x];
+
+                    switch (tile) {
                         case State.RobotStart:
                             console.log("creating a new robot, at " + GridUtils.toString(gridPos));
                             this.robot = this.createRobot(gridPos);
@@ -40,7 +43,7 @@ export class Level {
                             this.meshes.push(this.createWall(pos));
                             break;
                         case State.Ground:
-                            this.meshes.push(this.createWall(pos));
+                            this.meshes.push(this.createGround(pos));
                             break;
                         case State.Flag:
                             this.meshes.push(this.createFlag(pos));
@@ -53,29 +56,34 @@ export class Level {
         }
     }
 
-    private createRobot(gridPos : GridPoint) : Robot {
+    private createRobot(gridPos: GridPoint): Robot {
         return new Robot(this.drh, this.scene, this, gridPos);
     }
 
-    private createWall(pos : Vector3) : TransformNode {
-        return this.drh.createSingleInstance("wall",pos);
+    private createGround(pos: Vector3): TransformNode {
+        return this.drh.createSingleInstance("ground", pos, true);
     }
 
-    private createFlag(pos : Vector3) : TransformNode {
+    private createWall(pos: Vector3): TransformNode {
+        return this.drh.createSingleInstance("wall", pos, true);
+    }
+
+    private createFlag(pos: Vector3): TransformNode {
         const r = Math.random();
-        if (r > .5) 
-            return this.drh.createSingleInstance("pill", pos);
+        if (r > .5)
+            return this.drh.createSingleInstance("pill", pos, false, 1.0);
         else
-            return this.drh.createSingleInstance("heart", pos);
+            return this.drh.createSingleInstance("heart", pos, false, 1.0);
     }
 
-    public getRobot() : Robot {
+
+    public getRobot(): Robot {
         if (!this.robot)
             throw new Error("this level doesnt have any robot.");
         return this.robot;
     }
 
-    private mapShape() : [number, number, number] {
+    private mapShape(): [number, number, number] {
         return [this.map[0][0].length, this.map.length, this.map[0].length]; // x,y,z
     }
 
@@ -108,7 +116,7 @@ export class Level {
         return true;
     }
 
-    public findStatePos(state: State) : GridPoint | null {
+    public findStatePos(state: State): GridPoint | null {
         for (let z = 0; z < this.map.length; z++) {
             const layer = this.map[z];
 
@@ -117,15 +125,15 @@ export class Level {
 
                 for (let x = 0; x < row.length; x++) {
                     if (row[x] === state) {
-                        return { x:x, y:z, z:y };
+                        return { x: x, y: z, z: y };
                     }
                 }
             }
         }
 
         return null; // aucun state trouvé
-    }   
-    
+    }
+
     public reinitLevel() {
         this.robot?.reinit();
     }
@@ -142,5 +150,9 @@ export class Level {
         }
 
         this.map = [] as Map3;
+    }
+
+    getMeshes(): TransformNode[] {
+        return this.meshes;
     }
 }

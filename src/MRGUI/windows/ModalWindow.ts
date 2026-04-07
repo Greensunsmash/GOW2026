@@ -14,7 +14,7 @@ export class ModalWindow extends Rectangle {
         this.width = "400px";
         //window.height = "220px";
         this.adaptHeightToChildren = true;
-        this.background = "#2b2b2b";
+        this.background = "#2b2b2baa";
         this.cornerRadius = 10;
         this.thickness = 2;
         this.color = "#555555"; 

@@ -2,62 +2,12 @@
     "islands": [
         {
             "nb" : 1,
-            "begin_dialog" : "C'est ton moment de shine",
+            "begin_dialog" : "On tourne ...",
             "end_dialog" : "Bravo champion",
             "layouts": [
                 [
-                    [".    ", ".    ", ".    ", ".    ", ".....", "    .", "    .", "    .", "    ."],
-                    ["@    ", "     ", "     ", "     ", "     ", "     ", "     ", "     ", "    x"]
-                ]
-            ],
-            "blockset": {
-                "instructions": [
-                    "forward",
-                    "backward",
-                    "left",
-                    "right"
-                ],
-                "start" : [
-                    "start"
-                ]
-            },
-            "goal":{"name": "arrival"}
-        },
-        {
-            "nb" : 2,
-            "begin_dialog" : "C'est ton moment de shine",
-            "end_dialog" : "Bravo champion",
-            "layouts": [
-                [
-                    [".    ", ".    ", ".    ", ".    ", ".....", "    .", "    .", "    .", "    ."],
-                    ["@    ", "     ", "     ", "     ", "     ", "     ", "     ", "     ", "    x"]
-                ]
-            ],
-            "blockset": {
-                "instructions": [
-                    "forward",
-                    "backward",
-                    "left",
-                    "right"
-                ],
-                "structures": [
-                    "for"
-                ],
-                "start" : [
-                    "start"
-                ]
-            },
-            "goal":{"name": "arrival"},
-            "block_limitation": 9
-        },
-        {
-            "nb" : 2,
-            "begin_dialog" : "C'est ton moment de shine",
-            "end_dialog" : "Bravo champion",
-            "layouts": [
-                [
-                    [".     ", "..    ", " ..   ", "  ..  ", "   .. ", "    .."],
-                    ["@     ", "      ", "      ", "      ", "      ", "     x"]
+                    [".    ", ".   ", ".   ", "...."],
+                    ["@    ", "    ", "    ", "   x"]
                 ]
             ],
             "blockset": {
@@ -76,6 +26,60 @@
             },
             "goal":{"name": "arrival"},
             "block_limitation": 6
+        },
+        {
+            "nb" : 2,
+            "begin_dialog" : "... et on tourne ...",
+            "end_dialog" : "Bravo champion",
+            "layouts": [
+                [
+                    [".       ", ".      ", ".      ", "....   ", "   .   ", "   .   ", "   ...."],
+                    ["@       ", "       ", "       ", "       ", "       ", "       ", "      x"]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right"
+                ],
+                "structures": [
+                    "for"
+                ],
+                "start" : [
+                    "start"
+                ]
+            },
+            "goal":{"name": "arrival"},
+            "block_limitation": 8
+        },
+        {
+            "nb" : 3,
+            "begin_dialog" : "... et on tourne !",
+            "end_dialog" : "Bravo champion",
+            "layouts": [
+                [
+                    [".            .", ".           .", ".           .", "....     ....", "   .     .   ", "   .     .   ", "   .......   "],
+                    ["@            x", "             ", "             ", "             ", "             ", "             ", "             "]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right"
+                ],
+                "structures": [
+                    "for"
+                ],
+                "start" : [
+                    "start"
+                ]
+            },
+            "goal":{"name": "arrival"},
+            "block_limitation": 10
         }
     ]
 }

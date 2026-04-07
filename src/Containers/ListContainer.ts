@@ -17,16 +17,16 @@ import { Flag } from "../Language/Group/Depart/Flag";
 export class ListContainer extends GUI.Rectangle {
 
     private static count = 0;
-    private readonly id : number;
-    private readonly root : GUI.Container;
-    private readonly scene : GameScene;
-    private readonly stack : GUI.StackPanel;
-    private readonly magnet : Magnet;
+    private readonly id: number;
+    private readonly root: GUI.Container;
+    private readonly scene: GameScene;
+    private readonly stack: GUI.StackPanel;
+    private readonly magnet: Magnet;
     private pointerObserver: BABYLON.Observer<BABYLON.PointerInfo>;
-    private readonly detector : GUI.Rectangle;
-    private readonly list : (InstructionContainer | Magnet)[];
-    private readonly structureList : StructureContainer[];
-    private hover : boolean = false;
+    private readonly detector: GUI.Rectangle;
+    private readonly list: (InstructionContainer | Magnet)[];
+    private readonly structureList: StructureContainer[];
+    private hover: boolean = false;
     public isDragging = false;
 
     constructor(root: GUI.Container, scene: GameScene) {
@@ -73,7 +73,7 @@ export class ListContainer extends GUI.Rectangle {
         this.stack.addControl(this.magnet);
 
         // Même moi j'y comprends rien
-        this.pointerObserver = this.scene.scene.onPointerObservable.add((pointerInfo) => { 
+        this.pointerObserver = this.scene.scene.onPointerObservable.add((pointerInfo) => {
             if (this.detector.isHitTestVisible && pointerInfo.type === PointerEventTypes.POINTERMOVE) {
                 const evt = pointerInfo.event;
                 if (this.getHover()) {
@@ -86,14 +86,14 @@ export class ListContainer extends GUI.Rectangle {
                         if (!this.magnet.contains(x, y)) {
                             //console.log("Recalcul");
                             let found = false;
-                            for (let i=0; i<this.list.length; i++) {
-                                if (this.list[i].contains(x, y)) {this.moveMagnet(this.list.indexOf(this.list[i]));found = true; break;}
+                            for (let i = 0; i < this.list.length; i++) {
+                                if (this.list[i].contains(x, y)) { this.moveMagnet(this.list.indexOf(this.list[i])); found = true; break; }
                             }
-                            if (!found && this.list.indexOf(this.magnet) != this.list.length-1) this.moveMagnet(this.list.length-1);
+                            if (!found && this.list.indexOf(this.magnet) != this.list.length - 1) this.moveMagnet(this.list.length - 1);
                         }
                     }
                 } else {
-                    if (this.detector.contains(evt.x, evt.y)){
+                    if (this.detector.contains(evt.x, evt.y)) {
                         this.scene.setHoverList(this);
                     }
                 }
@@ -103,15 +103,16 @@ export class ListContainer extends GUI.Rectangle {
         this.detector.onPointerDownObservable.add((pointerInfo) => this.click(pointerInfo.x, pointerInfo.y));
 
 
-        this.scene.dragListeners.push(() => {this.stack.paddingBottom = "15px";});
-        this.scene.undragListeners.push(() => {this.stack.paddingBottom = "0px";});
+        this.scene.dragListeners.push(() => { this.stack.paddingBottom = "15px"; });
+        this.scene.undragListeners.push(() => { this.stack.paddingBottom = "0px"; });
     }
 
     // Appelé lorsque qu'on appuie dessus, pour démarrer le drag
-    click(x:number, y:number, forceStart?: boolean) {
-        let nb:number;
+    click(x: number, y: number, forceStart?: boolean) {
+
+        let nb: number;
         //console.log("click");
-        for (nb=0; nb < this.list.length ; nb++) {
+        for (nb = 0; nb < this.list.length; nb++) {
             if (this.list[nb] === this.magnet) continue;
             // Sélectionne sur quel bloc on appuie
             /*
@@ -126,15 +127,16 @@ export class ListContainer extends GUI.Rectangle {
                 // Si jamais on a appuyé sur un Valeur/BooleenContainer, on lui transmet le drag
                 let b = c.isPointHandle(new Vector2(x, y));
                 if (b) {
-                    b.onPointerDownObservable.notifyObservers(new GUI.Vector2WithInfo(new Vector2(x,y)));
-                    break;
+                    console.log("ispointhandle propagated")
+                    b.onPointerDownObservable.notifyObservers(new GUI.Vector2WithInfo(new Vector2(x, y)));
+                    return;
                 }
 
 
-                let l : ListContainer;
+                let l: ListContainer;
                 if (this.scene.getHoverList() === this) this.scene.setHoverList(null);
 
-                if (nb == 0 || (nb == 1 && this.list.indexOf(this.magnet) == 0) ) {// On a pris le premier bloc, donc on déplace tout
+                if (nb == 0 || (nb == 1 && this.list.indexOf(this.magnet) == 0)) {// On a pris le premier bloc, donc on déplace tout
                     l = this;
                     this.parent?.removeControl(this);
                     this.root.addControl(this);
@@ -148,15 +150,15 @@ export class ListContainer extends GUI.Rectangle {
                     if (s2.length === 1) nb = s2[0].getHeaderID();
 
                     let s = this.structureList.filter((x) => x.contains(nb));
-                    let toMove : InstructionContainer[] = []; // Les blocs qu'on va déplacer
-                    let structToMove : StructureContainer[] = []; // Les structures qu'on va déplacer
-                    
+                    let toMove: InstructionContainer[] = []; // Les blocs qu'on va déplacer
+                    let structToMove: StructureContainer[] = []; // Les structures qu'on va déplacer
+
                     if (s.length === 1) { // Si le bloc n'appartient qu'à une seule structure
                         toMove = this.list.slice(nb, s[0].getQueueID()).filter(
                             (x) => x instanceof InstructionContainer
                         );
                         structToMove = this.structureList.filter((x) => x.getHeaderID() >= nb && x.getQueueID() < s[0].getQueueID());
-                    } 
+                    }
                     else if (s.length > 1) { // Si le bloc appartient à plusieurs structure, on choisit la bonne
                         s.sort((x, y) => y.getHeaderID() - x.getHeaderID());
 
@@ -164,19 +166,19 @@ export class ListContainer extends GUI.Rectangle {
                             (x) => x instanceof InstructionContainer
                         );
                         structToMove = this.structureList.filter((x) => x.getHeaderID() >= nb && x.getQueueID() < s[0].getQueueID());
-                    } 
+                    }
                     else { // Si ça n'appartient pas à une structure
                         toMove = this.list.slice(nb).filter(
                             (x) => x instanceof InstructionContainer
                         );
-                        structToMove = this.structureList.filter((x) => x.getHeaderID() >= nb );
+                        structToMove = this.structureList.filter((x) => x.getHeaderID() >= nb);
                     }
-                    
+
                     // Et maintenant on déplace tout
                     for (const item of toMove) {
                         this.removeInstruction(item);
                     }
-                    for (let i=toMove.length-1; i>= 0; i--) {
+                    for (let i = toMove.length - 1; i >= 0; i--) {
                         l.addInstruction(toMove[i], 0);
                     }
                     for (const struct of structToMove) {
@@ -192,38 +194,38 @@ export class ListContainer extends GUI.Rectangle {
                 // On setup le drag
                 l.detector.isHitTestVisible = false;
                 this.scene.setDragging(true);
-                
+
                 l.isDragging = true;
                 let startX = c.leftInPixels + this.leftInPixels;
                 let startY = c.topInPixels + this.topInPixels;
-                let decalX = startX - x; 
+                let decalX = startX - x;
                 let decalY = startY - y;
 
                 l.leftInPixels = startX;
                 l.topInPixels = startY;
 
                 // On le fait bouger
-                this.scene.scene.onPointerMove = (evt:IPointerEvent) => {
+                this.scene.scene.onPointerMove = (evt: IPointerEvent) => {
                     if (!l.isDragging) return;
                     l.leftInPixels = evt.x + decalX;
                     l.topInPixels = evt.y + decalY;
                 }
 
                 // On le relache
-                this.scene.scene.onPointerUp = (_evt:IPointerEvent) => {
+                this.scene.scene.onPointerUp = (_evt: IPointerEvent) => {
                     const toolbox = this.scene.getToolbox();
                     if (l.isDragging && toolbox.contains(_evt.x, _evt.y)) {
-                            l.parent?.removeControl(l);
-                            l.isDragging = false;
-                            l.dispose();
-                            this.scene.blockCount--;
-                            this.scene.setDragging(false);
-                            return;
+                        l.parent?.removeControl(l);
+                        l.isDragging = false;
+                        l.dispose();
+                        this.scene.blockCount--;
+                        this.scene.setDragging(false);
+                        return;
                     }
                     l.isDragging = false;
                     let gros_q = this.scene.getHoverList();
                     if (gros_q instanceof ListContainer && gros_q != l) {
-                        if ((gros_q.getMagnetID() === 0 && !gros_q.isFirst()) || (gros_q.getMagnetID()>0 && !l.isFirst())) {
+                        if ((gros_q.getMagnetID() === 0 && !gros_q.isFirst()) || (gros_q.getMagnetID() > 0 && !l.isFirst())) {
                             gros_q.mergeList(l);
                             this.scene.setDragging(false);
                             l.dispose();
@@ -244,7 +246,7 @@ export class ListContainer extends GUI.Rectangle {
     }
 
     // Renvoie l'indentation d'un bloc, basé sur son index
-    getIndentation(id:number) {
+    getIndentation(id: number) {
         let sum = 0;
         for (const structure of this.structureList) {
             //console.log("Struct : ", structure.getHeaderID(), structure.getQueueID());
@@ -255,31 +257,31 @@ export class ListContainer extends GUI.Rectangle {
 
     // Mets à jour l'indentation de tous les blocs
     refreshIdentation() {
-        for (let i=0; i<this.list.length; i++) { // Ca comprend le magnet mais osef, faudra l régler lui aussi
+        for (let i = 0; i < this.list.length; i++) { // Ca comprend le magnet mais osef, faudra l régler lui aussi
             this.list[i].paddingLeftInPixels = this.getIndentation(i);
         }
     }
 
-    addStruct(s:StructureContainer) {
+    addStruct(s: StructureContainer) {
         this.structureList.push(s);
         s.setList(this);
         this.refreshIdentation();
     }
 
-    addInstruction(c: InstructionContainer, index : number) {
-        if (c.parent) {c.parent.removeControl(c);}
-        
+    addInstruction(c: InstructionContainer, index: number) {
+        if (c.parent) { c.parent.removeControl(c); }
+
         this.list.splice(index, 0, c);
         this.stack.clearControls();
-        for (let i=0; i<this.list.length; i++) {
+        for (let i = 0; i < this.list.length; i++) {
             this.list[i].paddingLeftInPixels = this.getIndentation(i);
             this.stack.addControl(this.list[i]);
         }
 
     }
 
-    removeInstruction(c:InstructionContainer) {
-        if (this.list.length <= 1) return ;
+    removeInstruction(c: InstructionContainer) {
+        if (this.list.length <= 1) return;
         let nb = this.list.indexOf(c);
         this.stack.removeControl(c);
         this.list.splice(nb, 1);
@@ -305,22 +307,22 @@ export class ListContainer extends GUI.Rectangle {
     }
 
     // Le rend visible/invisible
-    toggleMagnet(bool:boolean) {
+    toggleMagnet(bool: boolean) {
         this.magnet.isVisible = bool;
     }
 
     // Permet de rassembler 2 listes
-    mergeList(list:ListContainer) {
-        if (this === list)  {
+    mergeList(list: ListContainer) {
+        if (this === list) {
             console.log("bah wtf");
             return;
         }
-        let new_list = list.getList().filter((x)=>x instanceof InstructionContainer);
+        let new_list = list.getList().filter((x) => x instanceof InstructionContainer);
         let id = this.getMagnetID();
 
         console.log("Merge : ", new_list)
-        for (let i=0; i<new_list.length; i++) {
-            this.addInstruction(new_list[i], i+id);
+        for (let i = 0; i < new_list.length; i++) {
+            this.addInstruction(new_list[i], i + id);
         }
         for (const struct of list.structureList) {
             this.addStruct(struct);
@@ -330,7 +332,7 @@ export class ListContainer extends GUI.Rectangle {
     }
 
     // Renvoie la liste d'instructions, si elle est valide (possède un Depart)
-    getInstructionGroup() : Launchable | null {
+    getInstructionGroup(): Launchable | null {
         let first = this.getFirst();
         if (first) {
             let l = first.getLaunchable(this.getInstructionList(1, this.list.length));
@@ -340,16 +342,16 @@ export class ListContainer extends GUI.Rectangle {
     }
 
     // Recursive pour renvoyer par groupe les instructions
-    getInstructionList(first:number, length:number) : Executable[] {
-        let exeGroup : Executable[] = [];
-        for (let i=first; i<length + first; i++) {
+    getInstructionList(first: number, length: number): Executable[] {
+        let exeGroup: Executable[] = [];
+        for (let i = first; i < length + first; i++) {
             let instruction = this.list[i];
             if (instruction instanceof InstructionContainer) {
                 let struct = this.checkHeaders(instruction);
-                if (struct) { 
+                if (struct) {
                     // On entre dans une boucle, on rappelle donc cette fonction pour obtenir tout ce qui est dedans
                     let len = struct.getQueueID() - struct.getHeaderID() - 1;
-                    exeGroup.push(struct.getGroup(this.getInstructionList(struct.getHeaderID()+1, len))); // et on le renvoie sous forme d'un groupe
+                    exeGroup.push(struct.getGroup(this.getInstructionList(struct.getHeaderID() + 1, len))); // et on le renvoie sous forme d'un groupe
                     i += len + 1;
                 } else exeGroup.push(instruction.getInstruction());
             }
@@ -358,7 +360,7 @@ export class ListContainer extends GUI.Rectangle {
     }
 
     // Vérifie si l'instructionContainer est le début d'une structure
-    checkHeaders(i:InstructionContainer): StructureContainer | null {
+    checkHeaders(i: InstructionContainer): StructureContainer | null {
         for (const struct of this.structureList) {
             if (struct.getHeader() === i) return struct;
         }
@@ -366,8 +368,8 @@ export class ListContainer extends GUI.Rectangle {
     }
 
     // GETTERS
-    getHover():boolean{return this.hover;}
-    setHover(bool:boolean){
+    getHover(): boolean { return this.hover; }
+    setHover(bool: boolean) {
         if (bool) {
             this.detector.background = "white";
             if (this.scene.isDragging()) this.toggleMagnet(true);
@@ -380,13 +382,13 @@ export class ListContainer extends GUI.Rectangle {
             //console.log("unhover");
         };
     }
-    getListInstruction() : (Instruction[]) {
-        let l = this.list.filter((x:InstructionContainer | Magnet) => x instanceof InstructionContainer);
-        return l.map(((x:InstructionContainer) => x.getInstruction()));
+    getListInstruction(): (Instruction[]) {
+        let l = this.list.filter((x: InstructionContainer | Magnet) => x instanceof InstructionContainer);
+        return l.map(((x: InstructionContainer) => x.getInstruction()));
     }
-    getScene():GameScene{return this.scene;}
-    getList():(InstructionContainer | Magnet)[]{return this.list;}
-    getIdInstruction(i:InstructionContainer) : number{ return this.list.indexOf(i);}
+    getScene(): GameScene { return this.scene; }
+    getList(): (InstructionContainer | Magnet)[] { return this.list; }
+    getIdInstruction(i: InstructionContainer): number { return this.list.indexOf(i); }
     isFirst(): boolean {
         if (this.list.length > 0 && this.list[0] instanceof DepartContainer) return true;
         if (this.list.length > 1 && this.list[0] instanceof Magnet && this.list[1] instanceof DepartContainer) return true;
@@ -397,10 +399,10 @@ export class ListContainer extends GUI.Rectangle {
         if (this.list.length > 1 && this.list[0] instanceof Magnet && this.list[1] instanceof DepartContainer) return this.list[1];
         return null;
     }
-    getMagnetID(): number {return this.list.indexOf(this.magnet);}
-    getDetector(): GUI.Rectangle {return this.detector;}
+    getMagnetID(): number { return this.list.indexOf(this.magnet); }
+    getDetector(): GUI.Rectangle { return this.detector; }
 
-    toString():string {return "ListContainer : " + this.id.toString();}
+    toString(): string { return "ListContainer : " + this.id.toString(); }
     dispose(): void {
         this.scene.scene.onPointerObservable.remove(this.pointerObserver);
         this.detector.dispose();

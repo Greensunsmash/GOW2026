@@ -22,9 +22,9 @@ export class LeafNavigator extends Container {
         this.panel = new StackPanel();
         this.panel.isVertical = false;
 
-        this.panel.addControl(new BaseButton("prevlf", "-", () => onPrev(), 20));
+        this.panel.addControl(new BaseButton("prevlf", "-", () => onPrev(), 40));
         this.panel.addControl(new BaseHSpacer());
-        this.panel.addControl(new BaseButton("nextlf", "+", () => onNext(), 20));
+        this.panel.addControl(new BaseButton("nextlf", "+", () => onNext(), 40));
         this.addControl(this.panel);
     }
 }

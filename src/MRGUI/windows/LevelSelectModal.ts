@@ -12,7 +12,7 @@ export class LevelSelectModal extends ModalWindow {
         levelIndex: LevelIndexEntry[],
         callback: (levelName: string) => Promise<void>
     ) {
-        super(root, "Quel niveau qu'on va vers ?");
+        super(root, "Choix du niveau");
 
         this.panel.addControl(new BaseVSpacer());
         this.fillLevelNames(levelIndex, callback);

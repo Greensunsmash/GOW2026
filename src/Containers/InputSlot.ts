@@ -22,7 +22,9 @@ export class InputSlot extends EmptySlot implements Valuable {
         this.textInput.isHitTestVisible = false;
         this.addControl(this.textInput);
 
-        this.clickObserver = this.onPointerDownObservable.add(() => this.textInput.focus());
+        this.clickObserver = this.onPointerDownObservable.add(() => {
+            this.textInput.focus(); 
+        });
         this.dragObserver = () => { if (this.textInput) this.textInput.isHitTestVisible = false; };
         this.undragObserver = () => { if (this.textInput) this.textInput.isHitTestVisible = true; };
         
@@ -42,8 +44,10 @@ export class InputSlot extends EmptySlot implements Valuable {
 
     getValue(): Valeur[] {
         const raw = this.textInput.text;
+        console.log("read raw from input slot ", raw);
         const num = Number(raw);
         const val = isNaN(num) || raw === "" ? raw : num;
+        console.log("number turned to ", val);
         return [new ValeurBrute(val)];
     }
 

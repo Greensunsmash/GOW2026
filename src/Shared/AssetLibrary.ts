@@ -1,16 +1,17 @@
-import { LoadAssetContainerAsync, MeshBlock, MeshBuilder, TransformNode, Vector3, type AnimationGroup, type Scene } from "@babylonjs/core";
+import { AbstractMesh, Color3, LoadAssetContainerAsync, MeshBlock, MeshBuilder, TransformNode, Vector3, type AnimationGroup, type Scene } from "@babylonjs/core";
 import { ASSETS_ROOT, LayerMasks } from "./Constants";
 import "@babylonjs/loaders";
+import type { PlayScene } from "../MainLoop/Scene/PlayScene";
 
 export class AssetLibrary {
     static MODELS_ROOT = ASSETS_ROOT + "models/";
 
-    private readonly scene: Scene;
+    private readonly scene: PlayScene;
     private groups: { [key: string] : number } = {};
     private assets: { [key: string]: TransformNode } = {};
     private animationGroupsByAsset: { [key: string]: AnimationGroup[] } = {};
 
-    constructor(scene : Scene) {
+    constructor(scene : PlayScene) {
         this.scene = scene;
     }
     
@@ -29,8 +30,8 @@ export class AssetLibrary {
         }
 
         try {
-            const container = await LoadAssetContainerAsync(AssetLibrary.MODELS_ROOT + filename, this.scene);
-            const rootMesh = new TransformNode(name, this.scene);
+            const container = await LoadAssetContainerAsync(AssetLibrary.MODELS_ROOT + filename, this.scene.scene);
+            const rootMesh = new TransformNode(name, this.scene.scene);
 
             container.meshes.forEach(mesh => {
                 mesh.parent = rootMesh;
@@ -63,9 +64,11 @@ export class AssetLibrary {
     createSingleInstance(
         name: string,
         position: Vector3,
-        rotation: Vector3 = new Vector3(0,0,0),
-        scaleFactor: number = 1.0
+        fitInCube?: boolean,
+        scaleFactor?: number
     ): TransformNode {
+        console.log("creating new ", name, " instnace");
+
         if (!this.assets[name])
             throw new Error(`Asset '${name}' instance could not be loaded.`);
 
@@ -78,20 +81,22 @@ export class AssetLibrary {
         instance.setEnabled(true);
 
         let childMeshes = instance.getChildMeshes();
+        /*
         if (childMeshes.length === 0)
-            childMeshes = [instance];
+            childMeshes = [instance]; */
 
         childMeshes.forEach((mesh) => (mesh.isVisible = true));
 
         let minX = Number.MAX_VALUE,
-        maxX = Number.MIN_VALUE;
+        maxX = -Number.MAX_VALUE;
         let minY = Number.MAX_VALUE,
-        maxY = Number.MIN_VALUE;
+        maxY = -Number.MAX_VALUE;
         let minZ = Number.MAX_VALUE,
-        maxZ = Number.MIN_VALUE;
+        maxZ = -Number.MAX_VALUE;
 
         let centerOffset = Vector3.Zero();
-        childMeshes.forEach(mesh => {
+        childMeshes.forEach(mesh => { 
+            //this.scene.shadowGenerator.addShadowCaster(mesh);
             mesh.computeWorldMatrix(true);
             mesh.refreshBoundingInfo({});
             const bbox = mesh.getBoundingInfo().boundingBox;
@@ -114,12 +119,35 @@ export class AssetLibrary {
         let scaleY = 1 / sizeY;
         let scaleZ = 1 / sizeZ;
 
-        instance.scaling = new Vector3(scaleX * scaleFactor, scaleY * scaleFactor, scaleZ * scaleFactor);
-        instance.position = position.clone().subtract(centerOffset.subtract(instance.getAbsolutePosition()));
-        instance.position.y = position.y; // coller au sol !
-        instance.rotation = rotation;
+        if (scaleFactor)
+            instance.scaling = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+        else {
+            if (fitInCube)
+                instance.scaling = new Vector3(scaleX, scaleY, scaleZ);
+            else {
+                const scale = Math.min(scaleX, scaleY, scaleZ);
+                instance.scaling = new Vector3(scale, scale, scale);
+            }
+        }
+
+        const pivotPos = instance.getAbsolutePosition();
+        const offsetToCenter = centerOffset.subtract(pivotPos);
+        const offsetToBottom = minY - pivotPos.y;
+
+        instance.position.x = position.x - (offsetToCenter.x * instance.scaling.x);
+        instance.position.z = position.z - (offsetToCenter.z * instance.scaling.z);
+
+        instance.position.y = position.y - (offsetToBottom * instance.scaling.y);
+
+        instance.rotation = Vector3.Zero();
+
+        //instance.receiveShadows = true;
 
         return instance;
+    }
+
+    getAnimations(key: string) {
+        return this.animationGroupsByAsset[key];
     }
 
     printLoadedAssets() {

@@ -1,18 +1,15 @@
-import { ArcRotateCamera, Engine, HemisphericLight, KeyboardEventTypes, tonemapPixelShader, Vector3, Viewport } from "@babylonjs/core";
-import { Level } from "../../Environment/Level";
-import { LevelReader, State, type IslandMap } from "../../Environment/LevelReader";
-import { QuitButton } from "../../MRGUI/buttons/QuitButton";
-import { StartButton } from "../../MRGUI/buttons/StartButton";
-import { LayerMasks } from "../../Shared/Constants";
-import { ExecutionContext } from "../ExecutionContext";
-import { GameScene } from "./GameScene";
-import { Memory } from "../../Language/Memory";
+import { ArcRotateCamera, Color3, CubeTexture, DirectionalLight, Engine, IblShadowsRenderPipeline, KeyboardEventTypes, MeshBuilder, PBRMaterial, ShadowGenerator, Vector3, Viewport } from "@babylonjs/core";
 import { ListContainer } from "../../Containers/ListContainer";
 import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
-import { OneButtonModal } from "../../MRGUI/windows/OneButtonModal";
-import { CDPlaybar } from "../../MRGUI/mainscreen/CDPlaybar";
-import { TurnLeftInstruction } from "../../Language/Instructions/TurnLeftInstruction";
+import { Level } from "../../Environment/Level";
+import { LevelReader, State, type IslandMap } from "../../Environment/LevelReader";
+import { Memory } from "../../Language/Memory";
+import { QuitButton } from "../../MRGUI/buttons/QuitButton";
 import { MainNavigator } from "../../MRGUI/mainscreen/MainNavigator";
+import { OneButtonModal } from "../../MRGUI/windows/OneButtonModal";
+import { ASSETS_ROOT, LayerMasks } from "../../Shared/Constants";
+import { ExecutionContext } from "../ExecutionContext";
+import { GameScene } from "./GameScene";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene {
@@ -25,6 +22,7 @@ export class PlayScene extends GameScene {
     private ctx: ExecutionContext;
     private uiCamera: ArcRotateCamera;
     private mapCamera: ArcRotateCamera;
+    public shadowGenerator: ShadowGenerator;
 
     private onLevelGaveup?: () => void;
     private onLevelWon?: () => void;
@@ -38,14 +36,16 @@ export class PlayScene extends GameScene {
         super(engine);
         this.mainNav = new MainNavigator(
             this.leftPanel,
+            () => this.ctx.stepToFirst(),
             () => this.ctx.stepBack(),
             () => this.ctx.nextStep(),
+            () => this.ctx.stepToLast(),
             () => this.previousLeaf(),
             () => this.nextLeaf(true),
             () => this.dryAttempt(),
             () => this.attemptAllLeafs()
         );
-        this.init();
+        //this.init();
     }
 
     update(): void {
@@ -109,17 +109,49 @@ export class PlayScene extends GameScene {
         this.scene.activeCameras.push(this.uiCamera);
         this.addDetachControlObservables();
 
+        this.fillBelow();
+        this.setupSkybox();
+        this.setupShadows();
+
         await this.loadAssets();
         this.levelReader = new LevelReader();
         await this.levelReader.loadLevel(levelName);
         await this.loadIsland(0);
 
-        let light = new HemisphericLight("light", new Vector3(0, 1, 0), this.scene);
+        /* let light = new HemisphericLight("light", new Vector3(0, 1, 0), this.scene);
         light.includeOnlyWithLayerMask = LayerMasks.SCENE_ONLY;
-        light.intensity = 1.0;
+        light.intensity = 1.0; */
 
         this._isLoaded = true;
         this.scene.getEngine().hideLoadingUI();
+    }
+
+    private fillBelow() {
+        let ground = MeshBuilder.CreateGround("ground", { width: 512, height: 512, subdivisions: 32 }, this.scene);
+
+        const waterMat = new PBRMaterial("waterMat", this.scene);
+        waterMat.albedoColor = new Color3(0.01, 0.05, 0.08);
+        waterMat.alpha = 0.6; 
+        waterMat.metallic = 0.0; 
+        waterMat.roughness = 0.1;
+
+        ground.material = waterMat;
+        ground.layerMask = LayerMasks.SCENE_ONLY;
+        ground.position.y = 0.35;
+    }
+
+    private setupSkybox() {
+        const texture = new CubeTexture(ASSETS_ROOT + "/skybox/moon.env", this.scene);
+        texture.level = 1.0;
+        this.scene.environmentTexture = texture;
+        this.scene.imageProcessingConfiguration.exposure = 1.0;
+        this.scene.environmentIntensity = 1.0;
+        // Create a skybox mesh using this texture
+        const skybox = this.scene.createDefaultSkybox(texture, true, 100000, 0);
+    }
+
+    private setupShadows() {
+        
     }
 
     public async loadLeaf(index: number) {
@@ -160,9 +192,10 @@ export class PlayScene extends GameScene {
         if (next >= this.currentIslandMap.length) {
             console.log("Dernière feuille atteinte");
             if (!manual) {
+                console.log(this.levelReader.getEndDialog(this.currentIsland));
                 new OneButtonModal(
                     this.advancedTexture,
-                    "Ile terminée !",
+                    this.levelReader.getEndDialog(this.currentIsland) || "Ile terminée !",
                     "Continuer",
                     async () => await this.nextIsland()
                 );
@@ -203,6 +236,7 @@ export class PlayScene extends GameScene {
         this.currentIsland = index;
         this.currentIslandMap = island;
 
+
         await this.loadLeaf(0);
 
         this.toolbox.clear();
@@ -210,6 +244,16 @@ export class PlayScene extends GameScene {
         this.levelReader.setupToolbox(index, this.toolbox, this.ctx, this);
 
         this.mainNav.buildNavigator(this.currentIslandMap.length >= 2);
+
+        const beginDialog = this.levelReader.getBeginDialog(this.currentIsland);
+        if (beginDialog) {
+            new OneButtonModal(
+                this.advancedTexture,
+                beginDialog,
+                "Let's go",
+                () => {}
+            );
+        }
     }
 
     public async nextIsland() {
@@ -237,10 +281,12 @@ export class PlayScene extends GameScene {
 
     async loadAssets() {
         await Promise.all([
-            this._drh.loadSingleAsset("robot", "robot.glb"),
-            this._drh.loadSingleAsset("wall", "cube.glb"),
+            this._drh.loadSingleAsset("robot", "character-male-e.glb"),
+            this._drh.loadSingleAsset("ground", "grasscube.glb"),
+            this._drh.loadSingleAsset("wall", "stone.02.glb"),
             this._drh.loadSingleAsset("pill", "pill.glb"),
             this._drh.loadSingleAsset("heart", "heart.01.glb"),
+            this._drh.loadSingleAsset("river", "water.glb")
         ]);
     }
 

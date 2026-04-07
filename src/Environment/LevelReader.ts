@@ -54,6 +54,8 @@ export class LevelReader {
     private blockset: IslandBlockset[] = [];
     private blockLimit: (number | null)[] = [];
     private goals: Goal[] = [];
+    private beginDialog: (string | null)[] = [];
+    private endDialog: (string | null)[] =  [];
 
     static async getLevelList(): Promise<LevelIndexEntry[]> {
         const res = await fetch(LevelReader.LEVELS_ROOT + "index.json");
@@ -100,6 +102,9 @@ export class LevelReader {
                     this.blockLimit.push(null);
                 
                 this.goals.push(island.goal);
+
+                this.beginDialog.push(island.begin_dialog || null);
+                this.endDialog.push(island.end_dialog || null);
             }
 
             //console.log("json level loaded !");
@@ -118,6 +123,13 @@ export class LevelReader {
         return this.structure[nb];
     }
 
+    public getBeginDialog(nb: number): string | null {
+        return this.beginDialog[nb];
+    }
+
+    public getEndDialog(nb: number): string | null {
+        return this.endDialog[nb];
+    }
     
     /* Faudra que je bouge les trois du dessous,
     ca fait un peu trop de logique pour juste un LevelReader peut être... */

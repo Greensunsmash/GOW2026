@@ -32,7 +32,7 @@ export abstract class GameScene extends BaseScene {
     constructor(engine: Engine) {
         super(engine);
 
-        this._drh = new AssetLibrary(this.scene);
+        this._drh = new AssetLibrary(this);
         this.dragListeners = [];
         this.undragListeners = [];
 

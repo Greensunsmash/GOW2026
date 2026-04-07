@@ -1,0 +1,97 @@
+{
+    "islands": [
+        {
+            "nb": 1,
+            "begin_dialog": "Bienvenue en enfer (PS:le robot s'arrête automatiquement si il arrive sur un drapeau",
+            "end_dialog": "Bravo champion",
+            "layouts": [
+                [
+                    [
+                        "   .   ",
+                        "   .   ",
+                        "   .   ",
+                        "   ....",
+                        "   .   ",
+                        "       ",
+                        "       ",
+                        "       "
+                    ],
+                    [
+                        "   @   ",
+                        "       ",
+                        "       ",
+                        "      x",
+                        "   #   ",
+                        "       ",
+                        "       ",
+                        "       "
+                    ]
+                ],
+                [
+                    [
+                        "   .   ",
+                        "   .   ",
+                        "   .   ",
+                        "   .   ",
+                        "   .   ",
+                        "   ....",
+                        "   .   ",
+                        "       "
+                    ],
+                    [
+                        "   @   ",
+                        "       ",
+                        "       ",
+                        "       ",
+                        "       ",
+                        "      x",
+                        "   #   ",
+                        "       "
+                    ]
+                ],
+                [
+                    [
+                        "   .   ",
+                        "   .   ",
+                        "   ....",
+                        "   .   ",
+                        "       ",
+                        "       ",
+                        "       ",
+                        "       "
+                    ],
+                    [
+                        "   @   ",
+                        "       ",
+                        "      x",
+                        "   #   ",
+                        "       ",
+                        "       ",
+                        "       ",
+                        "       "
+                    ]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "left",
+                    "right"
+                ],
+                "sensors": [
+                    "obstacle"
+                ],
+                "structures": [
+                    "if",
+                    "for"
+                ],
+                "start": [
+                    "start"
+                ]
+            },
+            "goal": {
+                "name": "arrival"
+            }
+        }
+    ]
+}

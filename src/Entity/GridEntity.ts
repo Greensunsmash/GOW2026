@@ -1,4 +1,4 @@
-import { Animation, CubicEase, EasingFunction, Vector3, type TransformNode } from "@babylonjs/core";
+import { Animation, AnimationGroup, CubicEase, EasingFunction, Vector3, type TransformNode } from "@babylonjs/core";
 import type { AssetLibrary } from "../Shared/AssetLibrary";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
 import type { Level } from "../Environment/Level";
@@ -7,6 +7,8 @@ export class GridEntity {
     protected readonly initPos : GridPoint;
     protected readonly initRotation : number;
     protected mesh : TransformNode;
+    protected anims : AnimationGroup[];
+    protected idleAnim: AnimationGroup | undefined;
 
     // Coordonnées logiques (compilation)
     protected logicalGridPos: GridPoint;
@@ -28,8 +30,13 @@ export class GridEntity {
         this.initPos = gridPos;
         const pos : Vector3 = GridUtils.toWorld(gridPos);
         this.mesh = drh.createSingleInstance(assetName, pos);
+        this.anims = drh.getAnimations(assetName);
         this.initRotation = this.visualFacingIndex;
         this.mesh.rotation.y = this.initRotation * (Math.PI / 2);
+
+        this.idleAnim = this.anims.find(anim => anim.name === "idle");
+        if (this.idleAnim)
+            this.idleAnim.play(true);
     }
 
     // Fonctions LOGIQUES (utiles pour la compilation)
@@ -130,6 +137,10 @@ export class GridEntity {
         const frameRate = 60;
         const duration = 15; 
 
+        let anim: AnimationGroup | undefined = this.anims.find(anim => anim.name === "walk");
+        if (anim)
+            anim.play(true);
+
         return new Promise ((resolve) => Animation.CreateAndStartAnimation(
             "slide",
             this.mesh,
@@ -145,6 +156,10 @@ export class GridEntity {
                 for (let i = 0; i < this.posListeners.length; i++) {
                     this.posListeners[i](targetGridPos);
                 }
+                if (anim)
+                    anim.stop();
+                if (this.idleAnim)
+                    this.idleAnim.play(true);
                 resolve();
             }
         ));

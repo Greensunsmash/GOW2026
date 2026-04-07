@@ -11,15 +11,19 @@ export class MainNavigator extends Container {
 
     private onPrevStep: () => void;
     private onNextStep: () => void;
+    private onFirstStep: () => void;
+    private onLastStep: () => void;
     private onPrevLeaf: () => void;
     private onNextLeaf: () => void;
     private onTestButton: () => void;
     private onFullButton: () => void;
-    
+
     constructor(
         root: Container,
+        onFirstStep: () => void,
         onPrevStep: () => void,
         onNextStep: () => void,
+        onLastStep: () => void,
         onPrevLeaf: () => void,
         onNextLeaf: () => void,
         onTestButton: () => void,
@@ -27,7 +31,7 @@ export class MainNavigator extends Container {
     ) {
         super("mainnav");
 
-        this.width = "140px";
+        this.width = "240px";
         //this.height = "300px";
         this.adaptHeightToChildren = true;
         //this.adaptWidthToChildren = true;
@@ -36,13 +40,15 @@ export class MainNavigator extends Container {
         this.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
         this.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
 
-        this.left = "-20px"; 
+        this.left = "-20px";
         this.top = "-20px";
 
         //this.panel.zIndex = 100;
 
         this.onPrevStep = onPrevStep;
         this.onNextStep = onNextStep;
+        this.onFirstStep = onFirstStep;
+        this.onLastStep = onLastStep;
         this.onPrevLeaf = onPrevLeaf;
         this.onNextLeaf = onNextLeaf;
         this.onTestButton = onTestButton;
@@ -58,15 +64,15 @@ export class MainNavigator extends Container {
     buildNavigator(multipleLeafMode: boolean = false) {
         this.panel.clearControls();
         if (multipleLeafMode) {
-            this.panel.addControl(new CDPlaybar(this, () => this.onPrevStep(), () => this.onNextStep(), () =>  this.onTestButton()));
-            this.panel.addControl(new BaseVSpacer(30));
             this.panel.addControl(this.leafIndicator);
             this.panel.addControl(new BaseVSpacer(10));
             this.panel.addControl(new LeafNavigator(this, () => this.onPrevLeaf(), () => this.onNextLeaf()));
             this.panel.addControl(new BaseVSpacer());
             this.panel.addControl(new BaseButton("fullrunbtn", "Valider", () => this.onFullButton()));
+            this.panel.addControl(new BaseVSpacer(30));
+            this.panel.addControl(new CDPlaybar(this, () => this.onFirstStep(), () => this.onPrevStep(), () => this.onNextStep(), () => this.onLastStep(), () => this.onTestButton()));
         } else {
-            this.panel.addControl(new CDPlaybar(this, () => this.onPrevStep(), () => this.onNextStep(), () =>  this.onFullButton()));
+            this.panel.addControl(new CDPlaybar(this, () => this.onFirstStep(), () => this.onPrevStep(), () => this.onNextStep(), () => this.onLastStep(), () => this.onFullButton()));
         }
     }
 
