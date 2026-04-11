@@ -83,8 +83,18 @@ export class Level {
         return this.robot;
     }
 
-    private mapShape(): [number, number, number] {
+    public mapShape(): [number, number, number] {
         return [this.map[0][0].length, this.map.length, this.map[0].length]; // x,y,z
+    }
+
+    public getVisualCenter(): Vector3 {
+        const shape = this.mapShape();
+
+        const centerX = (shape[0] - 1) / 2;
+        const centerY = (shape[1] - 1) / 2;
+        const centerZ = (shape[2] - 1) / 2;
+
+        return new Vector3(centerX, centerY, centerZ);
     }
 
     public isWalkable(gridPos: GridPoint) {

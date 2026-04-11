@@ -251,6 +251,7 @@ export class OutilsBox extends Rectangle {
                 }
 
                 this.scene.blockCount++;
+                console.log("adding 1 block, count is now ", this.scene.blockCount);
                 // on build le bloc réel
                 const realDragBlock = buildBlock(this.root);
 
@@ -325,6 +326,7 @@ export class OutilsBox extends Rectangle {
 
     public clear() {
         // Supprimer tous les blocs présents dans la scène (sauf la toolbox)
+        /*
         const children = [...this.root.children];
         for (const child of children) {
             if (child !== this) {
@@ -332,7 +334,8 @@ export class OutilsBox extends Rectangle {
                 child.dispose();
             }
         }
-        this.scene.blockCount = 0;
+        */
+        //this.scene.blockCount = 0;
         this.categories.clear();
         this.stack.clearControls();
         this.vars = [];

@@ -98,11 +98,14 @@ export class PlayScene extends GameScene {
 
         this.uiCamera = new ArcRotateCamera("uiCamera", Math.PI / 2, Math.PI / 3, 10, Vector3.Zero(), this.scene);
         this.uiCamera.layerMask = LayerMasks.UI_ONLY;
-        this.mapCamera = new ArcRotateCamera("mapCamera", Math.PI / 2, Math.PI / 3, 10, Vector3.Zero(), this.scene);
+        this.mapCamera = new ArcRotateCamera("mapCamera", Math.PI / 2, Math.PI / 2.5, 15, Vector3.Zero(), this.scene);
         this.mapCamera.viewport = new Viewport(0.5, 0, 0.5, 1.0);
         this.mapCamera.layerMask = LayerMasks.SCENE_ONLY;
 
         this.mapCamera.attachControl(this.scene.getEngine().getRenderingCanvas(), true);
+        this.mapCamera.upperBetaLimit = Math.PI / 2.5;
+        this.mapCamera.lowerRadiusLimit = 10;
+        this.mapCamera.upperRadiusLimit = 25;
 
         this.scene.activeCameras = [];
         this.scene.activeCameras.push(this.mapCamera);
@@ -156,17 +159,20 @@ export class PlayScene extends GameScene {
     }
 
     private setupThePipeToTheline() {
-        const pipeline = new DefaultRenderingPipeline(
-            "defaultPipeline",
-            true, // Active le HDR
-            this.scene,
-            [this.mapCamera]
-        );
+        
+    }
 
-        pipeline.samples = 4; 
-        pipeline.bloomEnabled = true;
-        pipeline.bloomThreshold = 0.8;
-        pipeline.bloomWeight = 0.3; 
+    private focusCamera() {
+        const center = this.level.getVisualCenter();
+        this.mapCamera.setTarget(center);
+
+        const shape = this.level.mapShape();
+        const maxDimension = Math.max(shape[0], shape[1], shape[2]);
+
+        const cameraDistance = (maxDimension / 2) / Math.tan(this.mapCamera.fov / 2);
+        const margin = 1.75; 
+        
+        this.mapCamera.radius = cameraDistance * margin;
     }
 
     public async loadLeaf(index: number) {
@@ -180,6 +186,8 @@ export class PlayScene extends GameScene {
         const map = this.currentIslandMap[index];
         this.level = new Level(map, this._drh, this.scene);
         await this.level.init();
+
+        this.focusCamera();
 
         if (this.ctx) this.ctx.newLevel(this.level.getRobot());
         else this.ctx = new ExecutionContext(this.level.getRobot(), this);
