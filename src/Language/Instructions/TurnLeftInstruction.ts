@@ -14,6 +14,8 @@ export class TurnLeftInstruction extends Instruction {
     async execute(): Promise<void> {
         this.ctx.getRobot().logicalTurnLeft();
         Memory.get().instructionCalled("left");
+
+        if (Memory.get().isPlaying()) this.next();
     }
 
     onLaunch(_l: Launchable): boolean {

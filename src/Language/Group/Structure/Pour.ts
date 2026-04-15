@@ -5,6 +5,8 @@ import { Valeur } from "../../Valeur/Valeur";
 
 export class Pour extends Group implements Executable {
     private valeur: Valeur;
+    private loop_nb : number = 0;
+    private max_loop_nb : number = 0;
 
     constructor(e: Executable | Executable[] | Valeur, valeurOptional?: Valeur) {
         if (e instanceof Valeur) {
@@ -19,15 +21,19 @@ export class Pour extends Group implements Executable {
         }
     }
 
-    async execute(): Promise<void> {
+    public execute(): void {
         const val = this.valeur.eval();
         if (val.getType() === "INT") {
-            const nb = val.getValue() as number;
-            for (let i = 0; i < nb; i++) {
-                await super.execute();
-            }
+            this.max_loop_nb = val.getValue() as number;
+            this.loop_nb = 1;
+            this.next();
         }
         else console.log("oups");
+    }
+
+    public next(): void {
+        if (this.next_inst > this.list.length && this.loop_nb < this.max_loop_nb) this.next_inst = 0;
+        super.next();
     }
 
     onLaunch(l: Launchable): boolean {

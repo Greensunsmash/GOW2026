@@ -19,7 +19,10 @@ export class Si extends Group implements Executable {
         }
     }
 
-    async execute(): Promise<void> {if (this.bool.eval()) await super.execute();}
+    public execute(): void {
+        if (this.bool.eval()) this.next();
+        else this.jump_next();
+        }
 
     onLaunch(l: Launchable): boolean {
         if (this.bool.onLaunch(l)) return super.onLaunch(l);

@@ -323,11 +323,12 @@ export class PlayScene extends GameScene {
         });
     }
 
-    public async run() {
+    public run() {
         Memory.get().clear();
         this.level.reinitLevel();
         this.canRun = true;
         const prevLeafIndex = this.currentLeaf;
+        Memory.get().setPlaying(true);
 
         // "Compilation" :
         // on remplit l'history avec les instructions visuelles à éxécuter
@@ -353,7 +354,7 @@ export class PlayScene extends GameScene {
 
         // Exécution (évidemment c pas fini)
 
-        while (await this.ctx.nextStep(false) && this.canRun);
+        //while (await this.ctx.nextStep(false) && this.canRun);
         // et du coup à partir de là c ultra facile de faire du step by step complet
 
         if (this.canRun && this.currentLeaf == prevLeafIndex) {

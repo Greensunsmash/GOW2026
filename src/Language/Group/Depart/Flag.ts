@@ -17,8 +17,8 @@ export class Flag extends Group implements Launchable {
         }
     }
 
-    async execute(_list?: Value[]): Promise<void> {
-        await super.execute();
+    public execute(_list?: Value[]): void {
+        super.execute();
         console.log(Memory.get().getHistory());
     }
 

@@ -22,6 +22,8 @@ export class SetVar extends Instruction {
     async execute(): Promise<void> {
         if (this.valeur) {Memory.get().setVariable(this.name, this.valeur.eval());}
         if (this.bool) {Memory.get().setVariable(this.name, this.bool.eval());}
+
+        if (Memory.get().isPlaying()) this.next();
     }
 
     onLaunch(l: Launchable): boolean {

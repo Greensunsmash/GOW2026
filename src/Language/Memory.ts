@@ -52,6 +52,9 @@ export class Memory {
     private history: Action[]; // On stocke chaque action qu'on fait pour pouvoir retourner en arrière
     private historyID:number;
 
+    private playing = false;
+    private skip = false;
+
     private constructor() {
         this.values = new Map();
         this.booleans = new Map();
@@ -218,8 +221,10 @@ export class Memory {
         return {empty: true};
     }
 
-    // GETTERS
+    // GETTERS / SETTERS
     public getHistory():Action[] {return this.history;}
+    public isPlaying():boolean {return this.playing;}
+    public setPlaying(bool : boolean):void {this.playing = bool;}
 
     // PRINT
     public static print():void {

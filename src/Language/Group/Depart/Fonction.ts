@@ -20,7 +20,7 @@ export class Fonction extends Group implements Launchable {
         this.name = name;
     }
 
-    async execute(list?: Value[]): Promise<void> {
+    public execute(list?: Value[]): void {
         const map: Map<string, Value> = new Map();
         if (list && this.args) {
             for (let i = 0; i < Math.min(this.args.length, list.length); i++) {
@@ -28,10 +28,14 @@ export class Fonction extends Group implements Launchable {
             }
         }
         Memory.get().newFonctionCall(this.name, map);
-        await super.execute();
-        Memory.get().endFonction(this.name);
+        super.execute();
     }
 
+    protected jump_next(): void {
+        Memory.get().endFonction(this.name);
+        super.jump_next();
+    }
+    
     onLaunch(): boolean {
         for (const e of this.list) {
             if (e instanceof Bloc && !e.onLaunch(this)) return false;

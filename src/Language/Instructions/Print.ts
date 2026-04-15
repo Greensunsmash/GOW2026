@@ -2,6 +2,7 @@ import { Instruction } from "./Instruction";
 import { Valeur } from "../Valeur/Valeur";
 import { Booleen } from "../Booleen/Booleen";
 import type { Launchable } from "../Launchable";
+import { Memory } from "../Memory";
 
 export class Print extends Instruction {
     private valeur?: Valeur;
@@ -16,6 +17,8 @@ export class Print extends Instruction {
     async execute(): Promise<void> {
         if (this.valeur) console.log(this.valeur.eval().getValue());
         if (this.bool) console.log(this.bool.eval());
+        
+        if (Memory.get().isPlaying()) this.next();
     }
 
     onLaunch(l: Launchable): boolean {

@@ -11,9 +11,11 @@ export class MoveBackwardInstuction extends Instruction {
         this.ctx = ctx;
     }
 
-    async execute(): Promise<void> {
+    async execute() {
         this.ctx.getRobot().logicalMoveBackward();
         Memory.get().instructionCalled("backward");
+
+        if (Memory.get().isPlaying()) this.next();
     }
 
     onLaunch(_l: Launchable): boolean {

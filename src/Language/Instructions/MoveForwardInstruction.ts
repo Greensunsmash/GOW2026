@@ -11,9 +11,11 @@ export class MoveForwardInstuction extends Instruction {
         this.ctx = ctx;
     }
 
-    async execute(): Promise<void> {
+    async execute() {
         this.ctx.getRobot().logicalMoveForward();
         Memory.get().instructionCalled("forward");
+
+        if (Memory.get().isPlaying()) this.next();
     }
 
     onLaunch(_l: Launchable): boolean {
