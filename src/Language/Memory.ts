@@ -1,3 +1,4 @@
+import type { Executable } from "./Executable";
 import type { Fonction } from "./Group/Depart/Fonction";
 import { Value } from "./Valeur/Value";
 
@@ -53,6 +54,7 @@ export class Memory {
     private historyID:number;
 
     private playing = false;
+    private current_instruction : Executable | undefined;
     private skip = false;
 
     private constructor() {
@@ -131,7 +133,8 @@ export class Memory {
         //this.historyID += 1;
     }
     
-    public stepBack() : StepInfo {
+    public stepBack() : void {
+        /*
         console.log(this.historyID);
         while (this.historyID > 0) {
             this.historyID -= 1;
@@ -149,15 +152,17 @@ export class Memory {
                         if (action.last_value) this.values.set(action.name, action.last_value);
                         else this.values.delete(action.name);
                     }
+                    this.current_instruction?.back();
+                    return ;
                     };
-                    break;
                 case "BOOLSET": {
                     const action = this.history[this.historyID] as BoolSetAction;
                     if (!this.booleans.has(action.name) ) throw new Error("History Error, la variable " + action.name + " n'existe pas !");
                     if (action.last_value) this.booleans.set(action.name, action.last_value);
                     else this.booleans.delete(action.name);
+                    this.current_instruction?.back();
+                    return ;
                     };
-                    break;
                 case "END":{
                     const action = this.history[this.historyID] as EndCallAction;
                     if (action.frame) this.callStack.push(action.frame);
@@ -165,7 +170,8 @@ export class Memory {
                     break;
                 case "INSTRUCTION": {
                     const action = this.history[this.historyID] as DefinedAction;
-                    return {empty: false, instName: action.name};
+                    this.current_instruction?.back();
+                    return ;
                     };
                 case "CALL":{
                     const action = this.history[this.historyID] as CallAction;
@@ -176,14 +182,14 @@ export class Memory {
                     break;
             }
             //return {empty: false};
-        }
-        return {empty: true};
+        } */
+        this.current_instruction?.back();
     }
-    public nextStep() : StepInfo {
+    public nextStep() : void {
         // on boucle, pour ne s'arreter que quand on 
         // trouve une instruction "REELLE" (sur le robot)
         // sinon ca cassait les sructures
-        while (this.historyID < this.history.length) {
+        /* while (this.historyID < this.history.length) {
             switch (this.history[this.historyID].type) {
                 case "VALSET" : {
                     const action = this.history[this.historyID] as ValSetAction;
@@ -218,13 +224,16 @@ export class Memory {
             this.historyID += 1;
             //return {empty: false};
         }
-        return {empty: true};
+        return {empty: true}; */
+
+        if (this.current_instruction) this.current_instruction.next();
     }
 
     // GETTERS / SETTERS
     public getHistory():Action[] {return this.history;}
     public isPlaying():boolean {return this.playing;}
     public setPlaying(bool : boolean):void {this.playing = bool;}
+    public setCurrentInstruction(e:Executable):void {this.current_instruction = e; console.log(e);}
 
     // PRINT
     public static print():void {

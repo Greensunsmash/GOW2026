@@ -67,8 +67,8 @@ export class ExecutionContext {
     }
 
     public stepBack() {
-        const stepInfo: StepInfo = this.memory.stepBack();
-        if (stepInfo.empty) {
+       this.memory.stepBack();
+        /*if (stepInfo.empty) {
             console.log("no further step back");
             return false;
         }
@@ -91,7 +91,7 @@ export class ExecutionContext {
                 break;
         }
         Memory.print();
-        return true;
+        return true;*/
     }
 
     public stepToFirst() {
@@ -99,7 +99,8 @@ export class ExecutionContext {
     }
 
     public async nextStep(instantMove: boolean = true): Promise<boolean> {
-        const stepInfo: StepInfo = this.memory.nextStep();
+        this.memory.nextStep();
+        /*const stepInfo: StepInfo = this.memory.nextStep();
         if (stepInfo.empty) {
             console.log("no further step");
             return false;
@@ -122,7 +123,7 @@ export class ExecutionContext {
                 console.log("r");
                 break;
         }
-        Memory.print();
+        Memory.print();*/
         return true;
     }
 

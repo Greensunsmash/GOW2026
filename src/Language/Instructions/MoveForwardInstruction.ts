@@ -14,8 +14,14 @@ export class MoveForwardInstuction extends Instruction {
     async execute() {
         await this.ctx.getRobot().visualMoveForward();
         Memory.get().instructionCalled("forward");
+        Memory.get().setCurrentInstruction(this);
 
         if (Memory.get().isPlaying()) this.next();
+    }
+
+    async back() {
+        await this.ctx.getRobot().visualMoveBackward();
+        super.back();
     }
 
     onLaunch(_l: Launchable): boolean {

@@ -14,10 +14,15 @@ export class MoveBackwardInstuction extends Instruction {
     async execute() {
         await this.ctx.getRobot().visualMoveBackward();
         Memory.get().instructionCalled("backward");
+        Memory.get().setCurrentInstruction(this);
 
         if (Memory.get().isPlaying()) this.next();
     }
 
+    async back() {
+        await this.ctx.getRobot().visualMoveForward();
+        super.back();
+    }
     onLaunch(_l: Launchable): boolean {
         return true;
     }

@@ -11,4 +11,5 @@ export abstract class Instruction extends Bloc implements Executable {
     public next(){
         for (const listener of this.next_listeners) listener();
     }
+    public getBaseInstruction(): Executable {return this;}
 }

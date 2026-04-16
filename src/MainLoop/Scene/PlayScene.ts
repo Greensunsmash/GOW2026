@@ -328,7 +328,7 @@ export class PlayScene extends GameScene {
         this.level.reinitLevel();
         this.canRun = true;
         const prevLeafIndex = this.currentLeaf;
-        Memory.get().setPlaying(true);
+        //Memory.get().setPlaying(true);
 
         // "Compilation" :
         // on remplit l'history avec les instructions visuelles à éxécuter

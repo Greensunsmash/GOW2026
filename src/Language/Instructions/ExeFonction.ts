@@ -28,6 +28,8 @@ export class ExeFonction extends Instruction {
         } else {
             func.execute();
         }
+
+        Memory.get().setCurrentInstruction(this);
     }
 
     addArgs(valeur: Valeur): void {this.list.push(valeur);}
