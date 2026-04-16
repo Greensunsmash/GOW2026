@@ -357,6 +357,7 @@ export class PlayScene extends GameScene {
         //while (await this.ctx.nextStep(false) && this.canRun);
         // et du coup à partir de là c ultra facile de faire du step by step complet
 
+        /*
         if (this.canRun && this.currentLeaf == prevLeafIndex) {
             new OneButtonModal(
                 this.advancedTexture,
@@ -364,7 +365,7 @@ export class PlayScene extends GameScene {
                 "Réessayer",
                 () => { }
             );
-        }
+        } */
     }
 
     public stopRun() {

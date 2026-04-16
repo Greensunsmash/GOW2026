@@ -14,14 +14,21 @@ export abstract class Group extends Bloc {
         else if (Array.isArray(eOrList)) this.list = [...eOrList];
         else this.list = [eOrList];
         this.next_inst = 0;
+
+        this.next = this.next.bind(this);
     }
 
     public execute(): void{
+        this.next_inst = 0;
         this.next();
     }
 
     public next(): void {
-        if (this.next_inst > 0) this.list[this.next_inst-1].next_listeners.splice(this.list[this.next_inst-1].next_listeners.indexOf(this.next), 1);
+        const prev = this.list[(this.next_inst - 1 >= 0) ? this.next_inst - 1 : this.list.length -1];
+        const idx = prev.next_listeners.indexOf(this.next);
+        if (idx !== -1) {
+            prev.next_listeners.splice(idx, 1);
+        }
 
         if (this.next_inst < this.list.length) {
             this.list[this.next_inst].next_listeners.push(this.next);

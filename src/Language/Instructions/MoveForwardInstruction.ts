@@ -12,7 +12,7 @@ export class MoveForwardInstuction extends Instruction {
     }
 
     async execute() {
-        this.ctx.getRobot().logicalMoveForward();
+        await this.ctx.getRobot().visualMoveForward();
         Memory.get().instructionCalled("forward");
 
         if (Memory.get().isPlaying()) this.next();

@@ -47,6 +47,7 @@ export class GridEntity {
     }
 
     public logicalMoveBackward() {
+        console.log("hey");
         const facing = GridUtils.DIRECTIONS[this.logicalFacingIndex];
         this.tryLogicalMove(-facing.x, -facing.z);
     }

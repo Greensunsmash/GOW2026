@@ -12,7 +12,7 @@ export class MoveBackwardInstuction extends Instruction {
     }
 
     async execute() {
-        this.ctx.getRobot().logicalMoveBackward();
+        await this.ctx.getRobot().visualMoveBackward();
         Memory.get().instructionCalled("backward");
 
         if (Memory.get().isPlaying()) this.next();
