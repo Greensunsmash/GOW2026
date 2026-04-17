@@ -2,6 +2,7 @@ import type { Executable } from "../../Executable";
 import type { Launchable } from "../../Launchable";
 import { Group } from "../Group";
 import { Valeur } from "../../Valeur/Valeur";
+import { Memory } from "../../Memory";
 
 export class Pour extends Group implements Executable {
     private valeur: Valeur;
@@ -35,6 +36,24 @@ export class Pour extends Group implements Executable {
         //console.log("Boucle : passage ", this.loop_nb, "| ", this.max_loop_nb, " | next_inst ", this.next_inst);
         if (this.next_inst >= this.list.length && this.loop_nb < this.max_loop_nb) {this.loop_nb += 1; this.next_inst = 0;}
         super.next();
+    }
+
+    public back(): void {
+        this.next_inst -= 1;
+        const prev = this.list[(this.next_inst >=0) ? this.next_inst : this.list.length -1];
+        const idx = prev.next_listeners.indexOf(this.next);
+        const idx2 = prev.back_listeners.indexOf(this.back);
+        if (idx !== -1) prev.next_listeners.splice(idx, 1);
+        if (idx2 !== -1) prev.back_listeners.splice(idx, 1);
+
+        if (this.next_inst <= 0 && this.loop_nb >1) {this.next_inst = this.list.length; this.loop_nb -=1;}
+        if (this.next_inst > 0) {
+            this.list[this.next_inst-1].next_listeners.push(this.next);
+            this.list[this.next_inst-1].back_listeners.push(this.back);
+            Memory.get().setCurrentInstruction(this.list[this.next_inst-1].getBaseInstruction());
+        } else if (this.loop_nb > 1) {
+            this.jump_back();
+        }
     }
 
     onLaunch(l: Launchable): boolean {

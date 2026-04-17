@@ -24,7 +24,6 @@ export abstract class Group extends Bloc {
         this.next_inst = 0;
         this.next();
     }
-
     public next(): void {
         const prev = this.list[(this.next_inst - 1 >= 0) ? this.next_inst - 1 : this.list.length -1];
         const idx = prev.next_listeners.indexOf(this.next);
@@ -56,7 +55,7 @@ export abstract class Group extends Bloc {
         } else {
             this.jump_back();
         }
-    };
+    }
 
     // Utilisé pour sortir du groupe
     protected jump_next():void {for (const listener of this.next_listeners) listener();}

@@ -6,7 +6,7 @@ import { Bloc } from "../../Bloc";
 import { Memory } from "../../Memory";
 
 export class Flag extends Group implements Launchable {
-    
+    private memory : Memory;
     constructor(e?: Executable | Executable[]) {
         if (!e) {
             super();
@@ -15,11 +15,24 @@ export class Flag extends Group implements Launchable {
         } else {
             super(e);
         }
+        this.memory = Memory.get();
     }
 
     public execute(_list?: Value[]): void {
         super.execute();
-        console.log(Memory.get().getHistory());
+        //console.log(Memory.get().getHistory());
+    }
+
+    public next():void {
+        console.log("next ", this.next_inst);
+        if (this.next_inst >= this.list.length) {this.memory.programEnd(); this.memory.setCurrentInstruction(this.getBaseInstruction());}
+        else super.next();
+    }
+
+    public back():void {
+        console.log("back ", this.next_inst);
+        super.back();
+        if (this.next_inst <= 0) {this.memory.resetCurrentInstruction(); console.log("On est de retour au début");}
     }
 
     onLaunch(): boolean {

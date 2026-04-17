@@ -7,41 +7,6 @@ type StackFrame = {
     variables: Map<string, Value>;
 };
 
-type Action = ValSetAction | BoolSetAction | DefinedAction | CallAction | EndCallAction;
-
-type ValSetAction = {
-    type : "VALSET";
-    name: string;
-    last_value : Value | undefined; 
-    new_value : Value
-};
-type BoolSetAction = {
-    type : "BOOLSET";
-    name: string;
-    last_value :  boolean | undefined; 
-    new_value : boolean
-};
-type DefinedAction = { // Fonctions prédéfinies (donc inversables)
-    type : "INSTRUCTION"
-    name : string; 
-} 
-type CallAction = { // Implique la création d'une frame
-    type : "CALL";
-    name : string; 
-    variables : Map<string, Value>
-} 
-// Il est possible de récréer la frame au lieu de la stocker, a voir
-type EndCallAction = {
-    type : "END";
-    name : string; 
-    frame : StackFrame | undefined
-}
-
-export type StepInfo = {
-    empty: boolean;
-    instName?: string;
-}
-
 export class Memory {
     private static instance: Memory;
 
@@ -50,7 +15,6 @@ export class Memory {
     private fonctions: Map<String, Fonction>;
 
     private callStack: StackFrame[];
-    private history: Action[]; // On stocke chaque action qu'on fait pour pouvoir retourner en arrière
     private historyID:number;
 
     private playing = false;
@@ -62,7 +26,6 @@ export class Memory {
         this.booleans = new Map();
         this.fonctions = new Map();
         this.callStack = [];
-        this.history = [];
         this.historyID = 0;
     }
 
@@ -71,7 +34,6 @@ export class Memory {
         this.booleans = new Map();
         this.fonctions = new Map();
         this.callStack = [];
-        this.history = [];
         this.historyID = 0;
     }
 
@@ -87,14 +49,14 @@ export class Memory {
         if (val instanceof Value) {
             if (this.callStack.length > 0) {
                 const frame = this.callStack[this.callStack.length - 1];
-                this.history.push({type:"VALSET", name:name, last_value:frame.variables.get(name), new_value : val});
+                //this.history.push({type:"VALSET", name:name, last_value:frame.variables.get(name), new_value : val});
                 frame.variables.set(name, val);
             } else {
-                this.history.push({type:"VALSET", name:name, last_value:this.values.get(name), new_value : val});
+                //this.history.push({type:"VALSET", name:name, last_value:this.values.get(name), new_value : val});
                 this.values.set(name, val);
             }
         } else {
-            this.history.push({type:"BOOLSET", name:name, last_value:this.booleans.get(name), new_value : val});
+            //this.history.push({type:"BOOLSET", name:name, last_value:this.booleans.get(name), new_value : val});
             this.booleans.set(name, val);
         }
         //this.historyID += 1;
@@ -118,18 +80,18 @@ export class Memory {
     public newFonctionCall(name: string, map: Map<string, Value>): void {
         if (this.callStack.length >= 100) throw new Error("stack overflow");
         this.callStack.push({funcName: name, variables: map});
-        this.history.push({type:"CALL", name:name, variables:map});
+        //this.history.push({type:"CALL", name:name, variables:map});
         //this.historyID += 1;
     }
     public endFonction(name: string): void {
         if (this.callStack.length > 0) {
-            this.history.push({type:"END", name:name, frame:this.callStack.pop()});
+            //this.history.push({type:"END", name:name, frame:this.callStack.pop()});
             //this.historyID += 1;
         }
     }
 
     public instructionCalled(name:string) {
-        this.history.push({type:"INSTRUCTION", name:name});
+        //this.history.push({type:"INSTRUCTION", name:name});
         //this.historyID += 1;
     }
     
@@ -229,11 +191,16 @@ export class Memory {
         if (this.current_instruction) this.current_instruction.next();
     }
 
+    public programEnd() : void {
+        console.log("On est arrivé à la fin");
+    }
+
     // GETTERS / SETTERS
-    public getHistory():Action[] {return this.history;}
+    //public getHistory():Action[] {return this.history;}
     public isPlaying():boolean {return this.playing;}
     public setPlaying(bool : boolean):void {this.playing = bool;}
-    public setCurrentInstruction(e:Executable):void {this.current_instruction = e; console.log(e);}
+    public resetCurrentInstruction():void {this.current_instruction = undefined;}
+    public setCurrentInstruction(e:Executable):void {this.current_instruction = e;}
 
     // PRINT
     public static print():void {
