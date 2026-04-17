@@ -2,12 +2,14 @@ import { Group } from "../Group";
 import type { Executable } from "../../Executable";
 import type { Launchable } from "../../Launchable";
 import { Memory } from "../../Memory";
+import type { StackFrame } from "../../Memory";
 import { Value } from "../../Valeur/Value";
 import { Bloc } from "../../Bloc";
 
 export class Fonction extends Group implements Launchable {
     private name: string;
     private args?: string[];
+    private stack_list: StackFrame[];
 
     constructor(name: string, eOrList?: Executable | Executable[]) {
         if (!eOrList) {
@@ -18,6 +20,7 @@ export class Fonction extends Group implements Launchable {
             super(eOrList);
         }
         this.name = name;
+        this.stack_list = [];
     }
 
     public execute(list?: Value[]): void {
@@ -32,8 +35,13 @@ export class Fonction extends Group implements Launchable {
     }
 
     protected jump_next(): void {
-        Memory.get().endFonction(this.name);
+        this.stack_list.push(Memory.get().endFonction(this.name));
         super.jump_next();
+    }
+
+    protected jump_back() :void {
+        Memory.get().endFonction(this.name);
+        super.jump_back();
     }
     
     onLaunch(): boolean {
@@ -56,4 +64,10 @@ export class Fonction extends Group implements Launchable {
     getName(): string {
         return this.name;
     }
+
+    getBaseInstruction():Executable{
+        Memory.get().stackComeback(this.stack_list.pop());
+        return super.getBaseInstruction();
+    }
+
 }

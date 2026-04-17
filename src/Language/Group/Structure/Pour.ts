@@ -40,20 +40,17 @@ export class Pour extends Group implements Executable {
 
     public back(): void {
         this.next_inst -= 1;
+        //console.log("back", this.next_inst, " ", this.loop_nb);
         const prev = this.list[(this.next_inst >=0) ? this.next_inst : this.list.length -1];
         const idx = prev.next_listeners.indexOf(this.next);
         const idx2 = prev.back_listeners.indexOf(this.back);
         if (idx !== -1) prev.next_listeners.splice(idx, 1);
         if (idx2 !== -1) prev.back_listeners.splice(idx, 1);
 
-        if (this.next_inst <= 0 && this.loop_nb >1) {this.next_inst = this.list.length; this.loop_nb -=1;}
-        if (this.next_inst > 0) {
-            this.list[this.next_inst-1].next_listeners.push(this.next);
-            this.list[this.next_inst-1].back_listeners.push(this.back);
-            Memory.get().setCurrentInstruction(this.list[this.next_inst-1].getBaseInstruction());
-        } else if (this.loop_nb > 1) {
-            this.jump_back();
-        }
+        if (this.next_inst <= 0 && this.loop_nb > 1) {this.next_inst = this.list.length; this.loop_nb -=1;}
+        if (this.next_inst > 0) Memory.get().setCurrentInstruction(this.getBaseInstruction());
+        else if (this.loop_nb <= 1) this.jump_back();
+        
     }
 
     onLaunch(l: Launchable): boolean {

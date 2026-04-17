@@ -2,6 +2,7 @@ import { Bloc } from "../Bloc";
 import type { Executable } from "../Executable";
 import type { Launchable } from "../Launchable";
 import { Memory } from "../Memory";
+import { Si } from "./Structure/Si";
 
 export abstract class Group extends Bloc {
     protected list: Executable[];
@@ -69,5 +70,16 @@ export abstract class Group extends Bloc {
         }
         return true;
     }
-    getBaseInstruction():Executable{return this.list[this.next_inst-1];}
+    getBaseInstruction():Executable{
+        if (this.next_inst < 1) console.log("merde");
+        if (this.list[this.next_inst-1] instanceof Si) {
+            const si = this.list[this.next_inst - 1] as Si;
+            if (!si.done) {this.next_inst -= 1; return this.getBaseInstruction()};
+        }
+        if (this.list[this.next_inst-1].back_listeners.length === 0 && this.list[this.next_inst-1].next_listeners.length === 0) {
+            this.list[this.next_inst-1].next_listeners.push(this.next);
+            this.list[this.next_inst-1].back_listeners.push(this.back);
+        }
+        return this.list[this.next_inst-1].getBaseInstruction();
+    }
 }

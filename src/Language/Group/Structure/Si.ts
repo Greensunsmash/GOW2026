@@ -5,6 +5,7 @@ import { Booleen } from "../../Booleen/Booleen";
 
 export class Si extends Group implements Executable {
     private bool: Booleen;
+    public done: boolean = false;
 
     constructor(e: Executable | Executable[] | Booleen, boolOptional?: Booleen) {
         if (e instanceof Booleen) {
@@ -20,9 +21,15 @@ export class Si extends Group implements Executable {
     }
 
     public execute(): void {
-        if (this.bool.eval()) this.next();
+        this.done = false;
+        if (this.bool.eval()) {console.log("hey"); this.done = true; this.next();}
         else this.jump_next();
         }
+
+    public back(): void {
+        if (this.done) super.back();
+        else this.jump_back();
+    }
 
     onLaunch(l: Launchable): boolean {
         if (this.bool.onLaunch(l)) return super.onLaunch(l);

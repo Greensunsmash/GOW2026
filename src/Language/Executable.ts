@@ -4,5 +4,5 @@ export interface Executable {
     execute():void;
     next():void;
     back():void;
-    getBaseInstruction():Executable;
+    getBaseInstruction():Executable; // Faire attention avec cette fonction
 }

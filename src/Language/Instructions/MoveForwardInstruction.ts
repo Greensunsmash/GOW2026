@@ -12,14 +12,15 @@ export class MoveForwardInstuction extends Instruction {
     }
 
     async execute() {
+        console.log("forward");
         await this.ctx.getRobot().visualMoveForward();
-        Memory.get().instructionCalled("forward");
         Memory.get().setCurrentInstruction(this);
 
         if (Memory.get().isPlaying()) this.next();
     }
 
     async back() {
+        console.log("reverseForward");
         await this.ctx.getRobot().visualMoveBackward();
         super.back();
     }

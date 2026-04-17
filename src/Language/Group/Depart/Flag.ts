@@ -24,13 +24,13 @@ export class Flag extends Group implements Launchable {
     }
 
     public next():void {
-        console.log("next ", this.next_inst);
+        //console.log("next ", this.next_inst);
         if (this.next_inst >= this.list.length) {this.memory.programEnd(); this.memory.setCurrentInstruction(this.getBaseInstruction());}
         else super.next();
     }
 
     public back():void {
-        console.log("back ", this.next_inst);
+        //console.log("back ", this.next_inst);
         super.back();
         if (this.next_inst <= 0) {this.memory.resetCurrentInstruction(); console.log("On est de retour au début");}
     }
