@@ -11,8 +11,9 @@ export class GridEntity {
     protected idleAnim: AnimationGroup | undefined;
 
     // Coordonnées logiques (compilation)
+    /*
     protected logicalGridPos: GridPoint;
-    protected logicalFacingIndex: number = 0;
+    protected logicalFacingIndex: number = 0; */
 
     // Coordonnées visuelles (exécution de la trace que y a dans Memory)
     protected visualGridPos : GridPoint;
@@ -25,7 +26,7 @@ export class GridEntity {
 
     constructor(drh : AssetLibrary, assetName : string, level : Level, gridPos : GridPoint) {
         this.level = level;
-        this.logicalGridPos = gridPos;
+        //this.logicalGridPos = gridPos;
         this.visualGridPos = gridPos;
         this.initPos = gridPos;
         const pos : Vector3 = GridUtils.toWorld(gridPos);
@@ -40,7 +41,7 @@ export class GridEntity {
     }
 
     // Fonctions LOGIQUES (utiles pour la compilation)
-
+/*
     public logicalMoveForward() {
         const facing = GridUtils.DIRECTIONS[this.logicalFacingIndex];
         this.tryLogicalMove(facing.x, facing.z);
@@ -86,36 +87,33 @@ export class GridEntity {
             }
         );
         return !this.level.isWalkable(targetGridPos);
-    }
+    }*/
 
-    // Déplacements/rotations VISUELS
-
-    async visualMoveForward(force : boolean = false) {
+    // Déplacements/rotations instantannées
+    public moveForward() {
         const facing = GridUtils.DIRECTIONS[this.visualFacingIndex];
-        await this.tryVisualMove(facing.x, facing.z, force);
+        this.tryMove(facing.x, facing.z);
     }
 
-    async visualMoveBackward(force : boolean = false) {
+    public moveBackward() {
         const facing = GridUtils.DIRECTIONS[this.visualFacingIndex];
-        await this.tryVisualMove(-facing.x, -facing.z, force);
+        this.tryMove(-facing.x, -facing.z);
     }
 
-    async visualTurnRight(force : boolean = false) {
+    public turnRight() {
         if (this._isMoving) return;
         // 0 -> 1 -> 2 -> 3 -> 0
         this.visualFacingIndex = (this.visualFacingIndex + 1) % 4;
-        if (force) this.forceRotation(Math.PI / 2);
-        else await this.animateRotation(Math.PI / 2);
+        this.rotation(Math.PI / 2);
     }
 
-    async visualTurnLeft(force : boolean = false) {
+    public turnLeft() {
         if (this._isMoving) return;
         this.visualFacingIndex = (this.visualFacingIndex - 1 + 4) % 4;
-        if (force) this.forceRotation(-Math.PI);
-        else await this.animateRotation(-Math.PI / 2);
+        this.rotation(-Math.PI / 2);
     }
 
-    protected async tryVisualMove(dx: number, dz: number, force : boolean = false) {
+    protected tryMove(dx:number, dz:number) {
         const targetGridPos = GridUtils.add(
             this.visualGridPos,  
             {               // je me battrais jusqu'à la mort
@@ -125,10 +123,60 @@ export class GridEntity {
             }
         );
 
-        if (force) {
-            if (this.level.isWalkable(targetGridPos)) this.forceMove(targetGridPos);
-            else throw new Error("Error: Attempted to force a crash into the wall");
-        } else if (this.level.isWalkable(targetGridPos)) await this.doVisualMove(targetGridPos);
+        if (this.level.isWalkable(targetGridPos)) this.doMove(targetGridPos);
+        else throw new Error("Accident de la route sale chauffard");
+    }
+
+    private doMove(targetGridPos : GridPoint) {
+        this._isMoving = true;
+        this.visualGridPos = targetGridPos;
+        this.mesh.position = GridUtils.toWorld(targetGridPos);
+        for (let i = 0; i < this.posListeners.length; i++) this.posListeners[i](targetGridPos);
+        this._isMoving = false;
+    }
+
+    private rotation(relativeAngle: number){
+        this._isMoving = true;
+        this.mesh.rotation.y = (this.mesh.rotation.y + relativeAngle) % (2 * Math.PI);
+    }
+
+    // Déplacements/rotations VISUELS (animés)
+
+    async visualMoveForward() {
+        const facing = GridUtils.DIRECTIONS[this.visualFacingIndex];
+        await this.tryVisualMove(facing.x, facing.z);
+    }
+
+    async visualMoveBackward() {
+        const facing = GridUtils.DIRECTIONS[this.visualFacingIndex];
+        await this.tryVisualMove(-facing.x, -facing.z);
+    }
+
+    async visualTurnRight() {
+        if (this._isMoving) return;
+        // 0 -> 1 -> 2 -> 3 -> 0
+        this.visualFacingIndex = (this.visualFacingIndex + 1) % 4;
+        await this.animateRotation(Math.PI / 2);
+    }
+
+    async visualTurnLeft() {
+        if (this._isMoving) return;
+        this.visualFacingIndex = (this.visualFacingIndex - 1 + 4) % 4;
+        await this.animateRotation(-Math.PI / 2);
+    }
+
+    protected async tryVisualMove(dx: number, dz: number) {
+        const targetGridPos = GridUtils.add(
+            this.visualGridPos,  
+            {               // je me battrais jusqu'à la mort
+                x: dx,      
+                y: 0, 
+                z: dz
+            }
+        );
+
+        if (this.level.isWalkable(targetGridPos)) await this.doVisualMove(targetGridPos);
+        else throw new Error("Accident de la route sale chauffard");
     }
 
     private async doVisualMove(targetGridPos : GridPoint): Promise<void> {
@@ -166,11 +214,6 @@ export class GridEntity {
         ));
     }
 
-    private forceMove(targetGridPos : GridPoint) : void {
-        this.visualGridPos = targetGridPos;
-        this.mesh.position = GridUtils.toWorld(targetGridPos);
-    }
-
     private async animateRotation(relativeAngle: number): Promise<void> {
         this._isMoving = true;
         const targetAngle = this.mesh.rotation.y + relativeAngle;
@@ -193,10 +236,6 @@ export class GridEntity {
         ));
     }
 
-    private forceRotation(relativeAngle: number): void {
-        this.mesh.rotation.y = this.mesh.rotation.y + relativeAngle;
-    }
-
     private createEasing(): EasingFunction {
         const ease = new CubicEase();
         ease.setEasingMode(EasingFunction.EASINGMODE_EASEINOUT);
@@ -212,8 +251,8 @@ export class GridEntity {
         this.mesh.rotation.y = this.initRotation * (Math.PI / 2);
         this.visualFacingIndex = this.initRotation;
         this.visualGridPos = this.initPos;
-        this.logicalFacingIndex = this.initRotation;
-        this.logicalGridPos = this.initPos;
+        //this.logicalFacingIndex = this.initRotation;
+        //this.logicalGridPos = this.initPos;
     }
 
     public dispose() {

@@ -328,10 +328,8 @@ export class PlayScene extends GameScene {
         this.level.reinitLevel();
         this.canRun = true;
         const prevLeafIndex = this.currentLeaf;
-        //Memory.get().setPlaying(true);
 
         // "Compilation" :
-        // on remplit l'history avec les instructions visuelles à éxécuter
 
         let child_list = this.leftPanel.children;
         let start_block: ListContainer | undefined;
@@ -350,12 +348,7 @@ export class PlayScene extends GameScene {
             else throw new Error("error 406 Il y a eu une erreur au lancement");
         }
 
-        console.log(Memory.get().getHistory());
-
         // Exécution (évidemment c pas fini)
-
-        //while (await this.ctx.nextStep(false) && this.canRun);
-        // et du coup à partir de là c ultra facile de faire du step by step complet
 
         /*
         if (this.canRun && this.currentLeaf == prevLeafIndex) {

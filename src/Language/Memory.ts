@@ -7,6 +7,13 @@ export type StackFrame = {
     variables: Map<string, Value>;
 };
 
+// Explication de l'execution d'un programme.
+// On appelle playScene.run() qui transforme les blocs visuels en blocs logiques.
+// Puis on lance le flag. Chaque bloc à les fonctions next et back, qui servent à se déplacer dans le programme, en appellant les next et back listener
+// On peut savoir à tout moment ou en est le programme avec Current_instruction, et programme end signifie la fin de l'execution.
+// Si playing est vrai, alors le programme se déroule normalement, sinon les fèches peuvent servir à appeler next et back
+// Voilà, le tout n'est pas encore robuste et sécurisé, mais have fun ;) 
+
 export class Memory {
     private static instance: Memory;
 
@@ -15,18 +22,16 @@ export class Memory {
     private fonctions: Map<String, Fonction>;
 
     private callStack: StackFrame[];
-    private historyID:number;
 
-    private playing = false;
+    private playing = true;
     private current_instruction : Executable | undefined;
-    private skip = false;
+    public skip = true;
 
     private constructor() {
         this.values = new Map();
         this.booleans = new Map();
         this.fonctions = new Map();
         this.callStack = [];
-        this.historyID = 0;
     }
 
     clear() {
@@ -34,7 +39,6 @@ export class Memory {
         this.booleans = new Map();
         this.fonctions = new Map();
         this.callStack = [];
-        this.historyID = 0;
     }
 
     // Singleton
@@ -104,7 +108,7 @@ export class Memory {
     }
 
     public programEnd() : void {
-        console.log("On est arrivé à la fin");
+        this.setPlaying(false);
     }
 
     // GETTERS / SETTERS

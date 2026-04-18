@@ -12,14 +12,18 @@ export class MoveBackwardInstuction extends Instruction {
     }
 
     async execute() {
-        await this.ctx.getRobot().visualMoveBackward();
-        Memory.get().setCurrentInstruction(this);
+        const memory = Memory.get();
+        if (memory.skip) this.ctx.getRobot().moveBackward();
+        else await this.ctx.getRobot().visualMoveBackward();
+        memory.setCurrentInstruction(this);
 
-        if (Memory.get().isPlaying()) this.next();
+        if (memory.isPlaying()) this.next();
     }
 
     async back() {
-        await this.ctx.getRobot().visualMoveForward();
+        const memory = Memory.get();
+        if (memory.skip) this.ctx.getRobot().moveForward();
+        else await this.ctx.getRobot().visualMoveForward();
         super.back();
     }
     onLaunch(_l: Launchable): boolean {
