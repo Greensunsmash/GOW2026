@@ -35,4 +35,9 @@ export class Si extends Group implements Executable {
         if (this.bool.onLaunch(l)) return super.onLaunch(l);
         return false;
     }
+
+    getBaseInstruction():Executable{
+        if (!this.done) return this;
+        else return super.getBaseInstruction();
+    }
 }
