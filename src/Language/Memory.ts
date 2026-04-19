@@ -4,15 +4,17 @@ import { Value } from "./Valeur/Value";
 
 export type StackFrame = {
     funcName: string;
-    variables: Map<string, Value>;
+    variables: Map<string, Value | Boolean>;
 };
 
 // Explication de l'execution d'un programme.
 // On appelle playScene.run() qui transforme les blocs visuels en blocs logiques.
 // Puis on lance le flag. Chaque bloc à les fonctions next et back, qui servent à se déplacer dans le programme, en appellant les next et back listener
 // On peut savoir à tout moment ou en est le programme avec Current_instruction, et programme end signifie la fin de l'execution.
-// Si playing est vrai, alors le programme se déroule normalement, sinon les fèches peuvent servir à appeler next et back
+// Si playing est vrai, alors le programme se déroule normalement, sinon les fèches peuvent servir à appeler next et back. Si skip est vrai, il n'y a pas d'anim (utile pour se tp direct à la fin notamment)
 // Voilà, le tout n'est pas encore robuste et sécurisé, mais have fun ;) 
+
+// La séparation du stockage des bools et des values n'a plus vrm de sens actuellement, étant donné que c'est mélangé dans une stack
 
 export class Memory {
     private static instance: Memory;
@@ -25,7 +27,7 @@ export class Memory {
 
     private playing = true;
     private current_instruction : Executable | undefined;
-    public skip = true;
+    public skip = false;
 
     private constructor() {
         this.values = new Map();
@@ -49,7 +51,7 @@ export class Memory {
         return Memory.instance;
     }
 
-    public setVariable(name: string, val: Value | boolean | null): void { // null a pour effet de supprimer la variable
+    public setVariable(name: string, val: Value | Boolean | null): void { // null a pour effet de supprimer la variable
         if (!val) {
             if (this.callStack.length > 0) {
                 const frame = this.callStack[this.callStack.length - 1];
@@ -57,30 +59,39 @@ export class Memory {
             } else {
                 this.values.delete(name);
             }
-        }
-        else if (val instanceof Value) {
+        } else {
             if (this.callStack.length > 0) {
                 const frame = this.callStack[this.callStack.length - 1];
+                if (frame.variables.get(name) instanceof Boolean && val instanceof Value) throw new Error("On mélange pas les bools et les values");
+                if (frame.variables.get(name) instanceof Value && val instanceof Boolean) throw new Error("On mélange pas les bools et les values");
                 frame.variables.set(name, val);
             } else {
-                this.values.set(name, val);
+                if (val instanceof Value) this.values.set(name, val);
+                else this.booleans.set(name, val);
             }
-        } else {
-            this.booleans.set(name, val);
         }
     }
     public getVariableValue(name: string): Value | null{
         for (let i = this.callStack.length - 1; i >= 0; i--) {
             const frame = this.callStack[i];
-            if (frame.variables.has(name)) {
-                return frame.variables.get(name) ?? new Value("Error");
+            const val = frame.variables.get(name);
+            if (val instanceof Value) {
+                return val ?? new Value("Error");
             }
         }
-
         return this.values.get(name) ?? null;
     }
-    // Il faut refaire toute la logique concernant les booleens
-    public getVariableBoolean(name: string): boolean | null {return this.booleans.get(name) ?? null;}
+    
+    public getVariableBoolean(name: string): boolean | null {
+        for (let i = this.callStack.length - 1; i >= 0; i--) {
+            const frame = this.callStack[i];
+            const val = frame.variables.get(name);
+            if (val instanceof Boolean) {
+                return val.valueOf() ?? new Value("Error");
+            }
+        }
+        return this.booleans.get(name) ?? null;
+    }
 
     public setFonction(name: string, func: Fonction): void { this.fonctions.set(name, func);}
     public getFonction(name: string): Fonction | undefined { return this.fonctions.get(name);}
