@@ -1,4 +1,4 @@
-import type { Robot } from "../Entity/Robot"
+import type { MarcoBozo } from "../Entity/Robot"
 
 
 /*

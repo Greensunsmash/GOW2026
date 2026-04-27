@@ -13,9 +13,13 @@ export class MoveForwardInstuction extends Instruction {
 
     async execute() {
         const memory = Memory.get();
+        memory.setCurrentlyMoving(true);
+
         if (memory.skip) this.ctx.getRobot().moveForward();
         else await this.ctx.getRobot().visualMoveForward();
         Memory.get().setCurrentInstruction(this);
+
+        memory.setCurrentlyMoving(false);
 
         if (Memory.get().isPlaying()) this.next();
     }

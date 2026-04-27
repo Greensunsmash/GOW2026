@@ -13,9 +13,11 @@ export class TurnRightInstruction extends Instruction {
 
     async execute(): Promise<void> {
         const memory = Memory.get();
+        memory.setCurrentlyMoving(true);
         if (memory.skip) this.ctx.getRobot().turnRight();
         else await this.ctx.getRobot().visualTurnRight();
         memory.setCurrentInstruction(this);
+        memory.setCurrentlyMoving(false);
 
         if (memory.isPlaying()) this.next();
     }

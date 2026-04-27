@@ -12,6 +12,7 @@ export class BasicInstContainer extends InstructionContainer {
     }
 
     getInstruction(): Instruction {
+        this.instruction.reset();
         return this.instruction;
     }
 }

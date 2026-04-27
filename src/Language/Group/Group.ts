@@ -24,6 +24,7 @@ export abstract class Group extends Bloc {
         this.next_inst = 0;
         this.next();
     }
+    
     public next(): void {
         const prev = this.list[(this.next_inst - 1 >= 0) ? this.next_inst - 1 : this.list.length -1];
         const idx = prev.next_listeners.indexOf(this.next);
@@ -40,6 +41,7 @@ export abstract class Group extends Bloc {
             this.jump_next();
         }
     }
+
     public back():void {
         this.next_inst -= 1;
         const prev = this.list[(this.next_inst >=0) ? this.next_inst : this.list.length -1];

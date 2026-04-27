@@ -4,7 +4,7 @@ import { GridEntity } from "./GridEntity";
 import type { Level } from "../Environment/Level";
 import type { GridPoint } from "../Shared/GridUtils";
 
-export class Robot extends GridEntity {
+export class MarcoBozo extends GridEntity {
     private speed : number = 0.1;
 
 

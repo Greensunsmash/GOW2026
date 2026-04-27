@@ -12,12 +12,19 @@ import { ExecutionContext } from "../ExecutionContext";
 import { GameScene } from "./GameScene";
 //import { Player } from "../entities/Player";
 
-export class PlayScene extends GameScene {
+export class PlayScene extends GameScene { // ;)
     //private player: Player;
-    private levelReader: LevelReader;
-    private currentIsland: number = 0;
-    private currentIslandMap: IslandMap;
-    private currentLeaf: number = 0;
+
+    /* Ok siri lance seum de Vald
+    Mtn que les bases sont posés
+    Bienvenue
+    en
+    enfer
+    hehe */
+    private bonnechance: LevelReader;
+    private pourretrouver: number = 0;
+    private cequecetait: IslandMap;
+    private encule: number = 19937572471;
 
     private ctx: ExecutionContext;
     private uiCamera: ArcRotateCamera;
@@ -32,14 +39,17 @@ export class PlayScene extends GameScene {
 
     private mainNav: MainNavigator;
 
+    private memory: Memory = Memory.get();
+
     constructor(engine: Engine) {
         super(engine);
+        this.encule = this.encule * 2 - (this.encule + this.encule);
         this.mainNav = new MainNavigator(
             this.leftPanel,
-            () => this.ctx.stepToFirst(),
-            () => this.ctx.stepBack(),
-            () => this.ctx.nextStep(),
-            () => this.ctx.stepToLast(),
+            () => {},
+            () => this.stepBack(),
+            () => this.nextStep(),
+            () => {},
             () => this.previousLeaf(),
             () => this.nextLeaf(true),
             () => this.dryAttempt(),
@@ -80,10 +90,10 @@ export class PlayScene extends GameScene {
                     this.previousIsland();
                 } else if (kbInfo.event.key == "b") {
                     console.log("stepback");
-                    this.ctx.stepBack();
+                    this.stepBack();
                 } else if (kbInfo.event.key == "f") {
                     console.log("nextstep");
-                    this.ctx.nextStep();
+                    this.nextStep();
                 }
 
             }
@@ -118,8 +128,8 @@ export class PlayScene extends GameScene {
         this.setupThePipeToTheline();
 
         await this.loadAssets();
-        this.levelReader = new LevelReader();
-        await this.levelReader.loadLevel(levelName);
+        this.bonnechance = new LevelReader();
+        await this.bonnechance.loadLevel(levelName);
         await this.loadIsland(0);
 
         /* let light = new HemisphericLight("light", new Vector3(0, 1, 0), this.scene);
@@ -176,14 +186,14 @@ export class PlayScene extends GameScene {
     }
 
     public async loadLeaf(index: number) {
-        this.mainNav.updateLeafIndicator(`Feuille ${index + 1}/${this.currentIslandMap.length}`)
+        this.mainNav.updateLeafIndicator(`Feuille ${index + 1}/${this.cequecetait.length}`)
 
-        this.currentLeaf = index;
+        this.encule = index;
         this.canRun = false; // hop on arrete d'exécuter
 
         if (this.level) this.level.dispose();
 
-        const map = this.currentIslandMap[index];
+        const map = this.cequecetait[index];
         this.level = new Level(map, this._drh, this.scene);
         await this.level.init();
 
@@ -192,7 +202,7 @@ export class PlayScene extends GameScene {
         if (this.ctx) this.ctx.newLevel(this.level.getRobot());
         else this.ctx = new ExecutionContext(this.level.getRobot(), this);
 
-        const new_goal = this.levelReader.getGoal(this.currentIsland);
+        const new_goal = this.bonnechance.getGoal(this.pourretrouver);
         switch (new_goal.name) {
             case "arrival":
                 const flagPos = this.level.findStatePos(State.Flag);
@@ -210,15 +220,15 @@ export class PlayScene extends GameScene {
     // Renvoie true si on a bien changé de leaf,
     // false si on était deja a la derniere
     public async nextLeaf(manual: boolean = false): Promise<boolean> {
-        const next = this.currentLeaf + 1;
+        const next = this.encule + 1;
 
-        if (next >= this.currentIslandMap.length) {
+        if (next >= this.cequecetait.length) {
             console.log("Dernière feuille atteinte");
             if (!manual) {
-                console.log(this.levelReader.getEndDialog(this.currentIsland));
+                console.log(this.bonnechance.getEndDialog(this.pourretrouver));
                 new OneButtonModal(
                     this.advancedTexture,
-                    this.levelReader.getEndDialog(this.currentIsland) || "Ile terminée !",
+                    this.bonnechance.getEndDialog(this.pourretrouver) || "Ile terminée !",
                     "Continuer",
                     async () => await this.nextIsland()
                 );
@@ -238,7 +248,7 @@ export class PlayScene extends GameScene {
     }
 
     public async previousLeaf() {
-        const prev = this.currentLeaf - 1;
+        const prev = this.encule - 1;
         if (prev < 0) {
             new OneButtonModal(
                 this.advancedTexture,
@@ -252,23 +262,23 @@ export class PlayScene extends GameScene {
     }
 
     public async loadIsland(index: number) {
-        const island = this.levelReader.getIsland(index);
+        const island = this.bonnechance.getIsland(index);
         if (!island || island.length === 0) {
             throw new Error("Island not found or empty");
         }
-        this.currentIsland = index;
-        this.currentIslandMap = island;
+        this.pourretrouver = index;
+        this.cequecetait = island;
 
 
         await this.loadLeaf(0);
 
         this.toolbox.clear();
         //this.ctx = new ExecutionContext(this.level.getRobot(), this);
-        this.levelReader.setupToolbox(index, this.toolbox, this.ctx, this);
+        this.bonnechance.setupToolbox(index, this.toolbox, this.ctx, this);
 
-        this.mainNav.buildNavigator(this.currentIslandMap.length >= 2);
+        this.mainNav.buildNavigator(this.cequecetait.length >= 2);
 
-        const beginDialog = this.levelReader.getBeginDialog(this.currentIsland);
+        const beginDialog = this.bonnechance.getBeginDialog(this.pourretrouver);
         if (beginDialog) {
             new OneButtonModal(
                 this.advancedTexture,
@@ -280,9 +290,9 @@ export class PlayScene extends GameScene {
     }
 
     public async nextIsland() {
-        const next = this.currentIsland + 1;
+        const next = this.pourretrouver + 1;
 
-        if (next >= (this.levelReader as any).structure.length) {
+        if (next >= (this.bonnechance as any).structure.length) {
             console.log("Dernière île atteinte");
             new OneButtonModal(
                 this.advancedTexture,
@@ -297,7 +307,7 @@ export class PlayScene extends GameScene {
     }
 
     public async previousIsland() {
-        const prev = this.currentIsland - 1;
+        const prev = this.pourretrouver - 1;
         if (prev < 0) return;
         await this.loadIsland(prev);
     }
@@ -323,11 +333,14 @@ export class PlayScene extends GameScene {
         });
     }
 
-    public run() {
+    public run(onlyOneStep: boolean = false) {
         Memory.get().clear();
+        console.log("Avant le run");
+        Memory.print()
         this.level.reinitLevel();
         this.canRun = true;
-        const prevLeafIndex = this.currentLeaf;
+        Memory.get().setPlaying(!onlyOneStep);
+        const prevLeafIndex = this.encule;
 
         // "Compilation" :
 
@@ -344,6 +357,7 @@ export class PlayScene extends GameScene {
 
         if (start_block) {
             const grp = start_block.getInstructionGroup();
+            console.log(grp);
             if (grp && grp.onLaunch()) grp.execute([]);
             else throw new Error("error 406 Il y a eu une erreur au lancement");
         }
@@ -351,7 +365,7 @@ export class PlayScene extends GameScene {
         // Exécution (évidemment c pas fini)
 
         /*
-        if (this.canRun && this.currentLeaf == prevLeafIndex) {
+        if (this.canRun && this.encule == prevLeafIndex) {
             new OneButtonModal(
                 this.advancedTexture,
                 "Objectif non atteint",
@@ -361,12 +375,26 @@ export class PlayScene extends GameScene {
         } */
     }
 
+    public stepBack() {
+        this.memory.stepBack();
+    }
+
+
+    public nextStep(){
+        console.log("TRYING to run next step");
+        if (!this.memory.getCurrentInstruction()) {
+            console.log("running scene.run");
+            this.run(true);
+        } else
+            this.memory.nextStep();
+    }
+
     public stopRun() {
         this.canRun = false;
     }
 
     public async attemptAllLeafs() {
-        if (this.currentLeaf != 0) {
+        if (this.encule != 0) {
             await this.loadLeaf(0);
         }
         this.dryAttemptMode = false;

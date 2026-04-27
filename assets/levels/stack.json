@@ -1,0 +1,98 @@
+{
+    /* Ce fichier me sert à stocker mes idées de niveau en vrac, pour pas oublier */
+
+    /* J'aimerai qu'on ait quelque niveau sans fonction avant Sir C, afin de s'habituer et profiter du jeu */
+    /* Ca serait cool que ça utilise les variables */
+    "islands": [
+        {
+            "nb":1,
+            "begin_dialog": "Pour avec si/sinon, a tester mais ne marche pas car plus simple d'esuqiver le si/sinon je crois",
+            "end_dialog" : "Bravo champion",
+            "layouts":[
+                [
+                    [
+                        "  . ",
+                        "....",
+                        "....",
+                        "....",
+                        "....",
+                        "...."
+                    ],
+                    [
+                        "  @ ",
+                        " x  ",
+                        " # #",
+                        "    ",
+                        "    ",
+                        "  O "
+                    ]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right"
+                ],
+                "structures": [
+                    "for",
+                    "if",
+                    "else"
+                ],
+                "start": [
+                    "start"
+                ]
+            },
+            "goal": {
+                "name": "arrival"
+            }
+        },
+        {
+            "nb":1,
+            "begin_dialog": "Grosse spirale, faisable a priori avec un for, un while (ou fonction récursive si on a). variable indispensable",
+            "end_dialog" : "Bravo champion",
+            "layouts":[
+                [
+                    [
+                        ".....",
+                        ".   .",
+                        ". . .",
+                        ". ...",
+                        ".    ",
+                        ".    "
+                    ],
+                    [
+                        "     ",
+                        "     ",
+                        "  @  ",
+                        "     ",
+                        "     ",
+                        "x    "
+                    ]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right"
+                ],
+                "structures": [
+                    "for",
+                    "while",
+                    "if",
+                    "else"
+                ],
+                "start": [
+                    "start"
+                ]
+            },
+            "goal": {
+                "name": "arrival"
+            }
+        }
+        
+    ]
+}

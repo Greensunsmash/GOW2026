@@ -1,3 +1,4 @@
+import { TimerState } from "@babylonjs/core";
 import type { Executable } from "./Executable";
 import type { Fonction } from "./Group/Depart/Fonction";
 import { Value } from "./Valeur/Value";
@@ -26,8 +27,9 @@ export class Memory {
     private callStack: StackFrame[];
 
     private playing = true;
-    private current_instruction : Executable | undefined;
+    private current_instruction: Executable | undefined;
     public skip = false;
+    public currentlyMoving = false;
 
     private constructor() {
         this.values = new Map();
@@ -41,6 +43,7 @@ export class Memory {
         this.booleans = new Map();
         this.fonctions = new Map();
         this.callStack = [];
+        this.current_instruction = undefined;
     }
 
     // Singleton
@@ -71,7 +74,7 @@ export class Memory {
             }
         }
     }
-    public getVariableValue(name: string): Value | null{
+    public getVariableValue(name: string): Value | null {
         for (let i = this.callStack.length - 1; i >= 0; i--) {
             const frame = this.callStack[i];
             const val = frame.variables.get(name);
@@ -81,7 +84,7 @@ export class Memory {
         }
         return this.values.get(name) ?? null;
     }
-    
+
     public getVariableBoolean(name: string): boolean | null {
         for (let i = this.callStack.length - 1; i >= 0; i--) {
             const frame = this.callStack[i];
@@ -93,45 +96,47 @@ export class Memory {
         return this.booleans.get(name) ?? null;
     }
 
-    public setFonction(name: string, func: Fonction): void { this.fonctions.set(name, func);}
-    public getFonction(name: string): Fonction | undefined { return this.fonctions.get(name);}
-    
+    public setFonction(name: string, func: Fonction): void { this.fonctions.set(name, func); }
+    public getFonction(name: string): Fonction | undefined { return this.fonctions.get(name); }
+
     public newFonctionCall(name: string, map: Map<string, Value>): void {
         if (this.callStack.length >= 100) throw new Error("stack overflow");
-        this.callStack.push({funcName: name, variables: map});
+        this.callStack.push({ funcName: name, variables: map });
     }
     public endFonction(name: string): StackFrame | null {
         if (this.callStack.length > 0) return this.callStack.pop(); // error askip mais non vu que j'ai verif juste avant
         return null
     }
-    public stackComeback(bg : StackFrame):void {
+    public stackComeback(bg: StackFrame): void {
         this.callStack.push(bg);
     }
-    
-    public stepBack() : void {
-        console.log(this.current_instruction);
+
+    public stepBack(): void {
+        if (this.currentlyMoving || this.isPlaying()) return;
         this.current_instruction?.back();
-        Memory.print();
+        //Memory.print();
     }
-    public nextStep() : void {
+    public nextStep(): void {
+        if (this.currentlyMoving || this.isPlaying()) return;
         if (this.current_instruction) this.current_instruction.next();
-        Memory.print();
+        //Memory.print();
     }
 
-    public programEnd() : void {
+    public programEnd(): void {
         this.setPlaying(false);
     }
 
     // GETTERS / SETTERS
-    public isPlaying():boolean {return this.playing;}
-    public setPlaying(bool : boolean):void {this.playing = bool;}
-    public resetCurrentInstruction():void {this.current_instruction = undefined;}
-    public setCurrentInstruction(e:Executable):void {this.current_instruction = e;}
+    public isPlaying(): boolean { return this.playing; }
+    public setPlaying(bool: boolean): void { this.playing = bool; }
+    public resetCurrentInstruction(): void { this.current_instruction = undefined; }
+    public setCurrentInstruction(e: Executable): void { this.current_instruction = e; }
+
+    public setCurrentlyMoving(isMoving: boolean) { this.currentlyMoving = isMoving; }
+
+    public getCurrentInstruction() {return this.current_instruction;}
 
     // PRINT
-    public static print():void {
-        const mem = Memory.get();
-        console.log("Memory :", mem.callStack)
-    }
+    public static print(): void { const mem = Memory.get(); console.log("Memory :", mem.callStack, mem.current_instruction); }
 }
 

@@ -1,4 +1,4 @@
-import type { Robot } from "../Entity/Robot";
+import type { MarcoBozo } from "../Entity/Robot";
 import type { PlayScene } from "./Scene/PlayScene";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
 import { Memory, type StepInfo } from "../Language/Memory";
@@ -12,21 +12,21 @@ export type GoalArgs = ArrivalGoalArgs;
 export type Goal = {name: GoalName, args: GoalArgs};
 
 export class ExecutionContext {
-    private robot: Robot;
+    private robot: MarcoBozo;
     private scene: PlayScene;
     private memory: Memory;
 
-    constructor(robot: Robot, scene: PlayScene) {
+    constructor(robot: MarcoBozo, scene: PlayScene) {
         this.robot = robot;
         this.scene = scene;
         this.memory = Memory.get();
     }
 
-    public getRobot(): Robot {
+    public getRobot(): MarcoBozo {
         return this.robot;
     }
 
-    public newLevel(robot: Robot) {
+    public newLevel(robot: MarcoBozo) {
         this.robot.posListeners = [];
         this.robot = robot;
     }
@@ -64,70 +64,5 @@ export class ExecutionContext {
             default:
                 break;
         }
-    }
-
-    public stepBack() {
-       this.memory.stepBack();
-        /*if (stepInfo.empty) {
-            console.log("no further step back");
-            return false;
-        }
-        switch (stepInfo.instName) {
-            case "forward": 
-                this.getRobot().visualMoveBackward(true);
-                console.log("b");
-                break;
-            case "backward": 
-                this.getRobot().visualMoveForward(true);
-                console.log("f");
-                break;
-            case "left": 
-                this.getRobot().visualTurnRight(true);
-                console.log("r");
-                break;
-            case "right": 
-                this.getRobot().visualTurnLeft(true);
-                console.log("l");
-                break;
-        }
-        Memory.print();
-        return true;*/
-    }
-
-    public stepToFirst() {
-        while (this.stepBack());
-    }
-
-    public async nextStep(instantMove: boolean = true): Promise<boolean> {
-        this.memory.nextStep();
-        /*const stepInfo: StepInfo = this.memory.nextStep();
-        if (stepInfo.empty) {
-            console.log("no further step");
-            return false;
-        }
-        switch (stepInfo.instName) {
-            case "forward": 
-                await this.getRobot().visualMoveForward(instantMove);
-                console.log("f");
-                break;
-            case "backward": 
-                await this.getRobot().visualMoveBackward(instantMove);
-                console.log("b");
-                break;
-            case "left": 
-                await this.getRobot().visualTurnLeft(instantMove);
-                console.log("l");
-                break;
-            case "right": 
-                await this.getRobot().visualTurnRight(instantMove);
-                console.log("r");
-                break;
-        }
-        Memory.print();*/
-        return true;
-    }
-
-    public async stepToLast() {
-        while (await this.nextStep(true));
     }
 }

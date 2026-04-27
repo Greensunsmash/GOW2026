@@ -1,5 +1,5 @@
 import { Color3, CubeTexture, MeshBuilder, PBRMaterial, StandardMaterial, Texture, TransformNode, Vector3, type Scene } from "@babylonjs/core";
-import { Robot } from "../Entity/Robot";
+import { MarcoBozo } from "../Entity/Robot";
 import type { AssetLibrary } from "../Shared/AssetLibrary";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
 import { State, type Map3 } from "./LevelReader";
@@ -11,7 +11,7 @@ export class Level {
     private map: Map3;
     private readonly drh: AssetLibrary;
     private readonly scene: Scene;
-    private robot?: Robot;
+    private robot?: MarcoBozo;
     private meshes: TransformNode[] = [];
 
     constructor(map: Map3, drh: AssetLibrary, scene: Scene) {
@@ -56,8 +56,8 @@ export class Level {
         }
     }
 
-    private createRobot(gridPos: GridPoint): Robot {
-        return new Robot(this.drh, this.scene, this, gridPos);
+    private createRobot(gridPos: GridPoint): MarcoBozo {
+        return new MarcoBozo(this.drh, this.scene, this, gridPos);
     }
 
     private createGround(pos: Vector3): TransformNode {
@@ -77,7 +77,7 @@ export class Level {
     }
 
 
-    public getRobot(): Robot {
+    public getRobot(): MarcoBozo {
         if (!this.robot)
             throw new Error("this level doesnt have any robot.");
         return this.robot;

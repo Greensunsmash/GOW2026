@@ -209,6 +209,7 @@ export class GridEntity {
                     anim.stop();
                 if (this.idleAnim)
                     this.idleAnim.play(true);
+                console.log("ending dovisualmove");
                 resolve();
             }
         ));

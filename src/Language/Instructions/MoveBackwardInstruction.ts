@@ -13,18 +13,30 @@ export class MoveBackwardInstuction extends Instruction {
 
     async execute() {
         const memory = Memory.get();
+
+        // se deplace
+        memory.setCurrentlyMoving(true);
+
         if (memory.skip) this.ctx.getRobot().moveBackward();
         else await this.ctx.getRobot().visualMoveBackward();
         memory.setCurrentInstruction(this);
+
+        // stop le deplacement
+        memory.setCurrentlyMoving(false);
 
         if (memory.isPlaying()) this.next();
     }
 
     async back() {
         const memory = Memory.get();
+
+        memory.setCurrentlyMoving(true);
+
         if (memory.skip) this.ctx.getRobot().moveForward();
         else await this.ctx.getRobot().visualMoveForward();
         super.back();
+
+        memory.setCurrentlyMoving(false);
     }
     onLaunch(_l: Launchable): boolean {
         return true;
