@@ -153,19 +153,49 @@ export class ListContainer extends GUI.Rectangle {
                     let toMove: InstructionContainer[] = []; // Les blocs qu'on va déplacer
                     let structToMove: StructureContainer[] = []; // Les structures qu'on va déplacer
 
+                    const resolveSliceEnd = (structure: StructureContainer, start: number) => {
+                        const mid = structure.getMid?.();
+                        const midID = mid !== undefined && mid !== null ? structure.getMidID() : null;
+                        const queueID = structure.getQueueID();
+
+                        if (midID !== null) {
+                            if (start < midID) return midID;
+                            return queueID;
+                        }
+                        return queueID;
+                    };
+
                     if (s.length === 1) { // Si le bloc n'appartient qu'à une seule structure
-                        toMove = this.list.slice(nb, s[0].getQueueID()).filter(
+                        const end = resolveSliceEnd(s[0], nb);
+
+                        toMove = this.list.slice(nb, end).filter(
                             (x) => x instanceof InstructionContainer
                         );
-                        structToMove = this.structureList.filter((x) => x.getHeaderID() >= nb && x.getQueueID() < s[0].getQueueID());
+                        
+                        structToMove = this.structureList.filter((x) => {
+                            const mid = x.getMid?.();
+                            const midID = mid !== undefined && mid !== null ? x.getMidID() : null;
+                            const upperBound = midID !== null && nb < midID ? midID : x.getQueueID();
+
+                            return x.getHeaderID() >= nb && x.getHeaderID() < upperBound;
+                        });
                     }
                     else if (s.length > 1) { // Si le bloc appartient à plusieurs structure, on choisit la bonne
                         s.sort((x, y) => y.getHeaderID() - x.getHeaderID());
 
-                        toMove = this.list.slice(nb, s[0].getQueueID()).filter(
+                        const end = resolveSliceEnd(s[0], nb);
+
+                        toMove = this.list.slice(nb, end).filter(
                             (x) => x instanceof InstructionContainer
                         );
-                        structToMove = this.structureList.filter((x) => x.getHeaderID() >= nb && x.getQueueID() < s[0].getQueueID());
+
+                        structToMove = this.structureList.filter((x) => {
+                            const mid = x.getMid?.();
+                            const midID = mid !== undefined && mid !== null ? x.getMidID() : null;
+                            const upperBound = midID !== null && nb < midID ? midID : x.getQueueID();
+
+                            return x.getHeaderID() >= nb && x.getHeaderID() < upperBound;
+                        });
                     }
                     else { // Si ça n'appartient pas à une structure
                         toMove = this.list.slice(nb).filter(
