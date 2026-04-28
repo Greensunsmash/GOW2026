@@ -144,9 +144,9 @@ export class ListContainer extends GUI.Rectangle {
                 else { // Sinon, il va falloir séparer en 2
                     l = new ListContainer(this.root, this.scene);
 
-                    // Si on a cliqué sur la fin d'une structure, alors c'est comme si c'était le début de cette structure
+                    // Si on a cliqué sur la fin ou le milieu d'une structure, alors c'est comme si c'était le début de cette structure
                     const save = nb;
-                    const s2 = this.structureList.filter((x) => x.getQueue() === this.list[nb]);
+                    const s2 = this.structureList.filter((x) => x.getQueue() === this.list[nb] || x.getMid() === this.list[nb]);
                     if (s2.length === 1) nb = s2[0].getHeaderID();
 
                     let s = this.structureList.filter((x) => x.contains(nb));
@@ -354,9 +354,17 @@ export class ListContainer extends GUI.Rectangle {
                 let struct = this.checkHeaders(instruction);
                 if (struct) {
                     // On entre dans une boucle, on rappelle donc cette fonction pour obtenir tout ce qui est dedans
-                    let len = struct.getQueueID() - struct.getHeaderID() - 1;
-                    exeGroup.push(struct.getGroup(this.getInstructionList(struct.getHeaderID() + 1, len))); // et on le renvoie sous forme d'un groupe
-                    i += len + 1;
+                    const mid = struct.getMidID();
+                    if (mid) { // Si il est en 2 parties, comme si sinon par exemple
+                        let len1 = mid - struct.getHeaderID() - 1;
+                        let len2 = struct.getQueueID() - mid - 1;
+                        exeGroup.push(struct.getGroup(this.getInstructionList(struct.getHeaderID() + 1, len1), this.getInstructionList(mid + 1, len2)));
+                        i += len1 + len2 + 2;
+                    } else {
+                        let len = struct.getQueueID() - struct.getHeaderID() - 1;
+                        exeGroup.push(struct.getGroup(this.getInstructionList(struct.getHeaderID() + 1, len))); // et on le renvoie sous forme d'un groupe
+                        i += len + 1;
+                    }
                 } else exeGroup.push(instruction.getInstruction());
             }
         }

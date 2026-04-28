@@ -36,7 +36,9 @@
         ],
         "structures": [
           "for",
-          "if"
+          "if",
+          "while",
+          "elif"
         ],
         "booleans": [
           "true",

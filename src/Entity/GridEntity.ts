@@ -40,46 +40,10 @@ export class GridEntity {
             this.idleAnim.play(true);
     }
 
-    // Fonctions LOGIQUES (utiles pour la compilation)
-/*
-    public logicalMoveForward() {
-        const facing = GridUtils.DIRECTIONS[this.logicalFacingIndex];
-        this.tryLogicalMove(facing.x, facing.z);
-    }
-
-    public logicalMoveBackward() {
-        console.log("hey");
-        const facing = GridUtils.DIRECTIONS[this.logicalFacingIndex];
-        this.tryLogicalMove(-facing.x, -facing.z);
-    }
-
-    protected tryLogicalMove(dx: number, dz: number) {
-        const targetGridPos = GridUtils.add(
-            this.logicalGridPos,  
-            {               // je me battrais jusqu'à la mort
-                x: dx,      
-                y: 0, 
-                z: dz
-            }
-        );
-
-        if (this.level.isWalkable(targetGridPos)) 
-            this.logicalGridPos = targetGridPos;
-    }
-
-    public logicalTurnRight() {
-        // 0 -> 1 -> 2 -> 3 -> 0
-        this.logicalFacingIndex = (this.logicalFacingIndex + 1) % 4;
-    }
-
-    public logicalTurnLeft() {
-        this.logicalFacingIndex = (this.logicalFacingIndex - 1 + 4) % 4;
-    }
-
     public obstacleAhead(): boolean {
-        const facing = GridUtils.DIRECTIONS[this.logicalFacingIndex];
+        const facing = GridUtils.DIRECTIONS[this.visualFacingIndex];
         const targetGridPos = GridUtils.add(
-            this.logicalGridPos,
+            this.visualGridPos,
             {
                 x: facing.x,
                 y: 0,
@@ -87,7 +51,7 @@ export class GridEntity {
             }
         );
         return !this.level.isWalkable(targetGridPos);
-    }*/
+    }
 
     // Déplacements/rotations instantannées
     public moveForward() {

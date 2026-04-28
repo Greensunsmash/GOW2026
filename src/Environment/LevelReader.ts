@@ -28,6 +28,8 @@ import type { ExecutionContext, Goal } from "../MainLoop/ExecutionContext";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { ASSETS_ROOT } from "../Shared/Constants";
 import type { BooleanBlock, CategoryFactories, InstructionBlock, OpBlock, SensorBlock, StructureBlock } from "../Shared/types";
+import { TantQueContainer } from "../Containers/Prefabs/TantQueContainer";
+import { SinonContainer } from "../Containers/Prefabs/SinonContainer";
 
 export const State = { // Proposition, avoir différents symboles pour différetentes orientations : L = robot left, R = robot right etc
     Empty: " ",
@@ -171,6 +173,25 @@ export class LevelReader {
             l.addStruct(si);
             return l;
             },
+
+            while: (root) => {
+                const l = new ListContainer(root, scene);
+                const tantque = new TantQueContainer(l, root, scene);
+                l.addInstruction(tantque.getQueue(), 0);
+                l.addInstruction(tantque.getHeader(), 0);
+                l.addStruct(tantque);
+                return l;
+            },
+
+            elif: (root) => {
+                const l = new ListContainer(root, scene);
+                const sinon = new SinonContainer(l, root, scene);
+                l.addInstruction(sinon.getQueue(), 0);
+                l.addInstruction(sinon.getMid(), 0); // C'est un sinon tout va bien
+                l.addInstruction(sinon.getHeader(), 0);
+                l.addStruct(sinon);
+                return l;
+            }
         };
 
         const booleans: CategoryFactories<BooleanBlock> = {
