@@ -28,6 +28,7 @@ import type { ExecutionContext, Goal } from "../MainLoop/ExecutionContext";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { ASSETS_ROOT } from "../Shared/Constants";
 import type { BooleanBlock, CategoryFactories, InstructionBlock, OpBlock, SensorBlock, StructureBlock } from "../Shared/types";
+import { PickupInstruction } from "../Language/Instructions/PickupInstruction";
 
 export const State = { // Proposition, avoir différents symboles pour différetentes orientations : L = robot left, R = robot right etc
     Empty: " ",
@@ -35,8 +36,11 @@ export const State = { // Proposition, avoir différents symboles pour différet
     Wall: "#",
     Ground: ".",
     Flag: "x",
-    GodHimself: "^"
+    GodHimself: "^",
+    Item: "!"
 } as const;
+
+export type ItemType = typeof State.Item;
 
 export type State = typeof State[keyof typeof State];
 export type Map2 = State[][];
@@ -53,7 +57,7 @@ export class LevelReader {
     private structure : IslandMap[] = [];
     private blockset: IslandBlockset[] = [];
     private blockLimit: (number | null)[] = [];
-    private goals: Goal[] = [];
+    private goals: Goal[][] = [];
     private beginDialog: (string | null)[] = [];
     private endDialog: (string | null)[] =  [];
 
@@ -115,7 +119,7 @@ export class LevelReader {
         }
     }
 
-    public getGoal(nb: number): Goal {
+    public getGoalsForIsland(nb: number): Goal[] {
         return this.goals[nb];
     }
 
@@ -147,6 +151,9 @@ export class LevelReader {
 
             right: (root) =>
             new BasicInstContainer("Tourner à droite", new TurnRightInstruction(ctx), root, scene),
+
+            pickup: (root) =>
+            new BasicInstContainer("Ramasser l'objet", new PickupInstruction(ctx), root, scene),
 
             print: (root) =>
             new PrintContainer(root, scene),

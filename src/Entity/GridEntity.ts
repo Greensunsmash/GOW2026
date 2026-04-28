@@ -124,7 +124,7 @@ export class GridEntity {
         );
 
         if (this.level.isWalkable(targetGridPos)) this.doMove(targetGridPos);
-        else throw new Error("Accident de la route sale chauffard");
+        //else throw new Error("Accident de la route sale chauffard");
     }
 
     private doMove(targetGridPos : GridPoint) {
@@ -176,7 +176,8 @@ export class GridEntity {
         );
 
         if (this.level.isWalkable(targetGridPos)) await this.doVisualMove(targetGridPos);
-        else throw new Error("Accident de la route sale chauffard");
+        //else throw new Error("Accident de la route sale chauffard");
+        // (remplacer par quelque chose de moins explosif mdr)
     }
 
     private async doVisualMove(targetGridPos : GridPoint): Promise<void> {

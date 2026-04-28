@@ -9,6 +9,7 @@ import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { VarValueContainer } from "../Containers/Prefabs/VarValueContainer";
 import { SetVarContainer } from "../Containers/Prefabs/SetVarContainer";
 import { OneButtonModal } from "./windows/OneButtonModal";
+import type { PlayScene } from "../MainLoop/Scene/PlayScene";
 
 /*
 La bôite à boîtes,
@@ -21,12 +22,12 @@ export class OutilsBox extends Rectangle {
     private buttons : Button[] = [];
     private vars: string[] = [];
     private varPanel: StackPanel;
-    private readonly scene: GameScene;
+    private readonly scene: PlayScene;
     private readonly root: Container;
     private templateRegistry = new Map<string, Set<string>>();
     private blockLimit: number | null = null;
 
-    constructor(root: Container, scene: GameScene) {
+    constructor(root: Container, scene: PlayScene) {
         super();
         this.root = root;
         this.scene = scene;
@@ -237,7 +238,9 @@ export class OutilsBox extends Rectangle {
 
             // quand l'user va cliquer sur le bloc factice
             facticeBlock.onPointerDownObservable.add((evt) => {
-                if (this.blockLimit) {
+                if (this.blockLimit
+                    && ((realBlock instanceof ListContainer) || (realBlock instanceof InstructionContainer))
+                ) {
                     //console.log("block count is " + this.scene.blockCount);
                     if (this.scene.blockCount >= this.blockLimit) {
                         new OneButtonModal(
@@ -250,8 +253,6 @@ export class OutilsBox extends Rectangle {
                     }
                 }
 
-                this.scene.blockCount++;
-                console.log("adding 1 block, count is now ", this.scene.blockCount);
                 // on build le bloc réel
                 const realDragBlock = buildBlock(this.root);
 
@@ -263,17 +264,19 @@ export class OutilsBox extends Rectangle {
                 // on agit différemment selon le type de blocs
                 // si c'est une List (donc probablement une structure)
                 if (realDragBlock instanceof ListContainer) {
+                    this.scene.updateInstructionCount?.();
                     // on se contente de la mettre au bon endroit
                     realDragBlock.leftInPixels = absoluteLeft;
                     realDragBlock.topInPixels = absoluteTop;
                     // et de transmettre le clic pour trigger le drag
                     realDragBlock.click(evt.x, evt.y, true);
                 // si c'est une instruction
-                } else if (realDragBlock instanceof InstructionContainer) {
+                } else if (realDragBlock instanceof InstructionContainer) {  
                     // on l'encadre dans une liste,
                     // elle peut pas existe rseule
                     const listCtn = new ListContainer(this.root, this.scene);
                     listCtn.addInstruction(realDragBlock, 0);
+                    this.scene.updateInstructionCount?.();
                     
                     listCtn.leftInPixels = absoluteLeft;
                     listCtn.topInPixels = absoluteTop;

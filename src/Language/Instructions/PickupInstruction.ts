@@ -3,7 +3,7 @@ import type { Launchable } from "../Launchable";
 import { Memory } from "../Memory";
 import { Instruction } from "./Instruction";
 
-export class MoveForwardInstuction extends Instruction {
+export class PickupInstruction extends Instruction {
     private ctx: ExecutionContext;
 
     constructor(ctx: ExecutionContext) {
@@ -15,8 +15,7 @@ export class MoveForwardInstuction extends Instruction {
         const memory = Memory.get();
         memory.setCurrentlyMoving(true);
 
-        if (memory.skip) this.ctx.getRobot().moveForward();
-        else await this.ctx.getRobot().visualMoveForward();
+        await this.ctx.getRobot().pickupItem();
         Memory.get().setCurrentInstruction(this);
 
         memory.setCurrentlyMoving(false);
@@ -27,8 +26,7 @@ export class MoveForwardInstuction extends Instruction {
     async back() {
         const memory = Memory.get();
         memory.setCurrentlyMoving(true);
-        if (memory.skip) this.ctx.getRobot().moveBackward();
-        else await this.ctx.getRobot().visualMoveBackward();
+        await this.ctx.getRobot().leaveItem();
         super.back();
         memory.setCurrentlyMoving(false);
     }

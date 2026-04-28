@@ -4,6 +4,7 @@
     {"file": "level1.json", "name": "Une intro bien assaisonnée"},
     {"file": "level2.json", "name": "C'est quoi des boucles ?"},
     {"file": "level3.json", "name": "Ca se complique..."},
-    {"file": "level4.json", "name": "C'est quoi un if ?"}
+    {"file": "level4.json", "name": "C'est quoi un if ?"},
+    {"file": "test_items.json", "name": "Ramasse tes poubelles."}
   ] 
 }

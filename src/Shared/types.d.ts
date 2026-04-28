@@ -13,6 +13,7 @@ type InstructionBlock =
   | "backward"
   | "left"
   | "right"
+  | "pickup"
   | "print";
 
 type StructureBlock = "for" | "if";

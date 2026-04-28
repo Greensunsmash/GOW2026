@@ -222,7 +222,8 @@ export class ListContainer extends GUI.Rectangle {
                         l.parent?.removeControl(l);
                         l.isDragging = false;
                         l.dispose();
-                        this.scene.blockCount--;
+                        // on compte le nb de blocs dans la liste 
+                      this.scene.updateInstructionCount?.();
                         this.scene.setDragging(false);
                         return;
                     }
@@ -346,8 +347,9 @@ export class ListContainer extends GUI.Rectangle {
     }
 
     // Recursive pour renvoyer par groupe les instructions
-    getInstructionList(first: number, length: number): Executable[] {
+    getInstructionList(first: number, length?: number): Executable[] {
         let exeGroup: Executable[] = [];
+        if (length === undefined) length = this.list.length;
         for (let i = first; i < length + first; i++) {
             let instruction = this.list[i];
             if (instruction instanceof InstructionContainer) {
@@ -361,6 +363,17 @@ export class ListContainer extends GUI.Rectangle {
             }
         }
         return exeGroup;
+    }
+
+    getInstructionCount(): number {
+        let count = 0;
+        for (const item of this.list) {
+            if (item instanceof FlagContainer) continue;
+            if (!(item instanceof InstructionContainer)) continue;
+            if (this.structureList.some(s => s.getQueue() === item)) continue; // pour pas compter les struct en double
+            count += 1;
+        }
+        return count;
     }
 
     // Vérifie si l'instructionContainer est le début d'une structure

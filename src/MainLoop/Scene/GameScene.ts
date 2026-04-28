@@ -29,6 +29,7 @@ export abstract class GameScene extends BaseScene {
     protected _drh : AssetLibrary;
     protected _isLoaded : boolean = false;
 
+
     constructor(engine: Engine) {
         super(engine);
 
@@ -113,5 +114,5 @@ export abstract class GameScene extends BaseScene {
         return this.toolbox;
     }
     
-    
+    public updateInstructionCount?(): void;
 }

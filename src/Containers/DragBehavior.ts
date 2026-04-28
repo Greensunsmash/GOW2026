@@ -77,7 +77,7 @@ export class DragBehavior {
         this.target.isHitTestVisible = true;
         const toolbox = this.scene.getToolbox();
         if (this.isDragging && toolbox.contains(this.lastX, this.lastY)) {
-            this.scene.blockCount--;
+            this.scene.updateInstructionCount?.();
             this.target.parent?.removeControl(this.target);
             this.target.dispose();
         }

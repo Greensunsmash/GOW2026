@@ -3,10 +3,11 @@ import type { AssetLibrary } from "../Shared/AssetLibrary";
 import { GridEntity } from "./GridEntity";
 import type { Level } from "../Environment/Level";
 import type { GridPoint } from "../Shared/GridUtils";
+import type { ItemType } from "../Environment/LevelReader";
 
 export class MarcoBozo extends GridEntity {
     private speed : number = 0.1;
-
+    private carriedItem: ItemType | null = null;
 
     constructor(drh : AssetLibrary, scene : Scene, level : Level, gridPos : GridPoint) {
        super(drh, "robot", level, gridPos);
@@ -39,5 +40,26 @@ export class MarcoBozo extends GridEntity {
                 if (key === "q") this.visualTurnLeft();
             }
         });
+    }
+
+    override reinit(): void {
+        this.carriedItem = null;
+        super.reinit();
+    }
+
+    async pickupItem() {
+        const itemAtPos = this.level.getItemAt(this.visualGridPos);
+        itemAtPos?.setDisplay(false);
+        this.carriedItem = itemAtPos?.getType() ?? null;
+        console.log("robot now carries : ", this.carriedItem);
+    }
+
+    async leaveItem() {
+        this.carriedItem = null;
+        console.log("robot now doesnt carry anything anymore");
+    }
+
+    getCarriedItem(): ItemType | null {
+        return this.carriedItem;
     }
 }

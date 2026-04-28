@@ -1,15 +1,19 @@
 import type { MarcoBozo } from "../Entity/Robot";
-import type { PlayScene } from "./Scene/PlayScene";
+import type { ItemType, State } from "../Environment/LevelReader";
+import { Memory } from "../Language/Memory";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
-import { Memory, type StepInfo } from "../Language/Memory";
-import { OneButtonModal } from "../MRGUI/windows/OneButtonModal";
+import type { PlayScene } from "./Scene/PlayScene";
 
-export type GoalName = "arrival";
 
 export type ArrivalGoalArgs = {flagPos: GridPoint};
-export type GoalArgs = ArrivalGoalArgs;
+export type PickupGoalArgs = {itemType: ItemType};
+export type PickupBringGoalArgs = {bringPos: GridPoint, itemType: ItemType};
+export type GoalArgs = ArrivalGoalArgs | PickupGoalArgs | PickupBringGoalArgs;
 
-export type Goal = {name: GoalName, args: GoalArgs};
+export type Goal =
+    | { name: "arrival"; args: ArrivalGoalArgs }
+    | { name: "pickup"; args: PickupGoalArgs }
+    | { name: "pickup_and_bring"; args: PickupBringGoalArgs };
 
 export class ExecutionContext {
     private robot: MarcoBozo;
@@ -31,38 +35,31 @@ export class ExecutionContext {
         this.robot = robot;
     }
 
-    private async onGoalReached() {
-        this.scene.stopRun();
-        if (this.scene.isDryAttempt()) {
-            console.log("dry attempt success");
-            new OneButtonModal(
-                this.scene.advancedTexture,
-                "Objectif atteint",
-                "Fermer",
-                () => {}
-            );
-        } else {
-            const isAnotherLeafLeft = await this.scene.nextLeaf();
-            // si je mets pas ce delay ca marche pas..
-            // a investiguer 
-            //await new Promise((rs, rj) => setTimeout(rs, 500));
-            if (isAnotherLeafLeft)
-                this.scene.scene.onAfterRenderObservable.addOnce(async () => await this.scene.run());
-        }
-    }
-
-    public setGoal(goal: Goal) {
-        switch (goal.name) {
-            case "arrival":
-                this.robot.posListeners.push((pos: GridPoint) => {
-                    if (GridUtils.equals(pos, goal.args.flagPos)) {
-                        console.log("here");
-                        this.onGoalReached();
-                    }
-                });
-                break;
-            default:
-                break;
-        }
+    public setGoals(goals: Goal[]) {
+        console.log(goals);
+        this.memory.setOnProgramEnd(() => {
+            let unreached: boolean = false;
+            for (const goal of goals) {
+                switch (goal.name) {
+                    case "arrival":
+                        const robotPos = this.robot.getVisualGridPos();
+                        if (!GridUtils.equals(robotPos, goal.args.flagPos)) {
+                            unreached = true;
+                        } 
+                        break;
+                    case "pickup":
+                        console.log(goal);
+                        if (this.robot.getCarriedItem() !== goal.args.itemType)
+                            unreached = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (unreached)
+                this.scene.onGoalUnreached();
+            else
+                this.scene.onGoalReached();
+        });
     }
 }

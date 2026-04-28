@@ -44,9 +44,9 @@
                     "start"
                 ]
             },
-            "goal": {
+            "goal": [{
                 "name": "arrival"
-            }
+            }]
         },
         {
             "nb":1,
@@ -89,9 +89,9 @@
                     "start"
                 ]
             },
-            "goal": {
+            "goal": [{
                 "name": "arrival"
-            }
+            }]
         }
         
     ]

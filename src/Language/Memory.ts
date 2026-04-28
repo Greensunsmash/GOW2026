@@ -30,6 +30,9 @@ export class Memory {
     private current_instruction: Executable | undefined;
     public skip = false;
     public currentlyMoving = false;
+    private ran = false;
+
+    private onProgramEnd: (() => void) | undefined = undefined;
 
     private constructor() {
         this.values = new Map();
@@ -44,6 +47,7 @@ export class Memory {
         this.fonctions = new Map();
         this.callStack = [];
         this.current_instruction = undefined;
+        this.ran = false;
     }
 
     // Singleton
@@ -118,12 +122,14 @@ export class Memory {
     }
     public nextStep(): void {
         if (this.currentlyMoving || this.isPlaying()) return;
+        if (!this.ran) this.ran = true;
         if (this.current_instruction) this.current_instruction.next();
         //Memory.print();
     }
 
     public programEnd(): void {
         this.setPlaying(false);
+        if (this.onProgramEnd) this.onProgramEnd();
     }
 
     // GETTERS / SETTERS
@@ -135,6 +141,11 @@ export class Memory {
     public setCurrentlyMoving(isMoving: boolean) { this.currentlyMoving = isMoving; }
 
     public getCurrentInstruction() {return this.current_instruction;}
+
+    public setRan() {this.ran = true;}
+    public hasRan() {return this.ran;}
+
+    public setOnProgramEnd(onProgramEnd: (() => void) | undefined) {this.onProgramEnd = onProgramEnd;}
 
     // PRINT
     public static print(): void { const mem = Memory.get(); console.log("Memory :", mem.callStack, mem.current_instruction); }

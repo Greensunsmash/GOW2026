@@ -76,6 +76,8 @@ export abstract class Group extends Bloc {
             this.list[this.next_inst-1].next_listeners.push(this.next);
             this.list[this.next_inst-1].back_listeners.push(this.back);
         }
+        console.log(this.next_inst);
+        console.log(this.list[this.next_inst-1].getBaseInstruction());
         return this.list[this.next_inst-1].getBaseInstruction();
     }
 }

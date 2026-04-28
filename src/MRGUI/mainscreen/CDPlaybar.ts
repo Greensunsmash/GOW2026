@@ -28,15 +28,15 @@ export class CDPlaybar extends Container {
         this.panel = new StackPanel();
         this.panel.isVertical = false;
 
-        this.panel.addControl(new BaseButton("1st", "⏮", () => onFirst(), 30));
-        this.panel.addControl(new BaseHSpacer());
+        //this.panel.addControl(new BaseButton("1st", "⏮", () => onFirst(), 30));
+        //this.panel.addControl(new BaseHSpacer());
         this.panel.addControl(new BaseButton("prev", "⏪︎", () => onPrev(), 30));
         this.panel.addControl(new BaseHSpacer());
         this.panel.addControl(new BaseButton("fullattempt", "▶", () => onDryAttempt(), 30));
         this.panel.addControl(new BaseHSpacer());
         this.panel.addControl(new BaseButton("next", "⏩︎", () => onNext(), 30));
-        this.panel.addControl(new BaseHSpacer());
-        this.panel.addControl(new BaseButton("last", "⏭", () => onLast(), 30));
+        //this.panel.addControl(new BaseHSpacer());
+        //this.panel.addControl(new BaseButton("last", "⏭", () => onLast(), 30));
 
         this.addControl(this.panel);
     }

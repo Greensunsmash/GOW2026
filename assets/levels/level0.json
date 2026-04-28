@@ -63,10 +63,11 @@
           "start"
         ]
       },
-      "goal": 
+      "goal": [
         {
           "name": "arrival"
         }
+      ]
     }
   ]
 }

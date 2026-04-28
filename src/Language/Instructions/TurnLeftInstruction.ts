@@ -24,9 +24,11 @@ export class TurnLeftInstruction extends Instruction {
     }
     async back() {
         const memory = Memory.get();
+        memory.setCurrentlyMoving(true);
         if (memory.skip) this.ctx.getRobot().turnRight();
         else await this.ctx.getRobot().visualTurnRight();
         super.back();
+        memory.setCurrentlyMoving(false);
     }
     onLaunch(_l: Launchable): boolean {
         return true;

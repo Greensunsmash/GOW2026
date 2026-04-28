@@ -1,11 +1,10 @@
-import { Color3, CubeTexture, MeshBuilder, PBRMaterial, StandardMaterial, Texture, TransformNode, Vector3, type Scene } from "@babylonjs/core";
+import { TransformNode, Vector3, type Scene } from "@babylonjs/core";
+import "babylonjs-materials";
 import { MarcoBozo } from "../Entity/Robot";
 import type { AssetLibrary } from "../Shared/AssetLibrary";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
-import { State, type Map3 } from "./LevelReader";
-import "babylonjs-materials";
-import { WaterMaterial } from "babylonjs-materials";
-import { ASSETS_ROOT, LayerMasks } from "../Shared/Constants";
+import { State, type ItemType, type Map3 } from "./LevelReader";
+import { ItemDisplay } from "./ItemDisplay";
 
 export class Level {
     private map: Map3;
@@ -13,6 +12,7 @@ export class Level {
     private readonly scene: Scene;
     private robot?: MarcoBozo;
     private meshes: TransformNode[] = [];
+    private items: ItemDisplay[] = [];
 
     constructor(map: Map3, drh: AssetLibrary, scene: Scene) {
         this.map = map;
@@ -48,6 +48,9 @@ export class Level {
                         case State.Flag:
                             this.meshes.push(this.createFlag(pos));
                             break;
+                        case State.Item:
+                            this.items.push(new ItemDisplay(this.drh, this, pos, State.Item));
+                            break;
                         default:
                             break;
                     }
@@ -69,11 +72,7 @@ export class Level {
     }
 
     private createFlag(pos: Vector3): TransformNode {
-        const r = Math.random();
-        if (r > .5)
-            return this.drh.createSingleInstance("pill", pos, false, 1.0);
-        else
-            return this.drh.createSingleInstance("heart", pos, false, 1.0);
+        return this.drh.createSingleInstance("heart", pos, false, 1.0);
     }
 
 
@@ -95,6 +94,14 @@ export class Level {
         const centerZ = (shape[2] - 1) / 2;
 
         return new Vector3(centerX, centerY, centerZ);
+    }
+
+    public getItemAt(gridPos: GridPoint): ItemDisplay | null {
+        if (!this.isWalkable(gridPos)) 
+            return null;
+        
+        const item = this.items.find(it => GridUtils.equals(it.getGridPos(), gridPos));
+        return item ?? null;
     }
 
     public isWalkable(gridPos: GridPoint) {
@@ -146,6 +153,8 @@ export class Level {
 
     public reinitLevel() {
         this.robot?.reinit();
+        for (const item of this.items)
+            item.setDisplay(true);
     }
 
     public dispose() {
@@ -157,6 +166,10 @@ export class Level {
 
         for (const mesh of this.meshes) {
             mesh.dispose();
+        }
+
+        for (const item of this.items) {
+            item.dispose();
         }
 
         this.map = [] as Map3;

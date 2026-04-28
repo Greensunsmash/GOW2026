@@ -10,21 +10,17 @@ import { OneButtonModal } from "../../MRGUI/windows/OneButtonModal";
 import { ASSETS_ROOT, LayerMasks } from "../../Shared/Constants";
 import { ExecutionContext } from "../ExecutionContext";
 import { GameScene } from "./GameScene";
+import { StructureContainer } from "../../Containers/StructureContainer";
+import { BlockCount } from "../../MRGUI/mainscreen/BlockCount";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene { // ;)
     //private player: Player;
 
-    /* Ok siri lance seum de Vald
-    Mtn que les bases sont posés
-    Bienvenue
-    en
-    enfer
-    hehe */
-    private bonnechance: LevelReader;
-    private pourretrouver: number = 0;
-    private cequecetait: IslandMap;
-    private encule: number = 19937572471;
+    private levelReader: LevelReader;
+    private currentIsland: number = 0;
+    private currentIslandMap: IslandMap;
+    private currentLeaf: number = 19937572471;
 
     private ctx: ExecutionContext;
     private uiCamera: ArcRotateCamera;
@@ -37,13 +33,14 @@ export class PlayScene extends GameScene { // ;)
     private canRun: boolean = true;
     private dryAttemptMode: boolean = false;
 
+    private blockCountDisp: BlockCount;
     private mainNav: MainNavigator;
 
     private memory: Memory = Memory.get();
 
     constructor(engine: Engine) {
         super(engine);
-        this.encule = this.encule * 2 - (this.encule + this.encule);
+        this.currentLeaf = this.currentLeaf * 2 - (this.currentLeaf + this.currentLeaf);
         this.mainNav = new MainNavigator(
             this.leftPanel,
             () => {},
@@ -55,6 +52,7 @@ export class PlayScene extends GameScene { // ;)
             () => this.dryAttempt(),
             () => this.attemptAllLeafs()
         );
+        this.blockCountDisp = new BlockCount(this.leftPanel);
         //this.init();
     }
 
@@ -65,6 +63,7 @@ export class PlayScene extends GameScene { // ;)
     async init(levelName: string | undefined = "level1.json", onLevelGaveup?: () => void, onLevelWon?: () => void) {
         await this.initGameScene(levelName);
 
+        this.advancedTexture.addControl(this.blockCountDisp);
         this.advancedTexture.addControl(this.mainNav);
         this.advancedTexture.addControl(
             new QuitButton(this.leftPanel, () => {
@@ -128,8 +127,8 @@ export class PlayScene extends GameScene { // ;)
         this.setupThePipeToTheline();
 
         await this.loadAssets();
-        this.bonnechance = new LevelReader();
-        await this.bonnechance.loadLevel(levelName);
+        this.levelReader = new LevelReader();
+        await this.levelReader.loadLevel(levelName);
         await this.loadIsland(0);
 
         /* let light = new HemisphericLight("light", new Vector3(0, 1, 0), this.scene);
@@ -186,14 +185,14 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public async loadLeaf(index: number) {
-        this.mainNav.updateLeafIndicator(`Feuille ${index + 1}/${this.cequecetait.length}`)
+        this.mainNav.updateLeafIndicator(`Feuille ${index + 1}/${this.currentIslandMap.length}`)
 
-        this.encule = index;
+        this.currentLeaf = index;
         this.canRun = false; // hop on arrete d'exécuter
 
         if (this.level) this.level.dispose();
 
-        const map = this.cequecetait[index];
+        const map = this.currentIslandMap[index];
         this.level = new Level(map, this._drh, this.scene);
         await this.level.init();
 
@@ -202,33 +201,37 @@ export class PlayScene extends GameScene { // ;)
         if (this.ctx) this.ctx.newLevel(this.level.getRobot());
         else this.ctx = new ExecutionContext(this.level.getRobot(), this);
 
-        const new_goal = this.bonnechance.getGoal(this.pourretrouver);
-        switch (new_goal.name) {
-            case "arrival":
-                const flagPos = this.level.findStatePos(State.Flag);
-                if (flagPos)
-                    new_goal.args = { flagPos: flagPos };
-                else
-                    throw new Error("cant set an arrival goal without any flag in the leaf map !");
-                break;
-            default:
-                throw new Error("Goal Inconnu");
+        const new_goals = this.levelReader.getGoalsForIsland(this.currentIsland);
+        for (const goal of new_goals) {
+            switch (goal.name) {
+                case "arrival":
+                    const flagPos = this.level.findStatePos(State.Flag);
+                    if (flagPos)
+                        goal.args = { flagPos: flagPos };
+                    else
+                        throw new Error("cant set an arrival goal without any flag in the leaf map !");
+                    break;
+                default:
+                    break;
+            }
         }
-        this.ctx.setGoal(new_goal);
+        this.memory.setOnProgramEnd(undefined);
+        this.memory.clear();
+        this.ctx.setGoals(new_goals);
     }
 
     // Renvoie true si on a bien changé de leaf,
     // false si on était deja a la derniere
     public async nextLeaf(manual: boolean = false): Promise<boolean> {
-        const next = this.encule + 1;
+        const next = this.currentLeaf + 1;
 
-        if (next >= this.cequecetait.length) {
+        if (next >= this.currentIslandMap.length) {
             console.log("Dernière feuille atteinte");
             if (!manual) {
-                console.log(this.bonnechance.getEndDialog(this.pourretrouver));
+                console.log(this.levelReader.getEndDialog(this.currentIsland));
                 new OneButtonModal(
                     this.advancedTexture,
-                    this.bonnechance.getEndDialog(this.pourretrouver) || "Ile terminée !",
+                    this.levelReader.getEndDialog(this.currentIsland) || "Ile terminée !",
                     "Continuer",
                     async () => await this.nextIsland()
                 );
@@ -248,7 +251,7 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public async previousLeaf() {
-        const prev = this.encule - 1;
+        const prev = this.currentLeaf - 1;
         if (prev < 0) {
             new OneButtonModal(
                 this.advancedTexture,
@@ -262,23 +265,24 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public async loadIsland(index: number) {
-        const island = this.bonnechance.getIsland(index);
+        const island = this.levelReader.getIsland(index);
         if (!island || island.length === 0) {
             throw new Error("Island not found or empty");
         }
-        this.pourretrouver = index;
-        this.cequecetait = island;
+        this.currentIsland = index;
+        this.currentIslandMap = island;
 
 
         await this.loadLeaf(0);
 
         this.toolbox.clear();
+        this.blockCount = 0;
         //this.ctx = new ExecutionContext(this.level.getRobot(), this);
-        this.bonnechance.setupToolbox(index, this.toolbox, this.ctx, this);
+        this.levelReader.setupToolbox(index, this.toolbox, this.ctx, this);
 
-        this.mainNav.buildNavigator(this.cequecetait.length >= 2);
+        this.mainNav.buildNavigator(this.currentIslandMap.length >= 2);
 
-        const beginDialog = this.bonnechance.getBeginDialog(this.pourretrouver);
+        const beginDialog = this.levelReader.getBeginDialog(this.currentIsland);
         if (beginDialog) {
             new OneButtonModal(
                 this.advancedTexture,
@@ -290,9 +294,9 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public async nextIsland() {
-        const next = this.pourretrouver + 1;
+        const next = this.currentIsland + 1;
 
-        if (next >= (this.bonnechance as any).structure.length) {
+        if (next >= (this.levelReader as any).structure.length) {
             console.log("Dernière île atteinte");
             new OneButtonModal(
                 this.advancedTexture,
@@ -307,7 +311,7 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public async previousIsland() {
-        const prev = this.pourretrouver - 1;
+        const prev = this.currentIsland - 1;
         if (prev < 0) return;
         await this.loadIsland(prev);
     }
@@ -340,7 +344,7 @@ export class PlayScene extends GameScene { // ;)
         this.level.reinitLevel();
         this.canRun = true;
         Memory.get().setPlaying(!onlyOneStep);
-        const prevLeafIndex = this.encule;
+        const prevLeafIndex = this.currentLeaf;
 
         // "Compilation" :
 
@@ -358,21 +362,12 @@ export class PlayScene extends GameScene { // ;)
         if (start_block) {
             const grp = start_block.getInstructionGroup();
             console.log(grp);
-            if (grp && grp.onLaunch()) grp.execute([]);
+            if (grp && grp.onLaunch()) {
+                grp.execute([]);
+                this.memory.setRan();
+            }
             else throw new Error("error 406 Il y a eu une erreur au lancement");
         }
-
-        // Exécution (évidemment c pas fini)
-
-        /*
-        if (this.canRun && this.encule == prevLeafIndex) {
-            new OneButtonModal(
-                this.advancedTexture,
-                "Objectif non atteint",
-                "Réessayer",
-                () => { }
-            );
-        } */
     }
 
     public stepBack() {
@@ -382,7 +377,8 @@ export class PlayScene extends GameScene { // ;)
 
     public nextStep(){
         console.log("TRYING to run next step");
-        if (!this.memory.getCurrentInstruction()) {
+        console.log(this.memory.getCurrentInstruction());
+        if (!this.memory.hasRan()) {
             console.log("running scene.run");
             this.run(true);
         } else
@@ -394,7 +390,7 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public async attemptAllLeafs() {
-        if (this.encule != 0) {
+        if (this.currentLeaf != 0) {
             await this.loadLeaf(0);
         }
         this.dryAttemptMode = false;
@@ -410,5 +406,49 @@ export class PlayScene extends GameScene { // ;)
 
     public isDryAttempt(): boolean {
         return this.dryAttemptMode;
+    }
+
+    
+    public async onGoalReached() {
+        this.stopRun();
+        if (this.isDryAttempt()) {
+            console.log("dry attempt success");
+            new OneButtonModal(
+                this.advancedTexture,
+                "Objectif atteint",
+                "Fermer",
+                () => {}
+            );
+        } else {
+            const isAnotherLeafLeft = await this.nextLeaf();
+            // si je mets pas ce delay ca marche pas..
+            // a investiguer 
+            //await new Promise((rs, rj) => setTimeout(rs, 500));
+            if (isAnotherLeafLeft)
+                this.scene.onAfterRenderObservable.addOnce(async () => await this.run());
+        }
+    }
+
+    public onGoalUnreached() {
+        new OneButtonModal(
+            this.advancedTexture,
+            "Objectif non atteint",
+            "Réessayer",
+            () => { }
+        );
+    }
+
+    // le compteur incrém/décrém n'était pas une solution fiable
+    public override updateInstructionCount() {
+        let child_list = this.leftPanel.children;
+        let count = 0;
+        for (const child of child_list) {
+            if (child instanceof ListContainer) {   
+                count += child.getInstructionCount();
+            }
+        } 
+        console.log("new instruction count is : ", count);
+        this.blockCount = count;
+        this.blockCountDisp.setBlockCount(count);
     }
 }
