@@ -1,9 +1,9 @@
 // CD c'est pour la nostalge
 // Playbar c'est pour barre de lecture
 
-import { Container, Control, Rectangle, StackPanel } from "@babylonjs/gui";
+import { Container, StackPanel } from "@babylonjs/gui";
 import { BaseButton } from "../buttons/BaseButton";
-import { BaseHSpacer, BaseVSpacer } from "../misc/BaseSpacers";
+import { BaseHSpacer } from "../misc/BaseSpacers";
 
 // Une lecture ? Pas de pb, j'ai la barre
 export class CDPlaybar extends Container {

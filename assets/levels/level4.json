@@ -81,11 +81,7 @@
                     "left",
                     "right"
                 ],
-                "sensors": [
-                    "obstacle"
-                ],
                 "structures": [
-                    "if",
                     "for"
                 ],
                 "start": [

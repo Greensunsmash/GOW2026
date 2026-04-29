@@ -226,6 +226,8 @@ export class PlayScene extends GameScene { // ;)
         this.ctx.getRobot().setOnItemsChange((items: ItemType[]) => {
             this.itemsHud.setItems(items);
         });
+
+        this.updateInstructionCount();
     }
 
     // Renvoie true si on a bien changé de leaf,
@@ -287,6 +289,7 @@ export class PlayScene extends GameScene { // ;)
         this.blockCount = 0;
         //this.ctx = new ExecutionContext(this.level.getRobot(), this);
         this.levelReader.setupToolbox(index, this.toolbox, this.ctx, this);
+        this.blockCountDisp.setLimit(this.levelReader.getBlockLimitForIsland(this.currentIsland));
 
         this.mainNav.buildNavigator(this.currentIslandMap.length >= 2);
 
@@ -331,7 +334,8 @@ export class PlayScene extends GameScene { // ;)
             this._drh.loadSingleAsset("wall", "stone.02.glb"),
             this._drh.loadSingleAsset("pill", "pill.glb"),
             this._drh.loadSingleAsset("heart", "heart.01.glb"),
-            this._drh.loadSingleAsset("river", "water.glb")
+            this._drh.loadSingleAsset("river", "water.glb"),
+            this._drh.loadSingleAsset("pig", "cubepets/animal-pig.glb"),
         ]);
     }
 
@@ -386,7 +390,7 @@ export class PlayScene extends GameScene { // ;)
     public nextStep(){
         console.log("TRYING to run next step");
         console.log(this.memory.getCurrentInstruction());
-        if (!this.memory.hasRan()) {
+        if (!(this.memory.hasRan()) || !(this.memory.getCurrentInstruction())) {
             console.log("running scene.run");
             this.run(true);
         } else
@@ -395,6 +399,7 @@ export class PlayScene extends GameScene { // ;)
 
     public stopRun() {
         this.canRun = false;
+        this.memory.setPlaying(false);
     }
 
     public async attemptAllLeafs() {
@@ -438,10 +443,21 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public onGoalUnreached() {
+        this.stopRun();
         new OneButtonModal(
             this.advancedTexture,
             "Objectif non atteint",
             "Réessayer",
+            () => { }
+        );
+    }
+
+    public onRobotDead() {
+        this.stopRun();
+        new OneButtonModal(
+            this.advancedTexture,
+            "Vous êtes mort.",
+            "Je suis Jésus",
             () => { }
         );
     }

@@ -14,6 +14,7 @@ type InstructionBlock =
   | "left"
   | "right"
   | "pickup"
+  | "wait"
   | "print";
 
 type StructureBlock = "for" | "if" | "while" | "elif";

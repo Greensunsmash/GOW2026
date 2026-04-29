@@ -4,6 +4,8 @@ export class BlockCount extends Container {
     private panel :StackPanel;
     private countText: TextBlock;
 
+    private limit: number |  null = null;
+
     constructor(
         root: Container
     ) {
@@ -26,6 +28,11 @@ export class BlockCount extends Container {
     }
 
     public setBlockCount(count: number) {
-        this.countText.text = `Blocs : ${count}`;
+        this.countText.text = this.limit ? `Blocs: ${count} / ${this.limit}`:  `Blocs : ${count}`;
+    }
+
+    public setLimit(limit: number | null) {
+        this.limit = limit;
+        this.setBlockCount(0);
     }
 }

@@ -1,0 +1,61 @@
+{
+    "islands": [
+        {
+            "nb":1,
+            "begin_dialog": "Ramassez vos poubelles.",
+            "end_dialog" : "Bravo camion.",
+            "layouts":[
+                [
+                    [
+                        "   .   ",
+                        ".......",
+                        ".......",
+                        ".......",
+                        ".......",
+                        "  .  "
+                    ],
+                    [
+                        "   @   ",
+                        "u     u",
+                        "#     #",
+                        "   !   ",
+                        "       ",
+                        "   x   "
+                    ]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right",
+                    "pickup",
+                    "wait"
+                ],
+                "sensors": [
+                    "item"
+                ],
+                "booleans": [
+                    "not",
+                    "true"
+                ],
+                "structures": [
+                    "if",
+                    "for"
+                ],
+                "start": [
+                    "start"
+                ]
+            },
+            "goal": [
+                {
+                    "name": "arrival"
+                },
+                {
+                    "name": "pickup"
+                }
+            ]
+        }
+    ]
+}

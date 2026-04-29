@@ -2,8 +2,9 @@ import { Animation, AnimationGroup, CubicEase, EasingFunction, Vector3, type Tra
 import type { AssetLibrary } from "../Shared/AssetLibrary";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
 import type { Level } from "../Environment/Level";
+import type { MobIntention } from "../MainLoop/ExecutionContext";
 
-export class GridEntity {
+export abstract class GridEntity {
     protected readonly initPos : GridPoint;
     protected readonly initRotation : number;
     protected mesh : TransformNode;
@@ -54,6 +55,18 @@ export class GridEntity {
         this.tryMove(facing.x, facing.z);
     }
 
+    public getNextPosIntention(direction?: "forward" | "backward"){
+        const facing = GridUtils.DIRECTIONS[this.facingIndex];
+        let toAdd;
+        if (direction === "forward")
+            toAdd = {x: facing.x, y:0, z: facing.z};
+        else if (direction === "backward")
+            toAdd = {x: -facing.x, y:0, z: -facing.z};
+        else
+            toAdd = {x: 0, y: 0, z:0};
+        return GridUtils.add(this.gridPos, toAdd);
+    }
+
     public moveBackward() {
         const facing = GridUtils.DIRECTIONS[this.facingIndex];
         this.tryMove(-facing.x, -facing.z);
@@ -72,7 +85,7 @@ export class GridEntity {
         this.rotation(-Math.PI / 2);
     }
 
-    protected tryMove(dx:number, dz:number) {
+    public tryMove(dx:number, dz:number) {
         const targetGridPos = GridUtils.add(
             this.gridPos,  
             {               // je me battrais jusqu'à la mort
@@ -86,7 +99,7 @@ export class GridEntity {
         //else throw new Error("Accident de la route sale chauffard");
     }
 
-    private doMove(targetGridPos : GridPoint) {
+    public doMove(targetGridPos : GridPoint) {
         this._isMoving = true;
         this.gridPos = targetGridPos;
         this.mesh.position = GridUtils.toWorld(targetGridPos);
@@ -139,7 +152,7 @@ export class GridEntity {
         // (remplacer par quelque chose de moins explosif mdr)
     }
 
-    private async doVisualMove(targetGridPos : GridPoint): Promise<void> {
+    public async doVisualMove(targetGridPos : GridPoint): Promise<void> {
         this._isMoving = true;
         this.gridPos = targetGridPos;
 
@@ -175,7 +188,7 @@ export class GridEntity {
         ));
     }
 
-    private async animateRotation(relativeAngle: number): Promise<void> {
+    protected async animateRotation(relativeAngle: number): Promise<void> {
         this._isMoving = true;
         const targetAngle = this.mesh.rotation.y + relativeAngle;
 
@@ -205,6 +218,11 @@ export class GridEntity {
 
     public getVisualGridPos(): GridPoint {
         return this.gridPos;
+    }
+
+    protected updateVisualPos() {
+        this.mesh.position = GridUtils.toWorld(this.gridPos);
+        this.mesh.rotation = new Vector3(0, this.facingIndex * Math.PI / 2, 0);
     }
 
     public reinit() {

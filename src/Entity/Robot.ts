@@ -27,12 +27,15 @@ export class MarcoBozo extends GridEntity {
 
     async pickupItem() {
         const itemAtPos = this.level.getItemAt(this.gridPos);
+        if (!itemAtPos) {
+            // faire un truc
+        }
         itemAtPos?.setDisplay(false);
         const type = itemAtPos?.getType();
         if (type) {
             this.carriedItems.push(type);
             this.onItemsChange?.(this.carriedItems);
-        }
+        } 
         console.log("robot now carries : ", this.carriedItems);
     }
 

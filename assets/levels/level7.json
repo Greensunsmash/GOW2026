@@ -18,7 +18,11 @@
                     "right",
                     "pickup"
                 ],
+                "sensors": [
+                    "obstacle"
+                ],
                 "structures": [
+                    "if",
                     "for"
                 ],
                 "start": [
@@ -55,7 +59,11 @@
                     "right",
                     "pickup"
                 ],
+                "sensors": [
+                    "obstacle"
+                ],
                 "structures": [
+                    "if",
                     "for"
                 ],
                 "start": [

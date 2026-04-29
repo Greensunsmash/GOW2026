@@ -32,6 +32,7 @@ import { PickupInstruction } from "../Language/Instructions/PickupInstruction";
 import { ItemSensor } from "../Language/Booleen/ItemSensor";
 import { TantQueContainer } from "../Containers/Prefabs/TantQueContainer";
 import { SinonContainer } from "../Containers/Prefabs/SinonContainer";
+import { WaitInstruction } from "../Language/Instructions/WaitInstruction";
 
 export const State = { // Proposition, avoir différents symboles pour différetentes orientations : L = robot left, R = robot right etc
     Empty: " ",
@@ -40,10 +41,15 @@ export const State = { // Proposition, avoir différents symboles pour différet
     Ground: ".",
     Flag: "x",
     GodHimself: "^",
-    Item: "!"
+    Item: "!",
+    PigLeft: "l",
+    PigRight: "r",
+    PigUp: "u",
+    PigDown: "d"
 } as const;
 
 export type ItemType = typeof State.Item;
+export type MobType = typeof State.PigDown | typeof State.PigUp | typeof State.PigLeft | typeof State.PigRight;
 
 export type State = typeof State[keyof typeof State];
 export type Map2 = State[][];
@@ -122,6 +128,10 @@ export class LevelReader {
         }
     }
 
+    public getBlockLimitForIsland(nb: number): number | null {
+        return this.blockLimit[nb];
+    }
+
     public getGoalsForIsland(nb: number): Goal[] {
         return this.goals[nb];
     }
@@ -157,6 +167,9 @@ export class LevelReader {
 
             pickup: (root) =>
             new BasicInstContainer("Ramasser l'objet", new PickupInstruction(ctx), root, scene),
+
+            wait: (root) =>
+            new BasicInstContainer("Attendre", new WaitInstruction(ctx), root, scene),
 
             print: (root) =>
             new PrintContainer(root, scene),

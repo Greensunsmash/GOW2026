@@ -1,0 +1,1 @@
+export const stringArraysEq = (a: string[], b: string[]) => a.length === b.length && [...a].sort().join('|') === [...b].sort().join('|');

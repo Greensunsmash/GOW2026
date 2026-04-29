@@ -8,7 +8,8 @@
     {"file": "level5.json", "name": "Feuilles avec if"},
     {"file": "level6.json", "name": "Ramassage"},
     {"file": "level7.json", "name": "Ca se complique... 2 (en travaux)"},
-    {"file": "level8.json", "name": "Camion benne"},
-    {"file": "level9.json", "name": "Camion benne2"}
+    {"file": "level8.json", "name": "Variables 1"},
+    {"file": "level9.json", "name": "Variables 2"},
+    {"file": "test_mobs.json", "name": "Copains comme cochons"}
   ] 
 }

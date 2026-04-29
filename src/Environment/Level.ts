@@ -3,8 +3,10 @@ import "babylonjs-materials";
 import { MarcoBozo } from "../Entity/Robot";
 import type { AssetLibrary } from "../Shared/AssetLibrary";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
-import { State, type ItemType, type Map3 } from "./LevelReader";
+import { State, type ItemType, type MobType, type Map3 } from "./LevelReader";
 import { ItemDisplay } from "./ItemDisplay";
+import type { Mob, MobState } from "../Entity/Mob";
+import { Pig } from "../Entity/Pig";
 
 export class Level {
     private map: Map3;
@@ -13,7 +15,8 @@ export class Level {
     private robot?: MarcoBozo;
     private meshes: TransformNode[] = [];
     private items: ItemDisplay[] = [];
-    private mobs: Mobs[] = [];
+    private mobs: Mob[] = [];
+    private mobStates: (Map<Mob, MobState>)[] = [];
 
     constructor(map: Map3, drh: AssetLibrary, scene: Scene) {
         this.map = map;
@@ -52,12 +55,26 @@ export class Level {
                         case State.Item:
                             this.items.push(new ItemDisplay(this.drh, this, pos, State.Item));
                             break;
-                        default:
+                        case State.PigUp:
+                            this.mobs.push(new Pig(this.drh, this, gridPos, 0));
+                            break;
+                        case State.PigRight:
+                            this.mobs.push(new Pig(this.drh, this, gridPos, 1));
+                            break;
+                        case State.PigDown:
+                            this.mobs.push(new Pig(this.drh, this, gridPos, 2));
+                            break;
+                        case State.PigLeft:
+                            this.mobs.push(new Pig(this.drh, this, gridPos, 3));
+                            break;
+                    default:
                             break;
                     }
                 }
             }
         }
+
+        this.pushMobState();
     }
 
     private createRobot(gridPos: GridPoint): MarcoBozo {
@@ -97,6 +114,10 @@ export class Level {
         return new Vector3(centerX, centerY, centerZ);
     }
 
+    public getAllItems(): ItemType[] {
+        return this.items.map(it => it.getType());
+    }
+
     public getItemAt(gridPos: GridPoint): ItemDisplay | null {
         if (!this.isWalkable(gridPos)) 
             return null;
@@ -109,32 +130,40 @@ export class Level {
         return this.mobs;
     }
 
-    public isWalkable(gridPos: GridPoint) {
-        //console.log("testing if " + GridUtils.toString(gridPos) + " is walkable");
-        //console.log("map shape is " + this.mapShape());
-
+    public isVoidBelow(gridPos: GridPoint) {
         if (gridPos.x < 0 || gridPos.y < 0 || gridPos.z < 0)
-            return false;
+            return true;
         if (gridPos.y >= this.map.length)
-            return false;
+            return true;
         if (gridPos.z >= this.map[gridPos.y].length)
-            return false;
+            return true;
         if (gridPos.x >= this.map[gridPos.y][gridPos.z].length)
-            return false;
+            return true;
 
-        //console.log("map dimensions tests passed, processing wall checked");
-        const nextState = this.map[gridPos.y][gridPos.z][gridPos.x];
-        if (nextState == State.Wall)
-            return false;
-
-        // On marche que sur du sol owww
         if (gridPos.y - 1 >= 0) {
             const nextStateBelow = this.map[gridPos.y - 1][gridPos.z][gridPos.x];
             if (nextStateBelow != State.Ground)
-                return false;
+                return true;
         }
 
-        //console.log("tile is walkable");
+        return false;
+    }
+
+    public isObstacle(gridPos: GridPoint) {
+        const nextState = this.map[gridPos.y][gridPos.z][gridPos.x];
+        if (nextState == State.Wall)
+            return true;
+
+        return false;
+    }
+
+    public isWalkable(gridPos: GridPoint) {
+        if (this.isVoidBelow(gridPos))
+            return false;
+
+        if (this.isObstacle(gridPos))
+            return false;
+
         return true;
     }
 
@@ -156,10 +185,59 @@ export class Level {
         return null; // aucun state trouvé
     }
 
+    public pushMobState() {
+        const currState: Map<Mob, MobState> = new Map();
+        for (const mob of this.mobs) {
+            currState.set(mob, mob.getState());
+        }
+        this.mobStates.push(currState);
+        console.log(this.mobStates);
+    }
+
+    public popMobState() {
+        let currState: Map<Mob, MobState> | undefined = undefined;
+        if (this.mobStates.length === 0) {
+            console.warn("Cannot load a mob state when mob state stack is empty");
+            return;
+        } else if (this.mobStates.length === 1) {
+            console.warn("popping mob state, but only initial state in stack, so not removing first");
+            currState = this.mobStates[0];
+        } else {
+            currState = this.mobStates.pop();
+        }
+        console.log(this.mobStates);
+        console.log(currState);
+
+        if (!currState) {
+            console.warn("hmm alors la je vois pas");
+            return;
+        }
+
+        this.loadMobState(currState);
+    }
+
+    private loadMobState(state: Map<Mob, MobState>) {
+        for (const mob of state.keys()) {
+            const mobState = state.get(mob);
+            if (!mobState)
+                continue;
+            mob.setState(mobState);
+        }
+    }
+
     public reinitLevel() {
+        const initMobState = this.mobStates[0];
+        if (!initMobState) {
+            console.warn("reinit level called when no mob state has ever been stored ?? WHAT THE FUCK ??");
+            return;
+        }
+        this.loadMobState(initMobState);
+        this.mobStates.splice(1); // supprime tout apres le premier
         this.robot?.reinit();
         for (const item of this.items)
             item.setDisplay(true);
+        for (const mob of this.mobs)
+            mob.reinit();
     }
 
     public dispose() {
@@ -175,6 +253,10 @@ export class Level {
 
         for (const item of this.items) {
             item.dispose();
+        }
+
+        for (const mob of this.mobs) {
+            mob.dispose();
         }
 
         this.map = [] as Map3;

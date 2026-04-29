@@ -15,6 +15,7 @@ export class PickupInstruction extends Instruction {
         const memory = Memory.get();
         memory.setCurrentlyMoving(true);
 
+        await this.ctx.nextTick();
         await this.ctx.getRobot().pickupItem();
         Memory.get().setCurrentInstruction(this);
 
@@ -26,7 +27,9 @@ export class PickupInstruction extends Instruction {
     async back() {
         const memory = Memory.get();
         memory.setCurrentlyMoving(true);
-        await this.ctx.getRobot().leaveItem();
+
+        await this.ctx.prevTick();
+        //await this.ctx.getRobot().leaveItem();
         super.back();
         memory.setCurrentlyMoving(false);
     }
