@@ -6,5 +6,6 @@
     {"file": "level3.json", "name": "Ca se complique..."},
     {"file": "level4.json", "name": "C'est quoi un if ?"},
     {"file": "test_items.json", "name": "Ramasse tes poubelles."}
+    {"file": "level5.json", "name": "Feuilles avec if"}
   ] 
 }

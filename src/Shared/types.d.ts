@@ -16,7 +16,7 @@ type InstructionBlock =
   | "pickup"
   | "print";
 
-type StructureBlock = "for" | "if";
+type StructureBlock = "for" | "if" | "while" | "elif";
 
 type BooleanBlock =
   | "true"

@@ -1,0 +1,164 @@
+{
+    "islands": [
+        {
+            "nb":1,
+            "begin_dialog": "Ramassez vos poubelles.",
+            "end_dialog" : "Bravo camion.",
+            "layouts":[
+                [
+                    [".",".",".",".",".",".","."],
+                    ["@"," "," "," "," "," ","x"]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right",
+                    "pickup"
+                ],
+                "structures": [
+                    "for"
+                ],
+                "start": [
+                    "start"
+                ]
+            },
+            "goal": [
+                {
+                    "name": "arrival"
+                },
+                {
+                    "name": "pickup",
+                    "args": {
+                        "itemType": "!"
+                    }
+                }
+            ]
+        },
+        {
+            "nb":2,
+            "begin_dialog": "Ramassez vos poubelles.",
+            "end_dialog" : "Bravo camion.",
+            "layouts":[
+                [
+                    [".... "," ... "," ... "," ...."],
+                    ["@    ","     ","     ","    x"]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right",
+                    "pickup"
+                ],
+                "structures": [
+                    "for"
+                ],
+                "start": [
+                    "start"
+                ]
+            },
+            "goal": [
+                {
+                    "name": "arrival"
+                },
+                {
+                    "name": "pickup",
+                    "args": {
+                        "itemType": "!"
+                    }
+                }
+            ]
+        },
+        {
+            "nb":3,
+            "begin_dialog": "Ramassez vos poubelles.",
+            "end_dialog" : "Bravo camion.",
+            "layouts":[
+                [
+                    ["......."],
+                    ["@! ! !x"]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right",
+                    "pickup"
+                ],
+                "structures": [
+                    "for"
+                ],
+                "start": [
+                    "start"
+                ]
+            },
+            "goal": [
+                {
+                    "name": "arrival"
+                },
+                {
+                    "name": "pickup",
+                    "args": {
+                        "itemType": "!"
+                    }
+                }
+            ]
+        },
+        {
+            "nb":4,
+            "begin_dialog": "Ramassez vos poubelles.",
+            "end_dialog" : "Bravo camion.",
+            "layouts":[
+                [
+                    ["........"],
+                    ["@ ! ! !x"]
+                ],
+                [
+                    ["........"],
+                    ["@!  !! x"]
+                ],
+                [
+                    ["........"],
+                    ["@!!  ! x"]
+                ],
+                [
+                    ["........"],
+                    ["@    ! x"]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right",
+                    "pickup"
+                ],
+                "structures": [
+                    "for"
+                ],
+                "start": [
+                    "start"
+                ]
+            },
+            "goal": [
+                {
+                    "name": "arrival"
+                },
+                {
+                    "name": "pickup",
+                    "args": {
+                        "itemType": "!"
+                    }
+                }
+            ]
+        }
+    ]
+}

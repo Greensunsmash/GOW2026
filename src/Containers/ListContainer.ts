@@ -144,28 +144,58 @@ export class ListContainer extends GUI.Rectangle {
                 else { // Sinon, il va falloir séparer en 2
                     l = new ListContainer(this.root, this.scene);
 
-                    // Si on a cliqué sur la fin d'une structure, alors c'est comme si c'était le début de cette structure
+                    // Si on a cliqué sur la fin ou le milieu d'une structure, alors c'est comme si c'était le début de cette structure
                     const save = nb;
-                    const s2 = this.structureList.filter((x) => x.getQueue() === this.list[nb]);
+                    const s2 = this.structureList.filter((x) => x.getQueue() === this.list[nb] || x.getMid() === this.list[nb]);
                     if (s2.length === 1) nb = s2[0].getHeaderID();
 
                     let s = this.structureList.filter((x) => x.contains(nb));
                     let toMove: InstructionContainer[] = []; // Les blocs qu'on va déplacer
                     let structToMove: StructureContainer[] = []; // Les structures qu'on va déplacer
 
+                    const resolveSliceEnd = (structure: StructureContainer, start: number) => {
+                        const mid = structure.getMid?.();
+                        const midID = mid !== undefined && mid !== null ? structure.getMidID() : null;
+                        const queueID = structure.getQueueID();
+
+                        if (midID !== null) {
+                            if (start < midID) return midID;
+                            return queueID;
+                        }
+                        return queueID;
+                    };
+
                     if (s.length === 1) { // Si le bloc n'appartient qu'à une seule structure
-                        toMove = this.list.slice(nb, s[0].getQueueID()).filter(
+                        const end = resolveSliceEnd(s[0], nb);
+
+                        toMove = this.list.slice(nb, end).filter(
                             (x) => x instanceof InstructionContainer
                         );
-                        structToMove = this.structureList.filter((x) => x.getHeaderID() >= nb && x.getQueueID() < s[0].getQueueID());
+                        
+                        structToMove = this.structureList.filter((x) => {
+                            const mid = x.getMid?.();
+                            const midID = mid !== undefined && mid !== null ? x.getMidID() : null;
+                            const upperBound = midID !== null && nb < midID ? midID : x.getQueueID();
+
+                            return x.getHeaderID() >= nb && x.getHeaderID() < upperBound;
+                        });
                     }
                     else if (s.length > 1) { // Si le bloc appartient à plusieurs structure, on choisit la bonne
                         s.sort((x, y) => y.getHeaderID() - x.getHeaderID());
 
-                        toMove = this.list.slice(nb, s[0].getQueueID()).filter(
+                        const end = resolveSliceEnd(s[0], nb);
+
+                        toMove = this.list.slice(nb, end).filter(
                             (x) => x instanceof InstructionContainer
                         );
-                        structToMove = this.structureList.filter((x) => x.getHeaderID() >= nb && x.getQueueID() < s[0].getQueueID());
+
+                        structToMove = this.structureList.filter((x) => {
+                            const mid = x.getMid?.();
+                            const midID = mid !== undefined && mid !== null ? x.getMidID() : null;
+                            const upperBound = midID !== null && nb < midID ? midID : x.getQueueID();
+
+                            return x.getHeaderID() >= nb && x.getHeaderID() < upperBound;
+                        });
                     }
                     else { // Si ça n'appartient pas à une structure
                         toMove = this.list.slice(nb).filter(
@@ -356,9 +386,17 @@ export class ListContainer extends GUI.Rectangle {
                 let struct = this.checkHeaders(instruction);
                 if (struct) {
                     // On entre dans une boucle, on rappelle donc cette fonction pour obtenir tout ce qui est dedans
-                    let len = struct.getQueueID() - struct.getHeaderID() - 1;
-                    exeGroup.push(struct.getGroup(this.getInstructionList(struct.getHeaderID() + 1, len))); // et on le renvoie sous forme d'un groupe
-                    i += len + 1;
+                    const mid = struct.getMidID();
+                    if (mid) { // Si il est en 2 parties, comme si sinon par exemple
+                        let len1 = mid - struct.getHeaderID() - 1;
+                        let len2 = struct.getQueueID() - mid - 1;
+                        exeGroup.push(struct.getGroup(this.getInstructionList(struct.getHeaderID() + 1, len1), this.getInstructionList(mid + 1, len2)));
+                        i += len1 + len2 + 2;
+                    } else {
+                        let len = struct.getQueueID() - struct.getHeaderID() - 1;
+                        exeGroup.push(struct.getGroup(this.getInstructionList(struct.getHeaderID() + 1, len))); // et on le renvoie sous forme d'un groupe
+                        i += len + 1;
+                    }
                 } else exeGroup.push(instruction.getInstruction());
             }
         }

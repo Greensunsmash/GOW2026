@@ -1,0 +1,140 @@
+{
+    "islands": [
+        {
+            "nb": 1,
+            "begin_dialog": "hehe",
+            "end_dialog": "ahah",
+            "layouts": [
+                [
+                    [ ".   ", ".   ", ".   ", ".   "],
+                    [ "@   ", "    ", "    ", "x   "]
+                ],
+                [
+                    [ "....", ".   ", "    ", "    "],
+                    [ "@  x", "#   ", "    ", "    "]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right"
+                ],
+                "sensors": [
+                    "obstacle"
+                ],
+                "structures": [
+                    "if",
+                    "for"
+                ],
+                "start": [
+                    "start"
+                ]
+            },
+            "goal": {
+                "name": "arrival"
+            }
+        },
+        {
+            "nb": 2,
+            "begin_dialog": "Bienvenue en enfer",
+            "end_dialog": "Bravo champion",
+            "layouts": [
+                [
+                    [
+                        ".    ",
+                        ".    ",
+                        ".    ",
+                        ".    ",
+                        ".    ",
+                        ".    ",
+                        ".    ",
+                        "..   ",
+                        ".    "
+                    ],
+                    [
+                        "@    ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        " x   ",
+                        "#    "
+                    ]
+                ],
+                [
+                    [
+                        ".    ",
+                        ".    ",
+                        ".    ",
+                        ".    ",
+                        ".    ",
+                        ".... ",
+                        ".    ",
+                        "     ",
+                        "     "
+                    ],
+                    [
+                        "@    ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "   x ",
+                        "#    ",
+                        "     ",
+                        "     "
+                    ]
+                ],
+                [
+                    [
+                        ".    ",
+                        ".  . ",
+                        ".  . ",
+                        ".....",
+                        ".    ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "     "
+                    ],
+                    [
+                        "@    ",
+                        "   x ",
+                        "     ",
+                        "    #",
+                        "#    ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "     "
+                    ]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right"
+                ],
+                "sensors": [
+                    "obstacle"
+                ],
+                "structures": [
+                    "if",
+                    "for"
+                ],
+                "start": [
+                    "start"
+                ]
+            },
+            "goal": {
+                "name": "arrival"
+            }
+        }
+    ]
+}
