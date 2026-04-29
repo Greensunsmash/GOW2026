@@ -32,9 +32,7 @@
                     "start"
                 ]
             },
-            "goal": {
-                "name": "arrival"
-            }
+            "goal":[{"name": "arrival"}]
         },
         {
             "nb": 2,
@@ -132,9 +130,7 @@
                     "start"
                 ]
             },
-            "goal": {
-                "name": "arrival"
-            }
+            "goal":[{"name": "arrival"}]
         }
     ]
 }
