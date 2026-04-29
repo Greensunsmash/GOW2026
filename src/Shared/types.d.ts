@@ -28,7 +28,7 @@ type BooleanBlock =
   | "sup"
   | "eq";
 
-type SensorBlock = "obstacle";
+type SensorBlock = "obstacle" | "item";
 
 type VariableBlock = "var_create";
 

@@ -26,7 +26,12 @@ export abstract class Group extends Bloc {
     }
     
     public next(): void {
-        const prev = this.list[(this.next_inst - 1 >= 0) ? this.next_inst - 1 : this.list.length -1];
+        if (this.list.length === 0) // Groupes vides (sinon => crash)
+            return this.jump_next();
+
+        const prevIdx = (this.next_inst - 1 >= 0) ? this.next_inst - 1 : this.list.length -1;
+        console.log("in Group.next() : prevIdx = " + prevIdx);
+        const prev = this.list[prevIdx];
         const idx = prev.next_listeners.indexOf(this.next);
         const idx2 = prev.back_listeners.indexOf(this.back);
         if (idx !== -1) prev.next_listeners.splice(idx, 1);
@@ -36,6 +41,7 @@ export abstract class Group extends Bloc {
             this.list[this.next_inst].next_listeners.push(this.next);
             this.list[this.next_inst].back_listeners.push(this.back);
             this.next_inst += 1;
+            console.log("running inst ", this.next_inst-1, " : ", this.list[this.next_inst-1]);
             this.list[this.next_inst-1].execute();
         } else {
             this.jump_next();
@@ -43,6 +49,9 @@ export abstract class Group extends Bloc {
     }
 
     public back():void {
+        if (this.list.length === 0)
+            return this.jump_back();
+
         this.next_inst -= 1;
         const prev = this.list[(this.next_inst >=0) ? this.next_inst : this.list.length -1];
         const idx = prev.next_listeners.indexOf(this.next);

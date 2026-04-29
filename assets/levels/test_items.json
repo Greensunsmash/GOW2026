@@ -32,7 +32,15 @@
                     "right",
                     "pickup"
                 ],
+                "sensors": [
+                    "item"
+                ],
+                "booleans": [
+                    "not",
+                    "true"
+                ],
                 "structures": [
+                    "if",
                     "for"
                 ],
                 "start": [

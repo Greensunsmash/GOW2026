@@ -1,8 +1,8 @@
-import  { ExecutionContext } from "../../MainLoop/ExecutionContext";
+import { ExecutionContext } from "../../MainLoop/ExecutionContext";
 import type { Launchable } from "../Launchable";
 import { Booleen } from "./Booleen";
 
-export class ObstacleSensor extends Booleen {
+export class ItemSensor extends Booleen {
     private ctx: ExecutionContext;
 
     constructor(ctx: ExecutionContext) {
@@ -11,7 +11,8 @@ export class ObstacleSensor extends Booleen {
     }
 
     eval(): boolean {
-        return this.ctx.getRobot().obstacleAhead();
+        console.log("item sensor :" + this.ctx.getRobot().itemHere());
+        return this.ctx.getRobot().itemHere();
     }
 
     onLaunch(l: Launchable): boolean {return true;}

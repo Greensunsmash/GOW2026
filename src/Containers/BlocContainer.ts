@@ -157,7 +157,7 @@ export class BlocContainer extends GUI.Rectangle {
                 let result = s.isPointHandle(coords);
                 if (result) return result;
             } else if (s instanceof InputSlot) {
-                console.warn("la ?");
+                //console.warn("la ?");
                 let result = s.isPointHandle(coords);
                 if (result) return result;
             }

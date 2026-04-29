@@ -2,7 +2,7 @@ import { ArcRotateCamera, Color3, CubeTexture, DefaultRenderingPipeline, Directi
 import { ListContainer } from "../../Containers/ListContainer";
 import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
 import { Level } from "../../Environment/Level";
-import { LevelReader, State, type IslandMap } from "../../Environment/LevelReader";
+import { LevelReader, State, type IslandMap, type ItemType } from "../../Environment/LevelReader";
 import { Memory } from "../../Language/Memory";
 import { QuitButton } from "../../MRGUI/buttons/QuitButton";
 import { MainNavigator } from "../../MRGUI/mainscreen/MainNavigator";
@@ -12,6 +12,7 @@ import { ExecutionContext } from "../ExecutionContext";
 import { GameScene } from "./GameScene";
 import { StructureContainer } from "../../Containers/StructureContainer";
 import { BlockCount } from "../../MRGUI/mainscreen/BlockCount";
+import { ItemsHUD } from "../../MRGUI/mainscreen/ItemsHUD";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene { // ;)
@@ -34,6 +35,7 @@ export class PlayScene extends GameScene { // ;)
     private dryAttemptMode: boolean = false;
 
     private blockCountDisp: BlockCount;
+    private itemsHud: ItemsHUD;
     private mainNav: MainNavigator;
 
     private memory: Memory = Memory.get();
@@ -53,6 +55,7 @@ export class PlayScene extends GameScene { // ;)
             () => this.attemptAllLeafs()
         );
         this.blockCountDisp = new BlockCount(this.leftPanel);
+        this.itemsHud = new ItemsHUD(this.leftPanel);
         //this.init();
     }
 
@@ -64,6 +67,7 @@ export class PlayScene extends GameScene { // ;)
         await this.initGameScene(levelName);
 
         this.advancedTexture.addControl(this.blockCountDisp);
+        this.advancedTexture.addControl(this.itemsHud);
         this.advancedTexture.addControl(this.mainNav);
         this.advancedTexture.addControl(
             new QuitButton(this.leftPanel, () => {
@@ -198,8 +202,8 @@ export class PlayScene extends GameScene { // ;)
 
         this.focusCamera();
 
-        if (this.ctx) this.ctx.newLevel(this.level.getRobot());
-        else this.ctx = new ExecutionContext(this.level.getRobot(), this);
+        if (this.ctx) this.ctx.newLevel(this.level);
+        else this.ctx = new ExecutionContext(this.level, this);
 
         const new_goals = this.levelReader.getGoalsForIsland(this.currentIsland);
         for (const goal of new_goals) {
@@ -218,6 +222,10 @@ export class PlayScene extends GameScene { // ;)
         this.memory.setOnProgramEnd(undefined);
         this.memory.clear();
         this.ctx.setGoals(new_goals);
+
+        this.ctx.getRobot().setOnItemsChange((items: ItemType[]) => {
+            this.itemsHud.setItems(items);
+        });
     }
 
     // Renvoie true si on a bien changé de leaf,

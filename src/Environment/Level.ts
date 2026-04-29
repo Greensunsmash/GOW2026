@@ -13,6 +13,7 @@ export class Level {
     private robot?: MarcoBozo;
     private meshes: TransformNode[] = [];
     private items: ItemDisplay[] = [];
+    private mobs: Mobs[] = [];
 
     constructor(map: Map3, drh: AssetLibrary, scene: Scene) {
         this.map = map;
@@ -102,6 +103,10 @@ export class Level {
         
         const item = this.items.find(it => GridUtils.equals(it.getGridPos(), gridPos));
         return item ?? null;
+    }
+
+    public getMobs() {
+        return this.mobs;
     }
 
     public isWalkable(gridPos: GridPoint) {

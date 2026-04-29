@@ -33,8 +33,8 @@ export class Pour extends Group implements Executable {
     }
 
     public next(): void {
-        //console.log("Boucle : passage ", this.loop_nb, "| ", this.max_loop_nb, " | next_inst ", this.next_inst);
         if (this.next_inst >= this.list.length && this.loop_nb < this.max_loop_nb) {this.loop_nb += 1; this.next_inst = 0;}
+        console.log("Boucle : passage ", this.loop_nb, "| ", this.max_loop_nb, " | next_inst ", this.next_inst, " / ", this.list.length);
         super.next();
     }
 

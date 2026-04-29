@@ -22,7 +22,7 @@ export class Si extends Group implements Executable {
 
     public execute(): void {
         this.done = false;
-        if (this.bool.eval()) {console.log("hey"); this.done = true; this.next();}
+        if (this.bool.eval()) {console.log("running inner if"); this.done = true; this.next();}
         else this.jump_next();
         }
 

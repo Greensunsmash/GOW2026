@@ -10,14 +10,9 @@ export class GridEntity {
     protected anims : AnimationGroup[];
     protected idleAnim: AnimationGroup | undefined;
 
-    // Coordonnées logiques (compilation)
-    /*
-    protected logicalGridPos: GridPoint;
-    protected logicalFacingIndex: number = 0; */
-
-    // Coordonnées visuelles (exécution de la trace que y a dans Memory)
-    protected visualGridPos : GridPoint;
-    protected visualFacingIndex: number = 0;
+    // Coordonnées 
+    protected gridPos : GridPoint;
+    protected facingIndex: number = 0;
 
     protected level : Level;
     protected _isMoving : boolean = false;
@@ -27,12 +22,12 @@ export class GridEntity {
     constructor(drh : AssetLibrary, assetName : string, level : Level, gridPos : GridPoint) {
         this.level = level;
         //this.logicalGridPos = gridPos;
-        this.visualGridPos = gridPos;
+        this.gridPos = gridPos;
         this.initPos = gridPos;
         const pos : Vector3 = GridUtils.toWorld(gridPos);
         this.mesh = drh.createSingleInstance(assetName, pos);
         this.anims = drh.getAnimations(assetName);
-        this.initRotation = this.visualFacingIndex;
+        this.initRotation = this.facingIndex;
         this.mesh.rotation.y = this.initRotation * (Math.PI / 2);
 
         this.idleAnim = this.anims.find(anim => anim.name === "idle");
@@ -40,46 +35,10 @@ export class GridEntity {
             this.idleAnim.play(true);
     }
 
-    // Fonctions LOGIQUES (utiles pour la compilation)
-/*
-    public logicalMoveForward() {
-        const facing = GridUtils.DIRECTIONS[this.logicalFacingIndex];
-        this.tryLogicalMove(facing.x, facing.z);
-    }
-
-    public logicalMoveBackward() {
-        console.log("hey");
-        const facing = GridUtils.DIRECTIONS[this.logicalFacingIndex];
-        this.tryLogicalMove(-facing.x, -facing.z);
-    }
-
-    protected tryLogicalMove(dx: number, dz: number) {
-        const targetGridPos = GridUtils.add(
-            this.logicalGridPos,  
-            {               // je me battrais jusqu'à la mort
-                x: dx,      
-                y: 0, 
-                z: dz
-            }
-        );
-
-        if (this.level.isWalkable(targetGridPos)) 
-            this.logicalGridPos = targetGridPos;
-    }
-
-    public logicalTurnRight() {
-        // 0 -> 1 -> 2 -> 3 -> 0
-        this.logicalFacingIndex = (this.logicalFacingIndex + 1) % 4;
-    }
-
-    public logicalTurnLeft() {
-        this.logicalFacingIndex = (this.logicalFacingIndex - 1 + 4) % 4;
-    }
-
     public obstacleAhead(): boolean {
-        const facing = GridUtils.DIRECTIONS[this.logicalFacingIndex];
+        const facing = GridUtils.DIRECTIONS[this.facingIndex];
         const targetGridPos = GridUtils.add(
-            this.logicalGridPos,
+            this.gridPos,
             {
                 x: facing.x,
                 y: 0,
@@ -87,35 +46,35 @@ export class GridEntity {
             }
         );
         return !this.level.isWalkable(targetGridPos);
-    }*/
+    }
 
     // Déplacements/rotations instantannées
     public moveForward() {
-        const facing = GridUtils.DIRECTIONS[this.visualFacingIndex];
+        const facing = GridUtils.DIRECTIONS[this.facingIndex];
         this.tryMove(facing.x, facing.z);
     }
 
     public moveBackward() {
-        const facing = GridUtils.DIRECTIONS[this.visualFacingIndex];
+        const facing = GridUtils.DIRECTIONS[this.facingIndex];
         this.tryMove(-facing.x, -facing.z);
     }
 
     public turnRight() {
         if (this._isMoving) return;
         // 0 -> 1 -> 2 -> 3 -> 0
-        this.visualFacingIndex = (this.visualFacingIndex + 1) % 4;
+        this.facingIndex = (this.facingIndex + 1) % 4;
         this.rotation(Math.PI / 2);
     }
 
     public turnLeft() {
         if (this._isMoving) return;
-        this.visualFacingIndex = (this.visualFacingIndex - 1 + 4) % 4;
+        this.facingIndex = (this.facingIndex - 1 + 4) % 4;
         this.rotation(-Math.PI / 2);
     }
 
     protected tryMove(dx:number, dz:number) {
         const targetGridPos = GridUtils.add(
-            this.visualGridPos,  
+            this.gridPos,  
             {               // je me battrais jusqu'à la mort
                 x: dx,      
                 y: 0, 
@@ -129,7 +88,7 @@ export class GridEntity {
 
     private doMove(targetGridPos : GridPoint) {
         this._isMoving = true;
-        this.visualGridPos = targetGridPos;
+        this.gridPos = targetGridPos;
         this.mesh.position = GridUtils.toWorld(targetGridPos);
         for (let i = 0; i < this.posListeners.length; i++) this.posListeners[i](targetGridPos);
         this._isMoving = false;
@@ -143,31 +102,31 @@ export class GridEntity {
     // Déplacements/rotations VISUELS (animés)
 
     async visualMoveForward() {
-        const facing = GridUtils.DIRECTIONS[this.visualFacingIndex];
+        const facing = GridUtils.DIRECTIONS[this.facingIndex];
         await this.tryVisualMove(facing.x, facing.z);
     }
 
     async visualMoveBackward() {
-        const facing = GridUtils.DIRECTIONS[this.visualFacingIndex];
+        const facing = GridUtils.DIRECTIONS[this.facingIndex];
         await this.tryVisualMove(-facing.x, -facing.z);
     }
 
     async visualTurnRight() {
         if (this._isMoving) return;
         // 0 -> 1 -> 2 -> 3 -> 0
-        this.visualFacingIndex = (this.visualFacingIndex + 1) % 4;
+        this.facingIndex = (this.facingIndex + 1) % 4;
         await this.animateRotation(Math.PI / 2);
     }
 
     async visualTurnLeft() {
         if (this._isMoving) return;
-        this.visualFacingIndex = (this.visualFacingIndex - 1 + 4) % 4;
+        this.facingIndex = (this.facingIndex - 1 + 4) % 4;
         await this.animateRotation(-Math.PI / 2);
     }
 
     protected async tryVisualMove(dx: number, dz: number) {
         const targetGridPos = GridUtils.add(
-            this.visualGridPos,  
+            this.gridPos,  
             {               // je me battrais jusqu'à la mort
                 x: dx,      
                 y: 0, 
@@ -182,7 +141,7 @@ export class GridEntity {
 
     private async doVisualMove(targetGridPos : GridPoint): Promise<void> {
         this._isMoving = true;
-        this.visualGridPos = targetGridPos;
+        this.gridPos = targetGridPos;
 
         const frameRate = 60;
         const duration = 15; 
@@ -245,16 +204,14 @@ export class GridEntity {
     }
 
     public getVisualGridPos(): GridPoint {
-        return this.visualGridPos;
+        return this.gridPos;
     }
 
     public reinit() {
         this.mesh.position = GridUtils.toWorld(this.initPos);
         this.mesh.rotation.y = this.initRotation * (Math.PI / 2);
-        this.visualFacingIndex = this.initRotation;
-        this.visualGridPos = this.initPos;
-        //this.logicalFacingIndex = this.initRotation;
-        //this.logicalGridPos = this.initPos;
+        this.facingIndex = this.initRotation;
+        this.gridPos = this.initPos;
     }
 
     public dispose() {
@@ -263,7 +220,7 @@ export class GridEntity {
             this.mesh = null as any;
         }
         this.level = null as any;
-        this.visualGridPos = null as any;
+        this.gridPos = null as any;
         this._isMoving = false;
     }
 }

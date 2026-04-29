@@ -29,6 +29,7 @@ import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { ASSETS_ROOT } from "../Shared/Constants";
 import type { BooleanBlock, CategoryFactories, InstructionBlock, OpBlock, SensorBlock, StructureBlock } from "../Shared/types";
 import { PickupInstruction } from "../Language/Instructions/PickupInstruction";
+import { ItemSensor } from "../Language/Booleen/ItemSensor";
 
 export const State = { // Proposition, avoir différents symboles pour différetentes orientations : L = robot left, R = robot right etc
     Empty: " ",
@@ -194,6 +195,9 @@ export class LevelReader {
         const sensors: CategoryFactories<SensorBlock> = {
             obstacle: (root) =>
             new BasicBooleenContainer("Il y a un obstacle", new ObstacleSensor(ctx), root, scene),
+
+            item: (root) =>
+            new BasicBooleenContainer("Il y a un objet", new ItemSensor(ctx), root, scene),
         };
 
         const ops: CategoryFactories<OpBlock> = {
