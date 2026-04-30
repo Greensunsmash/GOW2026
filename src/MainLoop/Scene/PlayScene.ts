@@ -3,7 +3,7 @@ import { ListContainer } from "../../Containers/ListContainer";
 import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
 import { Level } from "../../Environment/Level";
 import { LevelReader, State, type IslandMap, type ItemType } from "../../Environment/LevelReader";
-import { Memory } from "../../Language/Memory";
+import { Memory, type GameMode } from "../../Language/Memory";
 import { QuitButton } from "../../MRGUI/buttons/QuitButton";
 import { MainNavigator } from "../../MRGUI/mainscreen/MainNavigator";
 import { OneButtonModal } from "../../MRGUI/windows/OneButtonModal";
@@ -13,6 +13,7 @@ import { GameScene } from "./GameScene";
 import { StructureContainer } from "../../Containers/StructureContainer";
 import { BlockCount } from "../../MRGUI/mainscreen/BlockCount";
 import { ItemsHUD } from "../../MRGUI/mainscreen/ItemsHUD";
+import { BasicInstContainer } from "../../Containers/BasicInstContainer";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene { // ;)
@@ -331,6 +332,7 @@ export class PlayScene extends GameScene { // ;)
         await Promise.all([
             this._drh.loadSingleAsset("robot", "character-male-e.glb"),
             this._drh.loadSingleAsset("ground", "grasscube.glb"),
+            this._drh.loadSingleAsset("cursed", "cube.glb"),
             this._drh.loadSingleAsset("wall", "stone.02.glb"),
             this._drh.loadSingleAsset("pill", "pill.glb"),
             this._drh.loadSingleAsset("heart", "heart.01.glb"),
@@ -474,5 +476,19 @@ export class PlayScene extends GameScene { // ;)
         console.log("new instruction count is : ", count);
         this.blockCount = count;
         this.blockCountDisp.setBlockCount(count);
+    }
+
+    public modeUpdate() {
+        this.toolbox.onModeChange();
+        let child_list = this.leftPanel.children;
+        for (const child of child_list) {
+            if (child instanceof ListContainer) {   
+                const insts = child.getInnerInstContainers();
+                for (const inst of insts) {
+                    if (inst instanceof BasicInstContainer)
+                        inst.triggerModeUpdate();
+                }
+            }
+        } 
     }
 }

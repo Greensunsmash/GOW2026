@@ -403,6 +403,15 @@ export class ListContainer extends GUI.Rectangle {
         return exeGroup;
     }
 
+    getInnerInstContainers(): InstructionContainer[] {
+        let insts = [];
+        for (const item of this.list) {
+            if (item instanceof InstructionContainer)
+                insts.push(item);
+        }
+        return insts;
+    } 
+
     getInstructionCount(): number {
         let count = 0;
         for (const item of this.list) {

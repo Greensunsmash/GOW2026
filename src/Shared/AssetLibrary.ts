@@ -1,4 +1,4 @@
-import { AbstractMesh, Color3, LoadAssetContainerAsync, MeshBlock, MeshBuilder, TransformNode, Vector3, type AnimationGroup, type Scene } from "@babylonjs/core";
+import { AbstractMesh, AssetContainer, Color3, LoadAssetContainerAsync, MeshBlock, MeshBuilder, TransformNode, Vector3, type AnimationGroup, type Scene } from "@babylonjs/core";
 import { ASSETS_ROOT, LayerMasks } from "./Constants";
 import "@babylonjs/loaders";
 import type { PlayScene } from "../MainLoop/Scene/PlayScene";
@@ -9,6 +9,7 @@ export class AssetLibrary {
     private readonly scene: PlayScene;
     private groups: { [key: string] : number } = {};
     private assets: { [key: string]: TransformNode } = {};
+    private containers: { [name: string]: AssetContainer } = {};
     private animationGroupsByAsset: { [key: string]: AnimationGroup[] } = {};
 
     constructor(scene : PlayScene) {
@@ -31,7 +32,7 @@ export class AssetLibrary {
 
         try {
             const container = await LoadAssetContainerAsync(AssetLibrary.MODELS_ROOT + filename, this.scene.scene);
-            const rootMesh = new TransformNode(name, this.scene.scene);
+            /*const rootMesh = new TransformNode(name, this.scene.scene);
 
             container.meshes.forEach(mesh => {
                 mesh.parent = rootMesh;
@@ -41,10 +42,12 @@ export class AssetLibrary {
 
             rootMesh.setEnabled(false);
 
-            this.assets[name] = rootMesh;
+            this.assets[name] = rootMesh;*/
+            this.containers[name] = container;
+            this.assets[name] = container.rootNodes[0] as TransformNode;
             this.animationGroupsByAsset[name] = container.animationGroups;
 
-            return rootMesh;
+            return this.assets[name];
         } catch (err) {
             console.error(`Failed to load asset '${name}' from '${AssetLibrary.MODELS_ROOT}${filename}'`, err);
             throw new Error(`Failed to load asset '${name}': ${err}`);
@@ -69,18 +72,25 @@ export class AssetLibrary {
     ): TransformNode {
         console.log("creating new ", name, " instnace");
 
-        if (!this.assets[name])
-            throw new Error(`Asset '${name}' instance could not be loaded.`);
+        const container = this.containers[name];
+        if (!container) throw new Error(`asset '${name}' container not found.`);
 
-        let rootMesh = this.assets[name];
-        let instance = rootMesh.clone(`${name}_instance`, null); 
+        const instantiatedEntries = container.instantiateModelsToScene(
+            nameFunction => `${name}_instance_${nameFunction}`, 
+            false, 
+            { doNotInstantiate: true }
+        );
 
-        if (!instance)
-            throw new Error(`Asset '${name}' instance could not be cloned.`);
-        instance.parent = null; // mon seul parent, c'est la scène - Dalida
+        console.log(instantiatedEntries);
+        let instance = instantiatedEntries.rootNodes[0] as TransformNode;
+        instance.parent = null; 
         instance.setEnabled(true);
 
+        const newAnimations = instantiatedEntries.animationGroups;
+        (instance as any).animations = newAnimations; 
+
         let childMeshes = instance.getChildMeshes();
+        childMeshes.forEach((mesh) => (mesh.isVisible = true));
         /*
         if (childMeshes.length === 0)
             childMeshes = [instance]; */

@@ -1,12 +1,15 @@
-import { TransformNode, Vector3, type Scene } from "@babylonjs/core";
+import { TransformNode, Vector3, type Scene, type Vector } from "@babylonjs/core";
 import "babylonjs-materials";
 import { MarcoBozo } from "../Entity/Robot";
 import type { AssetLibrary } from "../Shared/AssetLibrary";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
 import { State, type ItemType, type MobType, type Map3 } from "./LevelReader";
-import { ItemDisplay } from "./ItemDisplay";
-import type { Mob, MobState } from "../Entity/Mob";
+import { ItemDisplay } from "../Entity/ItemDisplay";
+import { Mob, type MobState } from "../Entity/Mob";
 import { Pig } from "../Entity/Pig";
+import { Interactable, } from "../Entity/Interactable";
+import type { EntityState, GridEntity } from "../Entity/GridEntity";
+import { SirCEye } from "../Entity/SirCEye";
 
 export class Level {
     private map: Map3;
@@ -14,9 +17,8 @@ export class Level {
     private readonly scene: Scene;
     private robot?: MarcoBozo;
     private meshes: TransformNode[] = [];
-    private items: ItemDisplay[] = [];
-    private mobs: Mob[] = [];
-    private mobStates: (Map<Mob, MobState>)[] = [];
+    private otherEntities: GridEntity[] = [];
+    private entityStates: (Map<GridEntity, EntityState>)[] = [];
 
     constructor(map: Map3, drh: AssetLibrary, scene: Scene) {
         this.map = map;
@@ -53,19 +55,28 @@ export class Level {
                             this.meshes.push(this.createFlag(pos));
                             break;
                         case State.Item:
-                            this.items.push(new ItemDisplay(this.drh, this, pos, State.Item));
+                            this.otherEntities.push(new ItemDisplay(this.drh, this, gridPos, State.Item));
                             break;
                         case State.PigUp:
-                            this.mobs.push(new Pig(this.drh, this, gridPos, 0));
+                            this.otherEntities.push(new Pig(this.drh, this, gridPos, 0));
                             break;
                         case State.PigRight:
-                            this.mobs.push(new Pig(this.drh, this, gridPos, 1));
+                            this.otherEntities.push(new Pig(this.drh, this, gridPos, 1));
                             break;
                         case State.PigDown:
-                            this.mobs.push(new Pig(this.drh, this, gridPos, 2));
+                            this.otherEntities.push(new Pig(this.drh, this, gridPos, 2));
                             break;
                         case State.PigLeft:
-                            this.mobs.push(new Pig(this.drh, this, gridPos, 3));
+                            this.otherEntities.push(new Pig(this.drh, this, gridPos, 3));
+                            break;
+                        case State.SirCEyeInteractor:
+                            this.otherEntities.push(new SirCEye(this.drh, this, gridPos));
+                            break;
+                        case State.CursedGround:
+                            const gridPosAbove = {...gridPos};
+                            gridPosAbove.y += 1;
+                            this.otherEntities.push(new SirCEye(this.drh, this, gridPosAbove));
+                            this.meshes.push(this.createCursedGround(pos));
                             break;
                     default:
                             break;
@@ -74,7 +85,7 @@ export class Level {
             }
         }
 
-        this.pushMobState();
+        this.pushEntityState();
     }
 
     private createRobot(gridPos: GridPoint): MarcoBozo {
@@ -83,6 +94,10 @@ export class Level {
 
     private createGround(pos: Vector3): TransformNode {
         return this.drh.createSingleInstance("ground", pos, true);
+    }
+
+    private createCursedGround(pos: Vector3): TransformNode {
+        return this.drh.createSingleInstance("cursed", pos, true);
     }
 
     private createWall(pos: Vector3): TransformNode {
@@ -114,20 +129,30 @@ export class Level {
         return new Vector3(centerX, centerY, centerZ);
     }
 
-    public getAllItems(): ItemType[] {
-        return this.items.map(it => it.getType());
+    public getItems(): ItemDisplay[] {
+        return this.otherEntities.filter(e => e instanceof ItemDisplay);
+    }
+
+    public getAllItemTypes(): ItemType[] {
+        return this.getItems().map(it => it.getType());
     }
 
     public getItemAt(gridPos: GridPoint): ItemDisplay | null {
         if (!this.isWalkable(gridPos)) 
             return null;
         
-        const item = this.items.find(it => GridUtils.equals(it.getGridPos(), gridPos));
+        const item = this.getItems().find(it => GridUtils.equals(it.getGridPos(), gridPos));
         return item ?? null;
     }
 
     public getMobs() {
-        return this.mobs;
+        return this.otherEntities.filter(e => e instanceof Mob);
+    }
+
+    public getInteratablesAt(gridPos: GridPoint): Interactable[] {
+        return this.otherEntities
+                    .filter(et => et instanceof Interactable)
+                    .filter(int => GridUtils.equals(gridPos, int.getVisualGridPos()));
     }
 
     public isVoidBelow(gridPos: GridPoint) {
@@ -142,8 +167,11 @@ export class Level {
 
         if (gridPos.y - 1 >= 0) {
             const nextStateBelow = this.map[gridPos.y - 1][gridPos.z][gridPos.x];
-            if (nextStateBelow != State.Ground)
+            if ((nextStateBelow != State.Ground) && (nextStateBelow != State.CursedGround)) {
+                console.log("grid pos ", gridPos, "is deadly.");
                 return true;
+            } else
+                return false;
         }
 
         return false;
@@ -185,27 +213,28 @@ export class Level {
         return null; // aucun state trouvé
     }
 
-    public pushMobState() {
-        const currState: Map<Mob, MobState> = new Map();
-        for (const mob of this.mobs) {
-            currState.set(mob, mob.getState());
+    public pushEntityState() {
+        const currState: Map<GridEntity, EntityState> = new Map();
+        for (const ent of this.otherEntities) {
+            currState.set(ent, ent.getState());
         }
-        this.mobStates.push(currState);
-        console.log(this.mobStates);
+        currState.set(this.robot!, this.robot!.getState());
+        this.entityStates.push(currState);
+        console.log(this.entityStates);
     }
 
-    public popMobState() {
-        let currState: Map<Mob, MobState> | undefined = undefined;
-        if (this.mobStates.length === 0) {
+    public popEntityState() {
+        let currState: Map<GridEntity, EntityState> | undefined = undefined;
+        if (this.entityStates.length === 0) {
             console.warn("Cannot load a mob state when mob state stack is empty");
             return;
-        } else if (this.mobStates.length === 1) {
+        } else if (this.entityStates.length === 1) {
             console.warn("popping mob state, but only initial state in stack, so not removing first");
-            currState = this.mobStates[0];
+            currState = this.entityStates[0];
         } else {
-            currState = this.mobStates.pop();
+            currState = this.entityStates.pop();
         }
-        console.log(this.mobStates);
+        console.log(this.entityStates);
         console.log(currState);
 
         if (!currState) {
@@ -213,30 +242,32 @@ export class Level {
             return;
         }
 
-        this.loadMobState(currState);
+        this.loadEntityState(currState);
     }
 
-    private loadMobState(state: Map<Mob, MobState>) {
-        for (const mob of state.keys()) {
-            const mobState = state.get(mob);
-            if (!mobState)
+    private loadEntityState(state: Map<GridEntity, EntityState>) {
+        for (const ent of state.keys()) {
+            const entState = state.get(ent);
+            if (!entState)
                 continue;
-            mob.setState(mobState);
+            ent.setState(entState);
         }
+        const robotState = state.get(this.robot!);
+        this.robot?.setState(robotState!);
     }
 
     public reinitLevel() {
-        const initMobState = this.mobStates[0];
-        if (!initMobState) {
+        const initEntState = this.entityStates[0];
+        if (!initEntState) {
             console.warn("reinit level called when no mob state has ever been stored ?? WHAT THE FUCK ??");
             return;
         }
-        this.loadMobState(initMobState);
-        this.mobStates.splice(1); // supprime tout apres le premier
+        this.loadEntityState(initEntState);
+        this.entityStates.splice(1); // supprime tout apres le premier
         this.robot?.reinit();
-        for (const item of this.items)
+        for (const item of this.getItems())
             item.setDisplay(true);
-        for (const mob of this.mobs)
+        for (const mob of this.getMobs())
             mob.reinit();
     }
 
@@ -247,17 +278,8 @@ export class Level {
             this.robot = undefined;
         }
 
-        for (const mesh of this.meshes) {
-            mesh.dispose();
-        }
-
-        for (const item of this.items) {
-            item.dispose();
-        }
-
-        for (const mob of this.mobs) {
-            mob.dispose();
-        }
+        this.meshes.map(mesh => mesh.dispose());
+        this.otherEntities.map(e => e.dispose());
 
         this.map = [] as Map3;
     }

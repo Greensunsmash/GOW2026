@@ -33,6 +33,8 @@ export class ExecutionContext {
     private scene: PlayScene;
     private memory: Memory;
 
+    private ticksSinceLastModeChange = 0;
+
     constructor(level: Level, scene: PlayScene) {
         this.robot = level.getRobot();
         this.level = level;
@@ -48,47 +50,36 @@ export class ExecutionContext {
         this.level = level;
         this.robot = level.getRobot();
         this.robot.posListeners = [];
+        this.ticksSinceLastModeChange = 0;
     }
 
+    // BOUCLE S'EXECUTANT A CHAQUE TICK DE JEU
     public async nextTick(robotIntention?: GridPoint, instant?: boolean) {
-        this.level.pushMobState();
-
         let robotDead: boolean = false;
+        let robotBounce: boolean = false;
+
+        // sauvegarder les états des entités
+        this.level.pushEntityState();
+        // sauvegarder l'état du jeu (pour qu'il soit réversible)
+        this.memory.onNextTick();
+
+        // recueillir les intentions des mobs
         const intentions: Map<Mob, MobIntention> = new Map();
         const mobs = this.level.getMobs();
         for (const mob of mobs) {
             intentions.set(mob, mob.nextTickIntention());
         }
 
-        if (robotIntention === undefined)
-            robotIntention = this.robot.getVisualGridPos();
-
-        if (!this.level.isWalkable(robotIntention)) {
-            // plus tard, gérer séparément la mort par obstacle et la mort par chute
-            robotDead = true;
-        }
-
-        for (const mob of mobs) {
-            const mobInt = intentions.get(mob);
-            if (!mobInt) continue;
-
-            const mobPos = mob.getVisualGridPos();
-
-            if (GridUtils.equals(mobInt.nextPos, robotIntention) // meme case dest.
-                || GridUtils.equals(robotIntention, mob.getVisualGridPos()) // robot fonce sur mob
-                || (GridUtils.equals(mobInt.nextPos, this.robot.getVisualGridPos()) &&
-                    GridUtils.equals(robotIntention, mobPos))) { // coll. frontale
-                console.warn("Deadly collision !");
-                robotDead = true;
-            }
-        }
-
+        // vérifier les collisions mobs/mobs ou mobs/obstacles ou les chutes de mobs
         const checkCollisions = (mob: Mob, intention: MobIntention): CollisionType => {
+            console.log("mob " , mob, " intention is on ", intention);
             if (this.level.isObstacle(intention.nextPos))
                 return "WALL";
 
-            if (this.level.isVoidBelow(intention.nextPos))
+            if (this.level.isVoidBelow(intention.nextPos)) {
+                console.log("in checkcoll : void collision");
                 return "VOID";
+            }
 
             for (const otherMob of mobs) {
                 if (mob === otherMob)
@@ -139,6 +130,7 @@ export class ExecutionContext {
                             mobInt.nextPos = mob.getVisualGridPos();
                         }
                     } else if (collision === "VOID") {
+                        console.log("mob dead : ", mob);
                         mobInt.deadDuringTick = true;
                     } else if (collision === "OTHERMOB") {
                         mobInt.status = "STUCK";
@@ -148,21 +140,92 @@ export class ExecutionContext {
             }
         }
 
+
+        // process l'intention du robot
+
+        // s'il ne bouge pas ce tick (turn left, right, attendre),
+        // son intention c'est juste sa position actuelle (flemmard)
+        if (robotIntention === undefined)
+            robotIntention = this.robot.getVisualGridPos();
+
+        if (this.level.isObstacle(robotIntention)) {
+            if (this.memory.getGameMode() === "PIGMODE") {
+                // il rebondit
+                const cur = this.robot.getVisualGridPos();
+                const dx = robotIntention.x - cur.x;
+                const dz = robotIntention.z - cur.z;
+                robotIntention = { x: cur.x - dx, y: cur.y, z: cur.z - dz };
+                robotBounce = true;
+            } else {
+                robotDead = true; 
+            }
+        }
+
+        // à cet instant, les positions réelles de tous les mobs sont connues
+
+        if (this.level.isVoidBelow(robotIntention)) {
+            // plus tard, gérer séparément les visuels de la mort par obstacle et la mort par chute
+            robotDead = true;
+        }
+
+        for (const mob of mobs) {
+            const mobInt = intentions.get(mob);
+            if (!mobInt) continue;
+
+            const mobPos = mob.getVisualGridPos();
+
+            if (GridUtils.equals(mobInt.nextPos, robotIntention) // meme case dest.
+                || GridUtils.equals(robotIntention, mob.getVisualGridPos()) // robot fonce sur mob
+                || (GridUtils.equals(mobInt.nextPos, this.robot.getVisualGridPos()) &&
+                    GridUtils.equals(robotIntention, mobPos))) { // coll. frontale
+                console.warn("Deadly collision !");
+                robotDead = true;
+            }
+        }
+
         if (instant) {
             for (const mob of mobs) {
                 await mob.doNextTick(intentions.get(mob)!, true);
             }
 
             if (!GridUtils.equals(this.robot.getVisualGridPos(), robotIntention))
-                this.robot.doMove(robotIntention);
+                this.robot.doMove(robotIntention, robotBounce);
         } else {
             const promises = mobs.map(mob => mob.doNextTick(intentions.get(mob)!));
             
             if (!GridUtils.equals(this.robot.getVisualGridPos(), robotIntention))
-                promises.push(this.robot.doVisualMove(robotIntention))
+                promises.push(this.robot.doVisualMove(robotIntention, robotBounce))
 
+            // exécuter toutes les fonctions async en meme temps
             await Promise.all(promises);
         }
+
+        if (this.memory.getGameMode() === "PIGMODE"
+            && this.ticksSinceLastModeChange >= 3) {
+                this.memory.setGameMode("NORMAL");
+                this.robot.backToACuteLittleRobot();
+            }
+
+        // gestion des interactions
+        // on sauvegarde le mode (normal/pig) avant toute interaction,
+        // puisque celles-ci peuvent modifier le mode (les sir c eyes)
+        // ainsi on peut savoir si pendant ce tick on a changé de mode ou pas
+        // pour pouvoir décider si on réniit. ou incrémente el countor
+        const gmBeforeInteract = this.memory.getGameMode();
+
+        const interactablesAtRobotPos = this.level.getInteratablesAt(this.robot.getVisualGridPos());
+        for (const int of interactablesAtRobotPos) {
+            await int.onInteract(this.robot);
+        }
+
+        if (this.memory.getGameMode() === "PIGMODE") {
+            if (gmBeforeInteract === "NORMAL")
+                this.ticksSinceLastModeChange = 0;
+            else
+                this.ticksSinceLastModeChange++;
+        }
+        
+        this.scene.modeUpdate();
 
         if (robotDead) {
             console.warn("DEAD!!!");
@@ -172,7 +235,9 @@ export class ExecutionContext {
     }
 
     public async prevTick() {
-        this.level.popMobState();
+        this.memory.onPrevTick();
+        this.scene.modeUpdate()
+        this.level.popEntityState();
     }
 
     public setGoals(goals: Goal[]) {
@@ -189,7 +254,7 @@ export class ExecutionContext {
                         break;
                     case "pickup":
                         console.log(goal);
-                        if (!stringArraysEq(this.robot.getCarriedItems(), this.level.getAllItems()))
+                        if (!stringArraysEq(this.robot.getCarriedItems(), this.level.getAllItemTypes()))
                             unreached = true;
                         break;
                     default:

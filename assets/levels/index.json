@@ -10,6 +10,7 @@
     {"file": "level7.json", "name": "Ca se complique... 2 (en travaux)"},
     {"file": "level8.json", "name": "Variables 1"},
     {"file": "level9.json", "name": "Variables 2"},
-    {"file": "test_mobs.json", "name": "Copains comme cochons"}
+    {"file": "test_mobs.json", "name": "Copains comme cochons"},
+    {"file": "test_sirc.json", "name": "Pas copains les cochons ?"}
   ] 
 }

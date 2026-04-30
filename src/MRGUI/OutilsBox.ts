@@ -1,7 +1,7 @@
 import { Button, Container, Control, Rectangle, ScrollViewer, StackPanel, TextBlock } from "@babylonjs/gui";
 import { BlocContainer } from "../Containers/BlocContainer";
 import { DragBehavior } from "../Containers/DragBehavior";
-import { FacticeFactory } from "../Containers/FacticeFactory";
+import { FacticeBlock, FacticeFactory } from "../Containers/FacticeFactory";
 import { InstructionContainer } from "../Containers/InstructionContainer";
 import { ListContainer } from "../Containers/ListContainer";
 import { FlagContainer } from "../Containers/Prefabs/FlagContainer";
@@ -10,6 +10,8 @@ import { VarValueContainer } from "../Containers/Prefabs/VarValueContainer";
 import { SetVarContainer } from "../Containers/Prefabs/SetVarContainer";
 import { OneButtonModal } from "./windows/OneButtonModal";
 import type { PlayScene } from "../MainLoop/Scene/PlayScene";
+import { Memory } from "../Language/Memory";
+import { BasicInstContainer } from "../Containers/BasicInstContainer";
 
 /*
 La bôite à boîtes,
@@ -18,6 +20,7 @@ La bôite à boîtes,
 export class OutilsBox extends Rectangle {
     private readonly scrollViewer: ScrollViewer;
     private readonly stack: StackPanel;
+    private facticeBlocks: FacticeBlock[] = [];
     private categories = new Map<string, StackPanel>();
     private buttons : Button[] = [];
     private vars: string[] = [];
@@ -232,12 +235,12 @@ export class OutilsBox extends Rectangle {
             // Et on drop le bloc de base, qui nous servait juste à ça
             newRoot.removeControl(realBlock);
             realBlock.dispose();
-
-            facticeBlock.left = "15px";
-            newRoot.addControl(facticeBlock);
+            this.facticeBlocks.push(facticeBlock);
+            facticeBlock.innerCtrl.left = "15px";
+            newRoot.addControl(facticeBlock.innerCtrl);
 
             // quand l'user va cliquer sur le bloc factice
-            facticeBlock.onPointerDownObservable.add((evt) => {
+            facticeBlock.innerCtrl.onPointerDownObservable.add((evt) => {
                 if (this.blockLimit
                     && ((realBlock instanceof ListContainer) || (realBlock instanceof InstructionContainer))
                 ) {
@@ -258,8 +261,8 @@ export class OutilsBox extends Rectangle {
 
                 // on le place là ou état le bloc factice
                 // (_curentMeasure c pour avoir les coords. absolues)
-                const absoluteLeft = facticeBlock._currentMeasure.left;
-                const absoluteTop = facticeBlock._currentMeasure.top;
+                const absoluteLeft = facticeBlock.innerCtrl._currentMeasure.left;
+                const absoluteTop = facticeBlock.innerCtrl._currentMeasure.top;
                 
                 // on agit différemment selon le type de blocs
                 // si c'est une List (donc probablement une structure)
@@ -272,6 +275,11 @@ export class OutilsBox extends Rectangle {
                     realDragBlock.click(evt.x, evt.y, true);
                 // si c'est une instruction
                 } else if (realDragBlock instanceof InstructionContainer) {  
+                    if (realDragBlock instanceof BasicInstContainer) {
+                        // ca devient "avancer d'une case" si on est en pig mode
+                        realDragBlock.triggerModeUpdate();
+                    }
+
                     // on l'encadre dans une liste,
                     // elle peut pas existe rseule
                     const listCtn = new ListContainer(this.root, this.scene);
@@ -327,8 +335,21 @@ export class OutilsBox extends Rectangle {
         this.blockLimit = limit;
     }
 
+    public onModeChange() {
+        const mode = Memory.get().getGameMode();
+        for (const factBlk of this.facticeBlocks) {
+            if (factBlk.updateOnModeChange) {
+                if (mode === "PIGMODE")
+                    factBlk.setFirstText("Avancer d'une case");
+                else
+                    factBlk.resetFirstText();
+            }
+        }
+    }
+
     public clear() {
         // Supprimer tous les blocs présents dans la scène (sauf la toolbox)
+        // euh ??? bah non en faittttt
         /*
         const children = [...this.root.children];
         for (const child of children) {
@@ -339,6 +360,7 @@ export class OutilsBox extends Rectangle {
         }
         */
         //this.scene.blockCount = 0;
+        this.facticeBlocks = [];
         this.categories.clear();
         this.stack.clearControls();
         this.vars = [];

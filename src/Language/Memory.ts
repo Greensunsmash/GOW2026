@@ -8,6 +8,8 @@ export type StackFrame = {
     variables: Map<string, Value | Boolean>;
 };
 
+export type GameMode = "NORMAL" | "PIGMODE";
+
 // Explication de l'execution d'un programme.
 // On appelle playScene.run() qui transforme les blocs visuels en blocs logiques.
 // Puis on lance le flag. Chaque bloc à les fonctions next et back, qui servent à se déplacer dans le programme, en appellant les next et back listener
@@ -34,6 +36,9 @@ export class Memory {
 
     private onProgramEnd: (() => void) | undefined = undefined;
 
+    private gameMode: GameMode = "NORMAL";
+    private gameModeStack: GameMode[] = [];
+
     private constructor() {
         this.values = new Map();
         this.booleans = new Map();
@@ -48,6 +53,7 @@ export class Memory {
         this.callStack = [];
         this.current_instruction = undefined;
         this.ran = false;
+        this.gameMode = "NORMAL";
     }
 
     // Singleton
@@ -146,6 +152,24 @@ export class Memory {
     public hasRan() {return this.ran;}
 
     public setOnProgramEnd(onProgramEnd: (() => void) | undefined) {this.onProgramEnd = onProgramEnd;}
+
+    public getGameMode(): GameMode {return this.gameMode;}
+    public setGameMode(gm: GameMode) {this.gameMode = gm;}
+
+    public onNextTick() {
+        this.gameModeStack.push(this.gameMode);
+    }
+    public onPrevTick() {
+        if (this.gameModeStack.length === 0) {
+            console.warn("Cannot load a game mode state when game mode state stack is empty");
+            return;
+        } else if (this.gameModeStack.length === 1) {
+            console.warn("popping GAME (not mob) state, but only initial state in stack, so not removing first");
+            this.gameMode = this.gameModeStack[0];
+        } else {
+            this.gameMode = this.gameModeStack.pop()!;
+        }
+    }
 
     // PRINT
     public static print(): void { const mem = Memory.get(); console.log("Memory :", mem.callStack, mem.current_instruction); }

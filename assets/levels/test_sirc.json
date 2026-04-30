@@ -2,15 +2,15 @@
     "islands": [
         {
             "nb":1,
-            "begin_dialog": "Ramassez vos poubelles.",
-            "end_dialog" : "Bravo camion.",
+            "begin_dialog": "Démerde toi.",
+            "end_dialog" : "Bien joué Ulysse tout lisse !",
             "layouts":[
                 [
                     [
                         "   .   ",
                         ".......",
                         ".......",
-                        ".......",
+                        "...O...",
                         ".......",
                         "   .   "
                     ],
@@ -18,8 +18,8 @@
                         "   @   ",
                         "u     u",
                         "       ",
-                        "   !   ",
-                        "#     #",
+                        "      ",
+                        "#  #  #",
                         "   x   "
                     ]
                 ]
@@ -51,9 +51,6 @@
             "goal": [
                 {
                     "name": "arrival"
-                },
-                {
-                    "name": "pickup"
                 }
             ]
         }

@@ -2,7 +2,17 @@ import { Animation, AnimationGroup, CubicEase, EasingFunction, Vector3, type Tra
 import type { AssetLibrary } from "../Shared/AssetLibrary";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
 import type { Level } from "../Environment/Level";
-import type { MobIntention } from "../MainLoop/ExecutionContext";
+import type { ItemType } from "../Environment/LevelReader";
+import type { MarcoBozo } from "./Robot";
+
+export type EntityState = {
+    pos?: GridPoint;
+    facingIndex?: number;
+    displayed?: boolean;
+    dead?: boolean;
+    carriedItems?: ItemType[];
+    affectedByADivineCurse?: boolean;
+}
 
 export abstract class GridEntity {
     protected readonly initPos : GridPoint;
@@ -18,22 +28,23 @@ export abstract class GridEntity {
     protected level : Level;
     protected _isMoving : boolean = false;
     
-    public posListeners: ((pos: GridPoint) => void)[] = [];
+    public posListeners: ((entity: GridEntity) => Promise<void>)[] = [];
 
-    constructor(drh : AssetLibrary, assetName : string, level : Level, gridPos : GridPoint) {
+    constructor(drh : AssetLibrary, assetName : string, level : Level, gridPos : GridPoint, scale: boolean = true) {
         this.level = level;
         //this.logicalGridPos = gridPos;
         this.gridPos = gridPos;
         this.initPos = gridPos;
         const pos : Vector3 = GridUtils.toWorld(gridPos);
-        this.mesh = drh.createSingleInstance(assetName, pos);
-        this.anims = drh.getAnimations(assetName);
+        if (scale)
+            this.mesh = drh.createSingleInstance(assetName, pos);
+        else
+            this.mesh = drh.createSingleInstance(assetName, pos, false, 1.0);
+        this.anims = (this.mesh as any).animations;
         this.initRotation = this.facingIndex;
         this.mesh.rotation.y = this.initRotation * (Math.PI / 2);
 
-        this.idleAnim = this.anims.find(anim => anim.name === "idle");
-        if (this.idleAnim)
-            this.idleAnim.play(true);
+        (this.mesh as any).animations?.find(anim => anim.name.includes("idle"))?.play(true);
     }
 
     public obstacleAhead(): boolean {
@@ -99,11 +110,15 @@ export abstract class GridEntity {
         //else throw new Error("Accident de la route sale chauffard");
     }
 
-    public doMove(targetGridPos : GridPoint) {
+    public doMove(targetGridPos : GridPoint, bounce?: boolean) {
         this._isMoving = true;
         this.gridPos = targetGridPos;
         this.mesh.position = GridUtils.toWorld(targetGridPos);
-        for (let i = 0; i < this.posListeners.length; i++) this.posListeners[i](targetGridPos);
+        if (bounce) {
+            this.facingIndex = (this.facingIndex + 2) % 4;
+            this.rotation(Math.PI);
+        }
+        //for (let i = 0; i < this.posListeners.length; i++) this.posListeners[i](this);
         this._isMoving = false;
     }
 
@@ -152,16 +167,19 @@ export abstract class GridEntity {
         // (remplacer par quelque chose de moins explosif mdr)
     }
 
-    public async doVisualMove(targetGridPos : GridPoint): Promise<void> {
+    public async doVisualMove(targetGridPos : GridPoint, bounce?: boolean): Promise<void> {
+        if (bounce) {
+            await this.animateRotation(Math.PI);
+        }
+
         this._isMoving = true;
         this.gridPos = targetGridPos;
 
         const frameRate = 60;
         const duration = 15; 
 
-        let anim: AnimationGroup | undefined = this.anims.find(anim => anim.name === "walk");
-        if (anim)
-            anim.play(true);
+        const anim = (this.mesh as any).animations?.find(anim => anim.name.includes("walk"));
+        anim?.play(true);
 
         return new Promise ((resolve) => Animation.CreateAndStartAnimation(
             "slide",
@@ -173,15 +191,13 @@ export abstract class GridEntity {
             GridUtils.toWorld(targetGridPos), 
             Animation.ANIMATIONLOOPMODE_CONSTANT,
             this.createEasing(), 
-            () => {
+            async () => {
                 this._isMoving = false; 
                 for (let i = 0; i < this.posListeners.length; i++) {
-                    this.posListeners[i](targetGridPos);
+                    await this.posListeners[i](this);
                 }
-                if (anim)
-                    anim.stop();
-                if (this.idleAnim)
-                    this.idleAnim.play(true);
+                anim?.stop();
+                (this.mesh as any).animations?.find(anim => anim.name.includes("idle"))?.play(true);
                 console.log("ending dovisualmove");
                 resolve();
             }
@@ -241,4 +257,7 @@ export abstract class GridEntity {
         this.gridPos = null as any;
         this._isMoving = false;
     }
+
+    abstract getState(): EntityState;
+    abstract setState(state: EntityState): void;
 }

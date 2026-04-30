@@ -45,7 +45,9 @@ export const State = { // Proposition, avoir différents symboles pour différet
     PigLeft: "l",
     PigRight: "r",
     PigUp: "u",
-    PigDown: "d"
+    PigDown: "d",
+    SirCEyeInteractor: "o",
+    CursedGround: "O"
 } as const;
 
 export type ItemType = typeof State.Item;
@@ -154,19 +156,19 @@ export class LevelReader {
     private createFactories(ctx: ExecutionContext, scene: GameScene) {
         const instructions: CategoryFactories<InstructionBlock> = {
             forward: (root) =>
-            new BasicInstContainer("Avancer d'une case", new MoveForwardInstuction(ctx), root, scene),
+            new BasicInstContainer("Avancer d'une case", new MoveForwardInstuction(ctx),  root, scene),
 
             backward: (root) =>
-            new BasicInstContainer("Reculer d'une case", new MoveBackwardInstuction(ctx), root, scene),
+            new BasicInstContainer("Reculer d'une case", new MoveBackwardInstuction(ctx), root, scene, new MoveForwardInstuction(ctx)),
 
             left: (root) =>
-            new BasicInstContainer("Tourner à gauche", new TurnLeftInstruction(ctx), root, scene),
+            new BasicInstContainer("Tourner à gauche", new TurnLeftInstruction(ctx), root, scene, new MoveForwardInstuction(ctx)),
 
             right: (root) =>
-            new BasicInstContainer("Tourner à droite", new TurnRightInstruction(ctx), root, scene),
+            new BasicInstContainer("Tourner à droite", new TurnRightInstruction(ctx), root, scene, new MoveForwardInstuction(ctx)),
 
             pickup: (root) =>
-            new BasicInstContainer("Ramasser l'objet", new PickupInstruction(ctx), root, scene),
+            new BasicInstContainer("Ramasser l'objet", new PickupInstruction(ctx), root, scene, new MoveForwardInstuction(ctx)),
 
             wait: (root) =>
             new BasicInstContainer("Attendre", new WaitInstruction(ctx), root, scene),

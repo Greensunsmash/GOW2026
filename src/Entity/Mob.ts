@@ -1,25 +1,21 @@
-import { ThinSSAO2BlurPostProcess } from "@babylonjs/core/PostProcesses/thinSSAO2BlurPostProcess";
 import type { MobIntention } from "../MainLoop/ExecutionContext";
-import type { GridPoint, GridUtils } from "../Shared/GridUtils";
-import { GridEntity } from "./GridEntity";
-
-export type MobState = {
-    pos: GridPoint;
-    facingIndex: number;
-    dead: boolean;
-}
+import { GridEntity, type EntityState } from "./GridEntity";
 
 export abstract class Mob extends GridEntity {
     protected dead: boolean = false;
 
-    public getState(): MobState {
-        return {pos: {...this.gridPos}, facingIndex: this.facingIndex, dead: this.dead};
+    public override getState(): EntityState {
+        return {
+            pos: {...this.gridPos}, 
+            facingIndex: this.facingIndex, 
+            dead: this.dead
+        };
     }
 
-    public setState(state: MobState) {
-        this.gridPos = state.pos;
-        this.facingIndex = state.facingIndex;
-        this.dead = state.dead;
+    public override setState(state: EntityState) {
+        this.gridPos = state.pos!;
+        this.facingIndex = state.facingIndex!;
+        this.dead = state.dead!;
         if (!this.dead)
             this.mesh.setEnabled(true);
         this.updateVisualPos();

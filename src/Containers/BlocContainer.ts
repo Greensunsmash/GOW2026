@@ -170,6 +170,10 @@ export class BlocContainer extends GUI.Rectangle {
     unableSlotHovering():void {}
     enableSlotHovering():void {}
 
+    public updateFirstLabel(newLabel: string) {
+        this.labels[0].text = newLabel;
+    }
+
     // Getters
     public getSlots(): readonly GUI.Rectangle[] {return this.slots;}
     public getContainer(): GUI.StackPanel {return this.container;}
