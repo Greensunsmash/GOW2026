@@ -6,7 +6,7 @@ import { Booleen } from "../../Booleen/Booleen";
 
 export class TantQue extends Group implements Executable {
     private bool : Booleen;
-    public loop_nb : number = 0;
+    public loop_nb : number[] = [];
 
     constructor(e: Executable | Executable[] | Booleen, boolOptional?: Booleen) {
         if (e instanceof Booleen) {
@@ -21,37 +21,43 @@ export class TantQue extends Group implements Executable {
         }
     }
 
-    public execute(): void {
+    public execute(): void { // Vérifiez pour une condition fausse dès le départ
         const b = this.bool.eval();
+        this.loop_nb.push(0)
+        this.next_inst.push(0);
         if (b) {
-            this.loop_nb = 1;
+            this.loop_nb[this.loop_nb.length -1] += 1;
             this.next();
         }
-        else console.log("oups");
+        else this.jump_next();
     }
 
     public next(): void {
-        if (this.next_inst >= this.list.length && this.bool.eval()) {
-            this.loop_nb += 1; 
-            this.next_inst = 0;
+        const i = this.next_inst.length - 1;
+        if (this.next_inst[i] >= this.list.length && this.bool.eval()) {
+            this.loop_nb[i] += 1; 
+            this.next_inst[i] = 0;
         }
         super.next();
     }
 
     public back(): void {
-        this.next_inst -= 1;
+        const i = this.next_inst.length - 1;
+        this.next_inst[i] -= 1;
         //console.log("back", this.next_inst, " ", this.loop_nb);
-        const prev = this.list[(this.next_inst >=0) ? this.next_inst : this.list.length -1];
+        const prev = this.list[(this.next_inst[i] >=0) ? this.next_inst[i] : this.list.length -1];
         const idx = prev.next_listeners.indexOf(this.next);
         const idx2 = prev.back_listeners.indexOf(this.back);
         if (idx !== -1) prev.next_listeners.splice(idx, 1);
         if (idx2 !== -1) prev.back_listeners.splice(idx, 1);
 
-        if (this.next_inst <= 0 && this.loop_nb > 1) {this.next_inst = this.list.length; this.loop_nb -=1;}
-        if (this.next_inst > 0) Memory.get().setCurrentInstruction(this.getBaseInstruction());
-        else if (this.loop_nb <= 1) this.jump_back();
+        if (this.next_inst[i] <= 0 && this.loop_nb[i] > 1) {this.next_inst[i] = this.list.length; this.loop_nb[i] -=1;}
+        if (this.next_inst[i] > 0) Memory.get().setCurrentInstruction(this.getBaseInstruction());
+        else if (this.loop_nb[i] <= 1) this.jump_back();
         
     }
+
+    protected jump_back():void {this.loop_nb.pop(); super.jump_back();}
 
     onLaunch(l: Launchable): boolean {
         if (this.bool.onLaunch(l)) return super.onLaunch(l);
@@ -59,7 +65,7 @@ export class TantQue extends Group implements Executable {
     }
 
     getBaseInstruction():Executable{
-        if (this.loop_nb == 0) return this;
+        if (this.loop_nb[this.next_inst.length - 1] == 0) return this;
         else return super.getBaseInstruction();
     }
 }
