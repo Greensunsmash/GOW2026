@@ -147,76 +147,84 @@ export class ListContainer extends GUI.Rectangle {
                     // Si on a cliqué sur la fin ou le milieu d'une structure, alors c'est comme si c'était le début de cette structure
                     const save = nb;
                     const s2 = this.structureList.filter((x) => x.getQueue() === this.list[nb] || x.getMid() === this.list[nb]);
-                    if (s2.length === 1) nb = s2[0].getHeaderID();
-
-                    let s = this.structureList.filter((x) => x.contains(nb));
-                    let toMove: InstructionContainer[] = []; // Les blocs qu'on va déplacer
-                    let structToMove: StructureContainer[] = []; // Les structures qu'on va déplacer
-
-                    const resolveSliceEnd = (structure: StructureContainer, start: number) => {
-                        const mid = structure.getMid?.();
-                        const midID = mid !== undefined && mid !== null ? structure.getMidID() : null;
-                        const queueID = structure.getQueueID();
-
-                        if (midID !== null) {
-                            if (start < midID) return midID;
+                    if (s2.length === 1) {
+                        nb = s2[0].getHeaderID();
+                    }
+                    if (nb == 0 || (nb == 1 && this.list.indexOf(this.magnet) == 0)) { // Si jamais en réalité, la structure commence la liste
+                        l.dispose();
+                        l = this;
+                        this.parent?.removeControl(this);
+                        this.root.addControl(this);
+                    }
+                    else {
+                            let s = this.structureList.filter((x) => x.contains(nb));
+                            let toMove: InstructionContainer[] = []; // Les blocs qu'on va déplacer
+                            let structToMove: StructureContainer[] = []; // Les structures qu'on va déplacer
+                            
+                            const resolveSliceEnd = (structure: StructureContainer, start: number) => {
+                                const mid = structure.getMid?.();
+                                const midID = mid !== undefined && mid !== null ? structure.getMidID() : null;
+                            const queueID = structure.getQueueID();
+                            
+                            if (midID !== null) {
+                                if (start < midID) return midID;
+                                return queueID;
+                            }
                             return queueID;
-                        }
-                        return queueID;
-                    };
-
-                    if (s.length === 1) { // Si le bloc n'appartient qu'à une seule structure
-                        const end = resolveSliceEnd(s[0], nb);
-
-                        toMove = this.list.slice(nb, end).filter(
-                            (x) => x instanceof InstructionContainer
-                        );
+                        };
                         
-                        structToMove = this.structureList.filter((x) => {
-                            const mid = x.getMid?.();
-                            const midID = mid !== undefined && mid !== null ? x.getMidID() : null;
-                            const upperBound = midID !== null && nb < midID ? midID : x.getQueueID();
-
-                            return x.getHeaderID() >= nb && x.getHeaderID() < upperBound;
-                        });
+                        if (s.length === 1) { // Si le bloc n'appartient qu'à une seule structure
+                            const end = resolveSliceEnd(s[0], nb);
+                            
+                            toMove = this.list.slice(nb, end).filter(
+                                (x) => x instanceof InstructionContainer
+                            );
+                            
+                            structToMove = this.structureList.filter((x) => {
+                                const mid = x.getMid?.();
+                                const midID = mid !== undefined && mid !== null ? x.getMidID() : null;
+                                const upperBound = midID !== null && nb < midID ? midID : x.getQueueID();
+                                
+                                return x.getHeaderID() >= nb && x.getHeaderID() < upperBound;
+                            });
+                        }
+                        else if (s.length > 1) { // Si le bloc appartient à plusieurs structure, on choisit la bonne
+                            s.sort((x, y) => y.getHeaderID() - x.getHeaderID());
+                            
+                            const end = resolveSliceEnd(s[0], nb);
+                            
+                            toMove = this.list.slice(nb, end).filter(
+                                (x) => x instanceof InstructionContainer
+                            );
+                            
+                            structToMove = this.structureList.filter((x) => {
+                                const mid = x.getMid?.();
+                                const midID = mid !== undefined && mid !== null ? x.getMidID() : null;
+                                const upperBound = midID !== null && nb < midID ? midID : x.getQueueID();
+                                
+                                return x.getHeaderID() >= nb && x.getHeaderID() < upperBound;
+                            });
+                        }
+                        else { // Si ça n'appartient pas à une structure
+                            toMove = this.list.slice(nb).filter(
+                                (x) => x instanceof InstructionContainer
+                            );
+                            structToMove = this.structureList.filter((x) => x.getHeaderID() >= nb);
+                        }
+                        
+                        // Et maintenant on déplace tout
+                        for (const item of toMove) {
+                            this.removeInstruction(item);
+                        }
+                        for (let i = toMove.length - 1; i >= 0; i--) {
+                            l.addInstruction(toMove[i], 0);
+                        }
+                        for (const struct of structToMove) {
+                            this.structureList.splice(this.structureList.indexOf(struct), 1);
+                            l.addStruct(struct);
+                        }
+                        l.refreshIdentation();
                     }
-                    else if (s.length > 1) { // Si le bloc appartient à plusieurs structure, on choisit la bonne
-                        s.sort((x, y) => y.getHeaderID() - x.getHeaderID());
-
-                        const end = resolveSliceEnd(s[0], nb);
-
-                        toMove = this.list.slice(nb, end).filter(
-                            (x) => x instanceof InstructionContainer
-                        );
-
-                        structToMove = this.structureList.filter((x) => {
-                            const mid = x.getMid?.();
-                            const midID = mid !== undefined && mid !== null ? x.getMidID() : null;
-                            const upperBound = midID !== null && nb < midID ? midID : x.getQueueID();
-
-                            return x.getHeaderID() >= nb && x.getHeaderID() < upperBound;
-                        });
-                    }
-                    else { // Si ça n'appartient pas à une structure
-                        toMove = this.list.slice(nb).filter(
-                            (x) => x instanceof InstructionContainer
-                        );
-                        structToMove = this.structureList.filter((x) => x.getHeaderID() >= nb);
-                    }
-
-                    // Et maintenant on déplace tout
-                    for (const item of toMove) {
-                        this.removeInstruction(item);
-                    }
-                    for (let i = toMove.length - 1; i >= 0; i--) {
-                        l.addInstruction(toMove[i], 0);
-                    }
-                    for (const struct of structToMove) {
-                        this.structureList.splice(this.structureList.indexOf(struct), 1);
-                        l.addStruct(struct);
-                    }
-                    l.refreshIdentation();
-
                     nb = save;
                 }
 

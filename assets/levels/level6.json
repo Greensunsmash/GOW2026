@@ -156,7 +156,8 @@
                     "pickup"
                 ],
                 "sensors": [
-                    "obstacle"
+                    "obstacle",
+                    "item"
                 ],
                 "structures": [
                     "if",

@@ -108,6 +108,7 @@ export class BlocContainer extends GUI.Rectangle {
             console.log("Pas de Wrapper ?????????");
             return;
         }
+        if (control == this) {console.log("Ah non, pas de fusion"); return;}
 
         if (control.parent) {control.parent.removeControl(control);}
 

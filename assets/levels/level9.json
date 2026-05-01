@@ -33,7 +33,8 @@
           "if"
         ],
         "sensors": [
-          "obstacle"
+          "obstacle",
+          "item"
         ],
         "variables": [
           "var_create",
@@ -76,14 +77,16 @@
           "backward",
           "left",
           "right",
-          "print"
+          "print",
+          "pickup"
         ],
         "structures": [
           "for",
           "if"
         ],
         "sensors": [
-          "obstacle"
+          "obstacle",
+          "item"
         ],
         "variables": [
           "var_create",
@@ -132,14 +135,16 @@
           "backward",
           "left",
           "right",
-          "print"
+          "print",
+          "pickup"
         ],
         "structures": [
           "for",
           "if"
         ],
         "sensors": [
-          "obstacle"
+          "obstacle",
+          "item"
         ],
         "variables": [
           "var_create",

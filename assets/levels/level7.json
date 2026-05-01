@@ -6,8 +6,8 @@
             "end_dialog" : "Bravo camion.",
             "layouts":[
                 [
-                    ["......."," ..... "," ..... "," ..... "," ..... "],
-                    ["@  !  x","  ! !  "," !   ! ","  ! !  ","   !   "]
+                    [".....",".....",".....",".....",".....", "    ."],
+                    ["  !  "," ! ! ","! @ !"," ! ! ","  !  ", "    x"]
                 ]
             ],
             "blockset": {
@@ -19,7 +19,8 @@
                     "pickup"
                 ],
                 "sensors": [
-                    "obstacle"
+                    "obstacle",
+                    "item"
                 ],
                 "structures": [
                     "if",
@@ -47,9 +48,18 @@
             "end_dialog" : "Bravo camion.",
             "layouts":[
                 [
-                    ["....  "," ....."," ...  "," .    "],
-                    ["@!!   "," !!!! "," !    "," x    "]
-                ]
+                    ["..","..","..","..","..",".."],
+                    ["@x","!!","!!","!!","!!","  "]
+                ],
+                [
+                    ["..","..","..",".."],
+                    ["@x","!!","!!","  "]
+                ],
+                [
+                    ["..","..",".."],
+                    ["@x","!!","  "]
+                ] 
+
             ],
             "blockset": {
                 "instructions": [
@@ -60,7 +70,114 @@
                     "pickup"
                 ],
                 "sensors": [
-                    "obstacle"
+                    "obstacle",
+                    "item"
+                ],
+                "structures": [
+                    "if",
+                    "for"
+                ],
+                "start": [
+                    "start"
+                ]
+            },
+            "goal": [
+                {
+                    "name": "arrival"
+                },
+                {
+                    "name": "pickup",
+                    "args": {
+                        "itemType": "!"
+                    }
+                }
+            ]
+        },
+        {
+            "nb":3,
+            "begin_dialog": "Ramassez vos poubelles.",
+            "end_dialog" : "Bravo camion.",
+            "layouts":[
+                [
+                    ["...","...","..."," . "],
+                    ["   "," @ "," ! "," x "]
+                ],
+                [
+                    [" . ","...","...","..."],
+                    [" x "," ! "," @ ","   "]
+                ],
+                [
+                    [" ...","...."," ..."],
+                    ["    ","x!@ ","    "]
+                ],
+                [
+                    ["... ","....","... "],
+                    ["    "," @!x","    "]
+                ]
+                
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right",
+                    "pickup"
+                ],
+                "sensors": [
+                    "obstacle",
+                    "item"
+                ],
+                "structures": [
+                    "if",
+                    "for"
+                ],
+                "start": [
+                    "start"
+                ]
+            },
+            "goal": [
+                {
+                    "name": "arrival"
+                },
+                {
+                    "name": "pickup",
+                    "args": {
+                        "itemType": "!"
+                    }
+                }
+            ]
+        },
+        {
+            "nb":4,
+            "begin_dialog": "Ramassez vos poubelles.",
+            "end_dialog" : "Bravo camion.",
+            "layouts":[
+                [
+                    ["    . "," .....","......","..... "," .    "],
+                    ["    @ ","    ! "," !!!! "," !    "," x    "]
+                ],
+                [
+                    [" .   ","...  ",".... "," ... "," ....","  .. "],
+                    [" @   "," !   "," !!  ","  !  ","  !!x","     "]
+                ],
+                [
+                    ["  .. "," ...."," ....","....."," ... "],
+                    ["  @  ","  !! ","   ! ","x!!! ","     "]
+                ]
+                
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right",
+                    "pickup"
+                ],
+                "sensors": [
+                    "obstacle",
+                    "item"
                 ],
                 "structures": [
                     "if",

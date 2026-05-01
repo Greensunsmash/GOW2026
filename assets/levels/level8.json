@@ -29,7 +29,8 @@
           "if"
         ],
         "sensors": [
-          "obstacle"
+          "obstacle",
+          "item"
         ],
         "start": [
           "start"
@@ -70,7 +71,8 @@
           "if"
         ],
         "sensors": [
-          "obstacle"
+          "obstacle",
+          "item"
         ],
         "variables": [
           "var_create",
@@ -115,7 +117,8 @@
           "if"
         ],
         "sensors": [
-          "obstacle"
+          "obstacle",
+          "item"
         ],
         "variables": [
           "var_create",
