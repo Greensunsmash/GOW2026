@@ -5,7 +5,7 @@ import { Booleen } from "../../Booleen/Booleen";
 
 export class Sinon extends Group implements Executable {
     private bool: Booleen; // Azy c'est bon y'aura pas d'erreur
-    public done: boolean = false;
+    public done: boolean[] = [];
     private l1 : Executable[] = [];
     private l2 : Executable[] = [];
 
@@ -24,8 +24,9 @@ export class Sinon extends Group implements Executable {
     }
 
     public execute(): void {
-        this.done = false;
-        if (this.bool.eval()) {this.list = this.l1; this.next();}
+        this.done.push(false);
+        this.next_inst.push(0);
+        if (this.bool.eval()) {this.done[this.done.length -1] = true; this.list = this.l1; this.next();}
         else {this.list = this.l2; this.next();};
     }
 
@@ -34,5 +35,13 @@ export class Sinon extends Group implements Executable {
         return false;
     }
 
+    protected jump_back():void {
+        this.done.pop(); 
+        if (this.done.length > 0) {
+            if (this.done[this.done.length-1]) this.list = this.l1;
+            else this.list = this.l2;
+        }
+        super.jump_back();
+    }
     
 }
