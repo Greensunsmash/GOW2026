@@ -12,6 +12,7 @@ export class Pig extends Mob {
         console.log("PIG ANIMS", this.anims);
         //(this.mesh as any).animations.find(a => a.name.includes("dance"))?.play(true);
         this.facingIndex = facingIndex;
+        this.initRotation = facingIndex;
         this.mesh.rotation = new Vector3(0, facingIndex * Math.PI / 2, 0);
     }
 

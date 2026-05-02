@@ -15,8 +15,8 @@ export type EntityState = {
 }
 
 export abstract class GridEntity {
-    protected readonly initPos : GridPoint;
-    protected readonly initRotation : number;
+    protected initPos : GridPoint;
+    protected initRotation : number;
     protected mesh : TransformNode;
     protected anims : AnimationGroup[];
     protected idleAnim: AnimationGroup | undefined;

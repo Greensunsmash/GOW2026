@@ -155,7 +155,7 @@ export class Level {
                     .filter(int => GridUtils.equals(gridPos, int.getVisualGridPos()));
     }
 
-    public isVoidBelow(gridPos: GridPoint) {
+    public isBeyondLimits(gridPos: GridPoint) {
         if (gridPos.x < 0 || gridPos.y < 0 || gridPos.z < 0)
             return true;
         if (gridPos.y >= this.map.length)
@@ -163,6 +163,13 @@ export class Level {
         if (gridPos.z >= this.map[gridPos.y].length)
             return true;
         if (gridPos.x >= this.map[gridPos.y][gridPos.z].length)
+            return true;
+
+        return false;
+    }
+
+    public isVoidBelow(gridPos: GridPoint) {
+        if (this.isBeyondLimits(gridPos))
             return true;
 
         if (gridPos.y - 1 >= 0) {
@@ -179,6 +186,9 @@ export class Level {
     }
 
     public isObstacle(gridPos: GridPoint) {
+        if (this.isBeyondLimits(gridPos))
+            return false;
+
         const nextState = this.map[gridPos.y][gridPos.z][gridPos.x];
         if (nextState == State.Wall) {
             console.log(GridUtils.toString(gridPos) + " is an obstacle");
