@@ -16,15 +16,16 @@ export class MoveForwardInstuction extends Instruction {
         memory.setCurrentlyMoving(true);
 
         await this.ctx.nextTick(this.ctx.getRobot().getNextPosIntention("forward"), memory.skip);
-
-        /*
-        if (memory.skip) this.ctx.getRobot().moveForward();
+        
+        /*if (memory.skip) this.ctx.getRobot().moveForward();
         else await this.ctx.getRobot().visualMoveForward();*/
         Memory.get().setCurrentInstruction(this);
 
         memory.setCurrentlyMoving(false);
 
+        console.log("isPlaying:", Memory.get().isPlaying(), "currentlyMoving:", memory.currentlyMoving);
         if (Memory.get().isPlaying()) this.next();
+        else console.log("STOPPED HERE");
     }
 
     async back() {

@@ -57,7 +57,7 @@ export abstract class GridEntity {
                 z: facing.z
             }
         );
-        return !this.level.isWalkable(targetGridPos);
+        return !this.level.isObstacle(targetGridPos);
     }
 
     // Déplacements/rotations instantannées
@@ -169,6 +169,7 @@ export abstract class GridEntity {
 
     public async doVisualMove(targetGridPos : GridPoint, bounce?: boolean): Promise<void> {
         if (bounce) {
+            this.facingIndex = (this.facingIndex + 2) % 4;
             await this.animateRotation(Math.PI);
         }
 
@@ -182,7 +183,7 @@ export abstract class GridEntity {
         anim?.play(true);
 
         return new Promise ((resolve) => Animation.CreateAndStartAnimation(
-            "slide",
+            "slide_" + Date.now(),
             this.mesh,
             "position",
             frameRate,
@@ -209,7 +210,7 @@ export abstract class GridEntity {
         const targetAngle = this.mesh.rotation.y + relativeAngle;
 
         return new Promise((resolve) => Animation.CreateAndStartAnimation(
-            "rotate",
+            "rotate_" + Date.now(), // pour pas avoir plusieurs fois le même nom
             this.mesh,
             "rotation.y",
             60,

@@ -141,7 +141,7 @@ export class Level {
         if (!this.isWalkable(gridPos)) 
             return null;
         
-        const item = this.getItems().find(it => GridUtils.equals(it.getGridPos(), gridPos));
+        const item = this.getItems().find(it => GridUtils.equals(it.getVisualGridPos(), gridPos));
         return item ?? null;
     }
 
@@ -167,8 +167,9 @@ export class Level {
 
         if (gridPos.y - 1 >= 0) {
             const nextStateBelow = this.map[gridPos.y - 1][gridPos.z][gridPos.x];
-            if ((nextStateBelow != State.Ground) && (nextStateBelow != State.CursedGround)) {
-                console.log("grid pos ", gridPos, "is deadly.");
+            if ((nextStateBelow != State.Ground)
+                && (nextStateBelow != State.CursedGround)) {
+                console.log("grid pos ", GridUtils.add(gridPos, {x:0,y:-1,z:0}), "is deadly. : it's " + nextStateBelow);
                 return true;
             } else
                 return false;
@@ -179,9 +180,10 @@ export class Level {
 
     public isObstacle(gridPos: GridPoint) {
         const nextState = this.map[gridPos.y][gridPos.z][gridPos.x];
-        if (nextState == State.Wall)
+        if (nextState == State.Wall) {
+            console.log(GridUtils.toString(gridPos) + " is an obstacle");
             return true;
-
+        }
         return false;
     }
 

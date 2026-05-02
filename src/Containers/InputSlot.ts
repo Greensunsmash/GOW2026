@@ -44,7 +44,7 @@ export class InputSlot extends EmptySlot implements Valuable {
     }
 
     getValue(): Valeur[] {
-        const raw = this.textInput.text;
+        const raw = this.textInput.text.replace(" ", "");
         console.log("read raw from input slot ", raw);
         const num = Number(raw);
         const val = isNaN(num) || raw === "" ? raw : num;

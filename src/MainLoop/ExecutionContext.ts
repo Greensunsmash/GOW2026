@@ -55,6 +55,8 @@ export class ExecutionContext {
 
     // BOUCLE S'EXECUTANT A CHAQUE TICK DE JEU
     public async nextTick(robotIntention?: GridPoint, instant?: boolean) {
+        console.log("[TICKS] ENTERING NEXT TICK.");
+
         let robotDead: boolean = false;
         let robotBounce: boolean = false;
 
@@ -77,7 +79,7 @@ export class ExecutionContext {
                 return "WALL";
 
             if (this.level.isVoidBelow(intention.nextPos)) {
-                console.log("in checkcoll : void collision");
+                console.log("[TICKS] in checkcoll : void collision");
                 return "VOID";
             }
 
@@ -130,7 +132,7 @@ export class ExecutionContext {
                             mobInt.nextPos = mob.getVisualGridPos();
                         }
                     } else if (collision === "VOID") {
-                        console.log("mob dead : ", mob);
+                        console.log("[TICKS] mob dead : ", mob);
                         mobInt.deadDuringTick = true;
                     } else if (collision === "OTHERMOB") {
                         mobInt.status = "STUCK";
@@ -151,12 +153,14 @@ export class ExecutionContext {
         if (this.level.isObstacle(robotIntention)) {
             if (this.memory.getGameMode() === "PIGMODE") {
                 // il rebondit
+                console.log("[TICKS] robot bouncing");
                 const cur = this.robot.getVisualGridPos();
                 const dx = robotIntention.x - cur.x;
                 const dz = robotIntention.z - cur.z;
                 robotIntention = { x: cur.x - dx, y: cur.y, z: cur.z - dz };
                 robotBounce = true;
             } else {
+                console.log("[TICKS] robot getting into an obstacle => dead.");
                 robotDead = true; 
             }
         }
@@ -178,7 +182,7 @@ export class ExecutionContext {
                 || GridUtils.equals(robotIntention, mob.getVisualGridPos()) // robot fonce sur mob
                 || (GridUtils.equals(mobInt.nextPos, this.robot.getVisualGridPos()) &&
                     GridUtils.equals(robotIntention, mobPos))) { // coll. frontale
-                console.warn("Deadly collision !");
+                console.warn("[TICKS] Deadly robot collision !");
                 robotDead = true;
             }
         }
@@ -228,10 +232,12 @@ export class ExecutionContext {
         this.scene.modeUpdate();
 
         if (robotDead) {
-            console.warn("DEAD!!!");
+            console.warn("[TICKS] ROBOT DEAD!!!");
             // faire quelque chose !
             this.scene.onRobotDead();
         }
+
+        console.log("[TICKS] TICK ENDED.");
     }
 
     public async prevTick() {
