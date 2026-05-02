@@ -11,6 +11,10 @@
     {"file": "level8.json", "name": "Variables 1"},
     {"file": "level9.json", "name": "Variables 2"},
     {"file": "level10.json", "name": "Rejoindre le créateur"},
+    {"file": "level11.json", "name": "Tant que / Sinon"},
+    {"file": "level12.json", "name": "Cochons cochons cochons"},
+    {"file": "level13.json", "name": "13"},
+    {"file": "level14.json", "name": "14"},
     {"file": "test_mobs.json", "name": "Copains comme cochons"},
     {"file": "test_sirc.json", "name": "Pas copains les cochons ?"}
   ] 
