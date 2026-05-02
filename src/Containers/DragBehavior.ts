@@ -76,14 +76,19 @@ export class DragBehavior {
         this.scene.scene.onPointerUp = undefined as any;
         this.target.isHitTestVisible = true;
         const toolbox = this.scene.getToolbox();
-        if (this.isDragging && toolbox.contains(this.lastX, this.lastY)) {
+        if (this.isDragging 
+            && toolbox.contains(this.target.leftInPixels + this.target.widthInPixels, this.target.topInPixels)) {
             this.scene.updateInstructionCount?.();
             this.target.parent?.removeControl(this.target);
             this.target.dispose();
         }
         this.isDragging = false;
         //this.scene.setDragging(false);
-        let slot = this.scene.getHoverSlot();
+        //let slot = this.scene.getHoverSlot();
+        let slot = this.scene.tiltTheSlotMachine()
+                // je tente une nouvelle mise en page
+                            .find(s => s.contains(this.target.leftInPixels, this.target.topInPixels))
+                    ?? this.scene.getHoverSlot();
         if (slot instanceof EmptySlot) {slot.replaceIfMatch(this.target);}
     }
 }

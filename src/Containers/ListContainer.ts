@@ -96,6 +96,12 @@ export class ListContainer extends GUI.Rectangle {
                     if (this.detector.contains(evt.x, evt.y)) {
                         this.scene.setHoverList(this);
                     }
+                    // si un bloc passe 
+                    const draggedList = this.scene.getDraggedList();
+                    if (draggedList 
+                        && this.detector.contains(draggedList.leftInPixels, draggedList.topInPixels)) {
+                        this.scene.setHoverList(this);
+                    }
                 }
             }
         });
@@ -231,7 +237,7 @@ export class ListContainer extends GUI.Rectangle {
                 //console.error("bip boup");
                 // On setup le drag
                 l.detector.isHitTestVisible = false;
-                this.scene.setDragging(true);
+                this.scene.setDragging(this);
 
                 l.isDragging = true;
                 let startX = c.leftInPixels + this.leftInPixels;
@@ -256,28 +262,34 @@ export class ListContainer extends GUI.Rectangle {
                     this.scene.scene.onPointerUp = undefined as any;
 
                     const toolbox = this.scene.getToolbox();
-                    if (l.isDragging && toolbox.contains(_evt.x, _evt.y)) {
+                    if (l.isDragging 
+                        && toolbox.contains(l.leftInPixels + l.widthInPixels, l.topInPixels)) {
                         l.parent?.removeControl(l);
                         l.isDragging = false;
                         l.dispose();
                         // on compte le nb de blocs dans la liste 
-                      this.scene.updateInstructionCount?.();
-                        this.scene.setDragging(false);
+                        this.scene.updateInstructionCount?.();
+                        this.scene.setDragging(null);
                         return;
                     }
                     l.isDragging = false;
-                    let gros_q = this.scene.getHoverList();
+                    //let gros_q = this.scene.getHoverList();
+                    let gros_q = this.scene.getAllListContainers().find(
+                        (list) => list !== l 
+                        && list.getDetector().isHitTestVisible 
+                        && list.getDetector().contains(l.leftInPixels, l.topInPixels)
+                    ) ?? null;
                     if (gros_q instanceof ListContainer && gros_q != l) {
                         if ((gros_q.getMagnetID() === 0 && !gros_q.isFirst()) || (gros_q.getMagnetID() > 0 && !l.isFirst())) {
                             gros_q.mergeList(l);
-                            this.scene.setDragging(false);
+                            this.scene.setDragging(null);
                             l.dispose();
                         } else {
-                            this.scene.setDragging(false);
+                            this.scene.setDragging(null);
                             l.detector.isHitTestVisible = true;
                         }
                     } else {
-                        this.scene.setDragging(false);
+                        this.scene.setDragging(null);
                         l.detector.isHitTestVisible = true;
                     }
                 }

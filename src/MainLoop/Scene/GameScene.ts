@@ -1,4 +1,4 @@
-import { Engine, Scene } from "@babylonjs/core";
+import { Engine, Scene, type Empty } from "@babylonjs/core";
 import { AdvancedDynamicTexture, Control, Rectangle } from "@babylonjs/gui";
 import { EmptySlot } from "../../Containers/EmptySlot";
 import { ListContainer } from "../../Containers/ListContainer";
@@ -16,7 +16,8 @@ import { BlocContainer } from "../../Containers/BlocContainer";
 export abstract class GameScene extends BaseScene {
     private hoverSlot : EmptySlot | null = null;
     private hoverList : ListContainer | null = null;
-    private dragging : boolean = false;
+    private dragging : ListContainer | null = null;
+    private slots: EmptySlot[] = [];
     public dragListeners : (() => void)[];
     public undragListeners : (() => void)[];
     public blockCount: number = 0;
@@ -93,9 +94,10 @@ export abstract class GameScene extends BaseScene {
     }
     public getHoverList():ListContainer | null {return this.hoverList;}
 
-    public isDragging(): boolean{return this.dragging;}
-    public setDragging(bool:boolean) {
-        if (bool) {
+    public isDragging(): boolean{return !!this.dragging;}
+    public getDraggedList(): ListContainer | null {return this.dragging;}
+    public setDragging(l: ListContainer | null) {
+        if (l) {
             for (let i = 0; i<this.dragListeners.length; i++) {
                 this.dragListeners[i]();
             }
@@ -106,9 +108,23 @@ export abstract class GameScene extends BaseScene {
             }
             if (this.hoverList instanceof ListContainer) this.hoverList.toggleMagnet(false);
         }
-        this.dragging = bool;
+        this.dragging = l;
     }
 
+
+    public getAllListContainers(): ListContainer[] {
+        return [...this.leftPanel.children].filter(child => child instanceof ListContainer);
+    }
+
+    public insertInSlotMachine(slot: EmptySlot) {
+        this.slots.push(slot);
+    }
+    public recoverFromSlotMachine(slot: EmptySlot) {
+        this.slots = this.slots.filter(s => s === slot);
+    }
+    public tiltTheSlotMachine() {
+        return this.slots;
+    }
     
     getToolbox() {
         return this.toolbox;

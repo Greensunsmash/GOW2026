@@ -42,6 +42,7 @@ export class EmptySlot extends GUI.Rectangle {
                 }
             }
         });
+        this.scene.insertInSlotMachine(this);
     }
 
     // Remplace si c'est du bon type
@@ -74,6 +75,8 @@ export class EmptySlot extends GUI.Rectangle {
     toString():string {return "EmptySlot " + this.id.toString();}
 
     dispose(): void {
+        this.scene.recoverFromSlotMachine(this);
+
         if (this.pointerObserver) {
             this.scene.scene.onPointerObservable.remove(this.pointerObserver);
             this.pointerObserver = null;
