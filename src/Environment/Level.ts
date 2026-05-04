@@ -141,7 +141,7 @@ export class Level {
         if (!this.isWalkable(gridPos)) 
             return null;
         
-        const item = this.getItems().find(it => GridUtils.equals(it.getVisualGridPos(), gridPos));
+        const item = this.getItems().find(it => GridUtils.equals(it.getVisualGridPos(), gridPos) && it.getState().displayed);
         return item ?? null;
     }
 

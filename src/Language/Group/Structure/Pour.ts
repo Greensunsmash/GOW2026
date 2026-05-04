@@ -35,7 +35,7 @@ export class Pour extends Group implements Executable {
 
     public next(): void {
         const i = this.next_inst.length - 1;
-        if (this.next_inst[i] >= this.list.length && this.loop_nb < this.max_loop_nb) {this.loop_nb[i] += 1; this.next_inst[i] = 0;}
+        if (this.next_inst[i] >= this.list.length && this.loop_nb[i] < this.max_loop_nb[i]) {this.loop_nb[i] += 1; this.next_inst[i] = 0;}
         super.next();
     }
 

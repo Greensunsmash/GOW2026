@@ -132,6 +132,13 @@
                     "if",
                     "for"
                 ],
+                "booleans": [
+                    "true",
+                    "false",
+                    "not",
+                    "and",
+                    "or"
+                ],
                 "start": [
                     "start"
                 ]
@@ -182,6 +189,13 @@
                 "structures": [
                     "if",
                     "for"
+                ],
+                "booleans": [
+                    "true",
+                    "false",
+                    "not",
+                    "and",
+                    "or"
                 ],
                 "start": [
                     "start"
