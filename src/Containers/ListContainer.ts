@@ -19,6 +19,7 @@ export class ListContainer extends GUI.Rectangle {
     private static count = 0;
     private readonly id: number;
     private readonly root: GUI.Container;
+    private readonly content_root: GUI.Container;
     private readonly scene: GameScene;
     private readonly stack: GUI.StackPanel;
     private readonly magnet: Magnet;
@@ -29,11 +30,12 @@ export class ListContainer extends GUI.Rectangle {
     private hover: boolean = false;
     public isDragging = false;
 
-    constructor(root: GUI.Container, scene: GameScene) {
+    constructor(root: GUI.Container, content_root : GUI.Container, scene: GameScene) {
         super();
         this.id = ListContainer.count;
         ListContainer.count += 1;
         this.root = root;
+        this.content_root = content_root;
         this.list = [];
         this.structureList = [];
         this.isHitTestVisible = false;
@@ -115,11 +117,6 @@ export class ListContainer extends GUI.Rectangle {
         for (nb = 0; nb < this.list.length; nb++) {
             if (this.list[nb] === this.magnet) continue;
             // Sélectionne sur quel bloc on appuie
-            /*
-            console.log("list + " + nb + " lipx " + this.list[nb].leftInPixels);
-            console.log("list + " + nb + " tipx " + this.list[nb].topInPixels);
-            console.log("list + " + nb + "  w  " + this.list[nb].widthInPixels);
-            console.log("list + " + nb + "  h  " + this.list[nb].heightInPixels);*/
             if (this.list[nb].contains(x, y) || forceStart) {
                 //console.log("past 2/double wesh");
                 let c = this.list[nb] as InstructionContainer;
@@ -138,11 +135,10 @@ export class ListContainer extends GUI.Rectangle {
 
                 if (nb == 0 || (nb == 1 && this.list.indexOf(this.magnet) == 0)) {// On a pris le premier bloc, donc on déplace tout
                     l = this;
-                    this.parent?.removeControl(this);
-                    this.root.addControl(this);
+                    this.reparent(this, this.root, new Vector2(x, y));
                 }
                 else { // Sinon, il va falloir séparer en 2
-                    l = new ListContainer(this.root, this.scene);
+                    l = new ListContainer(this.root, this.content_root, this.scene);
 
                     // Si on a cliqué sur la fin ou le milieu d'une structure, alors c'est comme si c'était le début de cette structure
                     const save = nb;
@@ -153,8 +149,7 @@ export class ListContainer extends GUI.Rectangle {
                     if (nb == 0 || (nb == 1 && this.list.indexOf(this.magnet) == 0)) { // Si jamais en réalité, la structure commence la liste
                         l.dispose();
                         l = this;
-                        this.parent?.removeControl(this);
-                        this.root.addControl(this);
+                        this.reparent(this, this.root, new Vector2(x, y));
                     }
                     else {
                             let s = this.structureList.filter((x) => x.contains(nb));
@@ -255,8 +250,7 @@ export class ListContainer extends GUI.Rectangle {
                     this.scene.scene.onPointerMove = undefined as any;
                     this.scene.scene.onPointerUp = undefined as any;
 
-                    const toolbox = this.scene.getToolbox();
-                    if (l.isDragging && toolbox.contains(_evt.x, _evt.y)) {
+                    if (l.isDragging && !this.content_root.contains(_evt.x, _evt.y)) {
                         l.parent?.removeControl(l);
                         l.isDragging = false;
                         l.dispose();
@@ -274,10 +268,12 @@ export class ListContainer extends GUI.Rectangle {
                             l.dispose();
                         } else {
                             this.scene.setDragging(false);
+                            this.reparent(this, this.content_root, new Vector2(_evt.x, _evt.y));
                             l.detector.isHitTestVisible = true;
                         }
                     } else {
                         this.scene.setDragging(false);
+                        this.reparent(this, this.content_root, new Vector2(_evt.x, _evt.y));
                         l.detector.isHitTestVisible = true;
                     }
                 }
@@ -437,6 +433,23 @@ export class ListContainer extends GUI.Rectangle {
             if (struct.getHeader() === i) return struct;
         }
         return null;
+    }
+
+    reparent(control: GUI.Control, newParent: GUI.Container, position:Vector2) {
+        
+        control.parent?.removeControl(control);
+        newParent.addControl(control);
+        const new_pos = newParent.getLocalCoordinates(position);
+
+        const centerX = newParent.widthInPixels / 2;
+        const centerY = newParent.heightInPixels / 2;
+
+        control.leftInPixels = (new_pos.x - centerX) / newParent.scaleX + centerX;
+        control.topInPixels  = (new_pos.y - centerY) / newParent.scaleY + centerY;
+
+        //console.log(" ", position, "->", new_pos); new_pos pas totalement correct
+        /*control.leftInPixels = new_pos.x;
+        control.topInPixels = new_pos.y;*/
     }
 
     // GETTERS

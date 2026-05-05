@@ -10,8 +10,8 @@ export class PrintContainer extends InstructionContainer {
 
     // Rajouter un InputText. En attendant on va faire comme ça
     // C'est inacceptable.
-    constructor(root: GUI.Container, scene: GameScene){
-        super(["Afficher ", "a"], root, scene);
+    constructor(root: GUI.Container, content_root:GUI.Container, scene: GameScene){
+        super(["Afficher ", "a"], root, content_root, scene);
     }
 
     getInstruction(): Instruction {

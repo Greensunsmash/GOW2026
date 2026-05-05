@@ -13,7 +13,7 @@ export class InstructionContainer extends GUI.Rectangle {
     protected readonly bloc : BlocContainer;
     private readonly root : GUI.Container;
 
-    constructor(list: string[], root: GUI.Container, scene: GameScene) {
+    constructor(list: string[], root: GUI.Container, content_root: GUI.Container, scene: GameScene) {
         super();
 
         // Setup main rectangle
@@ -36,7 +36,7 @@ export class InstructionContainer extends GUI.Rectangle {
         this.addControl(this.mainContainer);
 
         // Create bloc
-        this.bloc = new BlocContainer("n", list, root, scene);
+        this.bloc = new BlocContainer("n", list, root, content_root, scene);
         this.bloc.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         this.bloc.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
         root.removeControl(this.bloc);

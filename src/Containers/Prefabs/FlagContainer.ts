@@ -4,8 +4,8 @@ import { DepartContainer } from "../DepartContainer";
 
 export class FlagContainer extends DepartContainer{
 
-    constructor(root: GUI.Container, scene: GameScene) {
-        super(["Première instruction"], root, scene);
+    constructor(root: GUI.Container, content_root:GUI.Container, scene: GameScene) {
+        super(["Première instruction"], root, content_root, scene);
         this.bloc.background = "#F52795";
 
     }

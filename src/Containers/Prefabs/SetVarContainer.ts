@@ -9,8 +9,8 @@ export class SetVarContainer extends InstructionContainer {
     
     name:string;
 
-    constructor(name:string, root: GUI.Container, scene: GameScene){
-        super(["On met la valeur de " + name + " à ", "a"], root, scene);
+    constructor(name:string, root: GUI.Container, content_root:GUI.Container, scene: GameScene){
+        super(["On met la valeur de " + name + " à ", "a"], root, content_root, scene);
         this.name = name;
     }
 

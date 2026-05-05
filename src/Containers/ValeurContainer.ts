@@ -8,8 +8,8 @@ import type { Valuable } from "./Valuable";
 // Abstract pour tout les bloc renvoyant une valeur
 export class ValeurContainer extends BlocContainer implements Valuable {
 
-    constructor(list: string[], root: GUI.Container, scene: GameScene) {
-        super("v", list, root, scene);
+    constructor(list: string[], root: GUI.Container, content_root: GUI.Container, scene: GameScene) {
+        super("v", list, root, content_root, scene);
         //new DragBehavior(this);
     }
 

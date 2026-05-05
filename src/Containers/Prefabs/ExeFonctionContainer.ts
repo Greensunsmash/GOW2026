@@ -11,10 +11,10 @@ export class ExeFonctionContainer extends InstructionContainer {
     name:string;
     nb:number;
 
-    constructor(name:string, nb:number, root: GUI.Container, scene: GameScene){
+    constructor(name:string, nb:number, root: GUI.Container, content_root:GUI.Container, scene: GameScene){
         let list = ["Executer " + name + " "];
         for (let i=0; i<nb; i++) {list.push("v"); list.push("");}
-        super(list, root, scene);
+        super(list, root, content_root, scene);
         this.name = name;
         this.nb = nb;
     }

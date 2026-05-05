@@ -8,8 +8,8 @@ import { BooleenBrut } from "../Language/Booleen/BooleenBrute";
 // Abstract d'un bloc contenant un booleen
 export abstract class BooleenContainer extends BlocContainer {
     
-    constructor(list: string[], root: GUI.Container, scene: GameScene) {
-            super("b", list, root, scene);
+    constructor(list: string[], root: GUI.Container, content_root: GUI.Container, scene: GameScene) {
+            super("b", list, root, content_root, scene);
             //new DragBehavior(this);
         }
     

@@ -9,7 +9,7 @@ export class FonctionContainer extends DepartContainer {
     name: string;
     args : string[];
 
-    constructor(name:string, args:string[], root: GUI.Container, scene: GameScene) {
+    constructor(name:string, args:string[], root: GUI.Container, content_root:GUI.Container, scene: GameScene) {
         let s = "Fonction " + name + " (";
         let list = []
         for (const argname of args) {
@@ -19,7 +19,7 @@ export class FonctionContainer extends DepartContainer {
         }
         s = s.substring(0, s.length-1) + ")";
         list.push(s);
-        super(list, root, scene);
+        super(list, root, content_root, scene);
         this.args = args;
         this.name = name;
     }

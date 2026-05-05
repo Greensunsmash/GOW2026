@@ -10,8 +10,8 @@ export class BasicInstContainer extends InstructionContainer {
 
     private initName: string;
 
-    constructor(name: string, inst: Instruction, root: GUI.Container, scene: GameScene, pigModeInst?: Instruction){
-        super([name], root, scene);
+    constructor(name: string, inst: Instruction, root: GUI.Container, content_root: GUI.Container, scene: GameScene, pigModeInst?: Instruction){
+        super([name], root, content_root, scene);
         this.initName = name;
         this.instruction = inst;
         if (pigModeInst)

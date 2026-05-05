@@ -12,6 +12,7 @@ import { BaseScene } from "./BaseScene";
 import { Instruction } from "../../Language/Instructions/Instruction";
 import { InstructionContainer } from "../../Containers/InstructionContainer";
 import { BlocContainer } from "../../Containers/BlocContainer";
+import { WorkSpace } from "../../MRGUI/Workspace";
 
 export abstract class GameScene extends BaseScene {
     private hoverSlot : EmptySlot | null = null;
@@ -23,6 +24,7 @@ export abstract class GameScene extends BaseScene {
     protected leftPanel: Rectangle;
 
     protected toolbox: OutilsBox;
+    protected workspace: WorkSpace;
 
     protected level : Level;
 
@@ -43,7 +45,8 @@ export abstract class GameScene extends BaseScene {
         this.leftPanel.background = "#222222"; // Couleur de fond pour bien séparer
         this.advancedTexture.addControl(this.leftPanel);
         
-        this.toolbox = new OutilsBox(this.leftPanel, this);
+        this.workspace = new WorkSpace(this.leftPanel, this);
+        this.toolbox = new OutilsBox(this.leftPanel, this.workspace, this);
     }
 
     init(): void {}

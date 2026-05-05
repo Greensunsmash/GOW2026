@@ -7,8 +7,8 @@ import { isValuable } from "../Valuable";
 
 export class OuContainer extends BooleenContainer {
 
-    constructor(root: Container, scene: GameScene) {
-        super(["", "b", " ou ", "b"], root, scene);
+    constructor(root: Container, content_root:Container, scene: GameScene) {
+        super(["", "b", " ou ", "b"], root, content_root, scene);
     }
 
     public getValue(): (Booleen)[] {

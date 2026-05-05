@@ -9,8 +9,8 @@ export class BooleenBrutContainer extends BooleenContainer {
     bool : boolean;
 
     // Rajouter un InputText. En attendant on va faire comme ça
-    constructor(bool: boolean, root: GUI.Container, scene: GameScene) {
-        super([bool.toString()], root, scene);
+    constructor(bool: boolean, root: GUI.Container, content_root:GUI.Container, scene: GameScene) {
+        super([bool.toString()], root, content_root, scene);
         this.bool = bool;
     }
 

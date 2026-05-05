@@ -1,7 +1,7 @@
 {
   "levels": [
     {"file ": "level0.json", "name": "NE PAS CLIQUER"},
-    {"file": "level1.json", "name": "Une intro bien assaisonnée"},
+    {"file": "level0.json", "name": "Une intro bien assaisonnée"},
     {"file": "level2.json", "name": "C'est quoi des boucles ?"},
     {"file": "level3.json", "name": "Ca se complique..."},
     {"file": "level4.json", "name": "Feuilles intro"},

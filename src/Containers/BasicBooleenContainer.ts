@@ -6,8 +6,8 @@ import { BooleenContainer } from "./BooleenContainer";
 export class BasicBooleenContainer extends BooleenContainer {
     private bool: Booleen;
 
-    constructor(name:string, bool: Booleen, root: GUI.Container, scene: GameScene) {
-        super([name], root, scene);
+    constructor(name:string, bool: Booleen, root: GUI.Container, content_root: GUI.Container, scene: GameScene) {
+        super([name], root, content_root, scene);
         this.bool = bool;
     }
 

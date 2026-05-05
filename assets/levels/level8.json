@@ -28,6 +28,13 @@
           "for",
           "if"
         ],
+        "booleans": [
+            "true",
+            "false",
+            "not",
+            "and",
+            "or"
+        ],
         "sensors": [
           "obstacle",
           "item"
@@ -69,6 +76,16 @@
         "structures": [
           "for",
           "if"
+        ],
+        "booleans": [
+            "true",
+            "false",
+            "not",
+            "and",
+            "or",
+            "inf",
+            "sup",
+            "eq"
         ],
         "sensors": [
           "obstacle",
@@ -116,6 +133,16 @@
           "for",
           "if"
         ],
+        "booleans": [
+            "true",
+            "false",
+            "not",
+            "and",
+            "or",
+            "inf",
+            "sup",
+            "eq"
+        ],
         "sensors": [
           "obstacle",
           "item"
@@ -160,6 +187,16 @@
         "structures": [
           "for",
           "if"
+        ],
+        "booleans": [
+            "true",
+            "false",
+            "not",
+            "and",
+            "or",
+            "inf",
+            "sup",
+            "eq"
         ],
         "sensors": [
           "obstacle"

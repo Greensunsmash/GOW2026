@@ -98,6 +98,12 @@ export class PlayScene extends GameScene { // ;)
                 } else if (kbInfo.event.key == "f") {
                     console.log("nextstep");
                     this.nextStep();
+                } else if (kbInfo.event.key == "z") {
+                    console.log("zoom in");
+                    this.workspace.zoom(0.1);
+                } else if (kbInfo.event.key == "a") {
+                    console.log("zoom out");
+                    this.workspace.zoom(-0.1);
                 }
 
             }

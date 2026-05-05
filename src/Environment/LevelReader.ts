@@ -155,60 +155,60 @@ export class LevelReader {
 
     private createFactories(ctx: ExecutionContext, scene: GameScene) {
         const instructions: CategoryFactories<InstructionBlock> = {
-            forward: (root) =>
-            new BasicInstContainer("Avancer d'une case", new MoveForwardInstuction(ctx),  root, scene),
+            forward: (root, content_root) =>
+            new BasicInstContainer("Avancer d'une case", new MoveForwardInstuction(ctx),  root, content_root, scene),
 
-            backward: (root) =>
-            new BasicInstContainer("Reculer d'une case", new MoveBackwardInstuction(ctx), root, scene, new MoveForwardInstuction(ctx)),
+            backward: (root, content_root) =>
+            new BasicInstContainer("Reculer d'une case", new MoveBackwardInstuction(ctx), root, content_root, scene, new MoveForwardInstuction(ctx)),
 
-            left: (root) =>
-            new BasicInstContainer("Tourner à gauche", new TurnLeftInstruction(ctx), root, scene, new MoveForwardInstuction(ctx)),
+            left: (root, content_root) =>
+            new BasicInstContainer("Tourner à gauche", new TurnLeftInstruction(ctx), root, content_root, scene, new MoveForwardInstuction(ctx)),
 
-            right: (root) =>
-            new BasicInstContainer("Tourner à droite", new TurnRightInstruction(ctx), root, scene, new MoveForwardInstuction(ctx)),
+            right: (root, content_root) =>
+            new BasicInstContainer("Tourner à droite", new TurnRightInstruction(ctx), root, content_root, scene, new MoveForwardInstuction(ctx)),
 
-            pickup: (root) =>
-            new BasicInstContainer("Ramasser l'objet", new PickupInstruction(ctx), root, scene, new MoveForwardInstuction(ctx)),
+            pickup: (root, content_root) =>
+            new BasicInstContainer("Ramasser l'objet", new PickupInstruction(ctx), root, content_root, scene, new MoveForwardInstuction(ctx)),
 
-            wait: (root) =>
-            new BasicInstContainer("Attendre", new WaitInstruction(ctx), root, scene),
+            wait: (root, content_root) =>
+            new BasicInstContainer("Attendre", new WaitInstruction(ctx), root, content_root, scene),
 
-            print: (root) =>
-            new PrintContainer(root, scene),
+            print: (root, content_root) =>
+            new PrintContainer(root, content_root, scene),
 
         };
 
         const structures: CategoryFactories<StructureBlock> = {
-            for: (root) => {
-            const l = new ListContainer(root, scene);
-            const pour = new PourContainer(l, root, scene);
+            for: (root, content_root) => {
+            const l = new ListContainer(root, content_root, scene);
+            const pour = new PourContainer(l, root, content_root, scene);
             l.addInstruction(pour.getQueue(), 0);
             l.addInstruction(pour.getHeader(), 0);
             l.addStruct(pour);
             return l;
             },
 
-            if: (root) => {
-            const l = new ListContainer(root, scene);
-            const si = new SiContainer(l, root, scene);
+            if: (root, content_root) => {
+            const l = new ListContainer(root, content_root, scene);
+            const si = new SiContainer(l, root, content_root, scene);
             l.addInstruction(si.getQueue(), 0);
             l.addInstruction(si.getHeader(), 0);
             l.addStruct(si);
             return l;
             },
 
-            while: (root) => {
-                const l = new ListContainer(root, scene);
-                const tantque = new TantQueContainer(l, root, scene);
+            while: (root, content_root) => {
+                const l = new ListContainer(root, content_root, scene);
+                const tantque = new TantQueContainer(l, root, content_root, scene);
                 l.addInstruction(tantque.getQueue(), 0);
                 l.addInstruction(tantque.getHeader(), 0);
                 l.addStruct(tantque);
                 return l;
             },
 
-            elif: (root) => {
-                const l = new ListContainer(root, scene);
-                const sinon = new SinonContainer(l, root, scene);
+            elif: (root, content_root) => {
+                const l = new ListContainer(root, content_root, scene);
+                const sinon = new SinonContainer(l, root, content_root, scene);
                 l.addInstruction(sinon.getQueue(), 0);
                 l.addInstruction(sinon.getMid(), 0); // C'est un sinon tout va bien
                 l.addInstruction(sinon.getHeader(), 0);
@@ -218,27 +218,27 @@ export class LevelReader {
         };
 
         const booleans: CategoryFactories<BooleanBlock> = {
-            true: (root) => new BooleenBrutContainer(true, root, scene),
-            false: (root) => new BooleenBrutContainer(false, root, scene),
-            not: (root) => new NotContainer(root, scene),
-            and: (root) => new EtContainer(root, scene),
-            or: (root) => new OuContainer(root, scene),
-            inf: (root) => new InfContainer(root, scene),
-            sup: (root) => new SupContainer(root, scene),
-            eq: (root) => new EgalContainer(root, scene),
+            true: (root, content_root) => new BooleenBrutContainer(true, root, content_root, scene),
+            false: (root, content_root) => new BooleenBrutContainer(false, root, content_root, scene),
+            not: (root, content_root) => new NotContainer(root, content_root, scene),
+            and: (root, content_root) => new EtContainer(root, content_root, scene),
+            or: (root, content_root) => new OuContainer(root, content_root, scene),
+            inf: (root, content_root) => new InfContainer(root, content_root, scene),
+            sup: (root, content_root) => new SupContainer(root, content_root, scene),
+            eq: (root, content_root) => new EgalContainer(root, content_root, scene),
         };
 
         const sensors: CategoryFactories<SensorBlock> = {
-            obstacle: (root) =>
-            new BasicBooleenContainer("Il y a un obstacle", new ObstacleSensor(ctx), root, scene),
+            obstacle: (root, content_root) =>
+            new BasicBooleenContainer("Il y a un obstacle", new ObstacleSensor(ctx), root, content_root, scene),
 
-            item: (root) =>
-            new BasicBooleenContainer("Il y a un objet", new ItemSensor(ctx), root, scene),
+            item: (root, content_root) =>
+            new BasicBooleenContainer("Il y a un objet", new ItemSensor(ctx), root, content_root, scene),
         };
 
         const ops: CategoryFactories<OpBlock> = {
-            plus: (root) => new PlusContainer(root, scene),
-            minus: (root) => new MoinsContainer(root, scene),
+            plus: (root, content_root) => new PlusContainer(root, content_root, scene),
+            minus: (root, content_root) => new MoinsContainer(root, content_root, scene),
         };
 
         return { instructions, structures, booleans, sensors, ops };
@@ -270,11 +270,11 @@ export class LevelReader {
         if (this.blockset[nb].includes("function_create")) {
             tb.addButton("functions", "Créer un bloc de plastique", () => {
                 new MakeABlockModal(scene.advancedTexture, (name: string, args: string[]) => {
-                    tb.addTemplate("functions", (root) =>
-                        new FonctionContainer(name, args, root, scene)
+                    tb.addTemplate("functions", (root, content_root) =>
+                        new FonctionContainer(name, args, root, content_root, scene)
                     );
-                    tb.addTemplate("functions", (root) =>
-                        new ExeFonctionContainer(name, args.length, root, scene)
+                    tb.addTemplate("functions", (root, content_root) =>
+                        new ExeFonctionContainer(name, args.length, root, content_root, scene)
                     );
                 });
             });
@@ -282,8 +282,8 @@ export class LevelReader {
 
         // Start (cas spécial)
         if (this.blockset[nb].includes("start")) {
-            tb.addTemplate("start", (root) => {
-                return new FlagContainer(root, scene);
+            tb.addTemplate("start", (root, content_root) => {
+                return new FlagContainer(root, content_root, scene);
             });
         }
 

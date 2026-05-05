@@ -75,13 +75,15 @@ export class DragBehavior {
         this.scene.scene.onPointerMove = undefined as any;
         this.scene.scene.onPointerUp = undefined as any;
         this.target.isHitTestVisible = true;
-        const toolbox = this.scene.getToolbox();
-        if (this.isDragging && toolbox.contains(this.lastX, this.lastY)) {
+        const content_root = this.target.getContentRoot();
+        if (this.isDragging && !content_root.contains(this.lastX, this.lastY)) {
             this.scene.updateInstructionCount?.();
             this.target.parent?.removeControl(this.target);
             this.target.dispose();
         }
         this.isDragging = false;
+        this.target.parent?.removeControl(this.target);
+        this.target.getContentRoot().addControl(this.target);
         //this.scene.setDragging(false);
         let slot = this.scene.getHoverSlot();
         if (slot instanceof EmptySlot) {slot.replaceIfMatch(this.target);}

@@ -12,6 +12,7 @@ import { OneButtonModal } from "./windows/OneButtonModal";
 import type { PlayScene } from "../MainLoop/Scene/PlayScene";
 import { Memory } from "../Language/Memory";
 import { BasicInstContainer } from "../Containers/BasicInstContainer";
+import type { WorkSpace } from "./Workspace";
 
 /*
 La bôite à boîtes,
@@ -27,13 +28,15 @@ export class OutilsBox extends Rectangle {
     private varPanel: StackPanel;
     private readonly scene: PlayScene;
     private readonly root: Container;
+    private readonly workspace : WorkSpace;
     private templateRegistry = new Map<string, Set<string>>();
     private blockLimit: number | null = null;
 
-    constructor(root: Container, scene: PlayScene) {
+    constructor(root: Container, workspace:WorkSpace, scene: PlayScene) {
         super();
         this.root = root;
         this.scene = scene;
+        this.workspace = workspace;
 
         this.width = "40%";
         this.height = "100%";
@@ -200,7 +203,7 @@ export class OutilsBox extends Rectangle {
     // plus précisémenet, prend en argument une fonction qui permet de créer ce bloc
     // le bloc dans la toolbox sera l'équivalent factice du bloc que construit buildBlock,
     // mais quand l'user drag depuis ce bloc factice, il obtient un bloc réel
-    addTemplate(category: string, buildBlock: (root: Container) => Rectangle | undefined) {
+    addTemplate(category: string, buildBlock: (root: Container, content_root:Container) => Rectangle | undefined) {
         let newRoot = this.categories.get(category);
         if (!newRoot) {
             this.addCategory(category);
@@ -221,7 +224,7 @@ export class OutilsBox extends Rectangle {
 
         // on crée un bloc temporaire, 
         // qui nous servira à construire le factice
-        const realBlock = buildBlock(newRoot);
+        const realBlock = buildBlock(newRoot, newRoot);
         if (!realBlock) {
             console.log("block not build");
             return;
@@ -257,7 +260,7 @@ export class OutilsBox extends Rectangle {
                 }
 
                 // on build le bloc réel
-                const realDragBlock = buildBlock(this.root);
+                const realDragBlock = buildBlock(this.root, this.workspace.getContentRoot());
 
                 // on le place là ou état le bloc factice
                 // (_curentMeasure c pour avoir les coords. absolues)
@@ -282,7 +285,7 @@ export class OutilsBox extends Rectangle {
 
                     // on l'encadre dans une liste,
                     // elle peut pas existe rseule
-                    const listCtn = new ListContainer(this.root, this.scene);
+                    const listCtn = new ListContainer(this.root, this.workspace.getContentRoot(), this.scene);
                     listCtn.addInstruction(realDragBlock, 0);
                     this.scene.updateInstructionCount?.();
                     

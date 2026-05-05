@@ -8,8 +8,8 @@ import { Flag } from "../Language/Group/Depart/Flag";
 // Abstract du premier bloc d'une listContainer valide
 export abstract class DepartContainer extends InstructionContainer {
     
-    constructor(list: string[], root: GUI.Container, scene: GameScene) {
-        super(list, root, scene);
+    constructor(list: string[], root: GUI.Container, content_root:GUI.Container, scene: GameScene) {
+        super(list, root, content_root, scene);
         this.bloc.background = "#F52795";
     }
 

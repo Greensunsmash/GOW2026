@@ -52,7 +52,7 @@ type ToolboxBlockMap = {
 
 // Une factory est juste un fn qui prend un GUI.Container en arg
 // pour y créer un bloc dedans
-type Factory = (root: any) => any;
+type Factory = (root: any, content_root: any) => any;
 
 // Association d'un type de bloc et de la factory qui crée ce type de bloc
 // (Record c'est juste un dico en TS)

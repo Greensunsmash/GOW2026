@@ -9,8 +9,8 @@ export class VarValueContainer extends ValeurContainer {
     name:string;
 
     // Rajouter un InputText. En attendant on va faire comme ça
-    constructor(name:string, root: GUI.Container, scene: GameScene) {
-        super(["Variable " + name], root, scene);
+    constructor(name:string, root: GUI.Container, content_root:GUI.Container, scene: GameScene) {
+        super(["Variable " + name], root, content_root, scene);
         this.name = name;
     }
 

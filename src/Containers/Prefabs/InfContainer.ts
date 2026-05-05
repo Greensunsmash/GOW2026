@@ -7,8 +7,8 @@ import { isValuable } from "../Valuable";
 
 export class InfContainer extends BooleenContainer {
 
-    constructor(root: GUI.Container, scene: GameScene) {
-        super(["", "v", " < ", "v"], root, scene);
+    constructor(root: GUI.Container, content_root:GUI.Container, scene: GameScene) {
+        super(["", "v", " < ", "v"], root, content_root, scene);
     }
 
     public getValue(): (Booleen)[] {

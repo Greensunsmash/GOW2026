@@ -20,11 +20,23 @@
           "for",
           "if"
         ],
+        "booleans": [
+            "true",
+            "false",
+            "not",
+            "and",
+            "or",
+            "inf",
+            "sup",
+            "eq"
+        ],
         "sensors": [
           "obstacle"
         ],
         "variables": [
-          "var_create"
+          "var_create",
+          "plus",
+          "minus"
         ],
         "start": [
           "start"
@@ -68,11 +80,23 @@
           "for",
           "if"
         ],
+        "booleans": [
+            "true",
+            "false",
+            "not",
+            "and",
+            "or",
+            "inf",
+            "sup",
+            "eq"
+        ],
         "sensors": [
           "obstacle"
         ],
         "variables": [
-          "var_create"
+          "var_create",
+          "plus",
+          "minus"
         ],
         "start": [
           "start"
@@ -116,11 +140,23 @@
           "for",
           "if"
         ],
+        "booleans": [
+            "true",
+            "false",
+            "not",
+            "and",
+            "or",
+            "inf",
+            "sup",
+            "eq"
+        ],
         "sensors": [
           "obstacle"
         ],
         "variables": [
-          "var_create"
+          "var_create",
+          "plus",
+          "minus"
         ],
         "start": [
           "start"

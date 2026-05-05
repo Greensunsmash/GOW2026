@@ -18,11 +18,12 @@ export class BlocContainer extends GUI.Rectangle {
     private readonly args: ArgsType[];
     private readonly slots: GUI.Rectangle[];
     private readonly root: GUI.Container;
+    private readonly content_root : GUI.Container;
     private readonly scene: GameScene;
     private readonly type : ArgsType;
     public dragObservable : BABYLON.Observer<GUI.Vector2WithInfo> | undefined;
 
-    constructor(type:string, list: string[], root: GUI.Container, scene: GameScene) {
+    constructor(type:string, list: string[], root: GUI.Container, content_root: GUI.Container, scene: GameScene) {
         super();
 
         switch (type) {
@@ -35,6 +36,7 @@ export class BlocContainer extends GUI.Rectangle {
         this.slots = [];
         this.args = [];
         this.root = root;
+        this.content_root = content_root;
         this.scene = scene;
         this.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         this.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
@@ -179,6 +181,7 @@ export class BlocContainer extends GUI.Rectangle {
     public getSlots(): readonly GUI.Rectangle[] {return this.slots;}
     public getContainer(): GUI.StackPanel {return this.container;}
     public getRoot(): GUI.Container {return this.root;}
+    public getContentRoot(): GUI.Container {return this.content_root;}
     public getScene(): GameScene {return this.scene;}
     public getArgs(): readonly ArgsType[] {return this.args;}
     public getLabels(): readonly GUI.TextBlock[] {return this.labels;}

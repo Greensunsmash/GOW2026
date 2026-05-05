@@ -9,8 +9,8 @@ export class ValeurBruteContainer extends ValeurContainer {
     nb : number;
 
     // Rajouter un InputText. En attendant on va faire comme ça
-    constructor(valeur: number, root: GUI.Container, scene: GameScene) {
-        super([valeur.toString()], root, scene);
+    constructor(valeur: number, root: GUI.Container, content_root:GUI.Container, scene: GameScene) {
+        super([valeur.toString()], root, content_root, scene);
         this.nb = valeur;
     }
 
