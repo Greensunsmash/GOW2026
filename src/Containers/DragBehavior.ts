@@ -75,8 +75,8 @@ export class DragBehavior {
         this.scene.scene.onPointerMove = undefined as any;
         this.scene.scene.onPointerUp = undefined as any;
         this.target.isHitTestVisible = true;
-        const content_root = this.target.getContentRoot();
-        if (this.isDragging && !content_root.contains(this.lastX, this.lastY)) {
+
+        if (this.isDragging && (!this.target.getRoot().contains(this.lastX, this.lastY) || !this.target.getContentRoot().contains(this.lastX, this.lastY) || this.scene.getToolbox().contains(this.lastX, this.lastY))) {
             this.scene.updateInstructionCount?.();
             this.target.parent?.removeControl(this.target);
             this.target.dispose();

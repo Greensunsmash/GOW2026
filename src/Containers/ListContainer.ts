@@ -250,7 +250,7 @@ export class ListContainer extends GUI.Rectangle {
                     this.scene.scene.onPointerMove = undefined as any;
                     this.scene.scene.onPointerUp = undefined as any;
 
-                    if (l.isDragging && !this.content_root.contains(_evt.x, _evt.y)) {
+                    if (l.isDragging && (!this.root.contains(_evt.x, _evt.y) || !this.content_root.contains(_evt.x, _evt.y) || this.scene.getToolbox().contains(_evt.x, _evt.y))) {
                         l.parent?.removeControl(l);
                         l.isDragging = false;
                         l.dispose();
@@ -435,6 +435,7 @@ export class ListContainer extends GUI.Rectangle {
         return null;
     }
 
+    // Pour changer le parent d'un bloc
     reparent(control: GUI.Control, newParent: GUI.Container, position:Vector2) {
         
         control.parent?.removeControl(control);
@@ -446,10 +447,6 @@ export class ListContainer extends GUI.Rectangle {
 
         control.leftInPixels = (new_pos.x - centerX) / newParent.scaleX + centerX;
         control.topInPixels  = (new_pos.y - centerY) / newParent.scaleY + centerY;
-
-        //console.log(" ", position, "->", new_pos); new_pos pas totalement correct
-        /*control.leftInPixels = new_pos.x;
-        control.topInPixels = new_pos.y;*/
     }
 
     // GETTERS
