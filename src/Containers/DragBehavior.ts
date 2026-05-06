@@ -1,4 +1,4 @@
-import type { IPointerEvent } from "@babylonjs/core";
+import { Vector2, type IPointerEvent } from "@babylonjs/core";
 import * as GUI from "@babylonjs/gui";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { BlocContainer } from "./BlocContainer";
@@ -40,15 +40,13 @@ export class DragBehavior {
         // Remets le bloc enfant de la root pour le déplacer
         if (previousContainer instanceof BlocContainer) {
             previousContainer.resetEmptySlot(previousWrapper);
-        } else {
-            this.target.parent?.removeControl(this.target);
         }
-        this.target.getRoot().addControl(this.target);
+        this.reparent(this.target, this.target.getRoot(), new Vector2(this.lastX, this.lastY));
 
-        if (!coordsAbsolute) {
+        /*if (!coordsAbsolute) {
             this.target.leftInPixels = startX;
             this.target.topInPixels = startY;
-        }
+        }*/
         this.isDragging = true;
         //this.scene.setDragging(true);
 
@@ -61,15 +59,15 @@ export class DragBehavior {
             if (!this.isDragging) return;
             this.lastX = evt.x;
             this.lastY = evt.y;
-            this.target.leftInPixels = evt.x + decalX;
-            this.target.topInPixels = evt.y + decalY;
+            this.target.leftInPixels = this.lastX;
+            this.target.topInPixels = this.lastY;
         };
 
         // UP
         this.scene.scene.onPointerUp = () => {this.stopDrag();};
     }
 
-    // Arrêt du drage
+    // Arrêt du drag
     private stopDrag() {
         // Important : on nettoie les callbacks (je l'ai pas fait ailleurs oupsi)
         this.scene.scene.onPointerMove = undefined as any;
@@ -82,10 +80,26 @@ export class DragBehavior {
             this.target.dispose();
         }
         this.isDragging = false;
+
+        this.reparent(this.target, this.target.getContentRoot(), new Vector2(this.lastX, this.lastY));
         this.target.parent?.removeControl(this.target);
         this.target.getContentRoot().addControl(this.target);
         //this.scene.setDragging(false);
         let slot = this.scene.getHoverSlot();
         if (slot instanceof EmptySlot) {slot.replaceIfMatch(this.target);}
+    }
+
+    // Pour changer le parent d'un bloc
+    private reparent(control: GUI.Control, newParent: GUI.Container, position:Vector2) {
+        
+        control.parent?.removeControl(control);
+        newParent.addControl(control);
+        const new_pos = newParent.getLocalCoordinates(position);
+
+        const centerX = newParent.widthInPixels / 2;
+        const centerY = newParent.heightInPixels / 2;
+
+        control.leftInPixels = (new_pos.x - centerX) / newParent.scaleX + centerX;
+        control.topInPixels  = (new_pos.y - centerY) / newParent.scaleY + centerY;
     }
 }

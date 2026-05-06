@@ -10,7 +10,6 @@ import { InstructionContainer } from "./InstructionContainer";
 import { Magnet } from "./Magnet";
 import { FlagContainer } from "./Prefabs/FlagContainer";
 import type { StructureContainer } from "./StructureContainer";
-import { Flag } from "../Language/Group/Depart/Flag";
 
 // La classe qui permet de stocker plusieurs instructions container à la suite
 // WARNING : Une instruction ne peut être seule et doit toujours être contenue dans un ListContainer
