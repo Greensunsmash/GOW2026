@@ -32,17 +32,6 @@ export class AssetLibrary {
 
         try {
             const container = await LoadAssetContainerAsync(AssetLibrary.MODELS_ROOT + filename, this.scene.scene);
-            /*const rootMesh = new TransformNode(name, this.scene.scene);
-
-            container.meshes.forEach(mesh => {
-                mesh.parent = rootMesh;
-                mesh.isVisible = true;
-                mesh.layerMask = LayerMasks.SCENE_ONLY;
-            });
-
-            rootMesh.setEnabled(false);
-
-            this.assets[name] = rootMesh;*/
             this.containers[name] = container;
             this.assets[name] = container.rootNodes[0] as TransformNode;
             this.animationGroupsByAsset[name] = container.animationGroups;

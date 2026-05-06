@@ -4,6 +4,7 @@ import { PlayScene } from "./Scene/PlayScene";
 import { LayerMasks } from "../Shared/Constants";
 import { LevelSelectScene } from "./Scene/LevelSelectScene";
 import type { BaseScene } from "./Scene/BaseScene";
+import { LevelReader } from "../Environment/LevelReader";
 
 export class Game {
 
@@ -26,7 +27,9 @@ export class Game {
     */
     static async Create(canvas: HTMLCanvasElement): Promise<Game> {
         const game = new Game(canvas);
+        game.engine.displayLoadingUI();
         
+        await LevelReader.init();
         await game.switchToLevelSelect();
 
         game.engine.runRenderLoop(() => {
@@ -34,15 +37,21 @@ export class Game {
             game.currentScene.scene.render();
         });
 
+        let resizeTimeout: any;
         window.addEventListener("resize", () => {
-            game.engine.resize();
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                game.engine.resize();
+            }, 100);
         });
 
+        game.engine.hideLoadingUI();
         return game;
     }
 
     public async switchToLevelSelect() {
         const scene = new LevelSelectScene(this.engine);
+        await this.switchScene(scene);
         //await scene.init();
         await scene.init(
             async (levelName: string) => {
@@ -59,7 +68,6 @@ export class Game {
                 await this.switchScene(newScene);
             }
         );
-        this.switchScene(scene);
     }
 
     public async switchScene(scene: BaseScene) {

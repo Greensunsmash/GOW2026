@@ -368,7 +368,7 @@ export class PlayScene extends GameScene { // ;)
 
         // "Compilation" :
 
-        let child_list = this.leftPanel.children;
+        let child_list = this.workspace.getContentRoot().children;
         let start_block: ListContainer | undefined;
 
         for (const child of child_list) {
@@ -421,8 +421,8 @@ export class PlayScene extends GameScene { // ;)
     public async dryAttempt() {
         console.log("scene.dryAttempt");
         this.dryAttemptMode = true;
+        console.log("dryAttempt : " + this.dryAttemptMode);
         await this.run();
-        this.dryAttemptMode = false;
     }
 
     public isDryAttempt(): boolean {
@@ -431,6 +431,7 @@ export class PlayScene extends GameScene { // ;)
 
     
     public async onGoalReached() {
+        console.log("dry attempt mode " + this.dryAttemptMode);
         this.stopRun();
         if (this.isDryAttempt()) {
             console.log("dry attempt success");
@@ -472,7 +473,7 @@ export class PlayScene extends GameScene { // ;)
 
     // le compteur incrém/décrém n'était pas une solution fiable
     public override updateInstructionCount() {
-        let child_list = this.leftPanel.children;
+        let child_list = this.workspace.getContentRoot().children;
         let count = 0;
         for (const child of child_list) {
             if (child instanceof ListContainer) {   
@@ -486,7 +487,7 @@ export class PlayScene extends GameScene { // ;)
 
     public modeUpdate() {
         this.toolbox.onModeChange();
-        let child_list = this.leftPanel.children;
+        let child_list = this.workspace.getContentRoot().children;
         for (const child of child_list) {
             if (child instanceof ListContainer) {   
                 const insts = child.getInnerInstContainers();

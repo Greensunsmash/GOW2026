@@ -65,6 +65,49 @@ export class ExecutionContext {
         // sauvegarder l'état du jeu (pour qu'il soit réversible)
         this.memory.onNextTick();
 
+        // process l'intention du robot
+
+        // s'il ne bouge pas ce tick (turn left, right, attendre),
+        // son intention c'est juste sa position actuelle (flemmard)
+        if (robotIntention === undefined)
+            robotIntention = this.robot.getVisualGridPos();
+
+        // 1 : verif  collisions robot/obstacle-mur
+        if (this.level.isObstacle(robotIntention)) {
+            if (this.memory.getGameMode() === "PIGMODE") {
+                // il rebondit
+                console.log("[TICKS] robot bouncing");
+                const cur = this.robot.getVisualGridPos();
+                const dx = robotIntention.x - cur.x;
+                const dz = robotIntention.z - cur.z;
+                robotIntention = { x: cur.x - dx, y: cur.y, z: cur.z - dz };
+                robotBounce = true;
+            } else {
+                console.log("[TICKS] robot getting into an obstacle => dead.");
+                robotDead = true; 
+            }
+        }
+
+        if (this.level.isVoidBelow(robotIntention)) {
+            // plus tard, gérer séparément les visuels de la mort par obstacle et la mort par chute
+            robotDead = true;
+        }
+
+        if (!GridUtils.equals(this.robot.getVisualGridPos(), robotIntention)) {
+            if (instant)
+                this.robot.doMove(robotIntention, robotBounce);
+            else
+                await this.robot.doVisualMove(robotIntention, robotBounce);
+        }
+
+        
+        // Si le robot est déjç mort, inutile d'aller plus loin n'est-il pas?
+        if (robotDead) {
+            console.warn("[TICKS] ROBOT DEAD!!!");
+            // faire quelque chose !
+            this.scene.onRobotDead();
+        }
+
         // recueillir les intentions des mobs
         const intentions: Map<Mob, MobIntention> = new Map();
         const mobs = this.level.getMobs();
@@ -72,7 +115,7 @@ export class ExecutionContext {
             intentions.set(mob, mob.nextTickIntention());
         }
 
-        // vérifier les collisions mobs/mobs ou mobs/obstacles ou les chutes de mobs
+        // 2 : vérifier les collisions mobs/mobs ou mobs/obstacles ou les chutes de mobs
         const checkCollisions = (mob: Mob, intention: MobIntention): CollisionType => {
             console.log("mob " , mob, " intention is on ", intention);
             if (this.level.isObstacle(intention.nextPos))
@@ -121,16 +164,12 @@ export class ExecutionContext {
                     resolving = true;
                     if (collision === "WALL") {
                         if (mobInt.status === "FORWARD") {
-                            const cur = mob.getVisualGridPos();
-                            const dx = mobInt.nextPos.x - cur.x;
-                            const dz = mobInt.nextPos.z - cur.z;
-
                             mobInt.status = "BOUCING";
-                            mobInt.nextPos = { x: cur.x - dx, y: cur.y, z: cur.z - dz };
                         } else {
                             mobInt.status = "STUCK";
-                            mobInt.nextPos = mob.getVisualGridPos();
                         }
+                        // Tu ne bouges pas.
+                        mobInt.nextPos = mob.getVisualGridPos();
                     } else if (collision === "VOID") {
                         console.log("[TICKS] mob dead : ", mob);
                         mobInt.deadDuringTick = true;
@@ -142,68 +181,23 @@ export class ExecutionContext {
             }
         }
 
+        // 3 : visuel cochons
+        const mobMovePromises = mobs.map(mob => {
+            const int = intentions.get(mob);
+            if (int)
+                return intentions.get(mob) && mob.doNextTick(int, instant)
+        });
+        await Promise.all(mobMovePromises);
 
-        // process l'intention du robot
-
-        // s'il ne bouge pas ce tick (turn left, right, attendre),
-        // son intention c'est juste sa position actuelle (flemmard)
-        if (robotIntention === undefined)
-            robotIntention = this.robot.getVisualGridPos();
-
-        if (this.level.isObstacle(robotIntention)) {
-            if (this.memory.getGameMode() === "PIGMODE") {
-                // il rebondit
-                console.log("[TICKS] robot bouncing");
-                const cur = this.robot.getVisualGridPos();
-                const dx = robotIntention.x - cur.x;
-                const dz = robotIntention.z - cur.z;
-                robotIntention = { x: cur.x - dx, y: cur.y, z: cur.z - dz };
-                robotBounce = true;
-            } else {
-                console.log("[TICKS] robot getting into an obstacle => dead.");
-                robotDead = true; 
-            }
-        }
-
-        // à cet instant, les positions réelles de tous les mobs sont connues
-
-        if (this.level.isVoidBelow(robotIntention)) {
-            // plus tard, gérer séparément les visuels de la mort par obstacle et la mort par chute
-            robotDead = true;
-        }
-
+        // 4 : check collision robot/cochons
         for (const mob of mobs) {
-            const mobInt = intentions.get(mob);
-            if (!mobInt) continue;
-
-            const mobPos = mob.getVisualGridPos();
-
-            if (GridUtils.equals(mobInt.nextPos, robotIntention) // meme case dest.
-                || GridUtils.equals(robotIntention, mob.getVisualGridPos()) // robot fonce sur mob
-                || (GridUtils.equals(mobInt.nextPos, this.robot.getVisualGridPos()) &&
-                    GridUtils.equals(robotIntention, mobPos))) { // coll. frontale
+            if (GridUtils.equals(mob.getVisualGridPos(), this.robot.getVisualGridPos())) { 
                 console.warn("[TICKS] Deadly robot collision !");
-                robotDead = true;
+                this.scene.onRobotDead();
             }
         }
 
-        if (instant) {
-            for (const mob of mobs) {
-                await mob.doNextTick(intentions.get(mob)!, true);
-            }
-
-            if (!GridUtils.equals(this.robot.getVisualGridPos(), robotIntention))
-                this.robot.doMove(robotIntention, robotBounce);
-        } else {
-            const promises = mobs.map(mob => mob.doNextTick(intentions.get(mob)!));
-            
-            if (!GridUtils.equals(this.robot.getVisualGridPos(), robotIntention))
-                promises.push(this.robot.doVisualMove(robotIntention, robotBounce))
-
-            // exécuter toutes les fonctions async en meme temps
-            await Promise.all(promises);
-        }
-
+        // 4 : vérif. que ça fait pas 3 tours qu'on est en mode groink groink
         if (this.memory.getGameMode() === "PIGMODE"
             && this.ticksSinceLastModeChange >= 3) {
                 this.memory.setGameMode("NORMAL");
@@ -230,12 +224,6 @@ export class ExecutionContext {
         }
         
         this.scene.modeUpdate();
-
-        if (robotDead) {
-            console.warn("[TICKS] ROBOT DEAD!!!");
-            // faire quelque chose !
-            this.scene.onRobotDead();
-        }
 
         console.log("[TICKS] TICK ENDED.");
     }

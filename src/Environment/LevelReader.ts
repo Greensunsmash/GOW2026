@@ -61,8 +61,22 @@ export type IslandBlockset = string[]; // Chaque ile à son propre blockset, qui
 
 export type LevelIndexEntry = {name: string, file: string};
 
+type LevelData = {
+    islands: {
+        layouts: State[][];
+        blockset: any;
+        block_limitation: number | undefined;
+        goal: any;
+        begin_dialog: string;
+        end_dialog: string;
+    }[];
+};
+
 export class LevelReader {
     static LEVELS_ROOT = ASSETS_ROOT + "levels/";
+
+    private static indexCache: LevelIndexEntry[] | null = null;
+    private static levelCache: Map<string, LevelData> = new Map();
 
     private nb_islands : number = 0;
     private structure : IslandMap[] = [];
@@ -71,14 +85,45 @@ export class LevelReader {
     private goals: Goal[][] = [];
     private beginDialog: (string | null)[] = [];
     private endDialog: (string | null)[] =  [];
+    
+    static async init() {
+        // Aucune interception d'erreurs, on catch ailleurs
 
-    static async getLevelList(): Promise<LevelIndexEntry[]> {
-        const res = await fetch(LevelReader.LEVELS_ROOT + "index.json");
-        const data = await res.json();
-        return data.levels;
+        const fetchLevelList = async (): Promise<LevelIndexEntry[]> => {
+            const res = await fetch(LevelReader.LEVELS_ROOT + "index.json");
+            //console.log(await res.text());
+            const data = await res.json();
+            return data.levels;
+        } 
+
+        const levelList = await fetchLevelList();
+        if (levelList.length <= 0) {
+            throw new Error("cannot fill level list: level index (index.json) is empty");
+        }
+        this.indexCache = levelList;
+
+        const fetchLevel = async (name: string): Promise<LevelData> => {
+            const response = await fetch(LevelReader.LEVELS_ROOT + name);
+            if (!response.ok) {
+                throw new Error(`cant load level : ${response.statusText}`);
+            }
+            const data = await response.json();
+            return data;
+        }
+        const promises = levelList.map(async (levelEntry: LevelIndexEntry) => {
+            const lvl = await fetchLevel(levelEntry.file);
+            console.log("storing in cache" + levelEntry.file);
+            this.levelCache?.set(levelEntry.file, lvl);
+        });
+        await Promise.all(promises);
+    }
+
+    static async getLevelList() {
+        return this.indexCache;
     }
 
     constructor() {}
+
 
     private readLayers(layout: string[]): Map3 {
         return layout.map((layer) => {
@@ -93,13 +138,21 @@ export class LevelReader {
             });
     }
 
+    private reset() {
+        this.structure = [];
+        this.blockset = [];
+        this.blockLimit = [];
+        this.goals = [];
+        this.beginDialog = [];
+        this.endDialog = [];
+    }
+
     async loadLevel(name: string): Promise<void> {
+        this.reset();
         try {
-            const response = await fetch(LevelReader.LEVELS_ROOT + name);
-            if (!response.ok) {
-                throw new Error(`cant load level : ${response.statusText}`);
-            }
-            const data = await response.json();
+            const data = LevelReader.levelCache?.get(name);
+            if (!data)
+                throw new Error(`cant retrieve ${name} from level reader cache`);
             const list: any[] = data.islands;
             this.nb_islands = list.length;
 
