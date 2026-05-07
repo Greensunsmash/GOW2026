@@ -128,13 +128,14 @@ export class ListContainer extends GUI.Rectangle {
                     return;
                 }
 
+                const decal = this.getDecal(c, this.parent, new Vector2(x,y));
 
                 let l: ListContainer;
                 if (this.scene.getHoverList() === this) this.scene.setHoverList(null);
 
                 if (nb == 0 || (nb == 1 && this.list.indexOf(this.magnet) == 0)) {// On a pris le premier bloc, donc on déplace tout
                     l = this;
-                    this.reparent(this, this.root, new Vector2(x, y));
+                    this.reparent(this, this.root, new Vector2(x + decal.x, y + decal.y));
                 }
                 else { // Sinon, il va falloir séparer en 2
                     l = new ListContainer(this.root, this.content_root, this.scene);
@@ -148,7 +149,7 @@ export class ListContainer extends GUI.Rectangle {
                     if (nb == 0 || (nb == 1 && this.list.indexOf(this.magnet) == 0)) { // Si jamais en réalité, la structure commence la liste
                         l.dispose();
                         l = this;
-                        this.reparent(this, this.root, new Vector2(x, y));
+                        this.reparent(this, this.root, new Vector2(x + decal.x, y + decal.y));
                     }
                     else {
                             let s = this.structureList.filter((x) => x.contains(nb));
@@ -228,13 +229,11 @@ export class ListContainer extends GUI.Rectangle {
                 this.scene.setDragging(true);
 
                 l.isDragging = true;
-                let startX = c.leftInPixels + this.leftInPixels;
-                let startY = c.topInPixels + this.topInPixels;
-                let decalX = startX - x;
-                let decalY = startY - y;
+                let decalX = decal.x;
+                let decalY = decal.y;
 
-                l.leftInPixels = startX;
-                l.topInPixels = startY;
+                //l.leftInPixels = xa;
+                //l.topInPixels = ya;
 
                 // On le fait bouger
                 this.scene.scene.onPointerMove = (evt: IPointerEvent) => {
@@ -249,7 +248,7 @@ export class ListContainer extends GUI.Rectangle {
                     this.scene.scene.onPointerMove = undefined as any;
                     this.scene.scene.onPointerUp = undefined as any;
 
-                    if (l.isDragging && (!this.root.contains(_evt.x, _evt.y) || !this.content_root.contains(_evt.x, _evt.y) || this.scene.getToolbox().contains(_evt.x, _evt.y))) {
+                    if (l.isDragging && (!this.root.contains(_evt.x + decalX, _evt.y + decalY) || !this.content_root.contains(_evt.x + decalX, _evt.y+decalY) || this.scene.getToolbox().contains(_evt.x+decalX, _evt.y+decalY))) {
                         l.parent?.removeControl(l);
                         l.isDragging = false;
                         l.dispose();
@@ -267,12 +266,12 @@ export class ListContainer extends GUI.Rectangle {
                             l.dispose();
                         } else {
                             this.scene.setDragging(false);
-                            this.reparent(this, this.content_root, new Vector2(_evt.x, _evt.y));
+                            this.reparent(this, this.content_root, new Vector2(_evt.x+decalX, _evt.y+decalY));
                             l.detector.isHitTestVisible = true;
                         }
                     } else {
                         this.scene.setDragging(false);
-                        this.reparent(this, this.content_root, new Vector2(_evt.x, _evt.y));
+                        this.reparent(this, this.content_root, new Vector2(_evt.x+decalX, _evt.y+decalY));
                         l.detector.isHitTestVisible = true;
                     }
                 }
@@ -432,6 +431,12 @@ export class ListContainer extends GUI.Rectangle {
             if (struct.getHeader() === i) return struct;
         }
         return null;
+    }
+
+    getDecal(control: GUI.Control, parent: GUI.Container, pointer: Vector2): Vector2 {
+        // Cette fonction ne marche pas. Losque je serai capable de récupérer la position absolu d'un bloc, il suffira de soustraire au pointeur la position absolue de pointeur.
+        // En attendant, return 0
+        return new Vector2(0,0);
     }
 
     // Pour changer le parent d'un bloc
