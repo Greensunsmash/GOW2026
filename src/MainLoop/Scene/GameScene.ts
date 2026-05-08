@@ -13,13 +13,16 @@ import { Instruction } from "../../Language/Instructions/Instruction";
 import { InstructionContainer } from "../../Containers/InstructionContainer";
 import { BlocContainer } from "../../Containers/BlocContainer";
 import { WorkSpace } from "../../MRGUI/Workspace";
+import { Vector2 } from "babylonjs";
 
 export abstract class GameScene extends BaseScene {
     private hoverSlot : EmptySlot | null = null;
     private hoverList : ListContainer | null = null;
     private dragging : boolean = false;
+    public dragging_bloc : boolean = false;
     public dragListeners : (() => void)[];
     public undragListeners : (() => void)[];
+    public decal : Vector2;
     public blockCount: number = 0;
     protected leftPanel: Rectangle;
 
@@ -47,6 +50,7 @@ export abstract class GameScene extends BaseScene {
         
         this.workspace = new WorkSpace(this.leftPanel, this);
         this.toolbox = new OutilsBox(this.leftPanel, this.workspace, this);
+        this.decal = new Vector2(0, 0);
     }
 
     init(): void {}
@@ -112,10 +116,13 @@ export abstract class GameScene extends BaseScene {
         this.dragging = bool;
     }
 
+    public getDecal() : Vector2 {return this.decal;}
+    public setDecal(vec:Vector2) {this.decal = vec;}
     
-    getToolbox() {
+    public getToolbox() {
         return this.toolbox;
     }
+
     
     public updateInstructionCount?(): void;
 }

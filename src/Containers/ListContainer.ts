@@ -75,14 +75,16 @@ export class ListContainer extends GUI.Rectangle {
 
         // Même moi j'y comprends rien
         this.pointerObserver = this.scene.scene.onPointerObservable.add((pointerInfo) => {
+            const decal = this.scene.getDecal();
+
             if (this.detector.isHitTestVisible && pointerInfo.type === PointerEventTypes.POINTERMOVE) {
                 const evt = pointerInfo.event;
                 if (this.getHover()) {
-                    if (!this.detector.contains(evt.x, evt.y) && this.scene.getHoverList() === this) {
+                    if (!this.detector.contains(evt.x + decal.x, evt.y + decal.y) && this.scene.getHoverList() === this) {
                         this.scene.setHoverList(null);
                     } else if (scene.isDragging()) {
-                        let x = evt.x - this.stack.leftInPixels;
-                        let y = evt.y - this.stack.topInPixels;
+                        let x = evt.x + decal.x - this.stack.leftInPixels;
+                        let y = evt.y + decal.y - this.stack.topInPixels;
                         y = this.moveTowards(y, this.magnet.centerY, 5);
                         if (!this.magnet.contains(x, y)) {
                             //console.log("Recalcul");
@@ -94,7 +96,7 @@ export class ListContainer extends GUI.Rectangle {
                         }
                     }
                 } else {
-                    if (this.detector.contains(evt.x, evt.y)) {
+                    if (this.detector.contains(evt.x+decal.x, evt.y+decal.y)) {
                         this.scene.setHoverList(this);
                     }
                 }
@@ -129,6 +131,7 @@ export class ListContainer extends GUI.Rectangle {
                 }
 
                 const decal = this.getDecal(c, this.parent, new Vector2(x,y));
+                this.scene.setDecal(decal);
 
                 let l: ListContainer;
                 if (this.scene.getHoverList() === this) this.scene.setHoverList(null);
@@ -152,13 +155,13 @@ export class ListContainer extends GUI.Rectangle {
                         this.reparent(this, this.root, new Vector2(x + decal.x, y + decal.y));
                     }
                     else {
-                            let s = this.structureList.filter((x) => x.contains(nb));
-                            let toMove: InstructionContainer[] = []; // Les blocs qu'on va déplacer
-                            let structToMove: StructureContainer[] = []; // Les structures qu'on va déplacer
-                            
-                            const resolveSliceEnd = (structure: StructureContainer, start: number) => {
-                                const mid = structure.getMid?.();
-                                const midID = mid !== undefined && mid !== null ? structure.getMidID() : null;
+                        let s = this.structureList.filter((x) => x.contains(nb));
+                        let toMove: InstructionContainer[] = []; // Les blocs qu'on va déplacer
+                        let structToMove: StructureContainer[] = []; // Les structures qu'on va déplacer
+                        
+                        const resolveSliceEnd = (structure: StructureContainer, start: number) => {
+                            const mid = structure.getMid?.();
+                            const midID = mid !== undefined && mid !== null ? structure.getMidID() : null;
                             const queueID = structure.getQueueID();
                             
                             if (midID !== null) {
@@ -167,7 +170,7 @@ export class ListContainer extends GUI.Rectangle {
                             }
                             return queueID;
                         };
-                        
+                    
                         if (s.length === 1) { // Si le bloc n'appartient qu'à une seule structure
                             const end = resolveSliceEnd(s[0], nb);
                             
@@ -253,8 +256,9 @@ export class ListContainer extends GUI.Rectangle {
                         l.isDragging = false;
                         l.dispose();
                         // on compte le nb de blocs dans la liste 
-                      this.scene.updateInstructionCount?.();
+                        this.scene.updateInstructionCount?.();
                         this.scene.setDragging(false);
+                        this.scene.setDecal(new Vector2(0,0));
                         return;
                     }
                     l.isDragging = false;
@@ -274,6 +278,7 @@ export class ListContainer extends GUI.Rectangle {
                         this.reparent(this, this.content_root, new Vector2(_evt.x+decalX, _evt.y+decalY));
                         l.detector.isHitTestVisible = true;
                     }
+                    this.scene.setDecal(new Vector2(0,0));
                 }
                 break;
 
@@ -436,7 +441,8 @@ export class ListContainer extends GUI.Rectangle {
     getDecal(control: GUI.Control, parent: GUI.Container, pointer: Vector2): Vector2 {
         // Cette fonction ne marche pas. Losque je serai capable de récupérer la position absolu d'un bloc, il suffira de soustraire au pointeur la position absolue de pointeur.
         // En attendant, return 0
-        return new Vector2(0,0);
+        const ptn = control.transformedMeasure;
+        return new Vector2(ptn.left - pointer.x, ptn.top - pointer.y);
     }
 
     // Pour changer le parent d'un bloc

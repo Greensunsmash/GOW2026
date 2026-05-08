@@ -33,6 +33,8 @@ export class WorkSpace extends GUI.Rectangle {
         this.height_limit = this.content.heightInPixels / 2;
 
         this.onPointerDownObservable.add((event) => {
+            if (this.scene.isDragging() || this.scene.dragging_bloc) return;
+
             this.isPanning = true;
 
             const decal = this.getLocalCoordinates(new Vector2(event.x, event.y)).subtract(new Vector2(this.content.leftInPixels, this.content.topInPixels));
@@ -50,7 +52,7 @@ export class WorkSpace extends GUI.Rectangle {
                 const true_left = x_pos + (this.content.widthInPixels - this.content.widthInPixels*this.content.scaleX)/2;
                 const true_right = x_pos + (this.content.widthInPixels + this.content.widthInPixels*this.content.scaleX)/2;
 
-                 // Pour vérifier de pas trop déplacer sur les cotés
+                // Pour vérifier de pas trop déplacer sur les cotés
                 if (true_left <= this.width_limit && true_right >= this.width_limit) this.content.leftInPixels = x_pos;
                 else if (true_left > this.width_limit) this.content.leftInPixels = this.width_limit - (this.content.widthInPixels - this.content.widthInPixels*this.content.scaleX)/2;
                 else this.content.leftInPixels = this.width_limit - (this.content.widthInPixels + this.content.widthInPixels*this.content.scaleX)/2;

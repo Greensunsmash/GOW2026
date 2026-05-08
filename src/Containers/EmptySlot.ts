@@ -34,7 +34,8 @@ export class EmptySlot extends GUI.Rectangle {
         this.pointerObserver = this.scene.scene.onPointerObservable.add((pointerInfo) => { 
             if (pointerInfo.type === PointerEventTypes.POINTERMOVE) {
                 const evt = pointerInfo.event;
-                const contains = this.contains(evt.x, evt.y);
+                const decal = this.scene.getDecal();
+                const contains = this.contains(evt.x + decal.x, evt.y + decal.y);
                 if (this.getHover()) {
                     if (!contains && this.scene.getHoverSlot() === this) this.scene.setHoverSlot(null);
                 } else {

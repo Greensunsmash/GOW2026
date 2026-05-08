@@ -264,8 +264,10 @@ export class OutilsBox extends Rectangle {
 
                 // on le place là ou état le bloc factice
                 // (_curentMeasure c pour avoir les coords. absolues)
-                const absoluteLeft = facticeBlock.innerCtrl._currentMeasure.left;
-                const absoluteTop = facticeBlock.innerCtrl._currentMeasure.top;
+                const absoluteLeft = facticeBlock.innerCtrl.transformedMeasure.left;
+                const absoluteTop = facticeBlock.innerCtrl.transformedMeasure.top;
+
+                console.log(absoluteLeft, absoluteTop);
                 
                 // on agit différemment selon le type de blocs
                 // si c'est une List (donc probablement une structure)
@@ -275,7 +277,9 @@ export class OutilsBox extends Rectangle {
                     realDragBlock.leftInPixels = absoluteLeft;
                     realDragBlock.topInPixels = absoluteTop;
                     // et de transmettre le clic pour trigger le drag
-                    realDragBlock.click(evt.x, evt.y, true);
+                    requestAnimationFrame(() => {
+                        realDragBlock.click(evt.x, evt.y, true);
+                    });
                 // si c'est une instruction
                 } else if (realDragBlock instanceof InstructionContainer) {  
                     if (realDragBlock instanceof BasicInstContainer) {
@@ -291,13 +295,17 @@ export class OutilsBox extends Rectangle {
                     
                     listCtn.leftInPixels = absoluteLeft;
                     listCtn.topInPixels = absoluteTop;
-                    listCtn.click(evt.x, evt.y, true);
+                    requestAnimationFrame(() => {
+                        listCtn.click(evt.x, evt.y, true);
+                    });
                 // si c'set un blocContainer
                 } else if (realDragBlock instanceof BlocContainer)  {
                     realDragBlock.leftInPixels = absoluteLeft;
                     realDragBlock.topInPixels = absoluteTop;
                     const d = new DragBehavior(realDragBlock);
-                    d.startDrag(evt.x, evt.y, true);
+                    requestAnimationFrame(() => {
+                        d.startDrag(evt.x, evt.y, true);
+                    });
                 } else {
                     console.error("ntm");
                 }
