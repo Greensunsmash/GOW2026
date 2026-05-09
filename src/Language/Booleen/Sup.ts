@@ -2,15 +2,17 @@ import { Booleen } from "./Booleen";
 import { Valeur } from "../Valeur/Valeur";
 import { Value } from "../Valeur/Value";
 import type { Launchable } from "../Launchable";
+import type { BlocContainer } from "../../Containers/BlocContainer";
 
 export class Sup extends Booleen {
     private v1: Valeur;
     private v2: Valeur;
 
-    constructor(v1: Valeur, v2: Valeur) {
+    constructor(v1: Valeur, v2: Valeur, container:BlocContainer) {
         super();
         this.v1 = v1;
         this.v2 = v2;
+        this.container = container;
     }
 
     eval(): boolean {

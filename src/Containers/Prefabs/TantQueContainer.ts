@@ -16,6 +16,6 @@ export class TantQueContainer extends StructureContainer {
     public getGroup(e:Executable[]): Executable {
         let slots = this.getHeader().getSlots();
         let value = slots[0].children[0] as BooleenContainer;
-        return new TantQue(e, value.getValue()[0]);
+        return new TantQue(e, this, value.getValue()[0]);
     }
 }

@@ -2,12 +2,13 @@ import type { Executable } from "../../Executable";
 import type { Launchable } from "../../Launchable";
 import { Group } from "../Group";
 import { Booleen } from "../../Booleen/Booleen";
+import type { StructureContainer } from "../../../Containers/StructureContainer";
 
 export class Si extends Group implements Executable {
     private bool: Booleen;
     public done: boolean[] = [];
 
-    constructor(e: Executable | Executable[] | Booleen, boolOptional?: Booleen) {
+    constructor(e: Executable | Executable[] | Booleen, container:StructureContainer, boolOptional?: Booleen) {
         if (e instanceof Booleen) {
             super();
             this.bool = e;
@@ -18,6 +19,7 @@ export class Si extends Group implements Executable {
             super(e);
             this.bool = boolOptional!;
         }
+        this.container = container;
     }
 
     public execute(): void {

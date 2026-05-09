@@ -13,5 +13,5 @@ export abstract class DepartContainer extends InstructionContainer {
         this.bloc.background = "#F52795";
     }
 
-    getLaunchable(e:Executable[]):Launchable{return new Flag(e);}
+    getLaunchable(e:Executable[]):Launchable{return new Flag(this, e);}
 }

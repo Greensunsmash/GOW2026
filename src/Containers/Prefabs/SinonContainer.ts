@@ -16,6 +16,6 @@ export class SinonContainer extends StructureContainer {
     public getGroup(e:Executable[], e2:Executable[]): Executable {
         let slots = this.getHeader().getSlots();
         let value = slots[0].children[0] as BooleenContainer;
-        return new Sinon(e, e2, value.getValue()[0]);
+        return new Sinon(e, e2, this, value.getValue()[0]);
     }
 }

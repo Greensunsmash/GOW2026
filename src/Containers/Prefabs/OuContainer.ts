@@ -18,7 +18,7 @@ export class OuContainer extends BooleenContainer {
         if (isValuable(child1) && isValuable(child2)) {
             const b1 = child1.getValue()[0] as Booleen;
             const b2 = child2.getValue()[0] as Booleen;
-            return [new Ou(b1, b2)];
+            return [new Ou(b1, b2, this)];
         }
         
         throw new Error("Reading a value on a non-value control. Fuck you");

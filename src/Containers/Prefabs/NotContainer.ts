@@ -15,7 +15,7 @@ export class NotContainer extends BooleenContainer {
         let slots = this.getSlots();
         const child = slots[0].children[0];
         if (isValuable(child)) {
-            return [new Not(child.getValue()[0] as Booleen)];
+            return [new Not(child.getValue()[0] as Booleen, this)];
         }
         
         throw new Error("Reading a value on a non-value control. Fuck you");

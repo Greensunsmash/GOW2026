@@ -3,14 +3,16 @@ import { Value } from "./Value";
 import type { Launchable } from "../Launchable";
 import { Memory } from "../Memory";
 import { Fonction } from "../Group/Depart/Fonction";
+import type { BlocContainer } from "../../Containers/BlocContainer";
 
 export class VarValue extends Valeur {
     private name: string;
     private funcName?: string;
 
-    constructor(name: string) {
+    constructor(name: string, container:BlocContainer) {
         super();
         this.name = name;
+        this.container = container;
     }
 
     onLaunch(l: Launchable): boolean {
@@ -22,9 +24,6 @@ export class VarValue extends Valeur {
     }
 
     eval(): Value {
-        if (this.funcName) {
-            return Memory.get().getVariableValue(this.name, this.funcName);
-        }
         return Memory.get().getVariableValue(this.name);
     }
 }

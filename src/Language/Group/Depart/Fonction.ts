@@ -5,13 +5,14 @@ import { Memory } from "../../Memory";
 import type { StackFrame } from "../../Memory";
 import { Value } from "../../Valeur/Value";
 import { Bloc } from "../../Bloc";
+import type { DepartContainer } from "../../../Containers/DepartContainer";
 
 export class Fonction extends Group implements Launchable {
     private name: string;
     private args?: string[];
     private stack_list: StackFrame[];
 
-    constructor(name: string, eOrList?: Executable | Executable[]) {
+    constructor(name: string, container:DepartContainer, eOrList?: Executable | Executable[]) {
         if (!eOrList) {
             super();
         } else if (Array.isArray(eOrList)) {
@@ -21,6 +22,7 @@ export class Fonction extends Group implements Launchable {
         }
         this.name = name;
         this.stack_list = [];
+        this.container = container;
     }
 
     public execute(list?: Value[]): void {

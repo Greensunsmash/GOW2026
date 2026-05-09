@@ -3,13 +3,15 @@ import { Valeur } from "../Valeur/Valeur";
 import { Booleen } from "../Booleen/Booleen";
 import type { Launchable } from "../Launchable";
 import { Memory } from "../Memory";
+import type { InstructionContainer } from "../../Containers/InstructionContainer";
 
 export class Print extends Instruction {
     private valeur?: Valeur;
     private bool?: Booleen;
 
-    constructor(arg: Valeur | Booleen) {
+    constructor(arg: Valeur | Booleen, container:InstructionContainer) {
         super();
+        this.container = container;
         if (arg instanceof Valeur) this.valeur = arg;
         if (arg instanceof Booleen) this.bool = arg;
     }

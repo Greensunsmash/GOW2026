@@ -1,3 +1,5 @@
+import type { DepartContainer } from "../../Containers/DepartContainer";
+import type { StructureContainer } from "../../Containers/StructureContainer";
 import { Bloc } from "../Bloc";
 import type { Executable } from "../Executable";
 import type { Launchable } from "../Launchable";
@@ -5,6 +7,7 @@ import { Memory } from "../Memory";
 
 export abstract class Group extends Bloc {
     protected list: Executable[];
+    protected container: StructureContainer | DepartContainer;
     protected next_inst: number[];
     public back_listeners : (() => void)[] = [];
     public next_listeners : (() => void)[] = [];
@@ -87,4 +90,6 @@ export abstract class Group extends Bloc {
         }
         return this.list[this.next_inst[i]-1].getBaseInstruction();
     }
+    
+    public getContainer() : StructureContainer | DepartContainer {return this.container;}
 }

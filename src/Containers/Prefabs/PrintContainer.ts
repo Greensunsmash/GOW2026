@@ -20,7 +20,7 @@ export class PrintContainer extends InstructionContainer {
 
         if (isValuable(firstChild)) {
             const value = firstChild.getValue()[0];
-            return new Print(value);
+            return new Print(value, this);
         }
 
         throw new Error("Reading a value on a non-value control. Fuck you");

@@ -4,6 +4,7 @@ import { Booleen } from "../Booleen/Booleen";
 import type { Launchable } from "../Launchable";
 import { Memory } from "../Memory";
 import type { Value } from "../Valeur/Value";
+import type { InstructionContainer } from "../../Containers/InstructionContainer";
 
 export class SetVar extends Instruction {
     private name: string;
@@ -12,9 +13,10 @@ export class SetVar extends Instruction {
     private previous_value: Value | null = null;
     private previous_bool: boolean | null = null;
 
-    constructor(name: string, arg: Valeur | Booleen) {
+    constructor(name: string, arg: Valeur | Booleen, container : InstructionContainer) {
         super();
         this.name = name;
+        this.container = container;
         if (arg instanceof Valeur) {
             this.valeur = arg;
         } else {

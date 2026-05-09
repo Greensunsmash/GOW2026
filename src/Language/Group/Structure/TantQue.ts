@@ -3,12 +3,13 @@ import type { Launchable } from "../../Launchable";
 import { Group } from "../Group";
 import { Memory } from "../../Memory";
 import { Booleen } from "../../Booleen/Booleen";
+import type { StructureContainer } from "../../../Containers/StructureContainer";
 
 export class TantQue extends Group implements Executable {
     private bool : Booleen;
     public loop_nb : number[] = [];
 
-    constructor(e: Executable | Executable[] | Booleen, boolOptional?: Booleen) {
+    constructor(e: Executable | Executable[] | Booleen, container:StructureContainer, boolOptional?: Booleen) {
         if (e instanceof Booleen) {
             super();
             this.bool = e;
@@ -19,6 +20,7 @@ export class TantQue extends Group implements Executable {
             super(e);
             this.bool = boolOptional!;
         }
+        this.container = container;
     }
 
     public execute(): void { // Vérifiez pour une condition fausse dès le départ

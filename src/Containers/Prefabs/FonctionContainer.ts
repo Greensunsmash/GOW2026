@@ -25,7 +25,7 @@ export class FonctionContainer extends DepartContainer {
     }
 
     getLaunchable(e:Executable[]):Launchable{
-        let f = new Fonction(this.name, e);
+        let f = new Fonction(this.name, this, e);
         for (const arg of this.args) f.addArgs(arg);
         return f;
     }

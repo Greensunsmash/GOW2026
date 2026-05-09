@@ -20,7 +20,7 @@ export class PourContainer extends StructureContainer {
         let times;
         if (isValuable(value)) {
             times = value.getValue()[0] as Valeur;
-            return new Pour(e, times);
+            return new Pour(e, this, times);
         }
         throw new Error("cannot launch a pour container with an invalid slot. fuck you");
     }

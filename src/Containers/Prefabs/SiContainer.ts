@@ -16,6 +16,6 @@ export class SiContainer extends StructureContainer {
     public getGroup(e:Executable[]): Executable {
         let slots = this.getHeader().getSlots();
         let value = slots[0].children[0] as BooleenContainer;
-        return new Si(e, value.getValue()[0]);
+        return new Si(e, this, value.getValue()[0]);
     }
 }

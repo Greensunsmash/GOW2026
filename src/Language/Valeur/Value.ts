@@ -1,3 +1,5 @@
+import type { BlocContainer } from "../../Containers/BlocContainer";
+
 // Type erasable pour ValueType
 export type ValueType = "INT" | "FLOAT" | "STRING";
 

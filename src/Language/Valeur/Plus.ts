@@ -1,15 +1,17 @@
 import { Value } from "./Value";
 import { Valeur } from "./Valeur";
 import type { Launchable } from "../Launchable";
+import type { BlocContainer } from "../../Containers/BlocContainer";
 
 export class Plus extends Valeur {
     private v1: Valeur;
     private v2: Valeur;
 
-    constructor(v1: Valeur, v2: Valeur) {
+    constructor(v1: Valeur, v2: Valeur, container:BlocContainer) {
         super();
         this.v1 = v1;
         this.v2 = v2;
+        this.container = container;
     }
 
     eval(): Value {

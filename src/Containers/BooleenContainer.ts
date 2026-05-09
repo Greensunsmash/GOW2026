@@ -1,7 +1,6 @@
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { BlocContainer } from "./BlocContainer";
 import * as GUI from "@babylonjs/gui";
-import { DragBehavior } from "./DragBehavior";
 import type { Booleen } from "../Language/Booleen/Booleen";
 import { BooleenBrut } from "../Language/Booleen/BooleenBrute";
 

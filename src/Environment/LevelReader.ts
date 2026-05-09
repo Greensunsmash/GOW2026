@@ -33,6 +33,8 @@ import { ItemSensor } from "../Language/Booleen/ItemSensor";
 import { TantQueContainer } from "../Containers/Prefabs/TantQueContainer";
 import { SinonContainer } from "../Containers/Prefabs/SinonContainer";
 import { WaitInstruction } from "../Language/Instructions/WaitInstruction";
+import { ObstacleSensorContainer } from "../Containers/Prefabs/ObstacleSensorContainer";
+import { ItemSensorContainer } from "../Containers/Prefabs/ItemSensorContainer";
 
 export const State = { // Proposition, avoir différents symboles pour différetentes orientations : L = robot left, R = robot right etc
     Empty: " ",
@@ -283,10 +285,10 @@ export class LevelReader {
 
         const sensors: CategoryFactories<SensorBlock> = {
             obstacle: (root, content_root) =>
-            new BasicBooleenContainer("Il y a un obstacle", new ObstacleSensor(ctx), root, content_root, scene),
+            new ObstacleSensorContainer(root, content_root, scene),
 
             item: (root, content_root) =>
-            new BasicBooleenContainer("Il y a un objet", new ItemSensor(ctx), root, content_root, scene),
+            new ItemSensorContainer(root, content_root, scene),
         };
 
         const ops: CategoryFactories<OpBlock> = {

@@ -16,6 +16,7 @@ export class BasicInstContainer extends InstructionContainer {
         this.instruction = inst;
         if (pigModeInst)
             this.pigModeInstruction = pigModeInst;
+        this.instruction.setContainer(this);
     }
 
     getInstruction(): Instruction {

@@ -20,7 +20,7 @@ export class SetVarContainer extends InstructionContainer {
 
         if (isValuable(firstChild)) {
             const value = firstChild.getValue()[0];
-            return new SetVar(this.name, value);
+            return new SetVar(this.name, value, this);
         }
 
         throw new Error("Reading a value on a non-value control. Fuck you");

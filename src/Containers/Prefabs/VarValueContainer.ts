@@ -15,6 +15,6 @@ export class VarValueContainer extends ValeurContainer {
     }
 
     public getValue(): (Valeur)[] {
-        return [new VarValue(this.name)];
+        return [new VarValue(this.name, this)];
     }
 } 

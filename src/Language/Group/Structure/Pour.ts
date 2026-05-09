@@ -3,13 +3,14 @@ import type { Launchable } from "../../Launchable";
 import { Group } from "../Group";
 import { Valeur } from "../../Valeur/Valeur";
 import { Memory } from "../../Memory";
+import type { StructureContainer } from "../../../Containers/StructureContainer";
 
 export class Pour extends Group implements Executable {
     private valeur: Valeur;
     private loop_nb : number[] = [];
     private max_loop_nb : number[] = [];
 
-    constructor(e: Executable | Executable[] | Valeur, valeurOptional?: Valeur) {
+    constructor(e: Executable | Executable[] | Valeur, container:StructureContainer, valeurOptional?: Valeur) {
         if (e instanceof Valeur) {
             super();
             this.valeur = e;
@@ -20,6 +21,7 @@ export class Pour extends Group implements Executable {
             super(e);
             this.valeur = valeurOptional!;
         }
+        this.container = container
     }
 
     public execute(): void {

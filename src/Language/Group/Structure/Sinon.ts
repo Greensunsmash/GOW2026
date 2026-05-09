@@ -2,6 +2,7 @@ import type { Executable } from "../../Executable";
 import type { Launchable } from "../../Launchable";
 import { Group } from "../Group";
 import { Booleen } from "../../Booleen/Booleen";
+import type { StructureContainer } from "../../../Containers/StructureContainer";
 
 export class Sinon extends Group implements Executable {
     private bool: Booleen; // Azy c'est bon y'aura pas d'erreur
@@ -9,7 +10,7 @@ export class Sinon extends Group implements Executable {
     private l1 : Executable[] = [];
     private l2 : Executable[] = [];
 
-    constructor(e1: Executable | Executable[] | Booleen, e2: Executable | Executable[] | Booleen, boolOptional?: Booleen) {
+    constructor(e1: Executable | Executable[] | Booleen, e2: Executable | Executable[] | Booleen, container:StructureContainer, boolOptional?: Booleen) {
         super();
 
         if (e1 instanceof Booleen) {this.bool = e1;} 
@@ -21,6 +22,7 @@ export class Sinon extends Group implements Executable {
         else {this.l2 = [e2];} 
 
         if (boolOptional) this.bool = boolOptional;
+        this.container = container;
     }
 
     public execute(): void {

@@ -19,7 +19,7 @@ export class EgalContainer extends BooleenContainer {
         const child1 = slots[0].children[0];
         const child2 = slots[1].children[0];
         if (isValuable(child1) && isValuable(child2)) {
-            return [new Egal(child1.getValue()[0] as Valeur, child2.getValue()[0] as Valeur)];
+            return [new Egal(child1.getValue()[0] as Valeur, child2.getValue()[0] as Valeur,this)];
         }
         
         throw new Error("Reading a value on a non-value control. Fuck you");
