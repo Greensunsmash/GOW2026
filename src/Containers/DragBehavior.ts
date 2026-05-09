@@ -29,6 +29,8 @@ export class DragBehavior {
     public startDrag(x: number, y: number, coordsAbsolute?: boolean) {
         this.lastX = x;
         this.lastY = y;
+
+        console.log('xsh');
         
         const measure = this.target._currentMeasure;
         const startX = measure.left;
@@ -61,7 +63,7 @@ export class DragBehavior {
         };
 
         // UP
-        this.scene.scene.onPointerUp = () => {this.stopDrag();};
+        this.scene.scene.onPointerUp = () => {console.log("release"); this.stopDrag();};
     }
 
     // Arrêt du drag
@@ -74,7 +76,11 @@ export class DragBehavior {
         if (this.isDragging && (!this.target.getRoot().contains(this.lastX, this.lastY) || !this.target.getContentRoot().contains(this.lastX, this.lastY) || this.scene.getToolbox().contains(this.lastX, this.lastY))) {
             this.scene.updateInstructionCount?.();
             this.target.parent?.removeControl(this.target);
+            this.target.getScene().setDecal(new Vector2(0,0));
+            this.target.getScene().dragging_bloc = false;
+            this.isDragging = false;
             this.target.dispose();
+            return;
         }
         
         this.reparent(this.target, this.target.getContentRoot(), new Vector2(this.lastX, this.lastY));

@@ -210,6 +210,7 @@ export class ListContainer extends GUI.Rectangle {
                             structToMove = this.structureList.filter((x) => x.getHeaderID() >= nb);
                         }
                         
+                        console.log(toMove, structToMove);
                         // Et maintenant on déplace tout
                         for (const item of toMove) {
                             this.removeInstruction(item);
@@ -270,12 +271,12 @@ export class ListContainer extends GUI.Rectangle {
                             l.dispose();
                         } else {
                             this.scene.setDragging(false);
-                            this.reparent(this, this.content_root, new Vector2(_evt.x+decalX, _evt.y+decalY));
+                            this.reparent(l, this.content_root, new Vector2(_evt.x+decalX, _evt.y+decalY));
                             l.detector.isHitTestVisible = true;
                         }
                     } else {
                         this.scene.setDragging(false);
-                        this.reparent(this, this.content_root, new Vector2(_evt.x+decalX, _evt.y+decalY));
+                        this.reparent(l, this.content_root, new Vector2(_evt.x+decalX, _evt.y+decalY));
                         l.detector.isHitTestVisible = true;
                     }
                     this.scene.setDecal(new Vector2(0,0));

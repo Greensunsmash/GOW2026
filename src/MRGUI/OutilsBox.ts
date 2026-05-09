@@ -266,8 +266,6 @@ export class OutilsBox extends Rectangle {
                 // (_curentMeasure c pour avoir les coords. absolues)
                 const absoluteLeft = facticeBlock.innerCtrl.transformedMeasure.left;
                 const absoluteTop = facticeBlock.innerCtrl.transformedMeasure.top;
-
-                console.log(absoluteLeft, absoluteTop);
                 
                 // on agit différemment selon le type de blocs
                 // si c'est une List (donc probablement une structure)
