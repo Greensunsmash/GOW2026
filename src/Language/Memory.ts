@@ -31,7 +31,9 @@ export class Memory {
     private playing = true;
     private current_instruction: Executable | undefined;
     public skip = false;
-    public currentlyMoving = false;
+    private currentlyMoving = false;
+    public wait_reset = false;
+    public reset_callback : (() => void);
     private ran = false;
 
     private onProgramEnd: (() => void) | undefined = undefined;
@@ -132,6 +134,12 @@ export class Memory {
         if (this.current_instruction) this.current_instruction.next();
         //Memory.print();
     }
+    public continue():void {
+        if (this.currentlyMoving || !this.ran || !this.current_instruction) return;
+        this.setPlaying(true);
+        this.current_instruction.next();
+    }
+
 
     public programEnd(): void {
         this.setPlaying(false);
@@ -144,8 +152,6 @@ export class Memory {
     public resetCurrentInstruction(): void { this.current_instruction = undefined; }
     public setCurrentInstruction(e: Executable): void { this.current_instruction = e; }
 
-    public setCurrentlyMoving(isMoving: boolean) { this.currentlyMoving = isMoving; }
-
     public getCurrentInstruction() {return this.current_instruction;}
 
     public setRan() {this.ran = true;}
@@ -153,6 +159,11 @@ export class Memory {
 
     public setOnProgramEnd(onProgramEnd: (() => void) | undefined) {this.onProgramEnd = onProgramEnd;}
 
+    public isCurrentlyMoving():boolean {return this.currentlyMoving;}
+    public setCurrentlyMoving(isMoving:boolean) {
+        if (this.wait_reset) {this.currentlyMoving = false; this.reset_callback();}
+        else this.currentlyMoving = isMoving;
+    }
     public getGameMode(): GameMode {return this.gameMode;}
     public setGameMode(gm: GameMode) {this.gameMode = gm;}
 

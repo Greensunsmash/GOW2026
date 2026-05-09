@@ -78,8 +78,8 @@ export class PlayScene extends GameScene { // ;)
         );
 
         this.scene.onKeyboardObservable.add((kbInfo) => {
-            console.log("key event", kbInfo.event.key);
             if (kbInfo.type == KeyboardEventTypes.KEYUP) {
+                console.log("key event", kbInfo.event.key);
                 if (kbInfo.event.key === "l") {
                     console.log("nextleaf");
                     this.nextLeaf();
@@ -104,6 +104,12 @@ export class PlayScene extends GameScene { // ;)
                 } else if (kbInfo.event.key == "a") {
                     console.log("zoom out");
                     this.workspace.zoom(-0.1);
+                } else if (kbInfo.event.key == "o") {
+                    console.log("pause");
+                    this.pause();
+                } else if (kbInfo.event.key == "r") {
+                    console.log("reset");
+                    this.reset();
                 }
 
             }
@@ -357,13 +363,14 @@ export class PlayScene extends GameScene { // ;)
         });
     }
 
-    public run(onlyOneStep: boolean = false) {
-        Memory.get().clear();
+    public run(onlyOneStep: boolean = false, skip : boolean = false) { // Si skip est vrai, pas d'animation
+        this.memory.clear();
         console.log("Avant le run");
         Memory.print()
         this.level.reinitLevel();
         this.canRun = true;
-        Memory.get().setPlaying(!onlyOneStep);
+        this.memory.skip = skip;
+        this.memory.setPlaying(!onlyOneStep);
         const prevLeafIndex = this.currentLeaf;
 
         // "Compilation" :
@@ -390,12 +397,31 @@ export class PlayScene extends GameScene { // ;)
         }
     }
 
-    public stepBack() {
+    public stepBack(skip : boolean = false) {
+        this.memory.skip = skip;
         this.memory.stepBack();
     }
 
+    public pause() { // Mets en pause ou arrète la pause
+        if (!this.canRun) return;
+        if (this.memory.isPlaying()) this.memory.setPlaying(false);
+        else this.memory.continue();
+    }
 
-    public nextStep(){
+    public reset() { // Permet de revenir à l'état initiale
+        this.memory.reset_callback = () => {
+            this.memory.setPlaying(false);
+            this.memory.clear();
+            this.level.reinitLevel();
+            this.canRun = true;
+            this.memory.wait_reset = false;
+            this.memory.reset_callback = () => {};
+        };
+        this.memory.wait_reset = true
+    }
+
+    public nextStep(skip : boolean = false){
+        this.memory.skip = skip;
         console.log("TRYING to run next step");
         console.log(this.memory.getCurrentInstruction());
         if (!(this.memory.hasRan()) || !(this.memory.getCurrentInstruction())) {
@@ -428,8 +454,7 @@ export class PlayScene extends GameScene { // ;)
     public isDryAttempt(): boolean {
         return this.dryAttemptMode;
     }
-
-    
+ 
     public async onGoalReached() {
         console.log("dry attempt mode " + this.dryAttemptMode);
         this.stopRun();
