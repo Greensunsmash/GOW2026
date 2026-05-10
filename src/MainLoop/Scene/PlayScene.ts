@@ -110,6 +110,9 @@ export class PlayScene extends GameScene { // ;)
                 } else if (kbInfo.event.key == "r") {
                     console.log("reset");
                     this.reset();
+                } else if (kbInfo.event.key == "t") {
+                    console.log("toggle mgl");
+                    this.memory.toggleCurrentBloc();
                 }
 
             }

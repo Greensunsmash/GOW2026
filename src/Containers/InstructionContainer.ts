@@ -64,6 +64,10 @@ export class InstructionContainer extends GUI.Rectangle {
     // Par défaut print hello world (en pratique, cette fonction sera toujours override)
     getInstruction(): Instruction {return new Print(new ValeurBrute("Hello World")); }
 
+    public toggle():void {
+        if (this.bloc.background == "#8727F5") this.bloc.background = "#cac6ceff";
+        else this.bloc.background = "#8727F5";
+    }
     // GETTERS
     getRoot():GUI.Container{return this.root;}
     getScene():GameScene{return this.bloc.getScene()};

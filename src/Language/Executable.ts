@@ -5,4 +5,5 @@ export interface Executable {
     next():void;
     back():void;
     getBaseInstruction():Executable; // Faire attention avec cette fonction
+    getContainer():any;
 }

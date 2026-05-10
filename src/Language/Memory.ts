@@ -2,6 +2,7 @@ import { TimerState } from "@babylonjs/core";
 import type { Executable } from "./Executable";
 import type { Fonction } from "./Group/Depart/Fonction";
 import { Value } from "./Valeur/Value";
+import { InstructionContainer } from "../Containers/InstructionContainer";
 
 export type StackFrame = {
     funcName: string;
@@ -140,10 +141,15 @@ export class Memory {
         this.current_instruction.next();
     }
 
-
     public programEnd(): void {
         this.setPlaying(false);
         if (this.onProgramEnd) this.onProgramEnd();
+    }
+
+    public toggleCurrentBloc():void {
+        if (!this.current_instruction) return;
+        const container = this.current_instruction.getContainer();
+        if (container instanceof InstructionContainer) container.toggle();
     }
 
     // GETTERS / SETTERS
