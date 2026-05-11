@@ -81,6 +81,21 @@ export class WorkSpace extends GUI.Rectangle {
             this.content.scaleX = x+this.content.scaleX > 0.2 ? x+this.content.scaleX : 0.2;
             this.content.scaleY = x+this.content.scaleY > 0.2 ? x+this.content.scaleY : 0.2;
         }
+
+        // On ajuste la position au cas où
+
+        const true_left = this.content.leftInPixels + (this.content.widthInPixels - this.content.widthInPixels*this.content.scaleX)/2;
+        const true_right = this.content.leftInPixels + (this.content.widthInPixels + this.content.widthInPixels*this.content.scaleX)/2;
+        const true_up = this.topInPixels + (this.content.heightInPixels - this.content.heightInPixels*this.content.scaleY)/2;
+        const true_down = this.topInPixels + (this.content.heightInPixels + this.content.heightInPixels*this.content.scaleY)/2;
+
+        // Pour vérifier de pas trop déplacer sur les cotés
+        if (true_left > this.width_limit) this.content.leftInPixels = this.width_limit - (this.content.widthInPixels - this.content.widthInPixels*this.content.scaleX)/2;
+        else if (true_right < this.width_limit) this.content.leftInPixels = this.width_limit - (this.content.widthInPixels + this.content.widthInPixels*this.content.scaleX)/2;
+        
+        if (true_up > this.height_limit) this.content.topInPixels = this.height_limit - (this.content.heightInPixels - this.content.heightInPixels*this.content.scaleY)/2;
+        else if (true_down < this.height_limit) this.content.topInPixels = this.height_limit - (this.content.heightInPixels + this.content.heightInPixels*this.content.scaleY)/2;
+
     }
 
     // GETTERS

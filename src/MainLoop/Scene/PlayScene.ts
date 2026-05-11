@@ -412,6 +412,15 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public reset() { // Permet de revenir à l'état initiale
+        if (!this.memory.isPlaying()) {
+            this.memory.setPlaying(false);
+            this.memory.clear();
+            this.level.reinitLevel();
+            this.canRun = true;
+            this.memory.wait_reset = false;
+            this.memory.reset_callback = () => {};
+            return;
+        }
         this.memory.reset_callback = () => {
             this.memory.setPlaying(false);
             this.memory.clear();
