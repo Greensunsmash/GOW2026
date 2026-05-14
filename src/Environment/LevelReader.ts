@@ -285,10 +285,10 @@ export class LevelReader {
 
         const sensors: CategoryFactories<SensorBlock> = {
             obstacle: (root, content_root) =>
-            new ObstacleSensorContainer(root, content_root, scene),
+            new ObstacleSensorContainer(root, content_root, scene, ctx),
 
             item: (root, content_root) =>
-            new ItemSensorContainer(root, content_root, scene),
+            new ItemSensorContainer(root, content_root, scene, ctx),
         };
 
         const ops: CategoryFactories<OpBlock> = {
