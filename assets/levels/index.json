@@ -15,7 +15,6 @@
     {"file": "level12.json", "name": "Cochons cochons cochons"},
     {"file": "level13.json", "name": "13"},
     {"file": "level14.json", "name": "14"},
-    {"file": "test_mobs.json", "name": "Copains comme cochons"},
-    {"file": "test_sirc.json", "name": "Pas copains les cochons ?"}
+    {"file": "level15.json", "name": "15"}
   ] 
 }
