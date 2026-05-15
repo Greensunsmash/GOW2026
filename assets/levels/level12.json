@@ -14,8 +14,7 @@
                 "backward",
                 "left",
                 "right",
-                "pickup",
-                "print"
+                "pickup"
             ],
             "structures": [
                 "for",
@@ -62,7 +61,6 @@
                 "left",
                 "right",
                 "pickup",
-                "print",
                 "wait"
             ],
             "structures": [
@@ -110,7 +108,6 @@
                 "left",
                 "right",
                 "pickup",
-                "print",
                 "wait"
             ],
             "structures": [
@@ -158,7 +155,6 @@
                 "left",
                 "right",
                 "pickup",
-                "print",
                 "wait"
             ],
             "structures": [

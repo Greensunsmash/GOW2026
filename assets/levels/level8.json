@@ -22,7 +22,7 @@
           "backward",
           "left",
           "right",
-          "print"
+          "pickup"
         ],
         "structures": [
           "for",
@@ -71,7 +71,7 @@
           "backward",
           "left",
           "right",
-          "print"
+          "pickup"
         ],
         "structures": [
           "for",
@@ -117,8 +117,8 @@
           ["@x", "! ", "! ", "! ", " "]
         ],
         [
-          ["..", ". ", ". ", ". ", ". "],
-          ["@x", "! ", "! ", "! ", " "]
+          ["..", ". ", ". "],
+          ["@x", "! ", " "]
         ]
       ],
       "blockset": {
@@ -127,7 +127,7 @@
           "backward",
           "left",
           "right",
-          "print"
+          "pickup"
         ],
         "structures": [
           "for",
@@ -172,8 +172,8 @@
       "nb": 4,
       "layouts": [
         [
-          ["....  ", " .....", " ..   ", " .    "],
-          ["@!!   ", " !!!! ", " !    ", " x    "]
+          [".   ", "....", "... ", "..  ", " .  ", " .  "],
+          ["@   ", "!!!x", "!!  ", " !  ", " !  ", "    "]
         ]
       ],
       "blockset": {
@@ -182,7 +182,7 @@
           "backward",
           "left",
           "right",
-          "print"
+          "pickup"
         ],
         "structures": [
           "for",
@@ -199,7 +199,8 @@
             "eq"
         ],
         "sensors": [
-          "obstacle"
+          "obstacle",
+          "item"
         ],
         "variables": [
           "var_create",

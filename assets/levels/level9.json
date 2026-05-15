@@ -26,7 +26,7 @@
           "backward",
           "left",
           "right",
-          "print"
+          "pickup"
         ],
         "structures": [
           "for",
@@ -87,7 +87,6 @@
           "backward",
           "left",
           "right",
-          "print",
           "pickup"
         ],
         "structures": [
@@ -155,7 +154,6 @@
           "backward",
           "left",
           "right",
-          "print",
           "pickup"
         ],
         "structures": [

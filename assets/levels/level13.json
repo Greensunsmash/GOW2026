@@ -23,7 +23,6 @@
                 "left",
                 "right",
                 "pickup",
-                "print",
                 "wait"
             ],
             "structures": [
@@ -71,7 +70,6 @@
                 "left",
                 "right",
                 "pickup",
-                "print",
                 "wait"
             ],
             "structures": [

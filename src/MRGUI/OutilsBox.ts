@@ -330,11 +330,11 @@ export class OutilsBox extends Rectangle {
         // on crée le container de valeur
         // et l'instruction qui set la variable
         this.vars.forEach((v) => {
-            this.addTemplate("variables", (root) =>
-                new VarValueContainer(v, root, scene)
+            this.addTemplate("variables", (root, content_root) =>
+                new VarValueContainer(v, root, content_root, scene)
             );
-            this.addTemplate("variables", (root) =>
-                new SetVarContainer(v, root, scene)
+            this.addTemplate("variables", (root, content_root) =>
+                new SetVarContainer(v, root, content_root, scene)
             );
         });
     }

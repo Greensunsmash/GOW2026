@@ -14,7 +14,7 @@
           "backward",
           "left",
           "right",
-          "print"
+          "pickup"
         ],
         "structures": [
           "for",
@@ -31,7 +31,8 @@
             "eq"
         ],
         "sensors": [
-          "obstacle"
+          "obstacle",
+          "item"
         ],
         "variables": [
           "var_create",
@@ -74,7 +75,7 @@
           "backward",
           "left",
           "right",
-          "print"
+          "pickup"
         ],
         "structures": [
           "for",
@@ -91,7 +92,8 @@
             "eq"
         ],
         "sensors": [
-          "obstacle"
+          "obstacle",
+          "item"
         ],
         "variables": [
           "var_create",
@@ -134,7 +136,7 @@
           "backward",
           "left",
           "right",
-          "print"
+          "pickup"
         ],
         "structures": [
           "for",
@@ -151,7 +153,8 @@
             "eq"
         ],
         "sensors": [
-          "obstacle"
+          "obstacle",
+          "item"
         ],
         "variables": [
           "var_create",
