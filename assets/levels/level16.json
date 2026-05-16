@@ -1,0 +1,51 @@
+{
+    "islands": [
+        {
+        "nb": 1,
+        "layouts": [
+            [
+                ["  .","  .","  O","...","  .","  ."],
+                ["  @","   ","   ","x ","   ","  #"]   
+            ]
+        ],
+        "blockset": {
+            "instructions": [
+                "forward",
+                "backward",
+                "left",
+                "right",
+                "pickup",
+                "wait"
+            ],
+            "structures": [
+                "for",
+                "if",
+                "while"
+            ],
+            "booleans": [
+                "true",
+                "false",
+                "not",
+                "and",
+                "or",
+                "inf",
+                "sup",
+                "eq"
+            ],
+            "sensors": [
+                "obstacle",
+                "item"
+            ],
+            "variables": [
+                "var_create",
+                "plus",
+                "minus"
+            ],
+            "start": [
+                "start"
+            ]
+        },
+        "goal": [{"name": "arrival"}]
+        }
+    ]
+}

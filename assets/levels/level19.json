@@ -1,0 +1,155 @@
+{
+    "islands": [
+        {
+        "nb": 1,
+        "layouts": [
+            [
+                ["  .","..."," O."," O."],
+                ["  @","x !","   ","   "]
+            ],
+            [
+                ["  ."," O."," O.","..."],
+                ["  @","   ","   ","x !"]
+            ],
+            [
+                ["  ."," O.","..."," O."],
+                ["  @","   ","x !","   "]
+            ]
+        ],
+        "blockset": {
+            "instructions": [
+                "forward",
+                "backward",
+                "left",
+                "right",
+                "pickup",
+                "wait"
+            ],
+            "structures": [
+                "for",
+                "if",
+                "while"
+            ],
+            "booleans": [
+                "true",
+                "false",
+                "not",
+                "and",
+                "or",
+                "inf",
+                "sup",
+                "eq"
+            ],
+            "sensors": [
+                "obstacle",
+                "item"
+            ],
+            "variables": [
+                "var_create",
+                "plus",
+                "minus"
+            ],
+            "start": [
+                "start"
+            ]
+        },
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}]
+        },
+        {
+        "nb": 2,
+        "layouts": [
+            [
+                [".     .",".O...O.",".O.O...","...O.O."],
+                ["x     @","    !  ","      !","  !    "]
+            ]
+        ],
+        "blockset": {
+            "instructions": [
+                "forward",
+                "backward",
+                "left",
+                "right",
+                "pickup",
+                "wait"
+            ],
+            "structures": [
+                "for",
+                "if",
+                "while"
+            ],
+            "booleans": [
+                "true",
+                "false",
+                "not",
+                "and",
+                "or",
+                "inf",
+                "sup",
+                "eq"
+            ],
+            "sensors": [
+                "obstacle",
+                "item"
+            ],
+            "variables": [
+                "var_create",
+                "plus",
+                "minus"
+            ],
+            "start": [
+                "start"
+            ]
+        },
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
+        "block_limitation": 10
+        },
+        {
+        "nb": 3,
+        "layouts": [
+            [
+                [".     .",".O...O.",".O.O...","...O.O."],
+                ["x     @","  !   !","  ! !  ","    ! !"]
+            ]
+        ],
+        "blockset": {
+            "instructions": [
+                "forward",
+                "backward",
+                "left",
+                "right",
+                "pickup",
+                "wait"
+            ],
+            "structures": [
+                "for",
+                "if",
+                "while"
+            ],
+            "booleans": [
+                "true",
+                "false",
+                "not",
+                "and",
+                "or",
+                "inf",
+                "sup",
+                "eq"
+            ],
+            "sensors": [
+                "obstacle",
+                "item"
+            ],
+            "variables": [
+                "var_create",
+                "plus",
+                "minus"
+            ],
+            "start": [
+                "start"
+            ]
+        },
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
+        "block_limitation": 10
+        }
+    ]
+}

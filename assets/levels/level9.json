@@ -183,17 +183,7 @@
           "start"
         ]
       },
-      "goal": [
-        {
-        "name": "arrival"
-        },
-        {
-            "name": "pickup",
-            "args": {
-                "itemType": "!"
-            }
-        }
-      ]
+      "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}]
     }
   ]
 }
