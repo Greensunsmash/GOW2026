@@ -4,6 +4,57 @@
         "nb": 1,
         "layouts": [
             [
+                [".O.","...","..."],
+                ["   ","@#x"," ! "]
+            ],
+            [
+                ["...","...","..."],
+                [" ! ","@#x","   "]
+            ]
+        ],
+        "blockset": {
+            "instructions": [
+                "forward",
+                "backward",
+                "left",
+                "right",
+                "pickup",
+                "wait"
+            ],
+            "structures": [
+                "for",
+                "if",
+                "while"
+            ],
+            "booleans": [
+                "true",
+                "false",
+                "not",
+                "and",
+                "or",
+                "inf",
+                "sup",
+                "eq"
+            ],
+            "sensors": [
+                "obstacle",
+                "item"
+            ],
+            "variables": [
+                "var_create",
+                "plus",
+                "minus"
+            ],
+            "start": [
+                "start"
+            ]
+        },
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}]
+        },
+        {
+        "nb": 2,
+        "layouts": [
+            [
                 ["........","..O..O..","........","........"],
                 ["        "," ! !! ! ","@######x","  !  !  "]
             ],

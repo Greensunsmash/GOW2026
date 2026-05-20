@@ -1,0 +1,244 @@
+{
+    "islands": [
+        {
+        "nb": 1,
+        "layouts": [
+            [
+                [".......",".......",".......",".......","......."],
+                ["#  @  #","#d    #","#  d  #","# d  d#","#  xd #"]
+            ]
+        ],
+        "blockset": {
+            "instructions": [
+                "forward",
+                "backward",
+                "left",
+                "right",
+                "pickup",
+                "wait"
+            ],
+            "structures": [
+                "for",
+                "if",
+                "while",
+                "elif"
+            ],
+            "booleans": [
+                "true",
+                "false",
+                "not",
+                "and",
+                "or",
+                "inf",
+                "sup",
+                "eq"
+            ],
+            "sensors": [
+                "obstacle",
+                "item"
+            ],
+            "variables": [
+                "var_create",
+                "plus",
+                "minus"
+            ],
+            "start": [
+                "start"
+            ]
+        },
+        "goal": [{"name": "arrival"}]
+        },
+        {
+        "nb": 2,
+        "layouts": [
+            [
+                [".O...O.",".O...O.",".O...O.",".O...O.",".O...O.",".O...O."],
+                ["#  @  #","#     #","# d d #","#     #","#  d  #","#  x  #"]
+            ]
+        ],
+        "blockset": {
+            "instructions": [
+                "forward",
+                "backward",
+                "left",
+                "right",
+                "pickup",
+                "wait"
+            ],
+            "structures": [
+                "for",
+                "if",
+                "while",
+                "elif"
+            ],
+            "booleans": [
+                "true",
+                "false",
+                "not",
+                "and",
+                "or",
+                "inf",
+                "sup",
+                "eq"
+            ],
+            "sensors": [
+                "obstacle",
+                "item"
+            ],
+            "variables": [
+                "var_create",
+                "plus",
+                "minus"
+            ],
+            "start": [
+                "start"
+            ]
+        },
+        "goal": [{"name": "arrival"}]
+        },
+        {
+        "nb": 3,
+        "layouts": [
+            [
+                ["   . ","   . ","   . ","   O ",".....",".....",".....","   . ","   . "],
+                ["   @ ","     ","     ","     ","#  r#","#l  #","#  r#","     ","   x "]
+            ]
+        ],
+        "blockset": {
+            "instructions": [
+                "forward",
+                "backward",
+                "left",
+                "right",
+                "pickup",
+                "wait"
+            ],
+            "structures": [
+                "for",
+                "if",
+                "while",
+                "elif"
+            ],
+            "booleans": [
+                "true",
+                "false",
+                "not",
+                "and",
+                "or",
+                "inf",
+                "sup",
+                "eq"
+            ],
+            "sensors": [
+                "obstacle",
+                "item"
+            ],
+            "variables": [
+                "var_create",
+                "plus",
+                "minus"
+            ],
+            "start": [
+                "start"
+            ]
+        },
+        "goal": [{"name": "arrival"}]
+        },
+        {
+        "nb": 4,
+        "layouts": [
+            [
+                [".     ",".O... ","O...  ","..O.  ","..OO..","     ."],
+                ["@     ","    # ","      ","      ","      ","     x"]
+            ]
+        ],
+        "blockset": {
+            "instructions": [
+                "forward",
+                "backward",
+                "left",
+                "right",
+                "pickup",
+                "wait"
+            ],
+            "structures": [
+                "for",
+                "if",
+                "while",
+                "elif"
+            ],
+            "booleans": [
+                "true",
+                "false",
+                "not",
+                "and",
+                "or",
+                "inf",
+                "sup",
+                "eq"
+            ],
+            "sensors": [
+                "obstacle",
+                "item"
+            ],
+            "variables": [
+                "var_create",
+                "plus",
+                "minus"
+            ],
+            "start": [
+                "start"
+            ]
+        },
+        "goal": [{"name": "arrival"}]
+        }
+        {
+        "nb": 5,
+        "layouts": [
+            [
+                [".   ",".   ",".O.."],
+                ["@   ","    ","   x"]
+            ]
+        ],
+        "blockset": {
+            "instructions": [
+                "forward",
+                "backward",
+                "left",
+                "right",
+                "pickup",
+                "wait"
+            ],
+            "structures": [
+                "for",
+                "if",
+                "while",
+                "elif"
+            ],
+            "booleans": [
+                "true",
+                "false",
+                "not",
+                "and",
+                "or",
+                "inf",
+                "sup",
+                "eq"
+            ],
+            "sensors": [
+                "obstacle",
+                "item"
+            ],
+            "variables": [
+                "var_create",
+                "plus",
+                "minus"
+            ],
+            "start": [
+                "start"
+            ]
+        },
+        "goal": [{"name": "arrival"}]
+        }
+    ]
+}
