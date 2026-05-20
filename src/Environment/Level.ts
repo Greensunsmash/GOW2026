@@ -149,6 +149,10 @@ export class Level {
         return this.otherEntities.filter(e => e instanceof Mob);
     }
 
+    public getMobsAt(gridPos: GridPoint) {
+        return this.getMobs().filter(m => GridUtils.equals(m.getVisualGridPos(), gridPos));
+    }
+
     public getInteratablesAt(gridPos: GridPoint): Interactable[] {
         return this.otherEntities
                     .filter(et => et instanceof Interactable)

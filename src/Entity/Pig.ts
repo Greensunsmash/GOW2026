@@ -42,6 +42,7 @@ export class Pig extends Mob {
         if (processedIntention.status === "BOUCING") {
             this.facingIndex = (this.facingIndex + 2) % 4;
             await this.animateRotation(Math.PI);
+            return;
         }
         await this.doVisualMove(processedIntention.nextPos);
 

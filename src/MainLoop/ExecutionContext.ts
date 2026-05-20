@@ -1,5 +1,5 @@
 import { ThinSSAO2BlurPostProcess } from "@babylonjs/core/PostProcesses/thinSSAO2BlurPostProcess";
-import type { Mob } from "../Entity/Mob";
+import { Mob } from "../Entity/Mob";
 import type { MarcoBozo } from "../Entity/Robot";
 import type { Level } from "../Environment/Level";
 import type { ItemType, State } from "../Environment/LevelReader";
@@ -25,7 +25,10 @@ export type MobIntention = {
     deadDuringTick: boolean;
 };
 
-export type CollisionType = "OTHERMOB" | "WALL" | "VOID" | null;
+export type CollisionType = {
+    type: "OTHERMOB_SAMEDEST" | "OTHERMOB_OTHER" | "WALL" | "VOID" | null;
+    mob?: Mob;
+};
 
 export class ExecutionContext {
     private level: Level;
@@ -77,10 +80,7 @@ export class ExecutionContext {
             if (this.memory.getGameMode() === "PIGMODE") {
                 // il rebondit
                 console.log("[TICKS] robot bouncing");
-                const cur = this.robot.getVisualGridPos();
-                const dx = robotIntention.x - cur.x;
-                const dz = robotIntention.z - cur.z;
-                robotIntention = { x: cur.x - dx, y: cur.y, z: cur.z - dz };
+                robotIntention = this.robot.getVisualGridPos();
                 robotBounce = true;
             } else {
                 console.log("[TICKS] robot getting into an obstacle => dead.");
@@ -93,11 +93,19 @@ export class ExecutionContext {
             robotDead = true;
         }
 
-        if (!GridUtils.equals(this.robot.getVisualGridPos(), robotIntention)) {
-            if (instant)
-                this.robot.doMove(robotIntention, robotBounce);
-            else
-                await this.robot.doVisualMove(robotIntention, robotBounce);
+        if (instant)
+            this.robot.doMove(robotIntention, robotBounce);
+        else
+            await this.robot.doVisualMove(robotIntention, robotBounce);
+
+        // 1.5 : premier check collisions robot/mob
+        
+        const mobs = this.level.getMobs();
+        for (const mob of mobs) {
+            if (GridUtils.equals(mob.getVisualGridPos(), this.robot.getVisualGridPos())) { 
+                console.warn("[TICKS] Deadly robot collision !");
+                robotDead = true;
+            }
         }
 
         
@@ -106,11 +114,11 @@ export class ExecutionContext {
             console.warn("[TICKS] ROBOT DEAD!!!");
             // faire quelque chose !
             this.scene.onRobotDead();
+            return;
         }
 
         // recueillir les intentions des mobs
         const intentions: Map<Mob, MobIntention> = new Map();
-        const mobs = this.level.getMobs();
         for (const mob of mobs) {
             intentions.set(mob, mob.nextTickIntention());
         }
@@ -119,11 +127,11 @@ export class ExecutionContext {
         const checkCollisions = (mob: Mob, intention: MobIntention): CollisionType => {
             console.log("mob " , mob, " intention is on ", intention);
             if (this.level.isObstacle(intention.nextPos))
-                return "WALL";
+                return {type: "WALL"};
 
             if (this.level.isVoidBelow(intention.nextPos)) {
                 console.log("[TICKS] in checkcoll : void collision");
-                return "VOID";
+                return {type: "VOID"};
             }
 
             for (const otherMob of mobs) {
@@ -131,21 +139,15 @@ export class ExecutionContext {
                     continue;
 
                 const otherMobInt = intentions.get(otherMob);
-                if (otherMobInt
-                    && (
-                        // destination identique
-                        GridUtils.equals(intention.nextPos, otherMobInt.nextPos)
-                        // inversement des positions (collisions frontales)
-                        || (GridUtils.equals(mob.getVisualGridPos(), otherMobInt.nextPos) && GridUtils.equals(otherMob.getVisualGridPos(), intention.nextPos))
-                        // 
-                        || (otherMobInt.status === "STUCK" && GridUtils.equals(intention.nextPos, otherMob.getVisualGridPos()))
-                    )
-                ) {
-                    return "OTHERMOB";
+                if (otherMobInt) {
+                    if (GridUtils.equals(intention.nextPos, otherMobInt.nextPos))
+                        return {type: "OTHERMOB_SAMEDEST", mob: otherMob};
+                    else if ((GridUtils.equals(mob.getVisualGridPos(), otherMobInt.nextPos) && GridUtils.equals(otherMob.getVisualGridPos(), intention.nextPos)) || (GridUtils.equals(intention.nextPos, otherMob.getVisualGridPos())))
+                        return {type: "OTHERMOB_OTHER", mob: otherMob};
                 }
             }
 
-            return null;
+            return {type: null};
         }
 
         let resolving = true;
@@ -160,9 +162,17 @@ export class ExecutionContext {
                     continue;
 
                 const collision = checkCollisions(mob, mobInt);
-                if (collision) {
+                if (collision.type) {
                     resolving = true;
-                    if (collision === "WALL") {
+
+                    /*if (mobInt.status === "FORWARD") {
+                        mobInt.status = "BOUCING";
+                    } else {
+                        mobInt.status = "STUCK";
+                    }
+                    mobInt.nextPos = mob.getVisualGridPos();*/
+
+                    if (collision.type === "WALL") {
                         if (mobInt.status === "FORWARD") {
                             mobInt.status = "BOUCING";
                         } else {
@@ -170,11 +180,37 @@ export class ExecutionContext {
                         }
                         // Tu ne bouges pas.
                         mobInt.nextPos = mob.getVisualGridPos();
-                    } else if (collision === "VOID") {
+                    } else if (collision.type === "VOID") {
                         console.log("[TICKS] mob dead : ", mob);
                         mobInt.deadDuringTick = true;
-                    } else if (collision === "OTHERMOB") {
-                        mobInt.status = "STUCK";
+                    } else if (collision.type === "OTHERMOB_SAMEDEST") {
+                        /*const otherMobInt = intentions.get(collision);
+                        if (!otherMobInt) continue;
+                        if (otherMobInt.status === "FORWARD") {
+                            otherMobInt.status = "BOUCING";
+                        } else {
+                            otherMobInt.status = "STUCK";
+                        }
+                        // Tu ne bouges pas.
+                        otherMobInt.nextPos = collision.getVisualGridPos();*/
+                        const myIndex = mobs.indexOf(mob);
+                        const otherIndex = mobs.indexOf(collision.mob!);
+                        
+                        if (myIndex > otherIndex) {
+                            // je perds, je rebondis
+                            mobInt.status = "BOUCING";
+                        } else {
+                            // je gagne, je reste bloqué ce tick
+                            mobInt.status = "STUCK";
+                        }
+                        mobInt.nextPos = mob.getVisualGridPos();
+                    } else if (collision.type === "OTHERMOB_OTHER") {
+                        if (mobInt.status === "FORWARD") {
+                            mobInt.status = "BOUCING";
+                        } else {
+                            mobInt.status = "STUCK";
+                        }
+                        // Tu ne bouges pas.
                         mobInt.nextPos = mob.getVisualGridPos();
                     }
                 }
@@ -186,14 +222,15 @@ export class ExecutionContext {
             const int = intentions.get(mob);
             if (int)
                 return intentions.get(mob) && mob.doNextTick(int, instant)
-        });
+        }).filter(mob => !!mob);
         await Promise.all(mobMovePromises);
 
-        // 4 : check collision robot/cochons
+        // 4 : 2eme check collision robot/cochons
         for (const mob of mobs) {
             if (GridUtils.equals(mob.getVisualGridPos(), this.robot.getVisualGridPos())) { 
                 console.warn("[TICKS] Deadly robot collision !");
                 this.scene.onRobotDead();
+                return;
             }
         }
 

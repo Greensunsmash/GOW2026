@@ -57,7 +57,11 @@ export abstract class GridEntity {
                 z: facing.z
             }
         );
-        return !this.level.isObstacle(targetGridPos); // ????????, justifie ça tout de suite
+        return (
+            this.level.isObstacle(targetGridPos)
+            || this.level.getMobsAt(targetGridPos).length >= 1
+        ); // ????????, justifie ça tout de suite
+        // personne ne saura jamais pk t'as écrit ca
     }
 
     // Déplacements/rotations instantannées
