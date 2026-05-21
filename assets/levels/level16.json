@@ -20,7 +20,8 @@
             "structures": [
                 "for",
                 "if",
-                "while"
+                "while",
+                "elif"
             ],
             "booleans": [
                 "true",
@@ -67,7 +68,8 @@
             "structures": [
                 "for",
                 "if",
-                "while"
+                "while",
+                "elif"
             ],
             "booleans": [
                 "true",
