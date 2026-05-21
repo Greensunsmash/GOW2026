@@ -15,9 +15,11 @@ export class TurnLeftInstruction extends Instruction {
         const memory = Memory.get();
 
         memory.setCurrentlyMoving(true);
-
+        console.warn("TLI execute");
+        console.log("fi", this.ctx.getRobot().facingIndex);
         if (memory.skip) this.ctx.getRobot().turnLeft();
         else await this.ctx.getRobot().visualTurnLeft();
+        console.log("fi", this.ctx.getRobot().facingIndex);
         await this.ctx.nextTick(undefined, memory.skip);
         memory.setCurrentInstruction(this);
         memory.setCurrentlyMoving(false);

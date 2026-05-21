@@ -94,10 +94,14 @@ export class ExecutionContext {
             robotDead = true;
         }
 
-        if (instant)
-            this.robot.doMove(robotIntention, robotBounce);
-        else
-            await this.robot.doVisualMove(robotIntention, robotBounce);
+        if (!GridUtils.equals(robotIntention, this.robot.getVisualGridPos()) || robotBounce) {
+            if (instant)
+                
+                this.robot.doMove(robotIntention, robotBounce);
+            else
+                
+                await this.robot.doVisualMove(robotIntention, robotBounce);
+        }
 
         // 1.5 : premier check collisions robot/mob
         
@@ -271,7 +275,7 @@ export class ExecutionContext {
     public async prevTick(instant?: boolean) {
         this.memory.onPrevTick();
         this.scene.modeUpdate()
-        this.level.popEntityState(instant);
+        await this.level.popEntityState(instant);
     }
 
     public setGoals(goals: Goal[]) {

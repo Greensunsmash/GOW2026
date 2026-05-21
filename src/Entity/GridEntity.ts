@@ -33,8 +33,8 @@ export abstract class GridEntity {
     constructor(drh : AssetLibrary, assetName : string, level : Level, gridPos : GridPoint, scale: boolean = true) {
         this.level = level;
         //this.logicalGridPos = gridPos;
-        this.gridPos = gridPos;
-        this.initPos = gridPos;
+        this.gridPos = {...gridPos};
+        this.initPos = {...gridPos};
         const pos : Vector3 = GridUtils.toWorld(gridPos);
         if (scale)
             this.mesh = drh.createSingleInstance(assetName, pos);
@@ -95,6 +95,7 @@ export abstract class GridEntity {
     }
 
     public turnLeft() {
+        console.log("in turnLeft");
         if (this._isMoving) return;
         this.facingIndex = (this.facingIndex - 1 + 4) % 4;
         this.rotation(-Math.PI / 2);
@@ -116,7 +117,7 @@ export abstract class GridEntity {
 
     public doMove(targetGridPos : GridPoint, bounce?: boolean) {
         this._isMoving = true;
-        this.gridPos = targetGridPos;
+        this.gridPos = {...targetGridPos};
         this.mesh.position = GridUtils.toWorld(targetGridPos);
         if (bounce) {
             this.facingIndex = (this.facingIndex + 2) % 4;
@@ -127,7 +128,6 @@ export abstract class GridEntity {
     }
 
     private rotation(relativeAngle: number){
-        this._isMoving = true;
         this.mesh.rotation.y = (this.mesh.rotation.y + relativeAngle) % (2 * Math.PI);
     }
 
@@ -144,14 +144,16 @@ export abstract class GridEntity {
     }
 
     async visualTurnRight() {
-        if (this._isMoving) return;
+        //if (this._isMoving) return;
         // 0 -> 1 -> 2 -> 3 -> 0
         this.facingIndex = (this.facingIndex + 1) % 4;
         await this.animateRotation(Math.PI / 2);
     }
 
     async visualTurnLeft() {
-        if (this._isMoving) return;
+        console.warn("visualturnleft");
+        //if (this._isMoving) return;
+        console.warn("visualturnleft passed _isMoving test");
         this.facingIndex = (this.facingIndex - 1 + 4) % 4;
         await this.animateRotation(-Math.PI / 2);
     }
@@ -178,7 +180,7 @@ export abstract class GridEntity {
         }
 
         this._isMoving = true;
-        this.gridPos = targetGridPos;
+        this.gridPos = {...targetGridPos};
 
         const frameRate = 60;
         const duration = 15; 
@@ -202,6 +204,7 @@ export abstract class GridEntity {
                     await this.posListeners[i](this);
                 }
                 anim?.stop();
+                this.mesh.position = GridUtils.toWorld(targetGridPos);
                 (this.mesh as any).animations?.find(anim => anim.name.includes("idle"))?.play(true);
                 console.log("ending dovisualmove");
                 resolve();
@@ -238,18 +241,22 @@ export abstract class GridEntity {
     }
 
     public getVisualGridPos(): GridPoint {
-        return this.gridPos;
+        return {...this.gridPos};
     }
 
-    protected updateVisualPos(instant?: boolean) {
+    protected async updateVisualPos(instant?: boolean) {
         if (instant) {
             this.mesh.position = GridUtils.toWorld(this.gridPos);
             this.mesh.rotation = new Vector3(0, this.facingIndex * Math.PI / 2, 0);
         } else {
-            this.doVisualMove(this.gridPos);
-            this.animateRotation(
-                this.facingIndex * Math.PI / 2 - this.mesh.rotation.y
-            );
+            const targetWorld = GridUtils.toWorld(this.gridPos);
+            if (!this.mesh.position.equalsWithEpsilon(targetWorld, 0.01))
+                await this.doVisualMove({...this.gridPos});
+            
+            const targetAngle = this.facingIndex * Math.PI / 2;
+            const angleDiff = targetAngle - this.mesh.rotation.y;
+            if (Math.abs(angleDiff) > 0.01)
+                await this.animateRotation(angleDiff);
         }
     }
 
@@ -257,7 +264,7 @@ export abstract class GridEntity {
         this.mesh.position = GridUtils.toWorld(this.initPos);
         this.mesh.rotation.y = this.initRotation * (Math.PI / 2);
         this.facingIndex = this.initRotation;
-        this.gridPos = this.initPos;
+        this.gridPos = {...this.initPos};
     }
 
     public dispose() {
@@ -271,5 +278,5 @@ export abstract class GridEntity {
     }
 
     abstract getState(): EntityState;
-    abstract setState(state: EntityState): void;
+    abstract setState(state: EntityState, instant?: boolean): Promise<void>;
 }

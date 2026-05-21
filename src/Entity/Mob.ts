@@ -12,13 +12,13 @@ export abstract class Mob extends GridEntity {
         };
     }
 
-    public override setState(state: EntityState) {
-        this.gridPos = state.pos!;
+    public override async setState(state: EntityState, instant?: boolean) {
+        this.gridPos = {...state.pos!};
         this.facingIndex = state.facingIndex!;
         this.dead = state.dead!;
         if (!this.dead)
             this.mesh.setEnabled(true);
-        this.updateVisualPos();
+        await this.updateVisualPos(instant);
     }
 
     override reinit() {
