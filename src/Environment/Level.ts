@@ -173,10 +173,8 @@ export class Level {
     }
 
     public isVoidBelow(gridPos: GridPoint) {
-        if (this.isBeyondLimits(gridPos)) {
-            console.log("grid pos ", GridUtils.add(gridPos, {x:0,y:-1,z:0}), "is beyond limits.fuck you");
+        if (this.isBeyondLimits(gridPos))
             return true;
-        }
 
         if (gridPos.y - 1 >= 0) {
             const nextStateBelow = this.map[gridPos.y - 1][gridPos.z][gridPos.x];

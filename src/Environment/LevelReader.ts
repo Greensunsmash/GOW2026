@@ -127,24 +127,17 @@ export class LevelReader {
     constructor() {}
 
 
-    private readLayers(layout: string[][]): Map3 {
-        const maxWidth = Math.max(
-            ...layout.flat().map(line => line.length)
-        );
-
+    private readLayers(layout: string[]): Map3 {
         return layout.map((layer) => {
-            return layer.map((line) => {
-                const paddedLine = line.padEnd(maxWidth, " ");
-
-                return [...paddedLine].map((char) => {
-                    if (Object.values(State).includes(char as State)) {
-                        return char as State;
-                    }
-
-                    return State.Empty;
+                return [...layer].map((line) => {
+                    return [...line].map((char) => {
+                        if (Object.values(State).includes(char as State)) {
+                            return char as State;
+                        }
+                        return State.Empty;
+                    });
                 });
             });
-        });
     }
 
     private reset() {
@@ -166,7 +159,7 @@ export class LevelReader {
             this.nb_islands = list.length;
 
             for (const island of list) {
-                const leafs: string[][][] = island.layouts;
+                const leafs: string[][] = island.layouts;
                 const map : IslandMap = []
                 for (const leaf of leafs) {
                     map.push(this.readLayers(leaf));
