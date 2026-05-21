@@ -241,9 +241,16 @@ export abstract class GridEntity {
         return this.gridPos;
     }
 
-    protected updateVisualPos() {
-        this.mesh.position = GridUtils.toWorld(this.gridPos);
-        this.mesh.rotation = new Vector3(0, this.facingIndex * Math.PI / 2, 0);
+    protected updateVisualPos(instant?: boolean) {
+        if (instant) {
+            this.mesh.position = GridUtils.toWorld(this.gridPos);
+            this.mesh.rotation = new Vector3(0, this.facingIndex * Math.PI / 2, 0);
+        } else {
+            this.doVisualMove(this.gridPos);
+            this.animateRotation(
+                this.facingIndex * Math.PI / 2 - this.mesh.rotation.y
+            );
+        }
     }
 
     public reinit() {

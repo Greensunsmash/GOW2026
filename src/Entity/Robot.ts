@@ -59,10 +59,13 @@ export class MarcoBozo extends GridEntity {
         return {
             carriedItems: [...this.carriedItems],
             affectedByADivineCurse: this.affectedByADivineCurse,
+            pos: {...this.gridPos}, 
+            facingIndex: this.facingIndex, 
+           //dead: this.dead
         };
     }
 
-    override setState(state: EntityState) {
+    override setState(state: EntityState, instant?: boolean) {
         this.carriedItems = state.carriedItems!;
         this.onItemsChange?.(this.carriedItems);
         if (this.affectedByADivineCurse != state.affectedByADivineCurse) {
@@ -72,6 +75,9 @@ export class MarcoBozo extends GridEntity {
                 this.backToACuteLittleRobot();
             }
         }
+        this.gridPos = state.pos!;
+        this.facingIndex = state.facingIndex!;
+        this.updateVisualPos(instant);
     }
 
     setOnItemsChange(callback: ((items: ItemType[]) => void) | null) {

@@ -249,7 +249,7 @@ export class PlayScene extends GameScene { // ;)
     // Renvoie true si on a bien changé de leaf,
     // false si on était deja a la derniere
     public async nextLeaf(manual: boolean = false): Promise<boolean> {
-        const next = this.currentLeaf + 1;
+        let next = this.currentLeaf + 1;
 
         if (next >= this.currentIslandMap.length) {
             console.log("Dernière feuille atteinte");
@@ -261,15 +261,16 @@ export class PlayScene extends GameScene { // ;)
                     "Continuer",
                     async () => await this.nextIsland()
                 );
+                return false;
             } else {
-                new OneButtonModal(
+                /*new OneButtonModal(
                     this.advancedTexture,
                     "Dernière feuille",
                     "Fermer",
                     () => { }
-                );
+                );*/
+                next = 0;
             }
-            return false;
         }
 
         await this.loadLeaf(next);
@@ -277,15 +278,15 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public async previousLeaf() {
-        const prev = this.currentLeaf - 1;
+        let prev = this.currentLeaf - 1;
         if (prev < 0) {
-            new OneButtonModal(
+            /*new OneButtonModal(
                 this.advancedTexture,
                 "Plus d'autre feuille",
                 "Fermer",
                 () => { }
-            );
-            return;
+            );*/
+            prev = this.currentIslandMap.length - 1;
         }
         await this.loadLeaf(prev);
     }

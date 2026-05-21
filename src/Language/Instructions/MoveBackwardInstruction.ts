@@ -33,9 +33,9 @@ export class MoveBackwardInstuction extends Instruction {
 
         memory.setCurrentlyMoving(true);
 
-        await this.ctx.prevTick();
-        if (memory.skip) this.ctx.getRobot().moveForward();
-        else await this.ctx.getRobot().visualMoveForward();
+        await this.ctx.prevTick(memory.skip /* instant */);
+        /*if (memory.skip) this.ctx.getRobot().moveForward();
+        else await this.ctx.getRobot().visualMoveForward();*/
         super.back();
 
         memory.setCurrentlyMoving(false);

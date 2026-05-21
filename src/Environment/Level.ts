@@ -241,7 +241,7 @@ export class Level {
         console.log(this.entityStates);
     }
 
-    public popEntityState() {
+    public popEntityState(instant?: boolean) {
         let currState: Map<GridEntity, EntityState> | undefined = undefined;
         if (this.entityStates.length === 0) {
             console.warn("Cannot load a mob state when mob state stack is empty");
@@ -260,10 +260,10 @@ export class Level {
             return;
         }
 
-        this.loadEntityState(currState);
+        this.loadEntityState(currState, instant);
     }
 
-    private loadEntityState(state: Map<GridEntity, EntityState>) {
+    private loadEntityState(state: Map<GridEntity, EntityState>, instant?: boolean) {
         for (const ent of state.keys()) {
             const entState = state.get(ent);
             if (!entState)
@@ -271,7 +271,7 @@ export class Level {
             ent.setState(entState);
         }
         const robotState = state.get(this.robot!);
-        this.robot?.setState(robotState!);
+        this.robot?.setState(robotState!, instant);
     }
 
     public reinitLevel() {

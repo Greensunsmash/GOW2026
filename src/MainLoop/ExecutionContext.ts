@@ -268,10 +268,10 @@ export class ExecutionContext {
         console.log("[TICKS] TICK ENDED.");
     }
 
-    public async prevTick() {
+    public async prevTick(instant?: boolean) {
         this.memory.onPrevTick();
         this.scene.modeUpdate()
-        this.level.popEntityState();
+        this.level.popEntityState(instant);
     }
 
     public setGoals(goals: Goal[]) {
