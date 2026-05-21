@@ -15,14 +15,15 @@ export class TurnRightInstruction extends Instruction {
         const memory = Memory.get();
         memory.setCurrentlyMoving(true);
 
-        await this.ctx.nextTick(undefined, memory.skip);
         if (memory.skip) this.ctx.getRobot().turnRight();
         else await this.ctx.getRobot().visualTurnRight();
+        await this.ctx.nextTick(undefined, memory.skip);
         memory.setCurrentInstruction(this);
         memory.setCurrentlyMoving(false);
 
         if (memory.isPlaying()) this.next();
     }
+    
     async back() {
         const memory = Memory.get();
         memory.setCurrentlyMoving(true);

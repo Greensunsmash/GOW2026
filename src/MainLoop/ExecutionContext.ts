@@ -79,17 +79,18 @@ export class ExecutionContext {
         if (this.level.isObstacle(robotIntention)) {
             if (this.memory.getGameMode() === "PIGMODE") {
                 // il rebondit
-                console.log("[TICKS] robot bouncing");
+                console.warn("[TICKS] robot bouncing");
                 robotIntention = this.robot.getVisualGridPos();
                 robotBounce = true;
             } else {
-                console.log("[TICKS] robot getting into an obstacle => dead.");
+                console.warn("[TICKS] robot getting into an obstacle => dead.");
                 robotDead = true; 
             }
         }
 
         if (this.level.isVoidBelow(robotIntention)) {
             // plus tard, gérer séparément les visuels de la mort par obstacle et la mort par chute
+            console.warn("[TICKS] Robot dead vide");
             robotDead = true;
         }
 
@@ -150,8 +151,9 @@ export class ExecutionContext {
             return {type: null};
         }
 
+        let iterations = 0 ;
         let resolving = true;
-        while (resolving) {
+        while (resolving && iterations < 30) {
             resolving = false;
             for (const mob of mobs) {
                 const mobInt = intentions.get(mob);
@@ -215,6 +217,7 @@ export class ExecutionContext {
                     }
                 }
             }
+            iterations++;
         }
 
         // 3 : visuel cochons

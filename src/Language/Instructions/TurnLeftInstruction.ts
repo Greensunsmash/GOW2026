@@ -16,9 +16,9 @@ export class TurnLeftInstruction extends Instruction {
 
         memory.setCurrentlyMoving(true);
 
-        await this.ctx.nextTick(undefined, memory.skip);
         if (memory.skip) this.ctx.getRobot().turnLeft();
         else await this.ctx.getRobot().visualTurnLeft();
+        await this.ctx.nextTick(undefined, memory.skip);
         memory.setCurrentInstruction(this);
         memory.setCurrentlyMoving(false);
 
