@@ -16,10 +16,12 @@ export class TurnLeftInstruction extends Instruction {
 
         memory.setCurrentlyMoving(true);
         console.warn("TLI execute");
-        console.log("fi", this.ctx.getRobot().facingIndex);
-        if (memory.skip) this.ctx.getRobot().turnLeft();
-        else await this.ctx.getRobot().visualTurnLeft();
-        console.log("fi", this.ctx.getRobot().facingIndex);
+        if (Memory.get().getGameMode() === "PIGMODE") {
+            await this.ctx.nextTick(this.ctx.getRobot().getNextPosIntention("forward"), memory.skip);
+        } else {
+            if (memory.skip) this.ctx.getRobot().turnLeft();
+            else await this.ctx.getRobot().visualTurnLeft();
+        }
         await this.ctx.nextTick(undefined, memory.skip);
         memory.setCurrentInstruction(this);
         memory.setCurrentlyMoving(false);
@@ -29,9 +31,14 @@ export class TurnLeftInstruction extends Instruction {
     async back() {
         const memory = Memory.get();
         memory.setCurrentlyMoving(true);
+        if (Memory.get().getGameMode() === "PIGMODE") {
+            if (memory.skip) this.ctx.getRobot().moveBackward();
+            else await this.ctx.getRobot().visualMoveBackward();
+        } else {
+            if (memory.skip) this.ctx.getRobot().turnRight();
+            else await this.ctx.getRobot().visualTurnRight();
+        }
         await this.ctx.prevTick(memory.skip /* instant */);
-        /*if (memory.skip) this.ctx.getRobot().turnRight();
-        else await this.ctx.getRobot().visualTurnRight();*/
         super.back();
         memory.setCurrentlyMoving(false);
     }

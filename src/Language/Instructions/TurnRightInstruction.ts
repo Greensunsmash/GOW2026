@@ -15,8 +15,12 @@ export class TurnRightInstruction extends Instruction {
         const memory = Memory.get();
         memory.setCurrentlyMoving(true);
 
-        if (memory.skip) this.ctx.getRobot().turnRight();
-        else await this.ctx.getRobot().visualTurnRight();
+        if (Memory.get().getGameMode() === "PIGMODE") {
+            await this.ctx.nextTick(this.ctx.getRobot().getNextPosIntention("forward"), memory.skip);
+        } else {
+            if (memory.skip) this.ctx.getRobot().turnRight();
+            else await this.ctx.getRobot().visualTurnRight();
+        }
         await this.ctx.nextTick(undefined, memory.skip);
         memory.setCurrentInstruction(this);
         memory.setCurrentlyMoving(false);
@@ -28,8 +32,13 @@ export class TurnRightInstruction extends Instruction {
         const memory = Memory.get();
         memory.setCurrentlyMoving(true);
         await this.ctx.prevTick(memory.skip /* instant */);
-        /*if (memory.skip) this.ctx.getRobot().turnLeft();
-        else await this.ctx.getRobot().visualTurnLeft();*/
+        if (Memory.get().getGameMode() === "PIGMODE") {
+            if (memory.skip) this.ctx.getRobot().moveBackward();
+            else await this.ctx.getRobot().visualMoveBackward();
+        } else {
+            if (memory.skip) this.ctx.getRobot().turnLeft();
+            else await this.ctx.getRobot().visualTurnLeft();
+        }
         super.back();
         
         memory.setCurrentlyMoving(false);

@@ -128,6 +128,7 @@ export abstract class GridEntity {
     }
 
     private rotation(relativeAngle: number){
+        this._isMoving = true;
         this.mesh.rotation.y = (this.mesh.rotation.y + relativeAngle) % (2 * Math.PI);
     }
 
@@ -144,7 +145,7 @@ export abstract class GridEntity {
     }
 
     async visualTurnRight() {
-        //if (this._isMoving) return;
+        if (this._isMoving) return;
         // 0 -> 1 -> 2 -> 3 -> 0
         this.facingIndex = (this.facingIndex + 1) % 4;
         await this.animateRotation(Math.PI / 2);
@@ -152,7 +153,7 @@ export abstract class GridEntity {
 
     async visualTurnLeft() {
         console.warn("visualturnleft");
-        //if (this._isMoving) return;
+        if (this._isMoving) return;
         console.warn("visualturnleft passed _isMoving test");
         this.facingIndex = (this.facingIndex - 1 + 4) % 4;
         await this.animateRotation(-Math.PI / 2);
@@ -204,7 +205,7 @@ export abstract class GridEntity {
                     await this.posListeners[i](this);
                 }
                 anim?.stop();
-                this.mesh.position = GridUtils.toWorld(targetGridPos);
+                //this.mesh.position = GridUtils.toWorld(targetGridPos);
                 (this.mesh as any).animations?.find(anim => anim.name.includes("idle"))?.play(true);
                 console.log("ending dovisualmove");
                 resolve();

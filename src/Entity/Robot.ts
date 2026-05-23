@@ -4,6 +4,7 @@ import type { ItemType } from "../Environment/LevelReader";
 import type { AssetLibrary } from "../Shared/AssetLibrary";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
 import { GridEntity, type EntityState } from "./GridEntity";
+import { Memory } from "../Language/Memory";
 
 export class MarcoBozo extends GridEntity {
     private speed : number = 0.1;
@@ -59,8 +60,8 @@ export class MarcoBozo extends GridEntity {
         return {
             carriedItems: [...this.carriedItems],
             affectedByADivineCurse: this.affectedByADivineCurse,
-            pos: {...this.gridPos}, 
-            facingIndex: this.facingIndex, 
+            /*pos: {...this.gridPos}, 
+            facingIndex: this.facingIndex, */
            //dead: this.dead
         };
     }
@@ -75,10 +76,10 @@ export class MarcoBozo extends GridEntity {
                 this.backToACuteLittleRobot();
             }
         }
-        this.gridPos = {...state.pos};
+        /*this.gridPos = {...state.pos};
         this.facingIndex = state.facingIndex;
-        console.log("setState facingIndex:", state.facingIndex, "mesh.rotation.y:", this.mesh.rotation.y);
-        await this.updateVisualPos(instant);
+        console.log("setState facingIndex:", state.facingIndex, "mesh.rotation.y:", this.mesh.rotation.y);*/
+        //await this.updateVisualPos(instant);
     }
 
     setOnItemsChange(callback: ((items: ItemType[]) => void) | null) {
@@ -105,5 +106,41 @@ export class MarcoBozo extends GridEntity {
         this.origMesh.setEnabled(true);
         this.mesh = this.origMesh;
         (this.mesh as any).animations?.find(anim => anim.name.includes("idle"))?.play(true);
+    }
+
+    protected override async  tryVisualMove(dx: number, dz: number) {
+        const targetGridPos = GridUtils.add(
+            this.gridPos,  
+            {               // je me battrais jusqu'à la mort
+                x: dx,      
+                y: 0, 
+                z: dz
+            }
+        );
+
+        if (this.level.isWalkable(targetGridPos)) {
+            await this.doVisualMove(targetGridPos);
+        } else if (Memory.get().getGameMode() === "PIGMODE") {
+            this.facingIndex = (this.facingIndex + 2) % 4;
+            await this.updateVisualPos(false);
+        }
+    }
+
+    protected override async tryMove(dx: number, dz: number) {
+        const targetGridPos = GridUtils.add(
+            this.gridPos,  
+            {               // je me battrais jusqu'à la mort
+                x: dx,      
+                y: 0, 
+                z: dz
+            }
+        );
+
+        if (this.level.isWalkable(targetGridPos)) {
+            await this.doMove(targetGridPos);
+        } else if (Memory.get().getGameMode() === "PIGMODE") {
+            this.facingIndex = (this.facingIndex + 2) % 4;
+            await this.updateVisualPos(true);
+        }
     }
 }
