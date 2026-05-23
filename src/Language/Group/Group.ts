@@ -53,6 +53,10 @@ export abstract class Group extends Bloc {
         if (this.list.length === 0)
             return this.jump_back();
         const i = this.next_inst.length - 1;
+        if (this.next_inst[i] <= 0) {
+            Memory.get().resetCurrentInstruction();
+            return; 
+        }
         this.next_inst[i] -= 1;
         const prev = this.list[(this.next_inst[i] >=0) ? this.next_inst[i] : this.list.length -1];
         const idx = prev.next_listeners.indexOf(this.next);

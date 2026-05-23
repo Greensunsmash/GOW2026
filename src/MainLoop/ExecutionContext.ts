@@ -274,7 +274,7 @@ export class ExecutionContext {
 
     public async prevTick(instant?: boolean) {
         this.memory.onPrevTick();
-        this.scene.modeUpdate()
+        this.scene.modeUpdate();
         await this.level.popEntityState(instant);
     }
 

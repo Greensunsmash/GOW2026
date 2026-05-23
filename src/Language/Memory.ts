@@ -125,6 +125,7 @@ export class Memory {
     }
 
     public stepBack(): void {
+        console.log("stepBack called, current:", this.current_instruction, "moving:", this.currentlyMoving, "playing:", this.playing);
         if (this.currentlyMoving || this.isPlaying()) return;
         this.current_instruction?.back();
         //Memory.print();
@@ -155,8 +156,8 @@ export class Memory {
     // GETTERS / SETTERS
     public isPlaying(): boolean { return this.playing; }
     public setPlaying(bool: boolean): void { this.playing = bool; }
-    public resetCurrentInstruction(): void { this.current_instruction = undefined; }
-    public setCurrentInstruction(e: Executable): void { this.current_instruction = e; }
+    public resetCurrentInstruction(): void { console.trace("resetCurrentInstruction"); this.current_instruction = undefined; }
+    public setCurrentInstruction(e: Executable): void { console.trace("setCurrentInstruction", e); this.current_instruction = e; }
 
     public getCurrentInstruction() {return this.current_instruction;}
 
