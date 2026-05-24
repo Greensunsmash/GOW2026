@@ -1,9 +1,11 @@
 import type { InstructionContainer } from "../../Containers/InstructionContainer";
 import { Bloc } from "../Bloc";
 import type { Executable } from "../Executable";
+import type { GameMode } from "../Memory";
 
 export abstract class Instruction extends Bloc implements Executable {
     protected container : InstructionContainer;
+    protected gameModeAtExecute?: GameMode;
     public back_listeners : (() => void)[] = [];
     public next_listeners : (() => void)[] = [];
     abstract execute(): void;

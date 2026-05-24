@@ -35,7 +35,9 @@ export class Level {
                         /!\ ATTENTION
                         Avertissement national
                         Inversion y et z implicite (dans toWorld)
-                    */
+                        
+                        
+                        en fait non c meme plus vrai */
                     let pos: Vector3 = GridUtils.toWorld(gridPos);
                     let tile: State = this.map[y][z][x];
 

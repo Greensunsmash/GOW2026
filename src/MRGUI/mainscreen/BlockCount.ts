@@ -23,7 +23,6 @@ export class BlockCount extends Container {
         this.countText = new TextBlock("blockcount_textblk", "Blocs : 0");
         this.countText.height = "30px";
         this.panel.addControl(this.countText);
-
         root.addControl(this);
     }
 

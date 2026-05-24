@@ -10,6 +10,10 @@ export type StackFrame = {
 };
 
 export type GameMode = "NORMAL" | "PIGMODE";
+export type GameModeStackInfo = {
+    gameMode: GameMode;
+    ticksSinceLastModeChange: number;
+};
 
 // Explication de l'execution d'un programme.
 // On appelle playScene.run() qui transforme les blocs visuels en blocs logiques.
@@ -40,13 +44,16 @@ export class Memory {
     private onProgramEnd: (() => void) | undefined = undefined;
 
     private gameMode: GameMode = "NORMAL";
-    private gameModeStack: GameMode[] = [];
+    private gameModeStack: GameModeStackInfo[] = [];
 
     private constructor() {
         this.values = new Map();
         this.booleans = new Map();
         this.fonctions = new Map();
         this.callStack = [];
+        
+        this.gameMode = "NORMAL";
+        this.gameModeStack = [];
     }
 
     clear() {
@@ -56,7 +63,9 @@ export class Memory {
         this.callStack = [];
         this.current_instruction = undefined;
         this.ran = false;
+
         this.gameMode = "NORMAL";
+        this.gameModeStack = [];
     }
 
     // Singleton
@@ -156,8 +165,8 @@ export class Memory {
     // GETTERS / SETTERS
     public isPlaying(): boolean { return this.playing; }
     public setPlaying(bool: boolean): void { this.playing = bool; }
-    public resetCurrentInstruction(): void { console.trace("resetCurrentInstruction"); this.current_instruction = undefined; }
-    public setCurrentInstruction(e: Executable): void { console.trace("setCurrentInstruction", e); this.current_instruction = e; }
+    public resetCurrentInstruction(): void { /*onsole.trace("resetCurrentInstruction");*/ this.current_instruction = undefined; }
+    public setCurrentInstruction(e: Executable): void { /*console.trace("setCurrentInstruction", e);*/ this.current_instruction = e; }
 
     public getCurrentInstruction() {return this.current_instruction;}
 
@@ -174,18 +183,19 @@ export class Memory {
     public getGameMode(): GameMode {return this.gameMode;}
     public setGameMode(gm: GameMode) {this.gameMode = gm;}
 
-    public onNextTick() {
-        this.gameModeStack.push(this.gameMode);
+    public onNextTick(ticksSinceLastModeChange: number) {
+        console.log(this.gameModeStack);
+        this.gameModeStack.push({gameMode: this.gameMode, ticksSinceLastModeChange});
     }
-    public onPrevTick() {
+    public onPrevTick(): GameModeStackInfo | undefined {
+        console.log(this.gameModeStack);
         if (this.gameModeStack.length === 0) {
             console.warn("Cannot load a game mode state when game mode state stack is empty");
             return;
-        } else if (this.gameModeStack.length === 1) {
-            console.warn("popping GAME (not mob) state, but only initial state in stack, so not removing first");
-            this.gameMode = this.gameModeStack[0];
         } else {
-            this.gameMode = this.gameModeStack.pop()!;
+            const gmStackInfo = this.gameModeStack.pop()!;
+            this.gameMode = gmStackInfo.gameMode;
+            return gmStackInfo;
         }
     }
 

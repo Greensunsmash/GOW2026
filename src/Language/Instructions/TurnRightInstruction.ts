@@ -14,14 +14,14 @@ export class TurnRightInstruction extends Instruction {
     async execute(): Promise<void> {
         const memory = Memory.get();
         memory.setCurrentlyMoving(true);
-
-        if (Memory.get().getGameMode() === "PIGMODE") {
+        this.gameModeAtExecute = memory.getGameMode();
+        if (this.gameModeAtExecute === "PIGMODE") {
             await this.ctx.nextTick(this.ctx.getRobot().getNextPosIntention("forward"), memory.skip);
         } else {
             if (memory.skip) this.ctx.getRobot().turnRight();
             else await this.ctx.getRobot().visualTurnRight();
+            await this.ctx.nextTick(undefined, memory.skip);
         }
-        await this.ctx.nextTick(undefined, memory.skip);
         memory.setCurrentInstruction(this);
         memory.setCurrentlyMoving(false);
 
@@ -31,14 +31,15 @@ export class TurnRightInstruction extends Instruction {
     async back() {
         const memory = Memory.get();
         memory.setCurrentlyMoving(true);
-        await this.ctx.prevTick(memory.skip /* instant */);
-        if (Memory.get().getGameMode() === "PIGMODE") {
+        if (this.gameModeAtExecute === "PIGMODE") {
             if (memory.skip) this.ctx.getRobot().moveBackward();
             else await this.ctx.getRobot().visualMoveBackward();
         } else {
             if (memory.skip) this.ctx.getRobot().turnLeft();
             else await this.ctx.getRobot().visualTurnLeft();
         }
+        
+        await this.ctx.prevTick(memory.skip /* instant */);
         super.back();
         
         memory.setCurrentlyMoving(false);

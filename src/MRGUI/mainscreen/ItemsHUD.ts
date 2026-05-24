@@ -22,7 +22,7 @@ export class ItemsHUD extends Container {
         this.itemsText = new TextBlock("itemdisp_txt", "Items : ");
         this.itemsText.height = "30px";
         this.panel.addControl(this.itemsText);
-
+        this.isVisible = false;
         root.addControl(this);
     }
 
