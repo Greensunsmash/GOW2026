@@ -21,6 +21,7 @@ export class LevelSelectModal extends ModalWindow {
     }
 
     private fillLevelNames(levelIndex: LevelIndexEntry[], callback: (levelName: string) => Promise<void>) {
+        const lvlPanel = new GUI.StackPanel();
         levelIndex.forEach((lvl: LevelIndexEntry, i: number) => {
             if (lvl.name === "")
                 lvl.name = lvl.file;
@@ -29,8 +30,14 @@ export class LevelSelectModal extends ModalWindow {
                 this.blocker.dispose();
                 await callback(lvl.file);
             });
-            this.panel.addControl(levelBtn);
-            this.panel.addControl(new BaseVSpacer());
+            lvlPanel.addControl(levelBtn);
+            lvlPanel.addControl(new BaseVSpacer());
         });
+        const scroll = new GUI.ScrollViewer();
+        scroll.addControl(lvlPanel);
+        scroll.thickness = 0;
+        scroll.heightInPixels = 600;
+
+        this.panel.addControl(scroll);
     }
 }
