@@ -81,7 +81,7 @@ export class InstructionContainer extends GUI.Rectangle {
         
         this.morceauDosC.heightInPixels = height;
         
-        //this.morceauDosC.widthInPixels = 0; 
+        this.morceauDosC.widthInPixels = 0; 
         this.morceauDosC.leftInPixels = -20;
 
         //this.morceauDosC.leftInPixels = -30;

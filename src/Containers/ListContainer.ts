@@ -567,7 +567,7 @@ export class ListContainer extends GUI.Rectangle {
         morceau.background = Colors.PtitRoseDuSoir;
         morceau.thickness = 0;
         morceau.heightInPixels = height;
-        morceau.widthInPixels = 20;
+        morceau.widthInPixels = 40;
         morceau.paddingLeftInPixels = -20;
         morceau.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         morceau.zIndex = -1;
