@@ -1,5 +1,6 @@
 import * as GUI from "@babylonjs/gui";
 import { BasicInstContainer } from "./BasicInstContainer";
+import { SetVarContainer } from "./Prefabs/SetVarContainer";
 
 export class FacticeBlock {
     public innerCtrl?: GUI.Control;
@@ -93,7 +94,7 @@ export class FacticeFactory {
 
     static ultimateReaders(c: GUI.Rectangle): FacticeBlock {
         const factBlk = new FacticeBlock();
-        if (c instanceof BasicInstContainer && c.hasModeUpdateBehavior())
+        if ((c instanceof BasicInstContainer  || c instanceof SetVarContainer) && c.hasModeUpdateBehavior())
             factBlk.updateOnModeChange = true;
         factBlk.innerCtrl = this.ultimateReaders_aux(c, factBlk);
         //console.log(factBlk.innerCtrl);

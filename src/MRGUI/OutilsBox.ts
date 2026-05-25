@@ -15,6 +15,7 @@ import { BasicInstContainer } from "../Containers/BasicInstContainer";
 import type { WorkSpace } from "./Workspace";
 import { Colors } from "../Shared/Colors";
 import { BaseVSpacer } from "./misc/BaseSpacers";
+import type { ExecutionContext } from "../MainLoop/ExecutionContext";
 
 export class DoublePeloteDeLaineEloignezLesChats extends StackPanel {
     constructor(height?: number) {
@@ -375,7 +376,7 @@ export class OutilsBox extends Rectangle {
                     });
                 // si c'est une instruction
                 } else if (realDragBlock instanceof InstructionContainer) {  
-                    if (realDragBlock instanceof BasicInstContainer) {
+                    if (realDragBlock instanceof BasicInstContainer || realDragBlock instanceof SetVarContainer) {
                         // ca devient "avancer d'une case" si on est en pig mode
                         realDragBlock.triggerModeUpdate();
                     }
@@ -407,7 +408,7 @@ export class OutilsBox extends Rectangle {
     }
 
     // Ajtr une variable dans le panel "Variable"
-    addVariable(name: string, scene: GameScene) {
+    addVariable(name: string, scene: GameScene, ctx: ExecutionContext) {
         if (name in this.vars) {
             console.error("variable already exists.");
             return;
@@ -429,7 +430,7 @@ export class OutilsBox extends Rectangle {
                 new VarValueContainer(v, root, content_root, scene)
             );
             this.addTemplate("variables", (root, content_root) =>
-                new SetVarContainer(v, root, content_root, scene)
+                new SetVarContainer(v, root, content_root, scene, ctx)
             );
         });
     }

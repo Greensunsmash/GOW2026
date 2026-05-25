@@ -80,7 +80,7 @@ export class BlocContainer extends GUI.Rectangle {
                     case "a": this.args.push("ALL"); break;
                 }
 
-                const slotWrapper = new GUI.Rectangle();
+                const slotWrapper = new GUI.Rectangle("slot-wrp");
                 slotWrapper.adaptWidthToChildren = true;
                 slotWrapper.adaptHeightToChildren = true;
                 slotWrapper.color = "transparent";
@@ -199,6 +199,22 @@ export class BlocContainer extends GUI.Rectangle {
     public getArgs(): readonly ArgsType[] {return this.args;}
     public getLabels(): readonly GUI.TextBlock[] {return this.labels;}
     public getType(): ArgsType {return this.type;}
+
+    public getFirstSlot() {
+        return this.container.children.find(c => c.name === "slot-wrp");
+    }
+
+    public clearSlots() {
+        const first = this.getFirstSlot();
+        if (!first) {
+            return console.error("cannot find any slot");
+        }
+        this.container.removeControl(first);
+    }
+
+    public restoreSlot(slot: GUI.Control) {
+        this.container.addControl(slot);
+    }
 
     dispose(): void {
         if (this.dragObservable) this.onPointerDownObservable.remove(this.dragObservable);

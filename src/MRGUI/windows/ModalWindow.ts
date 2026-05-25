@@ -12,7 +12,7 @@ export class ModalWindow extends Rectangle {
         this.blocker = new GreyBlocker();
         this.blocker.addControl(this);
 
-        this.width = "400px";
+        this.width = "500px";
         //window.height = "220px";
         this.adaptHeightToChildren = true;
         this.background = Colors.ToolboxBg;
@@ -27,20 +27,22 @@ export class ModalWindow extends Rectangle {
 
         const titleBlock = new TextBlock("dialogTitle", title);
         titleBlock.height = "50px";
-        titleBlock.color = "black";
+        titleBlock.color = "white";
         titleBlock.fontSize = 18;
         titleBlock.fontFamily = "Inter";
-        titleBlock.resizeToFit = true;
+        titleBlock.widthInPixels = title.length*10 + 20;
 
         const titleBlockRect = new Rectangle("dialogTitleRect");
         titleBlockRect.height = "50px";
         titleBlockRect.background = Colors.PtitRoseDuSoir;
         titleBlockRect.cornerRadius = 22;
+        titleBlockRect.thickness = 0;
         titleBlockRect.adaptWidthToChildren = true;
 
         titleBlockRect.addControl(titleBlock);
         this.panel.addControl(titleBlockRect);
 
+        this.panel.addControl(new BaseVSpacer());
         
         root.addControl(this.blocker);
     }

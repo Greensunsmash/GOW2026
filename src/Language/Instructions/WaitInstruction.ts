@@ -15,7 +15,11 @@ export class WaitInstruction extends Instruction {
         const memory = Memory.get();
         memory.setCurrentlyMoving(true);
 
-        await this.ctx.nextTick(undefined, memory.skip);
+        this.gameModeAtExecute = memory.getGameMode();
+        if (this.gameModeAtExecute === "NORMAL")
+            await this.ctx.nextTick(undefined, memory.skip);
+        else
+            await this.ctx.nextTick(this.ctx.getRobot().getNextPosIntention("forward"), memory.skip);
 
         Memory.get().setCurrentInstruction(this);
 
@@ -27,6 +31,10 @@ export class WaitInstruction extends Instruction {
     async back() {
         const memory = Memory.get();
         memory.setCurrentlyMoving(true);
+        if (this.gameModeAtExecute === "PIGMODE") {
+            if (memory.skip) this.ctx.getRobot().moveBackward();
+            else await this.ctx.getRobot().visualMoveBackward();
+        } 
         await this.ctx.prevTick();
         super.back();
         memory.setCurrentlyMoving(false);

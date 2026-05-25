@@ -3,6 +3,7 @@ import { ModalWindow } from "./ModalWindow";
 import { BaseHSpacer, BaseVSpacer } from "../misc/BaseSpacers";
 import { CancelButton } from "../buttons/CancelButton";
 import { OkButton } from "../buttons/OkButton";
+import { Colors } from "../../Shared/Colors";
 
 // Bte de dialogue
 // "Créer une variable"
@@ -16,15 +17,26 @@ export class CreateVarModal extends ModalWindow {
 
         // Input nom
         const input = new GUI.InputText("dialogInput");
-        input.width = "80%";
-        input.height = "40px";
+        input.width = "100%";
+        input.height = "100%";
         input.color = "white";
-        input.background = "#1e1e1e";
+        input.background = Colors.AccentDuSud
         input.placeholderText = "Nom de ta variable...";
-        input.placeholderColor = "gray";
-        input.focusedBackground = "#2a2a2a";
+        input.placeholderColor = "white";
+        input.focusedBackground = Colors.Accent;
+        input.fontFamily = "Inter";
+        input.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
         if (prevName) input.text = prevName;
-        this.panel.addControl(input);
+
+
+        const inputRect = new GUI.Rectangle("dialogIn-rect");
+        inputRect.width = "80%";
+        inputRect.height = "50px";
+        inputRect.thickness = 1;
+        inputRect.color = Colors.Accent;
+        inputRect.addControl(input);
+        inputRect.cornerRadius = Colors.CornerRadiusVraimentArrondi;
+        this.panel.addControl(inputRect);
 
         this.panel.addControl(new BaseVSpacer());
 

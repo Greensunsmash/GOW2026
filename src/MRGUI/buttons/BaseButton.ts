@@ -9,13 +9,13 @@ export class BaseButton extends Button {
         this.widthInPixels = width;
         this.heightInPixels = height;
         this.color = "white";
-        this.thickness = 0;
+        this.thickness = 1;
         this.background = Colors.Accent;
         this.cornerRadius = Colors.CornerRadiusVraimentArrondi;
         this.mrTextBlock = new TextBlock();
         this.mrTextBlock.text = label;
         this.mrTextBlock.fontFamily = "Inter";
-        this.mrTextBlock.color = this.color;
+        this.mrTextBlock.color = "white";
         this.addControl(this.mrTextBlock);
         this.onPointerUpObservable.add(() => callback());
     }

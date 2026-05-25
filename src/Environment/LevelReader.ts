@@ -230,10 +230,10 @@ export class LevelReader {
             new BasicInstContainer("Tourner à droite", new TurnRightInstruction(ctx), root, content_root, scene, new MoveForwardInstuction(ctx)),
 
             pickup: (root, content_root) =>
-            new BasicInstContainer("Ramasser l'objet", new PickupInstruction(ctx), root, content_root, scene),
+            new BasicInstContainer("Ramasser l'objet", new PickupInstruction(ctx), root, content_root, scene, new MoveForwardInstuction(ctx)),
 
             wait: (root, content_root) =>
-            new BasicInstContainer("Attendre", new WaitInstruction(ctx), root, content_root, scene),
+            new BasicInstContainer("Attendre", new WaitInstruction(ctx), root, content_root, scene, new MoveForwardInstuction(ctx)),
 
             print: (root, content_root) =>
             new PrintContainer(root, content_root, scene),
@@ -331,7 +331,7 @@ export class LevelReader {
         if (this.blockset[nb].includes("var_create")) {
             tb.addButton("variables", "Créer une variable", () => {
                 new CreateVarModal(scene.advancedTexture, (name: string) => {
-                    tb.addVariable(name, scene);
+                    tb.addVariable(name, scene, ctx);
                 });
             });
         }
