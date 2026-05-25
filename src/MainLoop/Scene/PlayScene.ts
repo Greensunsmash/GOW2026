@@ -178,7 +178,7 @@ export class PlayScene extends GameScene { // ;)
         texture.level = 1.0;
         this.scene.environmentTexture = texture;
         this.scene.imageProcessingConfiguration.exposure = 1.0;
-        this.scene.environmentIntensity = 1.0;
+        this.scene.environmentIntensity = 1.4;
         // Create a skybox mesh using this texture
         const skybox = this.scene.createDefaultSkybox(texture, true, 100000, 0);
     }
@@ -347,7 +347,7 @@ export class PlayScene extends GameScene { // ;)
     async loadAssets() {
         await Promise.all([
             this._drh.loadSingleAsset("robot", "character-male-e.glb"),
-            this._drh.loadSingleAsset("ground", "grasscube.glb"),
+            this._drh.loadSingleAsset("ground", "roundblock.glb"),
             this._drh.loadSingleAsset("cursed", "cube.glb"),
             this._drh.loadSingleAsset("wall", "stone.02.glb"),
             this._drh.loadSingleAsset("pill", "pill.glb"),

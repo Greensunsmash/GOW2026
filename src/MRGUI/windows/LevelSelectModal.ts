@@ -28,7 +28,6 @@ export class LevelSelectModal extends ModalWindow {
                 this.blocker.dispose();
                 await callback(lvl.file);
             });
-            levelBtn.color = "#0000ff";
             this.panel.addControl(levelBtn);
             this.panel.addControl(new BaseVSpacer());
         });

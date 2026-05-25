@@ -4,6 +4,7 @@ import { ValeurBrute } from "../Language/Valeur/ValeurBrute";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { BlocContainer } from "./BlocContainer";
 import type { Valuable } from "./Valuable";
+import { Colors } from "../Shared/Colors";
 
 // Abstract pour tout les bloc renvoyant une valeur
 export class ValeurContainer extends BlocContainer implements Valuable {
@@ -15,7 +16,7 @@ export class ValeurContainer extends BlocContainer implements Valuable {
 
     build():void {
         // Met le fond en blorange (F587jet27)
-        this.background = "#F58727";
+        this.background = Colors.PtitRoseDuSoir;
         super.build();
     }
 

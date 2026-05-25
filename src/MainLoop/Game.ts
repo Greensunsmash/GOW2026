@@ -15,7 +15,10 @@ export class Game {
         DefaultLoadingScreen.DefaultLogoUrl = "/fulltransparent.png";
         DefaultLoadingScreen.DefaultSpinnerUrl = "/marcorobo.png";
         const loading = new DefaultLoadingScreen(canvas, '');
-        this.engine = new Engine(canvas, true);
+        this.engine = new Engine(canvas, true, {
+            /* horrible */
+            //adaptToDeviceRatio: true 
+        });
         this.engine.loadingScreen = loading;
     }
 

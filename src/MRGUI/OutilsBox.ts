@@ -13,6 +13,35 @@ import type { PlayScene } from "../MainLoop/Scene/PlayScene";
 import { Memory } from "../Language/Memory";
 import { BasicInstContainer } from "../Containers/BasicInstContainer";
 import type { WorkSpace } from "./Workspace";
+import { Colors } from "../Shared/Colors";
+import { BaseVSpacer } from "./misc/BaseSpacers";
+
+export class DoublePeloteDeLaineEloignezLesChats extends StackPanel {
+    constructor(height?: number) {
+        super("ficelle-n");
+
+        const ficelle = new Rectangle();
+        ficelle.widthInPixels = 6;
+        ficelle.height = "100%";
+        ficelle.cornerRadius = 3;
+        ficelle.background = Colors.SecondaryEnseignement;
+        ficelle.thickness = 0;
+
+        const ficelle2 = new Rectangle();
+        ficelle2.widthInPixels = 6;
+        ficelle2.height = "100%";
+        ficelle2.cornerRadius = 3;
+        ficelle2.background = Colors.SecondaryEnseignement;
+        ficelle2.thickness = 0;
+
+        this.isVertical = false;
+        this.spacing = 150;
+        this.heightInPixels = height ?? 75;
+        this.addControl(ficelle);
+        this.addControl(ficelle2);
+    }
+
+}
 
 /*
 La bôite à boîtes,
@@ -41,7 +70,7 @@ export class OutilsBox extends Rectangle {
         this.width = "40%";
         this.height = "100%";
         this.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-        this.background = "#101010";
+        this.background = Colors.ToolboxBg;
         this.thickness = 1;
         this.root.addControl(this);
 
@@ -52,9 +81,6 @@ export class OutilsBox extends Rectangle {
 
         this.stack = new StackPanel();
         this.stack.isVertical = true;
-        this.stack.spacing = 15;
-        this.stack.paddingTop = "10px";
-        this.stack.paddingBottom = "10px";
         this.stack.adaptHeightToChildren = true;
         this.scrollViewer.addControl(this.stack);
     }
@@ -78,11 +104,12 @@ export class OutilsBox extends Rectangle {
         sp.paddingTop = "10px";
         sp.paddingBottom = "10px";
         sp.adaptHeightToChildren = true;
-        sp.background = "#202020";
+        sp.background = Colors.Workbench;
 
         const catLabel = new TextBlock();
         catLabel.color = "white";
-        catLabel.fontSize = 14;
+        catLabel.fontSize = 18;
+        catLabel.fontFamily = "Inter";
         catLabel.resizeToFit = true;
         catLabel.textWrapping = true; 
         catLabel.paddingLeft = "10px";
@@ -91,12 +118,54 @@ export class OutilsBox extends Rectangle {
         catLabel.paddingBottom = "10px";
         catLabel.isHitTestVisible = false;
 
+        
         const catLabelRect = new Rectangle();
-        catLabelRect.adaptWidthToChildren = true;
+        //catLabelRect.adaptWidthToChildren = true;
         catLabelRect.adaptHeightToChildren = true;
         catLabelRect.isHitTestVisible = false;
-        catLabelRect.thickness = 2;
-            
+        catLabelRect.thickness = Colors.GeneralContour;
+        catLabelRect.color = Colors.AccentDuSud;
+        catLabelRect.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+        catLabelRect.widthInPixels = 150;
+        
+        catLabelRect.addControl(catLabel);
+        catLabelRect.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+
+
+        const catLabelWithScotch = new Container();
+        catLabelWithScotch.adaptHeightToChildren = true;
+        catLabelWithScotch.width = "100%";
+        catLabelWithScotch.clipChildren = false;
+        catLabelWithScotch.clipContent = false;
+
+        catLabelRect.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+
+        // scotch gauche
+        const scotchGauche = new Rectangle();
+        scotchGauche.widthInPixels = 20;
+        scotchGauche.heightInPixels = 25;
+        scotchGauche.cornerRadius = 8;
+        scotchGauche.background = Colors.SecondaryEnseignement;
+        scotchGauche.thickness = 0;
+        scotchGauche.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+        scotchGauche.leftInPixels = -catLabelRect.widthInPixels / 2;
+        scotchGauche.alpha = 0.5;
+
+        // ficelle droite
+        const scotchDroite = new Rectangle();
+        scotchDroite.widthInPixels = 20;
+        scotchDroite.heightInPixels = 25;
+        scotchDroite.cornerRadius = 8;
+        scotchDroite.background = Colors.SecondaryEnseignement;
+        scotchDroite.thickness = 0;
+        scotchDroite.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+        scotchDroite.leftInPixels = catLabelRect.widthInPixels / 2;
+        scotchDroite.alpha = 0.5;
+        
+        catLabelWithScotch.addControl(catLabelRect);;
+        catLabelWithScotch.addControl(scotchGauche);
+        catLabelWithScotch.addControl(scotchDroite);
+
         // selon la catégorie,
         // on change l'apparence
         // du titre
@@ -104,64 +173,87 @@ export class OutilsBox extends Rectangle {
             // Instructions (violet)
             case "instructions":
                 catLabel.text = "Instructions";
-                catLabelRect.background = "#8727F5";
+                catLabelRect.background = Colors.PtitRoseDuSoir;
+                catLabelRect.cornerRadius = Colors.CornerRadiusCarrePasTrop;
                 break;
             
             // Structures (violet)
             case "structures":
                 catLabel.text = "Structures";
-                catLabelRect.background = "#8727F5";
+                catLabelRect.background = Colors.PtitRoseDuSoir;
+                catLabelRect.cornerRadius = Colors.CornerRadiusCarrePasTrop;
                 break;
 
             // Booléens (vert fluo)
             case "booleans":
                 catLabel.text = "Booléens";
-                catLabelRect.background = "#95F527";
-                catLabelRect.cornerRadius = 10;
+                catLabelRect.background = Colors.PtitRoseDuSoir;
+                catLabelRect.cornerRadius = Colors.CornerRadiusVraimentArrondi;
                 break;
 
             // Capteurs (vert fluo)
             case "sensors":
                 catLabel.text = "Capteurs";
-                catLabelRect.background = "#95F527";
-                catLabelRect.cornerRadius = 10;
+                catLabelRect.background = Colors.PtitRoseDuSoir;
+                catLabelRect.cornerRadius = Colors.CornerRadiusVraimentArrondi;
                 break;
 
             // Variables (orange)
             case "variables":
                 catLabel.text =  "Variables";
-                catLabelRect.background = "#F58727";
-                catLabelRect.cornerRadius = 10;
+                catLabelRect.background = Colors.PtitRoseDuSoir;
+                catLabelRect.cornerRadius = Colors.CornerRadiusVraimentArrondi;
                 break;
 
             // Opérations (orange)
             case "ops":
                 catLabel.text =  "Opérations";
-                catLabelRect.background = "#F58727";
-                catLabelRect.cornerRadius = 10;
+                catLabelRect.background = Colors.PtitRoseDuSoir;
+                catLabelRect.cornerRadius = Colors.CornerRadiusVraimentArrondi;
                 break;
 
             // Fonctions (rose/fuchsia)
             case "functions":
                 catLabel.text = "Blocs de plastique mou";
-                catLabelRect.background = "#F52795";
+                catLabelRect.background = Colors.PtitRoseDuSoir;
+                catLabelRect.cornerRadius = Colors.CornerRadiusCarrePasTrop;
                 break;
 
             // Départ (rose)
             case "start":
                 catLabel.text = "Départ";
-                catLabelRect.background = "#F52795";
+                catLabelRect.background = Colors.PtitRoseDuSoir;
+                catLabelRect.cornerRadius = Colors.CornerRadiusCarrePasTrop;
                 break;
             
             default:
                 throw new Error("this category does not exist : " + shortName);
         }
 
-        catLabelRect.addControl(catLabel);
-        this.stack.addControl(catLabelRect);
+        const wrapper = new Rectangle();
+        wrapper.adaptHeightToChildren = true;
+        wrapper.background = Colors.Workbench;
+        wrapper.thickness = 2;
+        wrapper.color = Colors.SecondaryEnseignement;
+        wrapper.cornerRadius = 12;
+        wrapper.width = "90%";
 
+        
+        const innerStack = new StackPanel();
+        innerStack.isVertical = true;
+        innerStack.adaptHeightToChildren = true;
+
+        innerStack.addControl(new BaseVSpacer());
+        innerStack.addControl(catLabelWithScotch);
+        innerStack.addControl(new BaseVSpacer());
+        innerStack.addControl(sp);
+        innerStack.addControl(new BaseVSpacer());
+
+
+        wrapper.addControl(innerStack);
+        this.stack.addControl(new DoublePeloteDeLaineEloignezLesChats(this.categories.size > 0 ? 50 : 25));
+        this.stack.addControl(wrapper);
         this.categories.set(shortName, sp);
-        this.stack.addControl(sp);
     }
 
     // Ajoute un bouton dans la toolbox,
@@ -188,12 +280,15 @@ export class OutilsBox extends Rectangle {
             btn.textBlock.textWrapping = true; 
             btn.textBlock.paddingTop = "10px";
             btn.textBlock.paddingBottom = "10px";
+            btn.textBlock.fontFamily = "Inter";
         }
         btn.color = "white";
-        btn.background = "#ff0000"; 
+        btn.background = Colors.Accent; 
         btn.thickness = 2;
-        btn.fontSize = 14;
-        btn.left = "15px";
+        btn.fontSize = 18;
+        btn.cornerRadius = Colors.CornerRadiusCarrePasTrop;
+        btn.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+        btn.width = "80%";
         btn.onPointerUpObservable.add(callback);
         newRoot.addControl(btn);
         this.buttons.push(btn);

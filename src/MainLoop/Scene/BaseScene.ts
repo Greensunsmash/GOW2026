@@ -8,7 +8,15 @@ export abstract class BaseScene {
 
     constructor(engine: Engine) {
         this.scene = new Scene(engine);
-        this.advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
+        this.advancedTexture = AdvancedDynamicTexture.CreateFullscreenUI(
+            "UI",
+            true,
+            this.scene,
+            BABYLON.Texture.BILINEAR_SAMPLINGMODE, 
+            false
+        );
+        //this.advancedTexture.renderScale = window.devicePixelRatio;
+        //this.advancedTexture.idealWidth = window.innerWidth * window.devicePixelRatio;
         if (this.advancedTexture.layer) {
             this.advancedTexture.layer.layerMask = LayerMasks.UI_ONLY;
         }   

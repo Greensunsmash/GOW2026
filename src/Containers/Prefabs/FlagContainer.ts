@@ -1,12 +1,13 @@
 import * as GUI from "@babylonjs/gui";
 import type { GameScene } from "../../MainLoop/Scene/GameScene";
 import { DepartContainer } from "../DepartContainer";
+import { Colors } from "../../Shared/Colors";
 
 export class FlagContainer extends DepartContainer{
 
     constructor(root: GUI.Container, content_root:GUI.Container, scene: GameScene) {
-        super(["Première instruction"], root, content_root, scene);
-        this.bloc.background = "#F52795";
+        super(["Commencer par"], root, content_root, scene);
+        this.bloc.background = Colors.Accent;
 
     }
 

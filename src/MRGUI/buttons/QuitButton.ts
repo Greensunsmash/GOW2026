@@ -19,8 +19,8 @@ export class QuitButton extends Button {
         this.background = "#ff0000"; 
         this.thickness = 2;
         this.cornerRadius = 10;
-        this.fontSize = 20;
-        this.fontWeight = "bold";
+        this.fontSize = 18;
+        this.fontFamily = "Inter";
 
         this.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
         this.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;

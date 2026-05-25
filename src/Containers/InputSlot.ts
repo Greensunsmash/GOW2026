@@ -5,6 +5,7 @@ import { Valeur } from "../Language/Valeur/Valeur";
 import { ValeurBrute } from "../Language/Valeur/ValeurBrute";
 import type { Observer, Vector2 } from "@babylonjs/core";
 import type { Valuable } from "./Valuable";
+import { Colors } from "../Shared/Colors";
 
 export class InputSlot extends EmptySlot implements Valuable {
     private textInput: InputText;
@@ -16,9 +17,14 @@ export class InputSlot extends EmptySlot implements Valuable {
         super(parent, type);
 
         this.textInput = new InputText("inputSlot" + this.id.toString(), "");
-        this.textInput.color = "#ffffff"
+        this.textInput.color = "#000000";
+        this.textInput.focusedBackground = "#FFFFFF";
+        this.textInput.background = Colors.EmptySlot;
         this.textInput.height = "100%";
         this.textInput.width = "100%";
+        this.textInput.thickness = 0;
+        this.textInput.fontFamily = "Inter";
+        this.textInput.fontSize = 18;
         this.textInput.isHitTestVisible = false;
         this.textInput.isPointerBlocker = true;
         this.addControl(this.textInput);

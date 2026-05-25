@@ -8,7 +8,7 @@ import { isValuable } from "../Valuable";
 export class NotContainer extends BooleenContainer {
 
     constructor(root: Container, content_root:Container, scene: GameScene) {
-        super(["Non ", "b"], root, content_root, scene);
+        super(["Non", "b"], root, content_root, scene);
     }
 
     public getValue(): (Booleen)[] {

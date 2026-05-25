@@ -57,6 +57,7 @@ export class MainNavigator extends Container {
         this.leafIndicator = new TextBlock("leafind", "REMPLIR");
         this.leafIndicator.height = "40px";
         this.leafIndicator.color = "white";
+        this.leafIndicator.fontFamily = "Inter";
 
         this.addControl(this.panel);
         

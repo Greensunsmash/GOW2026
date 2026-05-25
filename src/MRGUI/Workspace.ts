@@ -1,6 +1,7 @@
 import * as GUI from "@babylonjs/gui";
 import type { PlayScene } from "../MainLoop/Scene/PlayScene";
 import { Vector2, type IPointerEvent } from "@babylonjs/core";
+import { Colors } from "../Shared/Colors";
 
 export class WorkSpace extends GUI.Rectangle {
     private readonly scene: PlayScene;
@@ -19,7 +20,7 @@ export class WorkSpace extends GUI.Rectangle {
         this.width = "60%";
         this.height = "100%";
         this.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
-        this.background = "#101010";
+        this.background = Colors.BehindWorkbench;
         this.thickness = 1;
         this.clipChildren = true;
         this.root.addControl(this);
@@ -27,7 +28,7 @@ export class WorkSpace extends GUI.Rectangle {
         this.content = new GUI.Rectangle();
         this.content.width = "2000px"; // grand espace de base
         this.content.height = "2000px";
-        this.content.background = "#31138bff";
+        this.content.background = Colors.Workbench;
         this.addControl(this.content);
         this.width_limit = this.content.widthInPixels / 2;
         this.height_limit = this.content.heightInPixels / 2;

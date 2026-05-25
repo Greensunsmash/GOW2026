@@ -2,6 +2,7 @@ import * as GUI from "@babylonjs/gui";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { Observer, PointerEventTypes, PointerInfo } from "@babylonjs/core";
 import type { ArgsType, BlocContainer } from "./BlocContainer";
+import { Colors } from "../Shared/Colors";
 
 // Cette classe symbolise un slot (de BlocContainer) vide qui peut donc être remplacé
 export class EmptySlot extends GUI.Rectangle {
@@ -21,11 +22,12 @@ export class EmptySlot extends GUI.Rectangle {
         this.scene = parent.getScene();
         this.type = type;
         this.blocParent = parent;
-        this.background = "#383838";
-        this.cornerRadius = 10;
+        this.background = Colors.EmptySlot;
+        this.cornerRadius = 12;
         this.height = "40px";
         this.width = "60px";
-        this.alpha = 0.3;
+        this.thickness = 2;
+        this.color = Colors.EmptySlotOhShitImHavingAStroke;
         this.isHitTestVisible = true;
         this.init();
     }
@@ -63,10 +65,10 @@ export class EmptySlot extends GUI.Rectangle {
     getHover() : boolean {return this.hover;}
     setHover(bool:boolean) {
         if (bool) {
-            this.background = "white";
+            this.background = Colors.EmptySlotHover;
             this.hover = bool;
         } else {
-            this.background = "#383838";
+            this.background = Colors.EmptySlot;
             this.hover = bool;
         };
     }

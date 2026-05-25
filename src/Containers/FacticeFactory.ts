@@ -32,6 +32,11 @@ export class FacticeFactory {
         if (c instanceof GUI.Rectangle) {
             new_superContainer = new GUI.Rectangle();
             (new_superContainer as GUI.Rectangle).thickness = (c as GUI.Rectangle).thickness;
+            (new_superContainer as GUI.Rectangle).color = (c as GUI.Rectangle).color;
+            (new_superContainer as GUI.Rectangle).paddingTop = (c as GUI.Rectangle).paddingTop;
+            (new_superContainer as GUI.Rectangle).paddingBottom = (c as GUI.Rectangle).paddingBottom;
+            (new_superContainer as GUI.Rectangle).paddingRight = (c as GUI.Rectangle).paddingRight;
+            (new_superContainer as GUI.Rectangle).paddingLeft = (c as GUI.Rectangle).paddingLeft;
             (new_superContainer as GUI.Rectangle).cornerRadius = (c as GUI.Rectangle).cornerRadius;
             (new_superContainer as GUI.Rectangle).background = (c as GUI.Rectangle).background;
             (new_superContainer as GUI.Rectangle).alpha = c.alpha;
@@ -39,6 +44,10 @@ export class FacticeFactory {
                 (new_superContainer as GUI.Rectangle).adaptWidthToChildren = true;
         } else if (c instanceof GUI.StackPanel) {
             new_superContainer = new GUI.StackPanel();
+            (new_superContainer as GUI.StackPanel).paddingTop = (c as GUI.StackPanel).paddingTop;
+            (new_superContainer as GUI.StackPanel).paddingBottom = (c as GUI.StackPanel).paddingBottom;
+            (new_superContainer as GUI.StackPanel).paddingRight = (c as GUI.StackPanel).paddingRight;
+            (new_superContainer as GUI.StackPanel).paddingLeft = (c as GUI.StackPanel).paddingLeft;
             if (factBlk?.updateOnModeChange)
                 (new_superContainer as GUI.StackPanel).adaptWidthToChildren = true;
             (new_superContainer as GUI.StackPanel).isVertical = (c as GUI.StackPanel).isVertical;
@@ -49,6 +58,7 @@ export class FacticeFactory {
             (new_superContainer as GUI.TextBlock).text = (c as GUI.TextBlock).text;
             (new_superContainer as GUI.TextBlock).color = (c as GUI.TextBlock).color;
             (new_superContainer as GUI.TextBlock).fontSize = (c as GUI.TextBlock).fontSize;
+            (new_superContainer as GUI.TextBlock).fontFamily = (c as GUI.TextBlock).fontFamily;
             if (factBlk?.updateOnModeChange)
                 (new_superContainer as GUI.TextBlock).resizeToFit = true;
             (new_superContainer as GUI.TextBlock).paddingLeft = c.paddingLeft;
