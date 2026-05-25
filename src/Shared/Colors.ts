@@ -7,7 +7,7 @@ export class Colors {
     static Workbench = "#F7EEE2";
     static BehindWorkbench = "#FFFFFF";
     static EmptySlot = "#FFFFFF";
-    static EmptySlotHover = this.Workbench;
+    static EmptySlotHover = "#e4dbcfff";
     static EmptySlotOhShitImHavingAStroke = "#E2E2E2";
 
     /* OUI c'est pas des COULEURS ET BAH JEN AI RIEN A FOUTRE */

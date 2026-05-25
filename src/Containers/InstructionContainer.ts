@@ -6,6 +6,7 @@ import { ValeurBrute } from "../Language/Valeur/ValeurBrute";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { BlocContainer } from "./BlocContainer";
 import { Colors } from "../Shared/Colors";
+import { ThinSSAO2BlurPostProcess } from "@babylonjs/core/PostProcesses/thinSSAO2BlurPostProcess";
 
 // Classe de base pour représenter une instruction. Contient un blocContainer pour la représentation visuelle
 export class InstructionContainer extends GUI.Rectangle {
@@ -36,6 +37,8 @@ export class InstructionContainer extends GUI.Rectangle {
         this.mainContainer.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         this.mainContainer.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
         this.mainContainer.isHitTestVisible = false; // Désactive les inputs sur ce control (askip)
+        this.mainContainer.clipChildren = false;
+        this.mainContainer.clipContent = false;
 
         this.addControl(this.mainContainer);
 
@@ -43,7 +46,7 @@ export class InstructionContainer extends GUI.Rectangle {
         this.bloc = new BlocContainer("n", list, root, content_root, scene);
         this.bloc.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         this.bloc.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
-        this.bloc.thickness = stroke ? this.bloc.thickness : 0;
+        if (!stroke) this.bloc.thickness = 0;
         root.removeControl(this.bloc);
         this.mainContainer.addControl(this.bloc);
 

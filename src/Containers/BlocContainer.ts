@@ -63,6 +63,7 @@ export class BlocContainer extends GUI.Rectangle {
                 label.text = list[i];
                 label.color = "white";
                 label.fontSize = 18;
+                label.fontWeight = "200";
                 label.resizeToFit = true;
                 label.paddingLeft = "10px";
                 label.paddingRight = "10px";
@@ -112,6 +113,13 @@ export class BlocContainer extends GUI.Rectangle {
         this.thickness = Colors.GeneralContour;
         /*this.paddingTop = "5px";
         this.paddingBottom = "5px";*/
+
+        this.shadowOffsetY = 1;
+        this.shadowOffsetX = 1;
+        this.shadowBlur = 6;
+        this.shadowColor = "#00000040";
+        this.clipContent = false;
+        this.clipChildren = false;
 
         this.adaptWidthToChildren = true;
         this.adaptHeightToChildren = true;

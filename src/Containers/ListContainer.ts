@@ -47,6 +47,8 @@ export class ListContainer extends GUI.Rectangle {
         this.adaptHeightToChildren = true;
         this.adaptWidthToChildren = true;
         this.thickness = 0;
+        this.clipChildren = false;
+        this.clipContent = false;
 
         this.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         this.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
@@ -57,6 +59,8 @@ export class ListContainer extends GUI.Rectangle {
         this.stack.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         this.stack.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
         this.stack.isHitTestVisible = false;
+        this.stack.clipChildren = false;
+        this.stack.clipContent = false;
 
         this.detector = new GUI.Rectangle();
         this.detector.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
@@ -336,36 +340,35 @@ export class ListContainer extends GUI.Rectangle {
 
         for (let i = 0; i < this.list.length; i++) {
             const currIdent = indentationList[i];
-            const nextIndent = (i + 1 < indentationList.length) ? indentationList[i+1] : undefined;
 
-            
             const isHeader = this.structureList.some(s => s.getHeader() === this.list[i]);
             const isMid = this.structureList.some(s => s.getMid() === this.list[i]);
             const isQueue = this.structureList.some(s => s.getQueue() === this.list[i]);
-            const isLastInStruct = (nextIndent !== undefined && !(this.list[i+1] instanceof Magnet)) ? (currIdent > nextIndent) : true;
+            const nextRealIndex = this.list.findIndex((e, idx) => idx > i && !(e instanceof Magnet));
+            const nextIndent = nextRealIndex !== -1 ? indentationList[nextRealIndex] : undefined;
+            const isLastInStruct = nextIndent !== undefined ? currIdent > nextIndent : true;
 
             if (isQueue || isMid) {
                 const spacer = new BaseVSpacer(10);
-                this.applyDosC(spacer, currIdent);
+                //this.applyDosC(spacer, currIdent);
                 this.stack.addControl(spacer);
             }
             
             this.list[i].paddingLeftInPixels = currIdent;
             if (this.list[i] instanceof InstructionContainer) {
-                (this.list[i] as InstructionContainer).refreshDosC(currIdent);
+                //(this.list[i] as InstructionContainer).refreshDosC(currIdent);
             }
             this.stack.addControl(this.list[i]);
 
             if (isHeader || isMid) {
                 const spacer = new BaseVSpacer(10);
-                this.applyDosC(spacer, currIdent);
+                //this.applyDosC(spacer, currIdent);
                 this.stack.addControl(spacer);
             }
 
-
             console.log("currIdent is " + currIdent + " nextIdent is " + nextIndent + " so islastinstructu is " + isLastInStruct);
 
-            if (!(this.list[i] instanceof Magnet) && !isHeader && !isLastInStruct) {
+            if (!(this.list[i] instanceof Magnet) && !isHeader && !isMid && !isLastInStruct) {
                 const indexInNoMagnet = listNoMagnet.indexOf(this.list[i] as InstructionContainer);
                 if (indexInNoMagnet + 1 < listNoMagnet.length) {
                     console.log("creating the whisky scotch");
@@ -410,7 +413,7 @@ export class ListContainer extends GUI.Rectangle {
                     scotch.addControl(scotchGauche);
                     if (scotchDroit) scotch.addControl(scotchDroit);
 
-                    this.applyDosC(scotch, currIdent);
+                    //this.applyDosC(scotch, currIdent);
                     this.stack.addControl(scotch);
                 }
             }

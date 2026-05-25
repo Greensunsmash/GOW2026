@@ -21,7 +21,6 @@ export class WorkSpace extends GUI.Rectangle {
         this.height = "100%";
         this.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
         this.background = Colors.BehindWorkbench;
-        this.thickness = 1;
         this.clipChildren = true;
         this.root.addControl(this);
 
@@ -29,6 +28,13 @@ export class WorkSpace extends GUI.Rectangle {
         this.content.width = "2000px"; // grand espace de base
         this.content.height = "2000px";
         this.content.background = Colors.Workbench;
+        this.content.color = Colors.SecondaryEnseignement;
+        this.content.thickness = 16;
+        this.content.cornerRadius = 22;
+        this.content.shadowOffsetX = 1;
+        this.content.shadowOffsetY = 1;
+        this.content.shadowBlur = 7;
+        this.content.shadowColor = "#00000040";
         this.addControl(this.content);
         this.width_limit = this.content.widthInPixels / 2;
         this.height_limit = this.content.heightInPixels / 2;

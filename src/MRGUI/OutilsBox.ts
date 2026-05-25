@@ -83,6 +83,8 @@ export class OutilsBox extends Rectangle {
         this.stack = new StackPanel();
         this.stack.isVertical = true;
         this.stack.adaptHeightToChildren = true;
+        this.stack.clipChildren = false;
+        this.stack.clipContent = false;
         this.scrollViewer.addControl(this.stack);
     }
 
@@ -105,12 +107,15 @@ export class OutilsBox extends Rectangle {
         sp.paddingTop = "10px";
         sp.paddingBottom = "10px";
         sp.adaptHeightToChildren = true;
+        sp.clipChildren = false;
+        sp.clipContent = false;
         sp.background = Colors.Workbench;
 
         const catLabel = new TextBlock();
         catLabel.color = "white";
         catLabel.fontSize = 18;
         catLabel.fontFamily = "Inter";
+        catLabel.fontWeight = "300";
         catLabel.resizeToFit = true;
         catLabel.textWrapping = true; 
         catLabel.paddingLeft = "10px";
