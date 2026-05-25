@@ -273,6 +273,7 @@ export class Level {
     }
 
     public reinitLevel() {
+        console.log("in reinit level");
         const initEntState = this.entityStates[0];
         if (!initEntState) {
             console.warn("reinit level called when no mob state has ever been stored ?? WHAT THE FUCK ??");

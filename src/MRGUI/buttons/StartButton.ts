@@ -20,7 +20,7 @@ export class StartButton extends Button {
         this.background = "#a0ff20"; 
         this.thickness = 2;
         this.cornerRadius = 10;
-        this.fontSize = 20;
+        this.fontSize = 18;
         this.fontWeight = "bold";
 
         this.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;

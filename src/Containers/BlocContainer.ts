@@ -7,6 +7,8 @@ import type { Booleen } from "../Language/Booleen/Booleen";
 import { ValeurBrute } from "../Language/Valeur/ValeurBrute";
 import { Vector2 } from "@babylonjs/core";
 import { InputSlot } from "./InputSlot";
+import { BaseHSpacer } from "../MRGUI/misc/BaseSpacers";
+import { Colors } from "../Shared/Colors";
 
 export type ArgsType = "VALEUR" | "BOOLEEN" | "ALL" | "NONE";
 
@@ -47,6 +49,11 @@ export class BlocContainer extends GUI.Rectangle {
         this.container.adaptWidthToChildren = true;
         this.container.adaptHeightToChildren = true;
         this.container.isHitTestVisible = false;
+        this.container.paddingTop = "7px";
+        this.container.paddingBottom = "7px";
+        this.container.paddingLeft = "7px";
+        this.container.paddingRight = "7px";
+        this.container.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_CENTER;
         this.addControl(this.container);
 
         for (let i = 0; i < list.length; i++) {
@@ -55,13 +62,15 @@ export class BlocContainer extends GUI.Rectangle {
                 const label = new GUI.TextBlock();
                 label.text = list[i];
                 label.color = "white";
-                label.fontSize = 14;
+                label.fontSize = 18;
+                label.fontWeight = "200";
                 label.resizeToFit = true;
                 label.paddingLeft = "10px";
                 label.paddingRight = "10px";
                 label.paddingTop = "10px";
                 label.paddingBottom = "10px";
                 label.isHitTestVisible = false;
+                label.fontFamily = "Inter";
 
                 this.labels.push(label);
                 this.container.addControl(label);
@@ -72,11 +81,12 @@ export class BlocContainer extends GUI.Rectangle {
                     case "a": this.args.push("ALL"); break;
                 }
 
-                const slotWrapper = new GUI.Rectangle();
+                const slotWrapper = new GUI.Rectangle("slot-wrp");
                 slotWrapper.adaptWidthToChildren = true;
                 slotWrapper.adaptHeightToChildren = true;
                 slotWrapper.color = "transparent";
                 slotWrapper.isHitTestVisible = false;
+                slotWrapper.height = "80%";
 
                 let slot;
                 if (list[i] == "b")
@@ -86,7 +96,9 @@ export class BlocContainer extends GUI.Rectangle {
                 slotWrapper.addControl(slot);
 
                 this.slots.push(slotWrapper);
+                this.container.addControl(new BaseHSpacer(5));
                 this.container.addControl(slotWrapper);
+                this.container.addControl(new BaseHSpacer(5));
             }
         }
 
@@ -96,9 +108,18 @@ export class BlocContainer extends GUI.Rectangle {
 
     // Préparations finales du rectangle (fonction destinée à être override (NOPE TRES MAUVAISE IDEE))
     protected build(): void {
-        this.cornerRadius = 10;
-        this.color = "white";
-        this.thickness = 2;
+        this.cornerRadius = Colors.CornerRadiusVraimentArrondi;
+        this.color = Colors.AccentDuSud;
+        this.thickness = Colors.GeneralContour;
+        /*this.paddingTop = "5px";
+        this.paddingBottom = "5px";*/
+
+        this.shadowOffsetY = 1;
+        this.shadowOffsetX = 1;
+        this.shadowBlur = 6;
+        this.shadowColor = "#00000040";
+        this.clipContent = false;
+        this.clipChildren = false;
 
         this.adaptWidthToChildren = true;
         this.adaptHeightToChildren = true;
@@ -186,6 +207,22 @@ export class BlocContainer extends GUI.Rectangle {
     public getArgs(): readonly ArgsType[] {return this.args;}
     public getLabels(): readonly GUI.TextBlock[] {return this.labels;}
     public getType(): ArgsType {return this.type;}
+
+    public getFirstSlot() {
+        return this.container.children.find(c => c.name === "slot-wrp");
+    }
+
+    public clearSlots() {
+        const first = this.getFirstSlot();
+        if (!first) {
+            return console.error("cannot find any slot");
+        }
+        this.container.removeControl(first);
+    }
+
+    public restoreSlot(slot: GUI.Control) {
+        this.container.addControl(slot);
+    }
 
     dispose(): void {
         if (this.dragObservable) this.onPointerDownObservable.remove(this.dragObservable);

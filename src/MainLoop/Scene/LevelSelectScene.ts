@@ -4,12 +4,14 @@ import { LayerMasks } from "../../Shared/Constants";
 import { LevelSelectModal } from "../../MRGUI/windows/LevelSelectModal";
 import { LevelReader, type LevelIndexEntry } from "../../Environment/LevelReader";
 import { BaseScene } from "./BaseScene";
+import { Colors } from "../../Shared/Colors";
 
 export class LevelSelectScene extends BaseScene {
     public uiCamera: ArcRotateCamera;
 
     constructor(engine: Engine) {
         super(engine);
+        this.scene.clearColor = BABYLON.Color4.FromHexString(Colors.SecondaryEnseignement);
     }
 
     async init(onLevelSelect: (levelName: string) => Promise<void>) {

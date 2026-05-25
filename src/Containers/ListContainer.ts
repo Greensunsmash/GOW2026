@@ -10,6 +10,8 @@ import { InstructionContainer } from "./InstructionContainer";
 import { Magnet } from "./Magnet";
 import { FlagContainer } from "./Prefabs/FlagContainer";
 import type { StructureContainer } from "./StructureContainer";
+import { Colors } from "../Shared/Colors";
+import { BaseVSpacer } from "../MRGUI/misc/BaseSpacers";
 
 // La classe qui permet de stocker plusieurs instructions container à la suite
 // WARNING : Une instruction ne peut être seule et doit toujours être contenue dans un ListContainer
@@ -44,6 +46,9 @@ export class ListContainer extends GUI.Rectangle {
         // bien joué 
         this.adaptHeightToChildren = true;
         this.adaptWidthToChildren = true;
+        this.thickness = 0;
+        this.clipChildren = false;
+        this.clipContent = false;
 
         this.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         this.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
@@ -54,13 +59,16 @@ export class ListContainer extends GUI.Rectangle {
         this.stack.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         this.stack.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
         this.stack.isHitTestVisible = false;
+        this.stack.clipChildren = false;
+        this.stack.clipContent = false;
 
         this.detector = new GUI.Rectangle();
         this.detector.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         this.detector.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
-        this.detector.height = "100%";
+        this.detector.height = "100%"
         this.detector.width = "100%";
         this.detector.alpha = 0.1;
+        //this.detector.thickness = 0;
         this.detector.isHitTestVisible = true;
 
         this.scene = scene;
@@ -213,16 +221,17 @@ export class ListContainer extends GUI.Rectangle {
                         console.log(toMove, structToMove);
                         // Et maintenant on déplace tout
                         for (const item of toMove) {
-                            this.removeInstruction(item);
+                            this.removeInstruction(item, true);
                         }
                         for (let i = toMove.length - 1; i >= 0; i--) {
-                            l.addInstruction(toMove[i], 0);
+                            l.addInstruction(toMove[i], 0, true);
                         }
                         for (const struct of structToMove) {
                             this.structureList.splice(this.structureList.indexOf(struct), 1);
                             l.addStruct(struct);
                         }
-                        l.refreshIdentation();
+                        this.recomputeInstructions();
+                        l.recomputeInstructions();
                     }
                     nb = save;
                 }
@@ -267,6 +276,9 @@ export class ListContainer extends GUI.Rectangle {
                     if (gros_q instanceof ListContainer && gros_q != l) {
                         if ((gros_q.getMagnetID() === 0 && !gros_q.isFirst()) || (gros_q.getMagnetID() > 0 && !l.isFirst())) {
                             gros_q.mergeList(l);
+                            if (this !== l && this.getList().length > 0) {
+                                this.recomputeInstructions();
+                            }
                             this.scene.setDragging(false);
                             l.dispose();
                         } else {
@@ -293,7 +305,7 @@ export class ListContainer extends GUI.Rectangle {
         let sum = 0;
         for (const structure of this.structureList) {
             //console.log("Struct : ", structure.getHeaderID(), structure.getQueueID());
-            if (structure.contains(id)) sum += 20;
+            if (structure.contains(id)) sum += 60;
         }
         return sum;
     }
@@ -308,26 +320,112 @@ export class ListContainer extends GUI.Rectangle {
     addStruct(s: StructureContainer) {
         this.structureList.push(s);
         s.setList(this);
-        this.refreshIdentation();
+        this.recomputeInstructions();
     }
 
-    addInstruction(c: InstructionContainer, index: number) {
+    addInstruction(c: InstructionContainer, index: number, skipRebuild: boolean = false) {
         if (c.parent) { c.parent.removeControl(c); }
 
         this.list.splice(index, 0, c);
-        this.stack.clearControls();
-        for (let i = 0; i < this.list.length; i++) {
-            this.list[i].paddingLeftInPixels = this.getIndentation(i);
-            this.stack.addControl(this.list[i]);
-        }
-
+        if (!skipRebuild) this.recomputeInstructions();
     }
 
-    removeInstruction(c: InstructionContainer) {
+    recomputeInstructions() {
+        console.log(this.list);
+
+        this.stack.clearControls();
+        const listNoMagnet = this.list.filter(e => !(e instanceof Magnet));
+
+        const indentationList: number[] = this.list.map((_, index) => this.getIndentation(index));
+
+        for (let i = 0; i < this.list.length; i++) {
+            const currIdent = indentationList[i];
+
+            const isHeader = this.structureList.some(s => s.getHeader() === this.list[i]);
+            const isMid = this.structureList.some(s => s.getMid() === this.list[i]);
+            const isQueue = this.structureList.some(s => s.getQueue() === this.list[i]);
+            const nextRealIndex = this.list.findIndex((e, idx) => idx > i && !(e instanceof Magnet));
+            const nextIndent = nextRealIndex !== -1 ? indentationList[nextRealIndex] : undefined;
+            const isLastInStruct = nextIndent !== undefined ? currIdent > nextIndent : true;
+
+            if (isQueue || isMid) {
+                const spacer = new BaseVSpacer(10);
+                //this.applyDosC(spacer, currIdent);
+                this.stack.addControl(spacer);
+            }
+            
+            this.list[i].paddingLeftInPixels = currIdent;
+            if (this.list[i] instanceof InstructionContainer) {
+                //(this.list[i] as InstructionContainer).refreshDosC(currIdent);
+            }
+            this.stack.addControl(this.list[i]);
+
+            if (isHeader || isMid) {
+                const spacer = new BaseVSpacer(10);
+                //this.applyDosC(spacer, currIdent);
+                this.stack.addControl(spacer);
+            }
+
+            console.log("currIdent is " + currIdent + " nextIdent is " + nextIndent + " so islastinstructu is " + isLastInStruct);
+
+            if (!(this.list[i] instanceof Magnet) && !isHeader && !isMid && !isLastInStruct) {
+                const indexInNoMagnet = listNoMagnet.indexOf(this.list[i] as InstructionContainer);
+                if (indexInNoMagnet + 1 < listNoMagnet.length) {
+                    console.log("creating the whisky scotch");
+                
+                    const scotch = new GUI.Container();
+                    scotch.heightInPixels = 5;
+                    scotch.width = "100%";
+                    scotch.clipChildren = false;
+
+                    /*
+                    pour apposer le scotch, je prend 
+                    la val. min de la largeur des deux blocs à relier comme base
+                    */
+                    const minWidth = Math.min(this.list[i].widthInPixels, this.list[i+1].widthInPixels);
+                    console.log("min width : " + minWidth);
+                    const scotchGauche = new GUI.Rectangle();
+                    scotchGauche.widthInPixels = 12;
+                    scotchGauche.heightInPixels = 15;
+                    scotchGauche.cornerRadius = 8;
+                    scotchGauche.background = Colors.SecondaryEnseignement;
+                    scotchGauche.thickness = 0;
+                    scotchGauche.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+                    scotchGauche.leftInPixels = 20 + currIdent; 
+                    scotchGauche.alpha = 0.5;
+
+                    let scotchDroit = null;
+                    if (minWidth > 60) {
+                        scotchDroit = new GUI.Rectangle();
+                        scotchDroit.widthInPixels = 12;
+                        scotchDroit.heightInPixels = 15;
+                        scotchDroit.cornerRadius = 8;
+                        scotchDroit.background = Colors.SecondaryEnseignement;
+                        scotchDroit.thickness = 0;
+                        scotchDroit.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+                        scotchDroit.leftInPixels = currIdent + (minWidth - scotchGauche.leftInPixels - scotchDroit.widthInPixels);
+                        scotchDroit.alpha = 0.5;
+                    } 
+
+
+                    //scotch.topInPixels = -20;
+                    // ALAIDE JE COMPRENDS RIEN
+                    scotch.addControl(scotchGauche);
+                    if (scotchDroit) scotch.addControl(scotchDroit);
+
+                    //this.applyDosC(scotch, currIdent);
+                    this.stack.addControl(scotch);
+                }
+            }
+        }
+    }
+
+    removeInstruction(c: InstructionContainer, skipRebuild: boolean = false) {
         if (this.list.length <= 1) return;
         let nb = this.list.indexOf(c);
-        this.stack.removeControl(c);
+        //this.stack.removeControl(c);
         this.list.splice(nb, 1);
+        if (!skipRebuild) this.recomputeInstructions();
     }
 
     moveTowards(current: number, target: number, maxDelta: number): number {
@@ -343,10 +441,7 @@ export class ListContainer extends GUI.Rectangle {
         this.list.splice(currentIndex, 1);
         currentIndex = id;
         this.list.splice(currentIndex, 0, this.magnet);
-        this.stack.clearControls();
-        for (const control of this.list) {
-            this.stack.addControl(control);
-        }
+        this.recomputeInstructions();
     }
 
     // Le rend visible/invisible
@@ -365,12 +460,12 @@ export class ListContainer extends GUI.Rectangle {
 
         console.log("Merge : ", new_list)
         for (let i = 0; i < new_list.length; i++) {
-            this.addInstruction(new_list[i], i + id);
+            this.addInstruction(new_list[i], i + id, true /*skipRebuud*/);
         }
         for (const struct of list.structureList) {
             this.addStruct(struct);
         }
-        this.refreshIdentation();
+        this.recomputeInstructions();
         this.root.removeControl(list);
     }
 
@@ -460,16 +555,40 @@ export class ListContainer extends GUI.Rectangle {
         control.topInPixels  = (new_pos.y - centerY) / newParent.scaleY + centerY;
     }
 
+    private applyDosC(composant: GUI.Container, indent: number, height: number = 10) {
+        console.log("apply dos C called on " + composant.name);
+
+        const ancien = composant.children.find(c => c.name === "morceau_dos_C");
+        if (ancien) {
+            composant.removeControl(ancien);
+            ancien.dispose();
+        }
+
+        if (indent === 0) return;
+
+        const morceau = new GUI.Rectangle("morceau_dos_C");
+        morceau.background = Colors.PtitRoseDuSoir;
+        morceau.thickness = 0;
+        morceau.heightInPixels = height;
+        morceau.widthInPixels = 40;
+        morceau.paddingLeftInPixels = -20;
+        morceau.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+        morceau.zIndex = -1;
+        morceau.isHitTestVisible = false;
+
+        composant.addControl(morceau);
+    }
+
     // GETTERS
     getHover(): boolean { return this.hover; }
     setHover(bool: boolean) {
         if (bool) {
-            this.detector.background = "white";
+            this.detector.background = Colors.Workbench;
             if (this.scene.isDragging()) this.toggleMagnet(true);
             this.hover = bool;
             //console.log("hover");
         } else {
-            this.detector.background = "#383838";
+            this.detector.background = "#00000000";
             this.toggleMagnet(false);
             this.hover = bool;
             //console.log("unhover");

@@ -1,6 +1,7 @@
 import * as GUI from "@babylonjs/gui";
 import type { PlayScene } from "../MainLoop/Scene/PlayScene";
 import { Vector2, type IPointerEvent } from "@babylonjs/core";
+import { Colors } from "../Shared/Colors";
 
 export class WorkSpace extends GUI.Rectangle {
     private readonly scene: PlayScene;
@@ -19,15 +20,21 @@ export class WorkSpace extends GUI.Rectangle {
         this.width = "60%";
         this.height = "100%";
         this.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
-        this.background = "#101010";
-        this.thickness = 1;
+        this.background = Colors.BehindWorkbench;
         this.clipChildren = true;
         this.root.addControl(this);
 
         this.content = new GUI.Rectangle();
         this.content.width = "2000px"; // grand espace de base
         this.content.height = "2000px";
-        this.content.background = "#31138bff";
+        this.content.background = Colors.Workbench;
+        this.content.color = Colors.SecondaryEnseignement;
+        this.content.thickness = 16;
+        this.content.cornerRadius = 22;
+        this.content.shadowOffsetX = 1;
+        this.content.shadowOffsetY = 1;
+        this.content.shadowBlur = 7;
+        this.content.shadowColor = "#00000040";
         this.addControl(this.content);
         this.width_limit = this.content.widthInPixels / 2;
         this.height_limit = this.content.heightInPixels / 2;
@@ -71,15 +78,27 @@ export class WorkSpace extends GUI.Rectangle {
         }
 
         )
+
+        const canvas = this.scene.scene.getEngine().getRenderingCanvas();
+        canvas?.addEventListener("wheel", (evt) => {
+            const x = evt.clientX;
+            const y = evt.clientY;
+            const measure = this._currentMeasure;
+            if (x < measure.left || x > measure.left + measure.width) return;
+            if (y < measure.top || y > measure.top + measure.height) return;
+            evt.preventDefault();
+            const delta = evt.deltaY > 0 ? -0.05 : 0.05;
+            this.zoom(delta);
+        });
     }
 
     public zoom(x:number) {
         if (x > 0) {
-            this.content.scaleX = x+this.content.scaleX > 2 ? 2 : x+this.content.scaleX; 
-            this.content.scaleY = x+this.content.scaleY > 2 ? 2 : x+this.content.scaleY;
+            this.content.scaleX = Math.min(x + this.content.scaleX, 1.5);
+            this.content.scaleY = Math.min(x + this.content.scaleY, 1.5);
         } else {
-            this.content.scaleX = x+this.content.scaleX > 0.2 ? x+this.content.scaleX : 0.2;
-            this.content.scaleY = x+this.content.scaleY > 0.2 ? x+this.content.scaleY : 0.2;
+            this.content.scaleX = Math.max(x+this.content.scaleX, 0.2); 
+            this.content.scaleY = Math.max(x+this.content.scaleY, 0.2); 
         }
 
         // On ajuste la position au cas où

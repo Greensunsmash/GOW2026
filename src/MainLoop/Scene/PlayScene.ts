@@ -1,4 +1,4 @@
-import { ArcRotateCamera, Color3, CubeTexture, DefaultRenderingPipeline, DirectionalLight, Engine, IblShadowsRenderPipeline, KeyboardEventTypes, MeshBuilder, PBRMaterial, ShadowGenerator, Vector3, Viewport } from "@babylonjs/core";
+import { ArcRotateCamera, Color3, CubeTexture, DefaultRenderingPipeline, DirectionalLight, Engine, IblShadowsRenderPipeline, KeyboardEventTypes, MeshBuilder, PBRMaterial, SetValueAction, ShadowGenerator, Vector3, Viewport } from "@babylonjs/core";
 import { ListContainer } from "../../Containers/ListContainer";
 import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
 import { Level } from "../../Environment/Level";
@@ -14,6 +14,7 @@ import { StructureContainer } from "../../Containers/StructureContainer";
 import { BlockCount } from "../../MRGUI/mainscreen/BlockCount";
 import { ItemsHUD } from "../../MRGUI/mainscreen/ItemsHUD";
 import { BasicInstContainer } from "../../Containers/BasicInstContainer";
+import { SetVarContainer } from "../../Containers/Prefabs/SetVarContainer";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene { // ;)
@@ -178,7 +179,7 @@ export class PlayScene extends GameScene { // ;)
         texture.level = 1.0;
         this.scene.environmentTexture = texture;
         this.scene.imageProcessingConfiguration.exposure = 1.0;
-        this.scene.environmentIntensity = 1.0;
+        this.scene.environmentIntensity = 1.4;
         // Create a skybox mesh using this texture
         const skybox = this.scene.createDefaultSkybox(texture, true, 100000, 0);
     }
@@ -347,7 +348,7 @@ export class PlayScene extends GameScene { // ;)
     async loadAssets() {
         await Promise.all([
             this._drh.loadSingleAsset("robot", "character-male-e.glb"),
-            this._drh.loadSingleAsset("ground", "grasscube.glb"),
+            this._drh.loadSingleAsset("ground", "roundblock.glb"),
             this._drh.loadSingleAsset("cursed", "cube.glb"),
             this._drh.loadSingleAsset("wall", "stone.02.glb"),
             this._drh.loadSingleAsset("pill", "pill.glb"),
@@ -530,10 +531,12 @@ export class PlayScene extends GameScene { // ;)
             if (child instanceof ListContainer) {   
                 const insts = child.getInnerInstContainers();
                 for (const inst of insts) {
-                    if (inst instanceof BasicInstContainer)
+                    if (inst instanceof BasicInstContainer || inst instanceof SetVarContainer)
                         inst.triggerModeUpdate();
                 }
             }
         } 
     }
+
+    public getCtx() { return this.ctx; }
 }

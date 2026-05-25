@@ -1,4 +1,5 @@
 import { Button, Container, Control, TextBlock } from "@babylonjs/gui";
+import { Colors } from "../../Shared/Colors";
 
 // Bouton "Quitter" en haut à gauche
 export class QuitButton extends Button {
@@ -16,11 +17,11 @@ export class QuitButton extends Button {
         this.width = "150px";
         this.height = "50px";
         this.color = "white";
-        this.background = "#ff0000"; 
+        this.background = Colors.Accent;
         this.thickness = 2;
         this.cornerRadius = 10;
-        this.fontSize = 20;
-        this.fontWeight = "bold";
+        this.fontSize = 18;
+        this.fontFamily = "Inter";
 
         this.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
         this.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;

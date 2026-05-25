@@ -1,4 +1,5 @@
 import { Button, TextBlock } from "@babylonjs/gui";
+import { Colors } from "../../Shared/Colors";
 
 export class BaseButton extends Button {
     public mrTextBlock: TextBlock; 
@@ -8,11 +9,18 @@ export class BaseButton extends Button {
         this.widthInPixels = width;
         this.heightInPixels = height;
         this.color = "white";
-        this.background = "#0000ff";
-        this.cornerRadius = 5;
+        this.thickness = 1;
+        this.background = Colors.Accent;
+        this.cornerRadius = Colors.CornerRadiusVraimentArrondi;
+        this.shadowOffsetX = 1;
+        this.shadowOffsetY = 1;
+        this.shadowColor = "#00000040";
+        this.shadowBlur = 6;
         this.mrTextBlock = new TextBlock();
         this.mrTextBlock.text = label;
-        this.mrTextBlock.color = this.color;
+        this.mrTextBlock.fontFamily = "Inter";
+        this.mrTextBlock.fontWeight = "300";
+        this.mrTextBlock.color = "white";
         this.addControl(this.mrTextBlock);
         this.onPointerUpObservable.add(() => callback());
     }

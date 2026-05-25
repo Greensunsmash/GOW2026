@@ -3,6 +3,7 @@ import { BaseButton, LargeButton } from "../buttons/BaseButton";
 import { ModalWindow } from "./ModalWindow";
 import { BaseVSpacer } from "../misc/BaseSpacers";
 import type { LevelIndexEntry } from "../../Environment/LevelReader";
+import { Colors } from "../../Shared/Colors";
 
 // Bte de dialogue
 // Choix de Niveau
@@ -13,8 +14,8 @@ export class LevelSelectModal extends ModalWindow {
         callback: (levelName: string) => Promise<void>
     ) {
         super(root, "Choix du niveau");
-
-        this.panel.addControl(new BaseVSpacer());
+        this.blocker.background = "rgba(0,0,0,0.3)";
+        //this.panel.addControl(new BaseVSpacer());
         this.fillLevelNames(levelIndex, callback);
         this.panel.addControl(new BaseVSpacer());
     }
@@ -28,7 +29,6 @@ export class LevelSelectModal extends ModalWindow {
                 this.blocker.dispose();
                 await callback(lvl.file);
             });
-            levelBtn.color = "#0000ff";
             this.panel.addControl(levelBtn);
             this.panel.addControl(new BaseVSpacer());
         });

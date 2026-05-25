@@ -3,6 +3,7 @@ import { BlocContainer } from "./BlocContainer";
 import * as GUI from "@babylonjs/gui";
 import type { Booleen } from "../Language/Booleen/Booleen";
 import { BooleenBrut } from "../Language/Booleen/BooleenBrute";
+import { Colors } from "../Shared/Colors";
 
 // Abstract d'un bloc contenant un booleen
 export abstract class BooleenContainer extends BlocContainer {
@@ -13,7 +14,7 @@ export abstract class BooleenContainer extends BlocContainer {
         }
     
     build():void {
-        this.background = "#95F527";
+        this.background = Colors.PtitRoseDuSoir;
         super.build();
     }
 

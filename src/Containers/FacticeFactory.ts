@@ -1,5 +1,8 @@
 import * as GUI from "@babylonjs/gui";
 import { BasicInstContainer } from "./BasicInstContainer";
+import { SetVarContainer } from "./Prefabs/SetVarContainer";
+import { BaseVSpacer } from "../MRGUI/misc/BaseSpacers";
+import { Magnet } from "./Magnet";
 
 export class FacticeBlock {
     public innerCtrl?: GUI.Control;
@@ -32,13 +35,30 @@ export class FacticeFactory {
         if (c instanceof GUI.Rectangle) {
             new_superContainer = new GUI.Rectangle();
             (new_superContainer as GUI.Rectangle).thickness = (c as GUI.Rectangle).thickness;
+            (new_superContainer as GUI.Rectangle).color = (c as GUI.Rectangle).color;
+            (new_superContainer as GUI.Rectangle).paddingTop = (c as GUI.Rectangle).paddingTop;
+            (new_superContainer as GUI.Rectangle).paddingBottom = (c as GUI.Rectangle).paddingBottom;
+            (new_superContainer as GUI.Rectangle).paddingRight = (c as GUI.Rectangle).paddingRight;
+            (new_superContainer as GUI.Rectangle).paddingLeft = (c as GUI.Rectangle).paddingLeft;
             (new_superContainer as GUI.Rectangle).cornerRadius = (c as GUI.Rectangle).cornerRadius;
             (new_superContainer as GUI.Rectangle).background = (c as GUI.Rectangle).background;
+            (new_superContainer as GUI.Rectangle).clipChildren = (c as GUI.Rectangle).clipChildren;
+            (new_superContainer as GUI.Rectangle).clipContent = (c as GUI.Rectangle).clipContent;
+            (new_superContainer as GUI.Rectangle).shadowOffsetX = (c as GUI.Rectangle).shadowOffsetX;
+            (new_superContainer as GUI.Rectangle).shadowOffsetY = (c as GUI.Rectangle).shadowOffsetY;
+            (new_superContainer as GUI.Rectangle).shadowColor = (c as GUI.Rectangle).shadowColor;
+            (new_superContainer as GUI.Rectangle).shadowBlur = (c as GUI.Rectangle).shadowBlur;
             (new_superContainer as GUI.Rectangle).alpha = c.alpha;
             if (factBlk?.updateOnModeChange)
                 (new_superContainer as GUI.Rectangle).adaptWidthToChildren = true;
         } else if (c instanceof GUI.StackPanel) {
             new_superContainer = new GUI.StackPanel();
+            (new_superContainer as GUI.StackPanel).paddingTop = (c as GUI.StackPanel).paddingTop;
+            (new_superContainer as GUI.StackPanel).paddingBottom = (c as GUI.StackPanel).paddingBottom;
+            (new_superContainer as GUI.StackPanel).paddingRight = (c as GUI.StackPanel).paddingRight;
+            (new_superContainer as GUI.StackPanel).paddingLeft = (c as GUI.StackPanel).paddingLeft;
+            (new_superContainer as GUI.StackPanel).clipChildren = (c as GUI.StackPanel).clipChildren;
+            (new_superContainer as GUI.StackPanel).clipContent = (c as GUI.StackPanel).clipContent;
             if (factBlk?.updateOnModeChange)
                 (new_superContainer as GUI.StackPanel).adaptWidthToChildren = true;
             (new_superContainer as GUI.StackPanel).isVertical = (c as GUI.StackPanel).isVertical;
@@ -49,6 +69,8 @@ export class FacticeFactory {
             (new_superContainer as GUI.TextBlock).text = (c as GUI.TextBlock).text;
             (new_superContainer as GUI.TextBlock).color = (c as GUI.TextBlock).color;
             (new_superContainer as GUI.TextBlock).fontSize = (c as GUI.TextBlock).fontSize;
+            (new_superContainer as GUI.TextBlock).fontWeight = (c as GUI.TextBlock).fontWeight;
+            (new_superContainer as GUI.TextBlock).fontFamily = (c as GUI.TextBlock).fontFamily;
             if (factBlk?.updateOnModeChange)
                 (new_superContainer as GUI.TextBlock).resizeToFit = true;
             (new_superContainer as GUI.TextBlock).paddingLeft = c.paddingLeft;
@@ -74,6 +96,8 @@ export class FacticeFactory {
 
         if (c instanceof GUI.Container && new_superContainer instanceof GUI.Container) {
             for (const child of (c as GUI.Container).children) {
+                if (child instanceof BaseVSpacer) continue;
+                if (child instanceof Magnet) continue;
                 new_superContainer.addControl(this.ultimateReaders_aux(child, factBlk));
             }
         }
@@ -83,7 +107,7 @@ export class FacticeFactory {
 
     static ultimateReaders(c: GUI.Rectangle): FacticeBlock {
         const factBlk = new FacticeBlock();
-        if (c instanceof BasicInstContainer && c.hasModeUpdateBehavior())
+        if ((c instanceof BasicInstContainer  || c instanceof SetVarContainer) && c.hasModeUpdateBehavior())
             factBlk.updateOnModeChange = true;
         factBlk.innerCtrl = this.ultimateReaders_aux(c, factBlk);
         //console.log(factBlk.innerCtrl);
