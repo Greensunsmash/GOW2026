@@ -9,9 +9,10 @@ export class OneButtonModal extends ModalWindow {
         title: string,
         buttonText: string,
         onClose: () => void, // Callback quand on appuie
+        text?: string
     ) {
         super(root, title);
-        this.panel.addControl(new BaseVSpacer());
+        //this.panel.addControl(new BaseVSpacer());
         this.panel.addControl(new BaseButton(buttonText.trim(), buttonText, () => {
             this.blocker.dispose();
             onClose();

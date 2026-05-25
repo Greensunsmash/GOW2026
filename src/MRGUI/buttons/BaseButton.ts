@@ -12,9 +12,14 @@ export class BaseButton extends Button {
         this.thickness = 1;
         this.background = Colors.Accent;
         this.cornerRadius = Colors.CornerRadiusVraimentArrondi;
+        this.shadowOffsetX = 1;
+        this.shadowOffsetY = 1;
+        this.shadowColor = "#00000040";
+        this.shadowBlur = 6;
         this.mrTextBlock = new TextBlock();
         this.mrTextBlock.text = label;
         this.mrTextBlock.fontFamily = "Inter";
+        this.mrTextBlock.fontWeight = "300";
         this.mrTextBlock.color = "white";
         this.addControl(this.mrTextBlock);
         this.onPointerUpObservable.add(() => callback());

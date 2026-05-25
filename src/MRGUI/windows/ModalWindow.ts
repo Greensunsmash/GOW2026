@@ -19,6 +19,10 @@ export class ModalWindow extends Rectangle {
         this.cornerRadius = 10;
         this.thickness = 2;
         this.color = Colors.AccentDuSud;
+        this.shadowOffsetX = 1;
+        this.shadowOffsetY = 1;
+        this.shadowColor = "#00000040";
+        this.shadowBlur = 6;
 
         this.panel = new StackPanel();
         this.addControl(this.panel);
@@ -29,6 +33,7 @@ export class ModalWindow extends Rectangle {
         titleBlock.height = "50px";
         titleBlock.color = "white";
         titleBlock.fontSize = 18;
+        titleBlock.fontWeight = "300";
         titleBlock.fontFamily = "Inter";
         titleBlock.widthInPixels = title.length*10 + 20;
 

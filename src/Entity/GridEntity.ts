@@ -175,7 +175,7 @@ export abstract class GridEntity {
     }
 
     public async doVisualMove(targetGridPos : GridPoint, bounce?: boolean): Promise<void> {
-        console.trace("dovisualmove: ");
+        //console.trace("dovisualmove: ");
 
         if (bounce) {
             this.facingIndex = (this.facingIndex + 2) % 4;
