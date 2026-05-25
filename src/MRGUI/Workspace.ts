@@ -72,15 +72,27 @@ export class WorkSpace extends GUI.Rectangle {
         }
 
         )
+
+        const canvas = this.scene.scene.getEngine().getRenderingCanvas();
+        canvas?.addEventListener("wheel", (evt) => {
+            const x = evt.clientX;
+            const y = evt.clientY;
+            const measure = this._currentMeasure;
+            if (x < measure.left || x > measure.left + measure.width) return;
+            if (y < measure.top || y > measure.top + measure.height) return;
+            evt.preventDefault();
+            const delta = evt.deltaY > 0 ? -0.05 : 0.05;
+            this.zoom(delta);
+        });
     }
 
     public zoom(x:number) {
         if (x > 0) {
-            this.content.scaleX = x+this.content.scaleX > 2 ? 2 : x+this.content.scaleX; 
-            this.content.scaleY = x+this.content.scaleY > 2 ? 2 : x+this.content.scaleY;
+            this.content.scaleX = Math.min(x + this.content.scaleX, 1.5);
+            this.content.scaleY = Math.min(x + this.content.scaleY, 1.5);
         } else {
-            this.content.scaleX = x+this.content.scaleX > 0.2 ? x+this.content.scaleX : 0.2;
-            this.content.scaleY = x+this.content.scaleY > 0.2 ? x+this.content.scaleY : 0.2;
+            this.content.scaleX = Math.max(x+this.content.scaleX, 0.2); 
+            this.content.scaleY = Math.max(x+this.content.scaleY, 0.2); 
         }
 
         // On ajuste la position au cas où
