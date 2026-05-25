@@ -172,7 +172,7 @@ export class OutilsBox extends Rectangle {
         switch(shortName) {
             // Instructions (violet)
             case "instructions":
-                catLabel.text = "Instructions";
+                catLabel.text = "Actions";
                 catLabelRect.background = Colors.PtitRoseDuSoir;
                 catLabelRect.cornerRadius = Colors.CornerRadiusCarrePasTrop;
                 break;

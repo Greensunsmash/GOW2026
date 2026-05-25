@@ -27,6 +27,7 @@ export abstract class StructureContainer  {
     }
 
     public getGroup(e:Executable[], e2?:Executable[]): Executable {return new Pour(e);}
+
     
 
     // GETTERS / SETTERS

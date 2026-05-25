@@ -11,7 +11,7 @@ import { isValuable } from "../Valuable";
 export class PourContainer extends StructureContainer {
     
     constructor(l:ListContainer, root: GUI.Container, content_root:GUI.Container, scene: GameScene) {
-        super(l, new InstructionContainer(["Répéter ", "v", " fois"], root, content_root, scene), new InstructionContainer(["Fin"], root, content_root, scene));
+        super(l, new InstructionContainer(["Répéter ", "v", " fois"], root, content_root, scene, false), new InstructionContainer(["Fin"], root, content_root, scene, false));
     }
 
     public getGroup(e:Executable[]): Executable {

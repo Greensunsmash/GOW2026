@@ -11,6 +11,7 @@ import { Magnet } from "./Magnet";
 import { FlagContainer } from "./Prefabs/FlagContainer";
 import type { StructureContainer } from "./StructureContainer";
 import { Colors } from "../Shared/Colors";
+import { BaseVSpacer } from "../MRGUI/misc/BaseSpacers";
 
 // La classe qui permet de stocker plusieurs instructions container à la suite
 // WARNING : Une instruction ne peut être seule et doit toujours être contenue dans un ListContainer
@@ -60,7 +61,7 @@ export class ListContainer extends GUI.Rectangle {
         this.detector = new GUI.Rectangle();
         this.detector.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         this.detector.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
-        this.detector.height = "100%";
+        this.detector.height = "100%"
         this.detector.width = "100%";
         this.detector.alpha = 0.1;
         //this.detector.thickness = 0;
@@ -300,7 +301,7 @@ export class ListContainer extends GUI.Rectangle {
         let sum = 0;
         for (const structure of this.structureList) {
             //console.log("Struct : ", structure.getHeaderID(), structure.getQueueID());
-            if (structure.contains(id)) sum += 40;
+            if (structure.contains(id)) sum += 60;
         }
         return sum;
     }
@@ -331,16 +332,46 @@ export class ListContainer extends GUI.Rectangle {
         this.stack.clearControls();
         const listNoMagnet = this.list.filter(e => !(e instanceof Magnet));
 
+        const indentationList: number[] = this.list.map((_, index) => this.getIndentation(index));
+
         for (let i = 0; i < this.list.length; i++) {
-            this.list[i].paddingLeftInPixels = this.getIndentation(i);
+            const currIdent = indentationList[i];
+            const nextIndent = (i + 1 < indentationList.length) ? indentationList[i+1] : undefined;
+
+            
+            const isHeader = this.structureList.some(s => s.getHeader() === this.list[i]);
+            const isMid = this.structureList.some(s => s.getMid() === this.list[i]);
+            const isQueue = this.structureList.some(s => s.getQueue() === this.list[i]);
+            const isLastInStruct = (nextIndent !== undefined && !(this.list[i+1] instanceof Magnet)) ? (currIdent > nextIndent) : true;
+
+            if (isQueue || isMid) {
+                const spacer = new BaseVSpacer(10);
+                this.applyDosC(spacer, currIdent);
+                this.stack.addControl(spacer);
+            }
+            
+            this.list[i].paddingLeftInPixels = currIdent;
+            if (this.list[i] instanceof InstructionContainer) {
+                (this.list[i] as InstructionContainer).refreshDosC(currIdent);
+            }
             this.stack.addControl(this.list[i]);
 
-            if (!(this.list[i] instanceof Magnet)) {
+            if (isHeader || isMid) {
+                const spacer = new BaseVSpacer(10);
+                this.applyDosC(spacer, currIdent);
+                this.stack.addControl(spacer);
+            }
+
+
+            console.log("currIdent is " + currIdent + " nextIdent is " + nextIndent + " so islastinstructu is " + isLastInStruct);
+
+            if (!(this.list[i] instanceof Magnet) && !isHeader && !isLastInStruct) {
                 const indexInNoMagnet = listNoMagnet.indexOf(this.list[i] as InstructionContainer);
                 if (indexInNoMagnet + 1 < listNoMagnet.length) {
+                    console.log("creating the whisky scotch");
                 
                     const scotch = new GUI.Container();
-                    scotch.heightInPixels = 20;
+                    scotch.heightInPixels = 5;
                     scotch.width = "100%";
                     scotch.clipChildren = false;
 
@@ -352,41 +383,34 @@ export class ListContainer extends GUI.Rectangle {
                     console.log("min width : " + minWidth);
                     const scotchGauche = new GUI.Rectangle();
                     scotchGauche.widthInPixels = 12;
-                    scotchGauche.heightInPixels = 30;
+                    scotchGauche.heightInPixels = 15;
                     scotchGauche.cornerRadius = 8;
                     scotchGauche.background = Colors.SecondaryEnseignement;
                     scotchGauche.thickness = 0;
                     scotchGauche.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-                    scotchGauche.leftInPixels = 20; 
+                    scotchGauche.leftInPixels = 20 + currIdent; 
                     scotchGauche.alpha = 0.5;
-                    scotchGauche.topInPixels = -10;
-                    scotchGauche.paddingTopInPixels = -20;
-                    scotchGauche.paddingBottomInPixels = -20;
 
                     let scotchDroit = null;
                     if (minWidth > 60) {
                         scotchDroit = new GUI.Rectangle();
                         scotchDroit.widthInPixels = 12;
-                        scotchDroit.heightInPixels = 30;
+                        scotchDroit.heightInPixels = 15;
                         scotchDroit.cornerRadius = 8;
                         scotchDroit.background = Colors.SecondaryEnseignement;
                         scotchDroit.thickness = 0;
                         scotchDroit.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-                        scotchDroit.leftInPixels = minWidth - scotchGauche.leftInPixels - scotchDroit.widthInPixels;
+                        scotchDroit.leftInPixels = currIdent + (minWidth - scotchGauche.leftInPixels - scotchDroit.widthInPixels);
                         scotchDroit.alpha = 0.5;
-                        scotchDroit.topInPixels = -10;
-                        scotchDroit.paddingTopInPixels = -20;
-                        scotchDroit.paddingBottomInPixels = -40;
                     } 
 
 
                     //scotch.topInPixels = -20;
                     // ALAIDE JE COMPRENDS RIEN
-                    scotch.paddingTopInPixels = -20;
-                    scotch.paddingBottomInPixels = -60;
                     scotch.addControl(scotchGauche);
                     if (scotchDroit) scotch.addControl(scotchDroit);
 
+                    this.applyDosC(scotch, currIdent);
                     this.stack.addControl(scotch);
                 }
             }
@@ -526,6 +550,30 @@ export class ListContainer extends GUI.Rectangle {
 
         control.leftInPixels = (new_pos.x - centerX) / newParent.scaleX + centerX;
         control.topInPixels  = (new_pos.y - centerY) / newParent.scaleY + centerY;
+    }
+
+    private applyDosC(composant: GUI.Container, indent: number, height: number = 10) {
+        console.log("apply dos C called on " + composant.name);
+
+        const ancien = composant.children.find(c => c.name === "morceau_dos_C");
+        if (ancien) {
+            composant.removeControl(ancien);
+            ancien.dispose();
+        }
+
+        if (indent === 0) return;
+
+        const morceau = new GUI.Rectangle("morceau_dos_C");
+        morceau.background = Colors.PtitRoseDuSoir;
+        morceau.thickness = 0;
+        morceau.heightInPixels = height;
+        morceau.widthInPixels = 20;
+        morceau.paddingLeftInPixels = -20;
+        morceau.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+        morceau.zIndex = -1;
+        morceau.isHitTestVisible = false;
+
+        composant.addControl(morceau);
     }
 
     // GETTERS

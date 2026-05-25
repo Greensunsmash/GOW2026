@@ -10,7 +10,7 @@ import { Sinon } from "../../Language/Group/Structure/Sinon.ts";
 export class SinonContainer extends StructureContainer {
     
     constructor(l:ListContainer, root: GUI.Container, content_root:GUI.Container, scene: GameScene) {
-        super(l, new InstructionContainer(["Si ", "b", " est vrai, faire"], root, content_root, scene), new InstructionContainer(["Sinon, faire"], root, content_root, scene), new InstructionContainer(["Fin"], root, scene));
+        super(l, new InstructionContainer(["Si ", "b", " est vrai, faire"], root, content_root, scene, false), new InstructionContainer(["Sinon, faire"], root, content_root, scene), new InstructionContainer(["Fin"], root, content_root, scene, false));
     }
 
     public getGroup(e:Executable[], e2:Executable[]): Executable {

@@ -11,7 +11,8 @@ export class Magnet extends GUI.Rectangle {
     constructor(scene:GameScene, parent:ListContainer){
         super();
         this.width = "100%";
-        this.height = "80px";
+        // hauteur scotch + hauteur bloc 
+        this.height = "70px";
         this.isHitTestVisible = false; // Désactive les inputs sur ce control (askip) (non)
         this.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
         this.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
