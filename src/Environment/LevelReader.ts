@@ -223,7 +223,7 @@ export class LevelReader {
             new BasicInstContainer("Tourner à droite", new TurnRightInstruction(ctx), root, content_root, scene, new MoveForwardInstuction(ctx)),
 
             pickup: (root, content_root) =>
-            new BasicInstContainer("Ramasser l'objet", new PickupInstruction(ctx), root, content_root, scene, new MoveForwardInstuction(ctx)),
+            new BasicInstContainer("Ramasser l'objet", new PickupInstruction(ctx), root, content_root, scene),
 
             wait: (root, content_root) =>
             new BasicInstContainer("Attendre", new WaitInstruction(ctx), root, content_root, scene),
@@ -302,6 +302,14 @@ export class LevelReader {
     public setupToolbox(nb : number, tb: OutilsBox, ctx: ExecutionContext, scene: GameScene) {
         const factories = this.createFactories(ctx, scene);
 
+        
+        // Start (cas spécial)
+        if (this.blockset[nb].includes("start")) {
+            tb.addTemplate("start", (root, content_root) => {
+                return new FlagContainer(root, content_root, scene);
+            });
+        }
+
         for (const category in factories) {
             const cat = category as keyof typeof factories;
             for (const block of this.blockset[nb] as any[]) {
@@ -335,12 +343,6 @@ export class LevelReader {
             });
         }
 
-        // Start (cas spécial)
-        if (this.blockset[nb].includes("start")) {
-            tb.addTemplate("start", (root, content_root) => {
-                return new FlagContainer(root, content_root, scene);
-            });
-        }
 
         tb.setBlockLimit(this.blockLimit[nb]);
     }

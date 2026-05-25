@@ -35,7 +35,9 @@ export class Level {
                         /!\ ATTENTION
                         Avertissement national
                         Inversion y et z implicite (dans toWorld)
-                    */
+                        
+                        
+                        en fait non c meme plus vrai */
                     let pos: Vector3 = GridUtils.toWorld(gridPos);
                     let tile: State = this.map[y][z][x];
 
@@ -239,7 +241,7 @@ export class Level {
         console.log(this.entityStates);
     }
 
-    public popEntityState(instant?: boolean) {
+    public async popEntityState(instant?: boolean) {
         let currState: Map<GridEntity, EntityState> | undefined = undefined;
         if (this.entityStates.length === 0) {
             console.warn("Cannot load a mob state when mob state stack is empty");
@@ -258,18 +260,16 @@ export class Level {
             return;
         }
 
-        this.loadEntityState(currState, instant);
+        await this.loadEntityState(currState, instant);
     }
 
-    private loadEntityState(state: Map<GridEntity, EntityState>, instant?: boolean) {
+    private async loadEntityState(state: Map<GridEntity, EntityState>, instant?: boolean) {
         for (const ent of state.keys()) {
             const entState = state.get(ent);
             if (!entState)
                 continue;
-            ent.setState(entState);
+            await ent.setState(entState, instant);
         }
-        const robotState = state.get(this.robot!);
-        this.robot?.setState(robotState!, instant);
     }
 
     public reinitLevel() {

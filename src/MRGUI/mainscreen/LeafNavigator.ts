@@ -26,5 +26,6 @@ export class LeafNavigator extends Container {
         this.panel.addControl(new BaseHSpacer());
         this.panel.addControl(new BaseButton("nextlf", "+", () => onNext(), 40));
         this.addControl(this.panel);
+        
     }
 }

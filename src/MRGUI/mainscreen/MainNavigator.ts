@@ -59,6 +59,7 @@ export class MainNavigator extends Container {
         this.leafIndicator.color = "white";
 
         this.addControl(this.panel);
+        
     }
 
     buildNavigator(multipleLeafMode: boolean = false) {

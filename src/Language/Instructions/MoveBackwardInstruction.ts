@@ -17,7 +17,10 @@ export class MoveBackwardInstuction extends Instruction {
         // se deplace
         memory.setCurrentlyMoving(true);
 
-        await this.ctx.nextTick(this.ctx.getRobot().getNextPosIntention("backward"), memory.skip);
+        this.gameModeAtExecute = memory.getGameMode();
+        await this.ctx.nextTick(this.ctx.getRobot().getNextPosIntention(
+            Memory.get().getGameMode() === "PIGMODE" ? "forward": "backward"
+        ), memory.skip);
         /*if (memory.skip) this.ctx.getRobot().moveBackward();
         else await this.ctx.getRobot().visualMoveBackward();*/
         memory.setCurrentInstruction(this);
@@ -33,9 +36,16 @@ export class MoveBackwardInstuction extends Instruction {
 
         memory.setCurrentlyMoving(true);
 
+
+        if (this.gameModeAtExecute === "PIGMODE") {
+            if (memory.skip) this.ctx.getRobot().moveBackward();
+            else await this.ctx.getRobot().visualMoveBackward();
+        } else {
+            if (memory.skip) this.ctx.getRobot().moveForward();
+            else await this.ctx.getRobot().visualMoveForward();
+        }
+        
         await this.ctx.prevTick(memory.skip /* instant */);
-        /*if (memory.skip) this.ctx.getRobot().moveForward();
-        else await this.ctx.getRobot().visualMoveForward();*/
         super.back();
 
         memory.setCurrentlyMoving(false);

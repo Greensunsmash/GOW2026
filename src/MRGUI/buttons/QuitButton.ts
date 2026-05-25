@@ -34,5 +34,6 @@ export class QuitButton extends Button {
             console.log("abandon :(..");
             callback();
         });
+
     }
 }

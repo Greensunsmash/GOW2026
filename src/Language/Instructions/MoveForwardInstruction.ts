@@ -32,8 +32,8 @@ export class MoveForwardInstuction extends Instruction {
         const memory = Memory.get();
         memory.setCurrentlyMoving(true);
         await this.ctx.prevTick(memory.skip /* instant */);
-        /*if (memory.skip) this.ctx.getRobot().moveBackward();
-        else await this.ctx.getRobot().visualMoveBackward();*/
+        if (memory.skip) this.ctx.getRobot().moveBackward();
+        else await this.ctx.getRobot().visualMoveBackward();
         super.back();
         memory.setCurrentlyMoving(false);
     }

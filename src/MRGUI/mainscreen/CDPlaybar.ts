@@ -37,7 +37,6 @@ export class CDPlaybar extends Container {
         this.panel.addControl(new BaseButton("next", "⏩︎", () => onNext(), 30));
         //this.panel.addControl(new BaseHSpacer());
         //this.panel.addControl(new BaseButton("last", "⏭", () => onLast(), 30));
-
         this.addControl(this.panel);
     }
 }

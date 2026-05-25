@@ -34,9 +34,17 @@ export class Flag extends Group implements Launchable {
 
     public back():void {
         const i = this.next_inst.length -1;
+        if (this.next_inst[i] <= 0) {
+            this.memory.resetCurrentInstruction();
+            return; 
+        }
         //console.log("back ", this.next_inst);
         super.back();
-        if (this.next_inst[i] <= 0) {this.memory.resetCurrentInstruction(); console.log("On est de retour au début");}
+        const j = this.next_inst.length - 1;
+        if (j < 0 || this.next_inst[j] <= 0) {
+            this.memory.resetCurrentInstruction();
+            console.log("On est de retour au début");
+        }
     }
 
     onLaunch(): boolean {

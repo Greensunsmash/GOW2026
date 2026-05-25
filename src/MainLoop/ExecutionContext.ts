@@ -3,7 +3,7 @@ import { Mob } from "../Entity/Mob";
 import type { MarcoBozo } from "../Entity/Robot";
 import type { Level } from "../Environment/Level";
 import type { ItemType, State } from "../Environment/LevelReader";
-import { Memory } from "../Language/Memory";
+import { Memory, type GameMode } from "../Language/Memory";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
 import type { PlayScene } from "./Scene/PlayScene";
 import { stringArraysEq } from "../Shared/utils";
@@ -29,6 +29,7 @@ export type CollisionType = {
     type: "OTHERMOB_SAMEDEST" | "OTHERMOB_OTHER" | "WALL" | "VOID" | null;
     mob?: Mob;
 };
+
 
 export class ExecutionContext {
     private level: Level;
@@ -65,8 +66,8 @@ export class ExecutionContext {
 
         // sauvegarder les états des entités
         this.level.pushEntityState();
-        // sauvegarder l'état du jeu (pour qu'il soit réversible)
-        this.memory.onNextTick();
+
+        this.memory.onNextTick(this.ticksSinceLastModeChange);
 
         // process l'intention du robot
 
@@ -92,11 +93,14 @@ export class ExecutionContext {
             // plus tard, gérer séparément les visuels de la mort par obstacle et la mort par chute
             robotDead = true;
         }
-
-        if (instant)
-            this.robot.doMove(robotIntention, robotBounce);
-        else
-            await this.robot.doVisualMove(robotIntention, robotBounce);
+        if (!GridUtils.equals(robotIntention, this.robot.getVisualGridPos()) || robotBounce) {
+            if (instant)
+                
+                this.robot.doMove(robotIntention, robotBounce);
+            else
+                
+                await this.robot.doVisualMove(robotIntention, robotBounce);
+        }
 
         // 1.5 : premier check collisions robot/mob
         
@@ -236,7 +240,7 @@ export class ExecutionContext {
 
         // 4 : vérif. que ça fait pas 3 tours qu'on est en mode groink groink
         if (this.memory.getGameMode() === "PIGMODE"
-            && this.ticksSinceLastModeChange >= 3) {
+            && this.ticksSinceLastModeChange >= 2) {
                 this.memory.setGameMode("NORMAL");
                 this.robot.backToACuteLittleRobot();
             }
@@ -266,9 +270,14 @@ export class ExecutionContext {
     }
 
     public async prevTick(instant?: boolean) {
-        this.memory.onPrevTick();
-        this.scene.modeUpdate()
-        this.level.popEntityState(instant);
+        const gmStackInfo = this.memory.onPrevTick();
+        if (!gmStackInfo) {
+            console.error("ctx.prevTick : call on memory.onPrevTick returned undefined (tas vu le msg derreur trop pro ehehhh)");
+            return;
+        }
+        this.ticksSinceLastModeChange = gmStackInfo?.ticksSinceLastModeChange;
+        this.scene.modeUpdate();
+        await this.level.popEntityState(instant);
     }
 
     public setGoals(goals: Goal[]) {
