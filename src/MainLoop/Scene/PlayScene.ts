@@ -270,7 +270,7 @@ export class PlayScene extends GameScene { // ;)
                 console.log(this.levelReader.getEndDialog(this.currentIsland));
                 new OneButtonModal(
                     this.advancedTexture,
-                    this.levelReader.getEndDialog(this.currentIsland) || "Ile terminée !",
+                    this.levelReader.getEndDialog(this.currentIsland) || "L'île est terminée !",
                     "Continuer",
                     async () => await this.nextIsland()
                 );
@@ -337,7 +337,7 @@ export class PlayScene extends GameScene { // ;)
             new OneButtonModal(
                 this.advancedTexture,
                 beginDialog,
-                "Let's go",
+                "Let's go !",
                 () => { }
             );
         }
@@ -350,8 +350,8 @@ export class PlayScene extends GameScene { // ;)
             console.log("Dernière île atteinte");
             new OneButtonModal(
                 this.advancedTexture,
-                "Niveau réussi !",
-                "Menu",
+                "Félicitations, vous avez vaincu l'archipel !",
+                "Retour à la base",
                 () => { if (this.onLevelWon) this.onLevelWon() }
             );
             return;
@@ -533,7 +533,7 @@ export class PlayScene extends GameScene { // ;)
             if (isAnotherLeafLeft) {
                 if (true /*continuousMode*/) {
                     console.log("running on next leaf");
-                    await new Promise((rs, rj) => setTimeout(rs, 500));
+                    //await new Promise((rs, rj) => setTimeout(rs, 500));
                     this.scene.onAfterRenderObservable.addOnce(async () => await this.run(false, false, true));
                 } else {
                     this.level.reinitLevel();
