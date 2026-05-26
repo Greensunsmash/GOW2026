@@ -118,7 +118,7 @@ export class PlayScene extends GameScene { // ;)
                     this.reset();
                 } else if (kbInfo.event.key == "t") {
                     console.log("toggle mgl");
-                    this.memory.toggleCurrentBloc();
+                   // this.memory.toggleCurrentBloc();
                 }
 
             }
@@ -384,6 +384,7 @@ export class PlayScene extends GameScene { // ;)
         this.memory.clear();
         console.log("Avant le run");
         Memory.print()
+        this.clearHighlights();
         this.level.reinitLevel();
         this.canRun = true;
         this.memory.skip = skip;
@@ -462,6 +463,7 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public stopRun() {
+        this.clearHighlights();
         this.canRun = false;
         this.memory.setPlaying(false);
     }
@@ -527,6 +529,7 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public onGoalUnreached() {
+        this.clearHighlights();
         if (!this.canRun) return;
         this.stopRun();
         new OneButtonModal(
@@ -560,6 +563,16 @@ export class PlayScene extends GameScene { // ;)
         console.log("new instruction count is : ", count);
         this.blockCount = count;
         this.topBar.blockCount.setBlockCount(count);
+    }
+
+    public clearHighlights() {
+        let child_list = this.workspace.getContentRoot().children;
+        let count = 0;
+        for (const child of child_list) {
+            if (child instanceof ListContainer) {   
+                child.clearHighlights();
+            }
+        } 
     }
 
     public modeUpdate() {

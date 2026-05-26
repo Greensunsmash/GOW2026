@@ -583,6 +583,13 @@ export class ListContainer extends GUI.Rectangle {
         composant.addControl(morceau);
     }
 
+    public clearHighlights() {
+        for (const inst of this.list) {
+            if (inst instanceof InstructionContainer)
+                inst.setHighlighht(false);
+        }
+    }
+
     // GETTERS
     getHover(): boolean { return this.hover; }
     setHover(bool: boolean) {
