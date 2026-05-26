@@ -257,7 +257,7 @@ export class OutilsBox extends Rectangle {
 
 
         wrapper.addControl(innerStack);
-        this.stack.addControl(new DoublePeloteDeLaineEloignezLesChats(this.categories.size > 0 ? 50 : 25));
+        this.stack.addControl(new DoublePeloteDeLaineEloignezLesChats(this.categories.size > 0 ? 50 : 75));
         this.stack.addControl(wrapper);
         this.categories.set(shortName, sp);
     }

@@ -21,7 +21,10 @@ export class ItemsHUD extends Rectangle {
         this.shadowColor = "#00000040";
         this.shadowBlur = 6;
         this.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-        this.top = "30px";
+        this.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+        this.top = "12%";
+        this.left = "25%";
+    
         this.isVisible = false;
 
         this.panel = new StackPanel("itemdisp_sp");
@@ -30,6 +33,9 @@ export class ItemsHUD extends Rectangle {
 
         this.itemsText = new TextBlock("itemdisp_txt", "Items : ");
         this.itemsText.height = "30px";
+        this.itemsText.fontFamily = "Inter";
+        this.itemsText.fontWeight = "200";
+        this.itemsText.fontSize = 14;
         this.panel.addControl(this.itemsText);
         root.addControl(this);
     }

@@ -15,6 +15,8 @@ import { BlockCount } from "../../MRGUI/mainscreen/BlockCount";
 import { ItemsHUD } from "../../MRGUI/mainscreen/ItemsHUD";
 import { BasicInstContainer } from "../../Containers/BasicInstContainer";
 import { SetVarContainer } from "../../Containers/Prefabs/SetVarContainer";
+import { TopBar } from "../../MRGUI/mainscreen/TopBar";
+import { BottomBar } from "../../MRGUI/mainscreen/BottomBar";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene { // ;)
@@ -56,8 +58,6 @@ export class PlayScene extends GameScene { // ;)
             () => this.dryAttempt(),
             () => this.attemptAllLeafs()
         );
-        this.blockCountDisp = new BlockCount(this.leftPanel);
-        this.itemsHud = new ItemsHUD(this.leftPanel);
         //this.init();
     }
 
@@ -66,17 +66,25 @@ export class PlayScene extends GameScene { // ;)
     }
 
     async init(levelName: string | undefined = "level1.json", onLevelGaveup?: () => void, onLevelWon?: () => void) {
+        
+        this.topBar = new TopBar(this.advancedTexture, () => {
+            if (onLevelGaveup)
+                onLevelGaveup();
+        });
+        this.advancedTexture.addControl(this.topBar);
+        
         await this.initGameScene(levelName);
 
-        this.advancedTexture.addControl(this.blockCountDisp);
-        this.advancedTexture.addControl(this.itemsHud);
         this.advancedTexture.addControl(this.mainNav);
-        this.advancedTexture.addControl(
+        /*this.advancedTexture.addControl(
             new QuitButton(this.leftPanel, () => {
                 if (onLevelGaveup)
                     onLevelGaveup();
             })
-        );
+        );*/
+
+        this.btmBar = new BottomBar(this.advancedTexture);
+        this.advancedTexture.addControl(this.btmBar);
 
         this.scene.onKeyboardObservable.add((kbInfo) => {
             if (kbInfo.type == KeyboardEventTypes.KEYUP) {
@@ -129,7 +137,7 @@ export class PlayScene extends GameScene { // ;)
         this.uiCamera = new ArcRotateCamera("uiCamera", Math.PI / 2, Math.PI / 3, 10, Vector3.Zero(), this.scene);
         this.uiCamera.layerMask = LayerMasks.UI_ONLY;
         this.mapCamera = new ArcRotateCamera("mapCamera", Math.PI / 2, Math.PI / 2.5, 15, Vector3.Zero(), this.scene);
-        this.mapCamera.viewport = new Viewport(0.5, 0, 0.5, 1.0);
+        this.mapCamera.viewport = new Viewport(0.5, 0, 0.5, 1);
         this.mapCamera.layerMask = LayerMasks.SCENE_ONLY;
 
         this.mapCamera.attachControl(this.scene.getEngine().getRenderingCanvas(), true);
@@ -241,9 +249,13 @@ export class PlayScene extends GameScene { // ;)
         this.ctx.setGoals(new_goals);
 
         this.ctx.getRobot().setOnItemsChange((items: ItemType[]) => {
-            this.itemsHud.setItems(items.length, this.level.getAllItemTypes().length);
+            console.log("top bar " + this.topBar);
+            console.log("top bar  idsip" + this.topBar);
+            this.topBar.itemDisp.setItems(items.length, this.level.getAllItemTypes().length);
         });
-        this.itemsHud.setItems(0, this.level.getAllItemTypes().length);
+        console.log("top bar " + this.topBar);
+        console.log("top bar  idsip" + this.topBar);
+        this.topBar.itemDisp.setItems(0, this.level.getAllItemTypes().length);
 
         this.updateInstructionCount();
     }
@@ -308,7 +320,7 @@ export class PlayScene extends GameScene { // ;)
         this.blockCount = 0;
         //this.ctx = new ExecutionContext(this.level.getRobot(), this);
         this.levelReader.setupToolbox(index, this.toolbox, this.ctx, this);
-        this.blockCountDisp.setLimit(this.levelReader.getBlockLimitForIsland(this.currentIsland));
+        this.topBar.blockCount.setLimit(this.levelReader.getBlockLimitForIsland(this.currentIsland));
 
         this.mainNav.buildNavigator(this.currentIslandMap.length >= 2);
 
@@ -531,7 +543,7 @@ export class PlayScene extends GameScene { // ;)
         } 
         console.log("new instruction count is : ", count);
         this.blockCount = count;
-        this.blockCountDisp.setBlockCount(count);
+        this.topBar.blockCount.setBlockCount(count);
     }
 
     public modeUpdate() {
