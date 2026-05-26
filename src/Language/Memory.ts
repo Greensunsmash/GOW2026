@@ -33,16 +33,18 @@ export class Memory {
 
     private callStack: StackFrame[];
 
-    private playing = true;
+    private playing = false;
     private current_instruction: Executable | undefined;
     public skip = false;
     private currentlyMoving = false;
     public wait_reset = false;
     public reset_callback : (() => void);
     private ran = false;
+    private ended = false;
 
     private onProgramEnd: (() => void) | undefined = undefined;
-
+    private onUpdate: (() => void) | undefined = undefined;
+    
     private gameMode: GameMode = "NORMAL";
     private gameModeStack: GameModeStackInfo[] = [];
 
@@ -63,6 +65,7 @@ export class Memory {
         this.callStack = [];
         this.current_instruction = undefined;
         this.ran = false;
+        this.ended = false;
 
         this.gameMode = "NORMAL";
         this.gameModeStack = [];
@@ -138,26 +141,31 @@ export class Memory {
         if (this.currentlyMoving || this.isPlaying()) return;
         this.current_instruction?.back();
         //Memory.print();
+        this.onUpdate?.();
     }
     public nextStep(): void {
         if (this.currentlyMoving || this.isPlaying()) return;
         if (!this.ran) this.ran = true;
         if (this.current_instruction) this.current_instruction.next();
+        this.onUpdate?.();
         //Memory.print();
     }
     public continue():void {
         if (this.currentlyMoving || !this.ran || !this.current_instruction) return;
         this.setPlaying(true);
         this.current_instruction.next();
+        this.onUpdate?.();
     }
 
     public programEnd(): void {
+        this.ended = true;
         this.setPlaying(false);
         if (this.current_instruction) {
             const oldContainer = this.current_instruction.getContainer();
             if (oldContainer instanceof InstructionContainer) oldContainer.setHighlighht(false);
         }
         if (this.onProgramEnd) this.onProgramEnd();
+        this.onUpdate?.();
     }
 
 
@@ -171,6 +179,7 @@ export class Memory {
         }
 
         /*onsole.trace("resetCurrentInstruction");*/ this.current_instruction = undefined; 
+        this.onUpdate?.();
     }
     public setCurrentInstruction(e: Executable): void {
         if (this.current_instruction) {
@@ -178,9 +187,11 @@ export class Memory {
             if (oldContainer instanceof InstructionContainer) oldContainer.setHighlighht(false);
         }
 
-         /*console.trace("setCurrentInstruction", e);*/ this.current_instruction = e; 
+        /*console.trace("setCurrentInstruction", e);*/ this.current_instruction = e; 
         const container = this.current_instruction.getContainer();
         if (container instanceof InstructionContainer) container.setHighlighht(true);
+
+        this.onUpdate?.();
     }
 
     public getCurrentInstruction() {return this.current_instruction;}
@@ -188,6 +199,9 @@ export class Memory {
     public setRan() {this.ran = true;}
     public hasRan() {return this.ran;}
 
+    public hasEnded() {return this.ended;}
+
+    public setOnStateUpdate(onUpdate: (() => void) | undefined) {this.onUpdate = onUpdate;}
     public setOnProgramEnd(onProgramEnd: (() => void) | undefined) {this.onProgramEnd = onProgramEnd;}
 
     public isCurrentlyMoving():boolean {return this.currentlyMoving;}

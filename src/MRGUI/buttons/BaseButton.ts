@@ -16,6 +16,11 @@ export abstract class RealBaseButton extends Button {
         this.shadowBlur = 6;
         this.onPointerClickObservable.add(() => callback());
     }
+
+    setCallback(call: () => void) {
+        this.onPointerClickObservable.clear();
+        this.onPointerClickObservable.add(() => call());
+    }
 }
 
 export class BaseButton extends RealBaseButton {
@@ -34,6 +39,7 @@ export class BaseButton extends RealBaseButton {
     setText(text: string) {
         this.mrTextBlock.text = text;
     }
+    
 }
 
 export class IconButton extends RealBaseButton {

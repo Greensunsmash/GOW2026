@@ -451,6 +451,10 @@ export class OutilsBox extends Rectangle {
             }
         }
     }
+    
+    finish() {
+        this.stack.addControl(new BaseVSpacer(200));
+    }
 
     public clear() {
         // Supprimer tous les blocs présents dans la scène (sauf la toolbox)

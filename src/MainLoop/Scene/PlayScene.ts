@@ -63,13 +63,13 @@ export class PlayScene extends GameScene { // ;)
 
         
         this.btmBar = new BottomBar(this.advancedTexture,
-            () => {},
+            () => this.reset(),
             () => this.stepBack(),
             () => this.nextStep(),
-            () => {},
             () => this.dryAttempt(),
             () => this.nextLeaf(true),
-            () => this.previousLeaf()
+            () => this.previousLeaf(),
+            () => this.pause()
         );
         this.advancedTexture.addControl(this.btmBar);
 
@@ -321,7 +321,14 @@ export class PlayScene extends GameScene { // ;)
 
         this.topBar.loadClues(this.levelReader.getClues(this.currentIsland));
 
-        this.btmBar.leafNav.isVisible = this.currentIslandMap.length >= 2;
+        const multipleLeaf = (this.currentIslandMap.length >= 2);
+        this.btmBar.cdPlaybar.switchMode(multipleLeaf);
+        this.btmBar.triggerUpdate();
+        this.btmBar.leafNav.isVisible = multipleLeaf;
+
+        this.memory.setOnStateUpdate(() => {
+            this.btmBar.triggerUpdate();
+        });
 
         const beginDialog = this.levelReader.getBeginDialog(this.currentIsland);
         if (beginDialog) {
@@ -381,6 +388,9 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public run(onlyOneStep: boolean = false, skip : boolean = false) { // Si skip est vrai, pas d'animation
+        if (this.memory.isCurrentlyMoving())
+            return;
+
         this.memory.clear();
         console.log("Avant le run");
         Memory.print()
@@ -427,23 +437,21 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public reset() { // Permet de revenir à l'état initiale
-        if (!this.memory.isPlaying()) {
+        const effectiveReset = () => {
+            this.clearHighlights();
             this.memory.setPlaying(false);
             this.memory.clear();
             this.level.reinitLevel();
             this.canRun = true;
             this.memory.wait_reset = false;
             this.memory.reset_callback = () => {};
-            return;
-        }
-        this.memory.reset_callback = () => {
-            this.memory.setPlaying(false);
-            this.memory.clear();
-            this.level.reinitLevel();
-            this.canRun = true;
-            this.memory.wait_reset = false;
-            this.memory.reset_callback = () => {};
+            this.btmBar.triggerUpdate();
         };
+
+        if (!this.memory.isPlaying() && !this.memory.isCurrentlyMoving()) {
+            effectiveReset();
+        }
+        this.memory.reset_callback = () => effectiveReset();
         this.memory.wait_reset = true
     }
 
