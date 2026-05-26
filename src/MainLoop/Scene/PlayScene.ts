@@ -319,6 +319,8 @@ export class PlayScene extends GameScene { // ;)
         this.levelReader.setupToolbox(index, this.toolbox, this.ctx, this);
         this.topBar.blockCount.setLimit(this.levelReader.getBlockLimitForIsland(this.currentIsland));
 
+        this.topBar.loadClues(this.levelReader.getClues(this.currentIsland));
+
         this.btmBar.leafNav.isVisible = this.currentIslandMap.length >= 2;
 
         const beginDialog = this.levelReader.getBeginDialog(this.currentIsland);

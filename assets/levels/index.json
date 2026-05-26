@@ -1,5 +1,6 @@
 {
   "levels": [
+    {"file":"level0.json", "name": "Les indices : test"},
     {"file":"level1.json", "name": "Le seul que je peux finir"},
     {"file": "level11.json", "name": "Tant que / Sinon"},
     {"file": "level12.json", "name": "Cochons cochons cochons"},

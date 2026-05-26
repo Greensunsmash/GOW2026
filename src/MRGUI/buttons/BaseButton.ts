@@ -14,7 +14,7 @@ export abstract class RealBaseButton extends Button {
         this.shadowOffsetY = 1;
         this.shadowColor = "#00000040";
         this.shadowBlur = 6;
-        this.onPointerUpObservable.add(() => callback());
+        this.onPointerClickObservable.add(() => callback());
     }
 }
 
@@ -29,7 +29,10 @@ export class BaseButton extends RealBaseButton {
         this.mrTextBlock.fontWeight = "300";
         this.mrTextBlock.color = "white";
         this.addControl(this.mrTextBlock);
-        this.onPointerUpObservable.add(() => callback());
+    }
+
+    setText(text: string) {
+        this.mrTextBlock.text = text;
     }
 }
 
@@ -70,8 +73,6 @@ export class IconButton extends RealBaseButton {
         this.addControl(this.sp);
 
         this.adaptWidthToChildren = true;
-
-        this.onPointerUpObservable.add(() => callback());
     }
 }
 

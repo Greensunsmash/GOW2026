@@ -5,10 +5,13 @@ import { ColorGradient } from "@babylonjs/core";
 import { BlockCount } from "./BlockCount";
 import type { ItemDisplay } from "../../Entity/ItemDisplay";
 import { ItemsHUD } from "./ItemsHUD";
+import { ClueDrawer } from "./ClueDrawer";
 
 export class TopBar extends Rectangle {
     public blockCount: BlockCount;
     public itemDisp: ItemsHUD;
+    public clueDrw: ClueDrawer;
+    public drawBtn: BaseButton;
 
     constructor(
         root: AdvancedDynamicTexture,
@@ -37,27 +40,16 @@ export class TopBar extends Rectangle {
         btn.height = "40px";
         this.addControl(btn);
 
-        /*const title = new TextBlock("topbar-title");
-        title.text = "Mission exemple";
-        title.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-        title.fontSize = 14;
-        title.fontFamily = "Inter";
-        title.fontWeight = "300";
-        title.widthInPixels = 200;
 
-        const titleBlockRect = new Rectangle("dialogTitleRect");
-        //titleBlockRect.height = "50px";
-        titleBlockRect.height = "80%";
-        titleBlockRect.background = Colors.PtitRoseDuSoir;
-        titleBlockRect.adaptWidthToChildren = true;
-        titleBlockRect.cornerRadius = 22;
-        titleBlockRect.thickness = 0;
-        titleBlockRect.adaptWidthToChildren = true;
-        titleBlockRect.addControl(title);
-        titleBlockRect.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-        titleBlockRect.paddingTopInPixels = 5;
-        titleBlockRect.paddingBottomInPixels = 5;
-        this.addControl(titleBlockRect);*/
+        this.clueDrw = new ClueDrawer(root);
+
+        const drawBtn = new BaseButton("clue-btn", "P'tit indice ?", () => this.clueDrw.toggle(), 200);
+        drawBtn.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+        drawBtn.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+        drawBtn.height = "40px";
+        drawBtn.isVisible = false;
+        this.addControl(drawBtn);
+        this.drawBtn = drawBtn;
 
         const rightPanel = new StackPanel("topbar-right");
         rightPanel.isVertical = false;
@@ -77,6 +69,16 @@ export class TopBar extends Rectangle {
         this.addControl(rightPanel);
 
         root.addControl(this);
+    }
+
+    loadClues(clues: string[]) {
+        if (clues.length === 0) {
+            this.drawBtn.isVisible = false;
+            return;
+        }
+
+        this.drawBtn.isVisible = true;
+        this.clueDrw.loadClues(clues);
     }
 
 }
