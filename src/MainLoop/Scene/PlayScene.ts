@@ -25,7 +25,7 @@ export class PlayScene extends GameScene { // ;)
     private levelReader: LevelReader;
     private currentIsland: number = 0;
     private currentIslandMap: IslandMap;
-    private currentLeaf: number = 19937572471;
+    private currentLeaf: number = 19937574471;
 
     private ctx: ExecutionContext;
     private uiCamera: ArcRotateCamera;
