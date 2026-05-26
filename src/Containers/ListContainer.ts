@@ -467,6 +467,8 @@ export class ListContainer extends GUI.Rectangle {
         }
         this.recomputeInstructions();
         this.root.removeControl(list);
+
+        this.scene.updateInstructionCount?.();
     }
 
     // Renvoie la liste d'instructions, si elle est valide (possède un Depart)
@@ -518,7 +520,7 @@ export class ListContainer extends GUI.Rectangle {
     getInstructionCount(): number {
         let count = 0;
         for (const item of this.list) {
-            if (item instanceof FlagContainer) continue;
+            //if (item instanceof FlagContainer) continue;
             if (!(item instanceof InstructionContainer)) continue;
             if (this.structureList.some(s => s.getQueue() === item)) continue; // pour pas compter les struct en double
             count += 1;
@@ -553,6 +555,8 @@ export class ListContainer extends GUI.Rectangle {
 
         control.leftInPixels = (new_pos.x - centerX) / newParent.scaleX + centerX;
         control.topInPixels  = (new_pos.y - centerY) / newParent.scaleY + centerY;
+
+        this.scene.updateInstructionCount?.();
     }
 
     private applyDosC(composant: GUI.Container, indent: number, height: number = 10) {

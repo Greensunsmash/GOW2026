@@ -366,7 +366,7 @@ export class OutilsBox extends Rectangle {
                 // on agit différemment selon le type de blocs
                 // si c'est une List (donc probablement une structure)
                 if (realDragBlock instanceof ListContainer) {
-                    this.scene.updateInstructionCount?.();
+                    //this.scene.updateInstructionCount?.();
                     // on se contente de la mettre au bon endroit
                     realDragBlock.leftInPixels = absoluteLeft;
                     realDragBlock.topInPixels = absoluteTop;
