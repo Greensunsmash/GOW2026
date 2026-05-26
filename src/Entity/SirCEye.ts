@@ -22,4 +22,9 @@ export class SirCEye extends Interactable {
         Memory.get().setGameMode("PIGMODE");
         entity.turnToAPig();
     }
+
+    override reinit() {
+        super.reinit();
+        this.setDisplay(false);
+    }
 }

@@ -350,13 +350,8 @@ export class OutilsBox extends Rectangle {
                 ) {
                     //console.log("block count is " + this.scene.blockCount);
                     if (this.scene.blockCount >= this.blockLimit) {
-                        new OneButtonModal(
-                            this.scene.advancedTexture,
-                            `Limite de ${this.scene.blockCount} blocs atteinte`,
-                            "J'ai compris",
-                            () => {}
-                        );
-                        return;
+                        // TODO :
+                        //this.scene.emphasizeBlockCount();
                     }
                 }
 

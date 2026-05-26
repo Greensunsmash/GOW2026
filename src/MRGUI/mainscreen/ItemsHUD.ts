@@ -1,7 +1,8 @@
-import { Container, Control, StackPanel, TextBlock } from "@babylonjs/gui";
+import { Container, Control, Rectangle, StackPanel, TextBlock } from "@babylonjs/gui";
 import type { ItemType } from "../../Environment/LevelReader";
+import { Colors } from "../../Shared/Colors";
 
-export class ItemsHUD extends Container {
+export class ItemsHUD extends Rectangle {
     private panel :StackPanel;
     private itemsText: TextBlock;
 
@@ -10,10 +11,18 @@ export class ItemsHUD extends Container {
     ) {
         super("itemdisp");
         this.height = "40px";
-        this.width = "100px";
-        this.background = "#fff";
+        this.width = "140px";
+        this.color = "white";
+        this.thickness = 1;
+        this.background = Colors.AccentDuSud;
+        this.cornerRadius = Colors.CornerRadiusVraimentArrondi;
+        this.shadowOffsetX = 1;
+        this.shadowOffsetY = 1;
+        this.shadowColor = "#00000040";
+        this.shadowBlur = 6;
         this.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
         this.top = "30px";
+        this.isVisible = false;
 
         this.panel = new StackPanel("itemdisp_sp");
         //this.panel.isVertical = false;
@@ -25,7 +34,17 @@ export class ItemsHUD extends Container {
         root.addControl(this);
     }
 
-    public setItems(items: ItemType[]) {
-        this.itemsText.text = `Items: ${items.join(',')}`;
+    public setItems(itemCount: number, goalItemCount: number) {
+        if (goalItemCount < 1) {
+            /*this.isVisible = false;
+            return;*/
+        }
+        this.itemsText.text = `Débris : ${itemCount} / ${goalItemCount}`;
+        this.isVisible = true;
+        if (itemCount >= goalItemCount) {
+            this.background = Colors.Accent;
+        } else {
+            this.background = Colors.AccentDuSud;
+        }
     }
 }

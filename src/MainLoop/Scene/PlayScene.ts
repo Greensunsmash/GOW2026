@@ -241,8 +241,9 @@ export class PlayScene extends GameScene { // ;)
         this.ctx.setGoals(new_goals);
 
         this.ctx.getRobot().setOnItemsChange((items: ItemType[]) => {
-            this.itemsHud.setItems(items);
+            this.itemsHud.setItems(items.length, this.level.getAllItemTypes().length);
         });
+        this.itemsHud.setItems(0, this.level.getAllItemTypes().length);
 
         this.updateInstructionCount();
     }
@@ -472,6 +473,15 @@ export class PlayScene extends GameScene { // ;)
     public async onGoalReached() {
         console.log("dry attempt mode " + this.dryAttemptMode);
         this.stopRun();
+        if (this.blockCount > (this.levelReader.getBlockLimitForIsland(this.currentIsland) ?? 0)) {
+            new OneButtonModal(
+                this.advancedTexture,
+                "Trop de blocs !",
+                "Réessayer",
+                () => {}
+            );
+            return;
+        }
         if (this.isDryAttempt()) {
             console.log("dry attempt success");
             new OneButtonModal(

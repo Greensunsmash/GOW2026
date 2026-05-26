@@ -17,6 +17,8 @@ export class ItemDisplay extends Interactable {
         return;
     }
 
+
+
     getType(): ItemType {
         return this.type;
     }

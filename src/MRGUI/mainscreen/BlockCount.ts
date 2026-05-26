@@ -1,6 +1,7 @@
-import { Container, Control, StackPanel, TextBlock } from "@babylonjs/gui";
+import { Container, Control, Rectangle, StackPanel, TextBlock } from "@babylonjs/gui";
+import { Colors } from "../../Shared/Colors";
 
-export class BlockCount extends Container {
+export class BlockCount extends Rectangle {
     private panel :StackPanel;
     private countText: TextBlock;
 
@@ -11,8 +12,15 @@ export class BlockCount extends Container {
     ) {
         super("blockcount");
         this.height = "40px";
-        this.width = "100px";
-        this.background = "#fff";
+        this.width = "140px";
+        this.color = "white";
+        this.thickness = 1;
+        this.background = Colors.AccentDuSud;
+        this.cornerRadius = Colors.CornerRadiusVraimentArrondi;
+        this.shadowOffsetX = 1;
+        this.shadowOffsetY = 1;
+        this.shadowColor = "#00000040";
+        this.shadowBlur = 6;
         this.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
         this.top = "-30px";
 
@@ -28,6 +36,11 @@ export class BlockCount extends Container {
 
     public setBlockCount(count: number) {
         this.countText.text = this.limit ? `Blocs: ${count} / ${this.limit}`:  `Blocs : ${count}`;
+        if (this.limit && count >= this.limit) {
+            this.background = Colors.Accent;
+        } else {
+            this.background = Colors.AccentDuSud;
+        }
     }
 
     public setLimit(limit: number | null) {
