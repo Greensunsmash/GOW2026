@@ -1,24 +1,24 @@
 import * as GUI from "@babylonjs/gui";
-import type { PlayScene } from "../MainLoop/Scene/PlayScene";
 import { Vector2, type IPointerEvent } from "@babylonjs/core";
-import { Colors } from "../Shared/Colors";
+import { Colors } from "../../Shared/Colors";
 import type { BaseScene } from "../../MainLoop/Scene/BaseScene";
+import { LevelPopup } from "./LevelPopup";
 
 export class LevelSelectMap extends GUI.Rectangle {
     private readonly scene: BaseScene;
-    private readonly root: GUI.Container;
+    private readonly root: GUI.AdvancedDynamicTexture;
     private readonly content: GUI.Rectangle;
     private width_limit : number;
     private height_limit : number;
 
     private isPanning : boolean = false;
 
-    constructor(root:GUI.Container, scene:PlayScene) {
+    constructor(root: GUI.AdvancedDynamicTexture, scene:BaseScene) {
         super();
         this.scene = scene;
         this.root = root;
         
-        this.width = "60%";
+        this.width = "100%";
         this.height = "100%";
         this.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
         this.background = Colors.BehindWorkbench;
@@ -26,8 +26,8 @@ export class LevelSelectMap extends GUI.Rectangle {
         this.root.addControl(this);
 
         this.content = new GUI.Rectangle();
-        this.content.width = "2000px"; // grand espace de base
-        this.content.height = "2000px";
+        this.content.width = "6000px"; // grand espace de base
+        this.content.height = "4000px";
         this.content.background = Colors.Workbench;
         this.content.color = Colors.SecondaryEnseignement;
         this.content.thickness = 16;
@@ -36,6 +36,8 @@ export class LevelSelectMap extends GUI.Rectangle {
         this.content.shadowOffsetY = 1;
         this.content.shadowBlur = 7;
         this.content.shadowColor = "#00000040";
+        this.content.scaleX = 0.25;
+        this.content.scaleY = 0.25;
         this.addControl(this.content);
         this.width_limit = this.content.widthInPixels / 2;
         this.height_limit = this.content.heightInPixels / 2;
@@ -89,12 +91,14 @@ export class LevelSelectMap extends GUI.Rectangle {
             const delta = evt.deltaY > 0 ? -0.05 : 0.05;
             this.zoom(delta);
         });
+
+        //this.addPopup(300,300);
     }
 
     public zoom(x:number) {
         if (x > 0) {
-            this.content.scaleX = Math.min(x + this.content.scaleX, 1.5);
-            this.content.scaleY = Math.min(x + this.content.scaleY, 1.5);
+            this.content.scaleX = Math.min(x + this.content.scaleX, 0.6);
+            this.content.scaleY = Math.min(x + this.content.scaleY, 1);
         } else {
             this.content.scaleX = Math.max(x+this.content.scaleX, 0.2); 
             this.content.scaleY = Math.max(x+this.content.scaleY, 0.2); 
@@ -114,6 +118,13 @@ export class LevelSelectMap extends GUI.Rectangle {
         if (true_up > this.height_limit) this.content.topInPixels = this.height_limit - (this.content.heightInPixels - this.content.heightInPixels*this.content.scaleY)/2;
         else if (true_down < this.height_limit) this.content.topInPixels = this.height_limit - (this.content.heightInPixels + this.content.heightInPixels*this.content.scaleY)/2;
 
+    }
+
+    addPopup(x: number, y: number, name: string, callback: () => void) {
+        const popup = new LevelPopup(this, name, callback);
+        popup.leftInPixels = x;
+        popup.topInPixels = y;
+        this.content.addControl(popup);
     }
 
     // GETTERS
