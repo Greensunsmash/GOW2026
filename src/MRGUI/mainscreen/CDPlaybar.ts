@@ -77,12 +77,12 @@ export class CDPlaybar extends Container {
             if (atStart) {
                 this.backBtn.isEnabled = false;
                 this.nextBtn.isEnabled = true;
-                this.playBtn.setText(this.multipleLeafMode ? "▶   Tester sur cette feuille" :  "▶   Lancer");
+                this.playBtn.setText(this.multipleLeafMode ? "▶   Tester ici" :  "▶   Lancer");
                 this.playBtn.setCallback(this.onFullRun);
             } else if (hasEnded) {
                 this.backBtn.isEnabled = true;
                 this.nextBtn.isEnabled = false;
-                this.playBtn.setText(this.multipleLeafMode ? "▶   Retester sur cette feuille" :  "▶   Relancer");
+                this.playBtn.setText(this.multipleLeafMode ? "▶   Retester ici" :  "▶   Relancer");
                 this.playBtn.setCallback(this.onFullRun);
             } else {
                 this.backBtn.isEnabled = true;

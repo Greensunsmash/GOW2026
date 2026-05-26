@@ -67,8 +67,8 @@ export class PlayScene extends GameScene { // ;)
             () => this.stepBack(),
             () => this.nextStep(),
             () => this.dryAttempt(),
-            () => this.nextLeaf(true),
             () => this.previousLeaf(),
+            () => this.nextLeaf(true),
             () => this.pause()
         );
         this.advancedTexture.addControl(this.btmBar);
@@ -255,6 +255,8 @@ export class PlayScene extends GameScene { // ;)
         this.topBar.itemDisp.setItems(0, this.level.getAllItemTypes().length);
 
         this.updateInstructionCount();
+        this.btmBar.triggerUpdate();
+        this.clearHighlights();
     }
 
     // Renvoie true si on a bien changé de leaf,
@@ -263,7 +265,7 @@ export class PlayScene extends GameScene { // ;)
         let next = this.currentLeaf + 1;
 
         if (next >= this.currentIslandMap.length) {
-            console.log("Dernière feuille atteinte");
+            console.log("Dernière feuille atteinte. manual : " + manual);
             if (!manual) {
                 console.log(this.levelReader.getEndDialog(this.currentIsland));
                 new OneButtonModal(
@@ -387,9 +389,11 @@ export class PlayScene extends GameScene { // ;)
         });
     }
 
-    public run(onlyOneStep: boolean = false, skip : boolean = false) { // Si skip est vrai, pas d'animation
-        if (this.memory.isCurrentlyMoving())
+    public run(onlyOneStep: boolean = false, skip : boolean = false, automaticRun: boolean = false) { // Si skip est vrai, pas d'animation
+        if (!automaticRun && this.memory.isCurrentlyMoving()) {
+            console.log("not running.");
             return;
+        }
 
         this.memory.clear();
         console.log("Avant le run");
@@ -481,7 +485,7 @@ export class PlayScene extends GameScene { // ;)
             await this.loadLeaf(0);
         }
         this.dryAttemptMode = false;
-        this.scene.onAfterRenderObservable.addOnce(async () => await this.run());
+        this.scene.onAfterRenderObservable.addOnce(async () => await this.run(false, false, true));
     }
 
     public async dryAttempt() {
@@ -499,12 +503,13 @@ export class PlayScene extends GameScene { // ;)
         console.log("dry attempt mode " + this.dryAttemptMode);
         const continuousMode = this.memory.isPlaying();
         this.stopRun();
+        this.btmBar.triggerUpdate();
         this.memory.clear();
         const limit = this.levelReader.getBlockLimitForIsland(this.currentIsland);
         if (limit && this.blockCount > limit) {
             new OneButtonModal(
                 this.advancedTexture,
-                "Trop de blocs !",
+                "Bien joué, mais le carnet de mission est trop long...",
                 "Réessayer",
                 () => {}
             );
@@ -526,9 +531,11 @@ export class PlayScene extends GameScene { // ;)
             //await new Promise((rs, rj) => setTimeout(rs, 500));
             // en fait jai trouvé mieux
             if (isAnotherLeafLeft) {
-                if (continuousMode)
-                    this.scene.onAfterRenderObservable.addOnce(async () => await this.run());
-                else {
+                if (true /*continuousMode*/) {
+                    console.log("running on next leaf");
+                    await new Promise((rs, rj) => setTimeout(rs, 500));
+                    this.scene.onAfterRenderObservable.addOnce(async () => await this.run(false, false, true));
+                } else {
                     this.level.reinitLevel();
                     this.canRun = true;
                 }
@@ -540,21 +547,25 @@ export class PlayScene extends GameScene { // ;)
         this.clearHighlights();
         if (!this.canRun) return;
         this.stopRun();
+        this.btmBar.triggerUpdate();
         new OneButtonModal(
             this.advancedTexture,
-            "Objectif non atteint",
+            "Dommage, vous n'avez pas atteint l'objectif !",
             "Réessayer",
             () => { }
         );
     }
 
     public onRobotDead() {
+        if (!this.canRun) return;
         this.stopRun();
+        this.memory.programEnd();
         this.level.getRobot().die();
+        this.btmBar.triggerUpdate();
         new OneButtonModal(
             this.advancedTexture,
-            "Vous êtes mort.",
-            "Je suis Jésus",
+            "Oh non, le robot est détruit !",
+            "Réessayer",
             () => { }
         );
     }
