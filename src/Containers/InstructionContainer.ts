@@ -1,4 +1,4 @@
-import type { Vector2 } from "@babylonjs/core";
+import { Color3, Color4, type Vector2 } from "@babylonjs/core";
 import * as GUI from "@babylonjs/gui";
 import type { Instruction } from "../Language/Instructions/Instruction";
 import { Print } from "../Language/Instructions/Print";
@@ -15,6 +15,10 @@ export class InstructionContainer extends GUI.Rectangle {
     protected readonly bloc : BlocContainer;
     private readonly root : GUI.Container;
     private morceauDosC: GUI.Rectangle | null = null;
+    private highlighted: boolean = false;
+    private initBackground: string = "";
+    private hlBAckground: string = "";
+    private initShadowColor: string = "";
 
     constructor(list: string[], root: GUI.Container, content_root: GUI.Container, scene: GameScene, stroke = true) {
         super();
@@ -101,9 +105,25 @@ export class InstructionContainer extends GUI.Rectangle {
     // Par défaut print hello world (en pratique, cette fonction sera toujours override)
     getInstruction(): Instruction {return new Print(new ValeurBrute("Hello World")); }
 
-    public toggle():void {
-        if (this.bloc.background == "#8727F5") this.bloc.background = "#cac6ceff";
-        else this.bloc.background = "#8727F5";
+    public setHighlighht(hl: boolean ):void {
+        if (!this.highlighted && this.initBackground === "") {
+            this.initBackground = this.bloc.background;
+            this.initShadowColor = this.bloc.shadowColor;
+            this.hlBAckground = Colors.SecondaryEnseignement;
+        }
+
+        this.highlighted = hl;
+        if (this.highlighted) {
+            this.bloc.thickness = 3;
+            this.bloc.color = Colors.HighlightStroke;
+            this.bloc.background = Colors.Highlight;;
+            this.bloc.shadowColor = "#00000065";
+        } else {
+            this.bloc.thickness = Colors.GeneralContour;
+            this.bloc.color = Colors.AccentDuSud;
+            this.bloc.background = this.initBackground;
+            this.bloc.shadowColor = this.initShadowColor;
+        }
     }
     // GETTERS
     getRoot():GUI.Container{return this.root;}

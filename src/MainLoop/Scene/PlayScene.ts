@@ -5,7 +5,6 @@ import { Level } from "../../Environment/Level";
 import { LevelReader, State, type IslandMap, type ItemType } from "../../Environment/LevelReader";
 import { Memory, type GameMode } from "../../Language/Memory";
 import { QuitButton } from "../../MRGUI/buttons/QuitButton";
-import { MainNavigator } from "../../MRGUI/mainscreen/MainNavigator";
 import { OneButtonModal } from "../../MRGUI/windows/OneButtonModal";
 import { ASSETS_ROOT, LayerMasks } from "../../Shared/Constants";
 import { ExecutionContext } from "../ExecutionContext";
@@ -15,6 +14,9 @@ import { BlockCount } from "../../MRGUI/mainscreen/BlockCount";
 import { ItemsHUD } from "../../MRGUI/mainscreen/ItemsHUD";
 import { BasicInstContainer } from "../../Containers/BasicInstContainer";
 import { SetVarContainer } from "../../Containers/Prefabs/SetVarContainer";
+import { TopBar } from "../../MRGUI/mainscreen/TopBar";
+import { BottomBar } from "../../MRGUI/mainscreen/BottomBar";
+import { TwoButtonModal } from "../../MRGUI/windows/TwoButtonsModal";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene { // ;)
@@ -23,7 +25,7 @@ export class PlayScene extends GameScene { // ;)
     private levelReader: LevelReader;
     private currentIsland: number = 0;
     private currentIslandMap: IslandMap;
-    private currentLeaf: number = 19937572471;
+    private currentLeaf: number = 19937574471;
 
     private ctx: ExecutionContext;
     private uiCamera: ArcRotateCamera;
@@ -38,26 +40,12 @@ export class PlayScene extends GameScene { // ;)
 
     private blockCountDisp: BlockCount;
     private itemsHud: ItemsHUD;
-    private mainNav: MainNavigator;
 
     private memory: Memory = Memory.get();
 
     constructor(engine: Engine) {
         super(engine);
         this.currentLeaf = this.currentLeaf * 2 - (this.currentLeaf + this.currentLeaf);
-        this.mainNav = new MainNavigator(
-            this.leftPanel,
-            () => {},
-            () => this.stepBack(),
-            () => this.nextStep(),
-            () => {},
-            () => this.previousLeaf(),
-            () => this.nextLeaf(true),
-            () => this.dryAttempt(),
-            () => this.attemptAllLeafs()
-        );
-        this.blockCountDisp = new BlockCount(this.leftPanel);
-        this.itemsHud = new ItemsHUD(this.leftPanel);
         //this.init();
     }
 
@@ -66,17 +54,34 @@ export class PlayScene extends GameScene { // ;)
     }
 
     async init(levelName: string | undefined = "level1.json", onLevelGaveup?: () => void, onLevelWon?: () => void) {
+        
+        this.topBar = new TopBar(this.advancedTexture, () => {
+            if (onLevelGaveup)
+                onLevelGaveup();
+        });
+        this.advancedTexture.addControl(this.topBar);
+
+        
+        this.btmBar = new BottomBar(this.advancedTexture,
+            () => {},
+            () => this.stepBack(),
+            () => this.nextStep(),
+            () => {},
+            () => this.dryAttempt(),
+            () => this.nextLeaf(true),
+            () => this.previousLeaf()
+        );
+        this.advancedTexture.addControl(this.btmBar);
+
         await this.initGameScene(levelName);
 
-        this.advancedTexture.addControl(this.blockCountDisp);
-        this.advancedTexture.addControl(this.itemsHud);
-        this.advancedTexture.addControl(this.mainNav);
-        this.advancedTexture.addControl(
+        //this.advancedTexture.addControl(this.mainNav);
+        /*this.advancedTexture.addControl(
             new QuitButton(this.leftPanel, () => {
                 if (onLevelGaveup)
                     onLevelGaveup();
             })
-        );
+        );*/
 
         this.scene.onKeyboardObservable.add((kbInfo) => {
             if (kbInfo.type == KeyboardEventTypes.KEYUP) {
@@ -113,7 +118,7 @@ export class PlayScene extends GameScene { // ;)
                     this.reset();
                 } else if (kbInfo.event.key == "t") {
                     console.log("toggle mgl");
-                    this.memory.toggleCurrentBloc();
+                   // this.memory.toggleCurrentBloc();
                 }
 
             }
@@ -129,7 +134,7 @@ export class PlayScene extends GameScene { // ;)
         this.uiCamera = new ArcRotateCamera("uiCamera", Math.PI / 2, Math.PI / 3, 10, Vector3.Zero(), this.scene);
         this.uiCamera.layerMask = LayerMasks.UI_ONLY;
         this.mapCamera = new ArcRotateCamera("mapCamera", Math.PI / 2, Math.PI / 2.5, 15, Vector3.Zero(), this.scene);
-        this.mapCamera.viewport = new Viewport(0.5, 0, 0.5, 1.0);
+        this.mapCamera.viewport = new Viewport(0.5, 0, 0.5, 1);
         this.mapCamera.layerMask = LayerMasks.SCENE_ONLY;
 
         this.mapCamera.attachControl(this.scene.getEngine().getRenderingCanvas(), true);
@@ -206,7 +211,7 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public async loadLeaf(index: number) {
-        this.mainNav.updateLeafIndicator(`Feuille ${index + 1}/${this.currentIslandMap.length}`)
+        this.btmBar.updateLeafIndicator(`Feuille ${index + 1} sur ${this.currentIslandMap.length}`)
 
         this.currentLeaf = index;
         this.canRun = false; // hop on arrete d'exécuter
@@ -241,8 +246,13 @@ export class PlayScene extends GameScene { // ;)
         this.ctx.setGoals(new_goals);
 
         this.ctx.getRobot().setOnItemsChange((items: ItemType[]) => {
-            this.itemsHud.setItems(items);
+            console.log("top bar " + this.topBar);
+            console.log("top bar  idsip" + this.topBar);
+            this.topBar.itemDisp.setItems(items.length, this.level.getAllItemTypes().length);
         });
+        console.log("top bar " + this.topBar);
+        console.log("top bar  idsip" + this.topBar);
+        this.topBar.itemDisp.setItems(0, this.level.getAllItemTypes().length);
 
         this.updateInstructionCount();
     }
@@ -307,9 +317,11 @@ export class PlayScene extends GameScene { // ;)
         this.blockCount = 0;
         //this.ctx = new ExecutionContext(this.level.getRobot(), this);
         this.levelReader.setupToolbox(index, this.toolbox, this.ctx, this);
-        this.blockCountDisp.setLimit(this.levelReader.getBlockLimitForIsland(this.currentIsland));
+        this.topBar.blockCount.setLimit(this.levelReader.getBlockLimitForIsland(this.currentIsland));
 
-        this.mainNav.buildNavigator(this.currentIslandMap.length >= 2);
+        this.topBar.loadClues(this.levelReader.getClues(this.currentIsland));
+
+        this.btmBar.leafNav.isVisible = this.currentIslandMap.length >= 2;
 
         const beginDialog = this.levelReader.getBeginDialog(this.currentIsland);
         if (beginDialog) {
@@ -372,6 +384,7 @@ export class PlayScene extends GameScene { // ;)
         this.memory.clear();
         console.log("Avant le run");
         Memory.print()
+        this.clearHighlights();
         this.level.reinitLevel();
         this.canRun = true;
         this.memory.skip = skip;
@@ -435,6 +448,10 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public nextStep(skip : boolean = false){
+        if (this.ctx && this.level.getRobot().isDead()) { 
+            console.warn("cant forward, robot dead !");
+            return;
+        }
         this.memory.skip = skip;
         console.log("TRYING to run next step");
         console.log(this.memory.getCurrentInstruction());
@@ -446,6 +463,7 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public stopRun() {
+        this.clearHighlights();
         this.canRun = false;
         this.memory.setPlaying(false);
     }
@@ -471,26 +489,48 @@ export class PlayScene extends GameScene { // ;)
  
     public async onGoalReached() {
         console.log("dry attempt mode " + this.dryAttemptMode);
+        const continuousMode = this.memory.isPlaying();
         this.stopRun();
-        if (this.isDryAttempt()) {
-            console.log("dry attempt success");
+        this.memory.clear();
+        const limit = this.levelReader.getBlockLimitForIsland(this.currentIsland);
+        if (limit && this.blockCount > limit) {
             new OneButtonModal(
                 this.advancedTexture,
-                "Objectif atteint",
-                "Fermer",
+                "Trop de blocs !",
+                "Réessayer",
                 () => {}
             );
+            return;
+        }
+        if (this.isDryAttempt() && this.currentIslandMap.length >= 2) {
+            console.log("dry attempt success");
+            new TwoButtonModal(
+                this.advancedTexture,
+                "Bravo ! On essaie sur toutes les feuilles ?",
+                "Non",
+                "Essayer",
+                () => this.attemptAllLeafs()
+            );
         } else {
-            const isAnotherLeafLeft = await this.nextLeaf();
+            const isAnotherLeafLeft = await this.nextLeaf(false);
             // si je mets pas ce delay ca marche pas..
             // a investiguer 
             //await new Promise((rs, rj) => setTimeout(rs, 500));
-            if (isAnotherLeafLeft)
-                this.scene.onAfterRenderObservable.addOnce(async () => await this.run());
+            // en fait jai trouvé mieux
+            if (isAnotherLeafLeft) {
+                if (continuousMode)
+                    this.scene.onAfterRenderObservable.addOnce(async () => await this.run());
+                else {
+                    this.level.reinitLevel();
+                    this.canRun = true;
+                }
+            }
         }
     }
 
     public onGoalUnreached() {
+        this.clearHighlights();
+        if (!this.canRun) return;
         this.stopRun();
         new OneButtonModal(
             this.advancedTexture,
@@ -502,6 +542,7 @@ export class PlayScene extends GameScene { // ;)
 
     public onRobotDead() {
         this.stopRun();
+        this.level.getRobot().die();
         new OneButtonModal(
             this.advancedTexture,
             "Vous êtes mort.",
@@ -521,7 +562,17 @@ export class PlayScene extends GameScene { // ;)
         } 
         console.log("new instruction count is : ", count);
         this.blockCount = count;
-        this.blockCountDisp.setBlockCount(count);
+        this.topBar.blockCount.setBlockCount(count);
+    }
+
+    public clearHighlights() {
+        let child_list = this.workspace.getContentRoot().children;
+        let count = 0;
+        for (const child of child_list) {
+            if (child instanceof ListContainer) {   
+                child.clearHighlights();
+            }
+        } 
     }
 
     public modeUpdate() {

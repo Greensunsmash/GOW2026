@@ -47,8 +47,13 @@ export class Pig extends Mob {
         await this.doVisualMove(processedIntention.nextPos);
 
         if (processedIntention.deadDuringTick) {
-            this.dead = true;
+            this.die();
             this.mesh.setEnabled(false);
         }
+    }
+
+    public die() {
+        /* anim */
+        this.dead = true;
     }
 }

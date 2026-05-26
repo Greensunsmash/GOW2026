@@ -257,7 +257,7 @@ export class OutilsBox extends Rectangle {
 
 
         wrapper.addControl(innerStack);
-        this.stack.addControl(new DoublePeloteDeLaineEloignezLesChats(this.categories.size > 0 ? 50 : 25));
+        this.stack.addControl(new DoublePeloteDeLaineEloignezLesChats(this.categories.size > 0 ? 50 : 100));
         this.stack.addControl(wrapper);
         this.categories.set(shortName, sp);
     }
@@ -350,13 +350,8 @@ export class OutilsBox extends Rectangle {
                 ) {
                     //console.log("block count is " + this.scene.blockCount);
                     if (this.scene.blockCount >= this.blockLimit) {
-                        new OneButtonModal(
-                            this.scene.advancedTexture,
-                            `Limite de ${this.scene.blockCount} blocs atteinte`,
-                            "J'ai compris",
-                            () => {}
-                        );
-                        return;
+                        // TODO :
+                        //this.scene.emphasizeBlockCount();
                     }
                 }
 
@@ -371,7 +366,7 @@ export class OutilsBox extends Rectangle {
                 // on agit différemment selon le type de blocs
                 // si c'est une List (donc probablement une structure)
                 if (realDragBlock instanceof ListContainer) {
-                    this.scene.updateInstructionCount?.();
+                    //this.scene.updateInstructionCount?.();
                     // on se contente de la mettre au bon endroit
                     realDragBlock.leftInPixels = absoluteLeft;
                     realDragBlock.topInPixels = absoluteTop;

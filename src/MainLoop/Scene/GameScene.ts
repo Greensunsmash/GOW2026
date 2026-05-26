@@ -14,6 +14,9 @@ import { InstructionContainer } from "../../Containers/InstructionContainer";
 import { BlocContainer } from "../../Containers/BlocContainer";
 import { WorkSpace } from "../../MRGUI/Workspace";
 import { Vector2 } from "babylonjs";
+import type { TopBar } from "../../MRGUI/mainscreen/TopBar";
+import { Colors } from "../../Shared/Colors";
+import type { BottomBar } from "../../MRGUI/mainscreen/BottomBar";
 
 export abstract class GameScene extends BaseScene {
     private hoverSlot : EmptySlot | null = null;
@@ -25,6 +28,8 @@ export abstract class GameScene extends BaseScene {
     public decal : Vector2;
     public blockCount: number = 0;
     protected leftPanel: Rectangle;
+    protected topBar: TopBar;
+    protected btmBar: BottomBar;
 
     protected toolbox: OutilsBox;
     protected workspace: WorkSpace;
@@ -44,8 +49,10 @@ export abstract class GameScene extends BaseScene {
 
         this.leftPanel = new Rectangle();
         this.leftPanel.width = "50%";
+        //this.leftPanel.height = "85%";
         this.leftPanel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-        this.leftPanel.background = "#222222"; // Couleur de fond pour bien séparer
+        this.leftPanel.background = Colors.SecondaryEnseignement; // Couleur de fond pour bien séparer
+        this.leftPanel.cornerRadius = Colors.CornerRadiusVraimentArrondi;
         this.advancedTexture.addControl(this.leftPanel);
         
         this.workspace = new WorkSpace(this.leftPanel, this);

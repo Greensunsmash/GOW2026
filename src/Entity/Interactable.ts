@@ -27,6 +27,11 @@ export abstract class Interactable extends GridEntity {
         };
     }
 
+    override reinit() {
+        super.reinit();
+        this.setDisplay(true);
+    }
+
     override async setState(state: EntityState, instant?: boolean) {
         this.gridPos = {...state.pos!};
         this.facingIndex = state.facingIndex!;

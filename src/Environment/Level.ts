@@ -274,18 +274,17 @@ export class Level {
 
     public reinitLevel() {
         console.log("in reinit level");
-        const initEntState = this.entityStates[0];
+        /*const initEntState = this.entityStates[0];
         if (!initEntState) {
             console.warn("reinit level called when no mob state has ever been stored ?? WHAT THE FUCK ??");
             return;
         }
         this.loadEntityState(initEntState);
-        this.entityStates.splice(1); // supprime tout apres le premier
+        this.entityStates.splice(1); // supprime tout apres le premier*/
+        this.entityStates = [];
         this.robot?.reinit();
-        for (const item of this.getItems())
-            item.setDisplay(true);
-        for (const mob of this.getMobs())
-            mob.reinit();
+        for (const e of this.otherEntities)
+            e.reinit();
     }
 
     public dispose() {

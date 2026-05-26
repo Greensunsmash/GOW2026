@@ -12,6 +12,7 @@ export class MarcoBozo extends GridEntity {
     private affectedByADivineCurse: boolean = false;
     private readonly pigMesh: TransformNode;
     private readonly origMesh: TransformNode;
+    private dead = false;
 
     private onItemsChange: ((items: ItemType[]) => void) | null = null;
 
@@ -24,6 +25,7 @@ export class MarcoBozo extends GridEntity {
     }
 
     override reinit(): void {
+        this.dead = false;
         this.carriedItems = [];
         this.backToACuteLittleRobot();
         this.onItemsChange?.([]);
@@ -35,6 +37,10 @@ export class MarcoBozo extends GridEntity {
     }
 
     async pickupItem() {
+        if (this.dead) {
+            console.warn("cant pickup, cant Suv, dead.");
+            return;
+        }
         const itemAtPos = this.level.getItemAt(this.gridPos);
         if (!itemAtPos) {
             // faire un truc
@@ -60,6 +66,7 @@ export class MarcoBozo extends GridEntity {
         return {
             carriedItems: [...this.carriedItems],
             affectedByADivineCurse: this.affectedByADivineCurse,
+            dead: this.dead
             /*pos: {...this.gridPos}, 
             facingIndex: this.facingIndex, */
            //dead: this.dead
@@ -76,6 +83,7 @@ export class MarcoBozo extends GridEntity {
                 this.backToACuteLittleRobot();
             }
         }
+        this.dead = state.dead!;
         /*this.gridPos = {...state.pos};
         this.facingIndex = state.facingIndex;
         console.log("setState facingIndex:", state.facingIndex, "mesh.rotation.y:", this.mesh.rotation.y);*/
@@ -143,4 +151,11 @@ export class MarcoBozo extends GridEntity {
             await this.updateVisualPos(true);
         }
     }
+
+    public die() {
+        this.dead = true;
+        /* faire une anim */
+    }
+
+    public isDead() {return this.dead;}
 }

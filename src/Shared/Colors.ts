@@ -2,6 +2,8 @@ export class Colors {
     static ToolboxBg = "#F9D8B9";
     static Accent = "#FE5F55";
     static AccentDuSud = "#FB756B";
+    static Highlight = "#fb9992ff";
+    static HighlightStroke = "#fcaba5ff";
     static SecondaryEnseignement = "#F0B67F";
     static PtitRoseDuSoir = "#FF8676";
     static Workbench = "#F7EEE2";

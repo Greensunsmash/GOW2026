@@ -153,20 +153,35 @@ export class Memory {
 
     public programEnd(): void {
         this.setPlaying(false);
+        if (this.current_instruction) {
+            const oldContainer = this.current_instruction.getContainer();
+            if (oldContainer instanceof InstructionContainer) oldContainer.setHighlighht(false);
+        }
         if (this.onProgramEnd) this.onProgramEnd();
     }
 
-    public toggleCurrentBloc():void {
-        if (!this.current_instruction) return;
-        const container = this.current_instruction.getContainer();
-        if (container instanceof InstructionContainer) container.toggle();
-    }
 
     // GETTERS / SETTERS
     public isPlaying(): boolean { return this.playing; }
     public setPlaying(bool: boolean): void { this.playing = bool; }
-    public resetCurrentInstruction(): void { /*onsole.trace("resetCurrentInstruction");*/ this.current_instruction = undefined; }
-    public setCurrentInstruction(e: Executable): void { /*console.trace("setCurrentInstruction", e);*/ this.current_instruction = e; }
+    public resetCurrentInstruction(): void { 
+        if (this.current_instruction) {
+            const oldContainer = this.current_instruction.getContainer();
+            if (oldContainer instanceof InstructionContainer) oldContainer.setHighlighht(false);
+        }
+
+        /*onsole.trace("resetCurrentInstruction");*/ this.current_instruction = undefined; 
+    }
+    public setCurrentInstruction(e: Executable): void {
+        if (this.current_instruction) {
+            const oldContainer = this.current_instruction.getContainer();
+            if (oldContainer instanceof InstructionContainer) oldContainer.setHighlighht(false);
+        }
+
+         /*console.trace("setCurrentInstruction", e);*/ this.current_instruction = e; 
+        const container = this.current_instruction.getContainer();
+        if (container instanceof InstructionContainer) container.setHighlighht(true);
+    }
 
     public getCurrentInstruction() {return this.current_instruction;}
 

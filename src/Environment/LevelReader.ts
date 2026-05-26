@@ -71,6 +71,7 @@ type LevelData = {
         goal: any;
         begin_dialog: string;
         end_dialog: string;
+        clues: string[];
     }[];
 };
 
@@ -83,6 +84,7 @@ export class LevelReader {
     private nb_islands : number = 0;
     private structure : IslandMap[] = [];
     private blockset: IslandBlockset[] = [];
+    private clues: string[][] = [];
     private blockLimit: (number | null)[] = [];
     private goals: Goal[][] = [];
     private beginDialog: (string | null)[] = [];
@@ -170,6 +172,8 @@ export class LevelReader {
                     this.blockLimit.push(island.block_limitation);
                 else
                     this.blockLimit.push(null);
+
+                this.clues.push(island.clues ?? []);
                 
                 this.goals.push(island.goal);
 
@@ -203,6 +207,10 @@ export class LevelReader {
 
     public getEndDialog(nb: number): string | null {
         return this.endDialog[nb];
+    }
+
+    public getClues(nb: number): string[] {
+        return this.clues[nb];
     }
     
     /* Faudra que je bouge les trois du dessous,
