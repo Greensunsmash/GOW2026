@@ -20,10 +20,10 @@ export class ItemsHUD extends Rectangle {
         this.shadowOffsetY = 1;
         this.shadowColor = "#00000040";
         this.shadowBlur = 6;
-        this.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+        this.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
         this.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-        this.top = "12%";
-        this.left = "25%";
+        //this.top = "12%";
+        //this.left = "25%";
     
         this.isVisible = false;
 
@@ -35,15 +35,15 @@ export class ItemsHUD extends Rectangle {
         this.itemsText.height = "30px";
         this.itemsText.fontFamily = "Inter";
         this.itemsText.fontWeight = "200";
-        this.itemsText.fontSize = 14;
+        //this.itemsText.fontSize = 14;
         this.panel.addControl(this.itemsText);
         root.addControl(this);
     }
 
     public setItems(itemCount: number, goalItemCount: number) {
         if (goalItemCount < 1) {
-            /*this.isVisible = false;
-            return;*/
+            this.isVisible = false;
+            return;
         }
         this.itemsText.text = `Débris : ${itemCount} / ${goalItemCount}`;
         this.isVisible = true;

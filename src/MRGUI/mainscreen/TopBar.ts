@@ -16,7 +16,7 @@ export class TopBar extends Rectangle {
     ) {
         super("topbar");
         this.height= "10%";
-        this.width = "96%";
+        this.width = "98%";
         this.color = "white";
         this.thickness = 2;
         this.background = Colors.ToolboxBg;
@@ -27,15 +27,14 @@ export class TopBar extends Rectangle {
         this.shadowBlur = 6;
         this.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
         this.top = "5px";
-        this.paddingLeft = "2%";
-        this.paddingRight = "2%";
+        this.paddingLeft = "1%";
+        this.paddingRight = "1%";
 
-        const btn = new IconButton("giveup-btn-nouvelleda", "Retour base", "\ue5cb", onBackClick, 80);
+        const btn = new BaseButton("giveup-btn-nouvelleda", "‹   Retour base", onBackClick, 200);
         btn.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
         btn.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
         btn.paddingLeftInPixels = 18;
-        btn.paddingTopInPixels = 5;
-        btn.paddingBottomInPixels = 5;
+        btn.height = "40px";
         this.addControl(btn);
 
         /*const title = new TextBlock("topbar-title");

@@ -65,6 +65,9 @@ export class CreateVarModal extends ModalWindow {
         });
         buttonPanel.addControl(btnOk);
 
+        buttonPanel.clipChildren = false;
+        buttonPanel.clipContent = false;
+
         this.panel.addControl(new BaseVSpacer());
         
         input.focus();

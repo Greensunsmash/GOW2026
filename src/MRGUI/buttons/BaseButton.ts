@@ -51,7 +51,7 @@ export class IconButton extends RealBaseButton {
         this.textBlk.widthInPixels = width === 0 ? (10*label.length) : width;
         this.textBlk.fontFamily = "Inter";
         this.textBlk.fontWeight = "300";
-        this.textBlk.fontSize = 12;
+        this.textBlk.fontSize = 14;
         this.textBlk.color = "white";
 
         this.icon = new TextBlock(name + "-btn-iconblk");
@@ -59,7 +59,7 @@ export class IconButton extends RealBaseButton {
         this.icon.width = "15px";
         this.icon.fontFamily = "Material Symbols Outlined";
         this.icon.fontWeight = "200";
-        this.icon.fontSize = 12;
+        this.icon.fontSize = 14;
         this.icon.color = "white";
         this.icon.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
         this.icon.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;

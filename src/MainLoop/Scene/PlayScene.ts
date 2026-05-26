@@ -5,7 +5,6 @@ import { Level } from "../../Environment/Level";
 import { LevelReader, State, type IslandMap, type ItemType } from "../../Environment/LevelReader";
 import { Memory, type GameMode } from "../../Language/Memory";
 import { QuitButton } from "../../MRGUI/buttons/QuitButton";
-import { MainNavigator } from "../../MRGUI/mainscreen/MainNavigator";
 import { OneButtonModal } from "../../MRGUI/windows/OneButtonModal";
 import { ASSETS_ROOT, LayerMasks } from "../../Shared/Constants";
 import { ExecutionContext } from "../ExecutionContext";
@@ -17,6 +16,7 @@ import { BasicInstContainer } from "../../Containers/BasicInstContainer";
 import { SetVarContainer } from "../../Containers/Prefabs/SetVarContainer";
 import { TopBar } from "../../MRGUI/mainscreen/TopBar";
 import { BottomBar } from "../../MRGUI/mainscreen/BottomBar";
+import { TwoButtonModal } from "../../MRGUI/windows/TwoButtonsModal";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene { // ;)
@@ -40,24 +40,12 @@ export class PlayScene extends GameScene { // ;)
 
     private blockCountDisp: BlockCount;
     private itemsHud: ItemsHUD;
-    private mainNav: MainNavigator;
 
     private memory: Memory = Memory.get();
 
     constructor(engine: Engine) {
         super(engine);
         this.currentLeaf = this.currentLeaf * 2 - (this.currentLeaf + this.currentLeaf);
-        this.mainNav = new MainNavigator(
-            this.leftPanel,
-            () => {},
-            () => this.stepBack(),
-            () => this.nextStep(),
-            () => {},
-            () => this.previousLeaf(),
-            () => this.nextLeaf(true),
-            () => this.dryAttempt(),
-            () => this.attemptAllLeafs()
-        );
         //this.init();
     }
 
@@ -72,19 +60,28 @@ export class PlayScene extends GameScene { // ;)
                 onLevelGaveup();
         });
         this.advancedTexture.addControl(this.topBar);
+
         
+        this.btmBar = new BottomBar(this.advancedTexture,
+            () => {},
+            () => this.stepBack(),
+            () => this.nextStep(),
+            () => {},
+            () => this.dryAttempt(),
+            () => this.nextLeaf(true),
+            () => this.previousLeaf()
+        );
+        this.advancedTexture.addControl(this.btmBar);
+
         await this.initGameScene(levelName);
 
-        this.advancedTexture.addControl(this.mainNav);
+        //this.advancedTexture.addControl(this.mainNav);
         /*this.advancedTexture.addControl(
             new QuitButton(this.leftPanel, () => {
                 if (onLevelGaveup)
                     onLevelGaveup();
             })
         );*/
-
-        this.btmBar = new BottomBar(this.advancedTexture);
-        this.advancedTexture.addControl(this.btmBar);
 
         this.scene.onKeyboardObservable.add((kbInfo) => {
             if (kbInfo.type == KeyboardEventTypes.KEYUP) {
@@ -214,7 +211,7 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public async loadLeaf(index: number) {
-        this.mainNav.updateLeafIndicator(`Feuille ${index + 1}/${this.currentIslandMap.length}`)
+        this.btmBar.updateLeafIndicator(`Feuille ${index + 1} sur ${this.currentIslandMap.length}`)
 
         this.currentLeaf = index;
         this.canRun = false; // hop on arrete d'exécuter
@@ -322,7 +319,7 @@ export class PlayScene extends GameScene { // ;)
         this.levelReader.setupToolbox(index, this.toolbox, this.ctx, this);
         this.topBar.blockCount.setLimit(this.levelReader.getBlockLimitForIsland(this.currentIsland));
 
-        this.mainNav.buildNavigator(this.currentIslandMap.length >= 2);
+        this.btmBar.leafNav.isVisible = this.currentIslandMap.length >= 2;
 
         const beginDialog = this.levelReader.getBeginDialog(this.currentIsland);
         if (beginDialog) {
@@ -448,6 +445,10 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public nextStep(skip : boolean = false){
+        if (this.ctx && this.level.getRobot().isDead()) { 
+            console.warn("cant forward, robot dead !");
+            return;
+        }
         this.memory.skip = skip;
         console.log("TRYING to run next step");
         console.log(this.memory.getCurrentInstruction());
@@ -484,8 +485,11 @@ export class PlayScene extends GameScene { // ;)
  
     public async onGoalReached() {
         console.log("dry attempt mode " + this.dryAttemptMode);
+        const continuousMode = this.memory.isPlaying();
         this.stopRun();
-        if (this.blockCount > (this.levelReader.getBlockLimitForIsland(this.currentIsland) ?? 0)) {
+        this.memory.clear();
+        const limit = this.levelReader.getBlockLimitForIsland(this.currentIsland);
+        if (limit && this.blockCount > limit) {
             new OneButtonModal(
                 this.advancedTexture,
                 "Trop de blocs !",
@@ -494,25 +498,34 @@ export class PlayScene extends GameScene { // ;)
             );
             return;
         }
-        if (this.isDryAttempt()) {
+        if (this.isDryAttempt() && this.currentIslandMap.length >= 2) {
             console.log("dry attempt success");
-            new OneButtonModal(
+            new TwoButtonModal(
                 this.advancedTexture,
-                "Objectif atteint",
-                "Fermer",
-                () => {}
+                "Bravo ! On essaie sur toutes les feuilles ?",
+                "Non",
+                "Essayer",
+                () => this.attemptAllLeafs()
             );
         } else {
-            const isAnotherLeafLeft = await this.nextLeaf();
+            const isAnotherLeafLeft = await this.nextLeaf(false);
             // si je mets pas ce delay ca marche pas..
             // a investiguer 
             //await new Promise((rs, rj) => setTimeout(rs, 500));
-            if (isAnotherLeafLeft)
-                this.scene.onAfterRenderObservable.addOnce(async () => await this.run());
+            // en fait jai trouvé mieux
+            if (isAnotherLeafLeft) {
+                if (continuousMode)
+                    this.scene.onAfterRenderObservable.addOnce(async () => await this.run());
+                else {
+                    this.level.reinitLevel();
+                    this.canRun = true;
+                }
+            }
         }
     }
 
     public onGoalUnreached() {
+        if (!this.canRun) return;
         this.stopRun();
         new OneButtonModal(
             this.advancedTexture,
@@ -524,6 +537,7 @@ export class PlayScene extends GameScene { // ;)
 
     public onRobotDead() {
         this.stopRun();
+        this.level.getRobot().die();
         new OneButtonModal(
             this.advancedTexture,
             "Vous êtes mort.",

@@ -23,8 +23,11 @@ export class ModalWindow extends Rectangle {
         this.shadowOffsetY = 1;
         this.shadowColor = "#00000040";
         this.shadowBlur = 6;
+        this.clipChildren = false;
 
         this.panel = new StackPanel();
+        this.panel.clipChildren = false;
+        this.panel.clipContent = false;
         this.addControl(this.panel);
 
         this.panel.addControl(new BaseVSpacer());

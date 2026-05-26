@@ -21,8 +21,8 @@ export class BlockCount extends Rectangle {
         this.shadowOffsetY = 1;
         this.shadowColor = "#00000040";
         this.shadowBlur = 6;
-        this.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-        this.top = "12%";
+        this.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+        //this.top = "12%";
 
         this.panel = new StackPanel("blockcount_sp");
         //this.panel.isVertical = false;
@@ -32,7 +32,7 @@ export class BlockCount extends Rectangle {
         this.countText.height = "30px";
         this.countText.fontFamily = "Inter";
         this.countText.fontWeight = "200";
-        this.countText.fontSize = 14;
+        //this.countText.fontSize = 14;
         this.panel.addControl(this.countText);
         root.addControl(this);
     }
