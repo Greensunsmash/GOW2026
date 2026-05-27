@@ -30,8 +30,8 @@ export class TopBar extends Rectangle {
         this.shadowBlur = 6;
         this.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
         this.top = "5px";
-        this.paddingLeft = "1%";
-        this.paddingRight = "1%";
+        this.paddingLeft = "10px";
+        this.paddingRight = "10px";
 
         const btn = new BaseButton("giveup-btn-nouvelleda", "‹   Retour base", onBackClick, 200);
         btn.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
@@ -68,7 +68,6 @@ export class TopBar extends Rectangle {
         
         this.addControl(rightPanel);
 
-        root.addControl(this);
     }
 
     loadClues(clues: string[]) {

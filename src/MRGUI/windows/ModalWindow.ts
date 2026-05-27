@@ -36,7 +36,7 @@ export class ModalWindow extends Rectangle {
         titleBlock.height = "50px";
         titleBlock.color = "white";
         titleBlock.fontSize = 18;
-        titleBlock.fontWeight = "300";
+        titleBlock.fontWeight = "400";
         titleBlock.fontFamily = "Inter";
         titleBlock.widthInPixels = title.length*10 + 20;
 

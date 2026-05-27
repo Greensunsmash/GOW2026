@@ -19,7 +19,7 @@ export class LeafNavigator extends Container {
         this.height = "40px";
         //this.adaptHeightToChildren = true;
         this.adaptWidthToChildren = true;
-        this.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+        //this.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
         this.clipChildren = false;
         this.clipContent = false;
         //this.zIndex = 100;

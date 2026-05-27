@@ -73,7 +73,8 @@ export class Game {
                     }
                 );
                 await this.switchScene(newScene);
-            }
+            },
+            () => this.switchToLevelSelect() 
         );
     }
 

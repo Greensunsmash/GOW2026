@@ -125,7 +125,7 @@ export class LevelPopup extends Rectangle {
     }
 
 
-    punchScale(): void {
+    private punchScale(): void {
         const anim = new Animation(
             "scalePunch",
             "scaleX", 
@@ -144,7 +144,7 @@ export class LevelPopup extends Rectangle {
 
         const animY = new Animation(
             "scalePunch",
-            "scaleX", 
+            "scaleY", 
             60,
             Animation.ANIMATIONTYPE_FLOAT,
             Animation.ANIMATIONLOOPMODE_CONSTANT

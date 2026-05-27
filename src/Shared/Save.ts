@@ -23,4 +23,8 @@ export class Save {
     static isCompleted(levelName: string): boolean {
         return this.getCompletedLevels().includes(levelName);
     }
+
+    static reset() {
+        sessionStorage.setItem(this.STORAGE_KEY, "[]");
+    }
 }

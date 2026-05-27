@@ -1,5 +1,5 @@
-import { ArcRotateCamera, Engine, Vector3 } from "@babylonjs/core";
-import { LayerMasks } from "../../Shared/Constants";
+import { ArcRotateCamera, Engine, KeyboardEventTypes, Vector3 } from "@babylonjs/core";
+import { INTRO_LEVEL, LayerMasks } from "../../Shared/Constants";
 import { LevelReader, type LevelIndexEntry } from "../../Environment/LevelReader";
 import { BaseScene } from "./BaseScene";
 import { Colors } from "../../Shared/Colors";
@@ -10,6 +10,8 @@ import { ArchipelTrigger } from "../../MRGUI/buttons/ArchipelTrigger";
 import { Control, Rectangle, TextBlock } from "@babylonjs/gui";
 import { Save } from "../../Shared/Save";
 import { LevelCount } from "../../MRGUI/levelsel/LevelCount";
+import { RealDialog } from "../../MRGUI/windows/RealDialog";
+import { TwoButtonModal } from "../../MRGUI/windows/TwoButtonsModal";
 
 export class LevelSelectScene extends BaseScene {
     public uiCamera: ArcRotateCamera;
@@ -23,14 +25,27 @@ export class LevelSelectScene extends BaseScene {
         this.scene.clearColor = BABYLON.Color4.FromHexString(Colors.SecondaryEnseignement);
     }
 
-    async init(onLevelSelect: (levelName: string) => Promise<void>) {
+    async init(onLevelSelect: (levelName: string) => Promise<void>, onReset: () => void) {
         console.log("init levelselectscene");
+
+        
+        this.uiCamera = new ArcRotateCamera("uiCamera", Math.PI/2, Math.PI/3, 10, Vector3.Zero(), this.scene);
+        this.uiCamera.layerMask = LayerMasks.UI_ONLY;
+
+        this.scene.activeCameras = [];
+        this.scene.activeCameras.push(this.uiCamera);
 
         const levelIndex: LevelIndexEntry[] = await LevelReader.getLevelList();
         console.log(levelIndex);
         if (levelIndex.length <= 0) {
             throw new Error("cannot fill level list: level index (index.json) is empty");
         }
+
+        if(!Save.isCompleted(INTRO_LEVEL)) {
+            this.intro(onLevelSelect);
+            return;
+        }
+
         this.levelPopup = new LevelPopup(this.advancedTexture, "T", () => {console.log("callback not set")});
 
         this.levelMap = new LevelSelectMap(this.advancedTexture, this);
@@ -75,12 +90,19 @@ export class LevelSelectScene extends BaseScene {
         this.levelCount.setTotal(levelIndex.length);
         this.levelCount.setCount(Save.getCompletedLevels().length);
         this.advancedTexture.addControl(this.levelCount);
-        
-        this.uiCamera = new ArcRotateCamera("uiCamera", Math.PI/2, Math.PI/3, 10, Vector3.Zero(), this.scene);
-        this.uiCamera.layerMask = LayerMasks.UI_ONLY;
 
-        this.scene.activeCameras = [];
-        this.scene.activeCameras.push(this.uiCamera);
+        this.scene.onKeyboardObservable.add((kbInfo) => {
+            if (kbInfo.type == KeyboardEventTypes.KEYUP) {
+                if (kbInfo.event.key === "Escape") {
+                    new TwoButtonModal(this.advancedTexture, "Effacer votre progression ?", "Annuler", "Confirmer",
+                        () => {
+                            Save.reset();
+                            onReset();
+                        }
+                    );
+                }
+            }
+        });
     }
 
     private createTitle() {
@@ -113,4 +135,11 @@ export class LevelSelectScene extends BaseScene {
         this.advancedTexture.addControl(titleRect);
     }
     
+    async intro(onEnd: (levelFile) => Promise<void>) {
+        await RealDialog.show(this.advancedTexture, this, "Tout va bien ?", true);
+        await RealDialog.show(this.advancedTexture, this, "Où es-tu passé ?", true);
+        await RealDialog.show(this.advancedTexture, this, "J'espère que rien n'est cassé...", true);
+        await RealDialog.show(this.advancedTexture, this, "Essayons de te déplacer pour vérifier.", false);
+        await onEnd(INTRO_LEVEL);
+    }
 }

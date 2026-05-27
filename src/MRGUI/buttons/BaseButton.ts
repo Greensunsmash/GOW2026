@@ -43,42 +43,45 @@ export class BaseButton extends RealBaseButton {
 }
 
 export class IconButton extends RealBaseButton {
-    public textBlk: TextBlock;
+    public textBlk?: TextBlock;
     public icon: TextBlock;
     public sp: StackPanel;
 
     constructor(name: string, label: string, icon: string, callback: () => void, width: number = 120, height: number = 40, useSecretAlgorithm = false) {
+
         super(name, label, callback, width, height, useSecretAlgorithm);
         this.sp = new StackPanel(name + "-btn-sp");
         this.sp.spacing = 5;
-        this.sp.paddingLeft = "10%";
-        this.sp.paddingRight = "10%";
+        this.sp.paddingLeft = "15px";
+        this.sp.paddingRight = "15px";
         this.sp.isVertical = false;
 
-        this.textBlk = new TextBlock(name + "-btn-labelblk");
-        this.textBlk.text = label;
-        this.textBlk.widthInPixels = width === 0 ? (10*label.length) : width;
-        this.textBlk.fontFamily = "Inter";
-        this.textBlk.fontWeight = "300";
-        this.textBlk.fontSize = 14;
-        this.textBlk.color = "white";
+        if (label !== "") {
+            this.textBlk = new TextBlock(name + "-btn-labelblk");
+            this.textBlk.text = label;
+            this.textBlk.resizeToFit = true;
+            this.textBlk.fontFamily = "Inter";
+            this.textBlk.fontWeight = "300";
+            this.textBlk.color = "white";
+        }
 
         this.icon = new TextBlock(name + "-btn-iconblk");
         this.icon.text = icon;
-        this.icon.width = "15px";
+        this.icon.width = "20px";
         this.icon.fontFamily = "Material Symbols Outlined";
         this.icon.fontWeight = "200";
-        this.icon.fontSize = 14;
+        this.icon.fontSize = 24;
         this.icon.color = "white";
         this.icon.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
         this.icon.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+        this.icon.paddingTop = "7.5%";
         //this.icon.height = "10px";
 
         this.sp.addControl(this.icon);
-        this.sp.addControl(this.textBlk);
+        if (this.textBlk) this.sp.addControl(this.textBlk);
         this.addControl(this.sp);
 
-        this.adaptWidthToChildren = true;
+        this.widthInPixels = width = width === 0 ? (10*label.length) : width;
     }
 }
 

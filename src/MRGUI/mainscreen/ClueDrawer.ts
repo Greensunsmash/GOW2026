@@ -89,6 +89,7 @@ export class ClueDrawer extends Rectangle {
     loadClues(clues: string[]) {
         this.clues = clues;
         this.lastClueIndex = -1;
+        this.cluesPanel.clearControls();
 
         if (this.clues.length >= 1) {
             this.cluesPanel.addControl(this.btn);

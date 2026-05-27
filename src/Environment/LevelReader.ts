@@ -69,8 +69,8 @@ type LevelData = {
         blockset: any;
         block_limitation: number | undefined;
         goal: any;
-        begin_dialog: string;
-        end_dialog: string;
+        begin_dialogs: string[];
+        end_dialogs: string[];
         clues: string[];
     }[];
 };
@@ -87,8 +87,8 @@ export class LevelReader {
     private clues: string[][] = [];
     private blockLimit: (number | null)[] = [];
     private goals: Goal[][] = [];
-    private beginDialog: (string | null)[] = [];
-    private endDialog: (string | null)[] =  [];
+    private beginDialogs: (string[] | null)[] = [];
+    private endDialogs: (string | null)[] =  [];
     
     static async init() {
         // Aucune interception d'erreurs, on catch ailleurs
@@ -147,8 +147,8 @@ export class LevelReader {
         this.blockset = [];
         this.blockLimit = [];
         this.goals = [];
-        this.beginDialog = [];
-        this.endDialog = [];
+        this.beginDialogs = [];
+        this.endDialogs = [];
     }
 
     async loadLevel(name: string): Promise<void> {
@@ -177,8 +177,8 @@ export class LevelReader {
                 
                 this.goals.push(island.goal);
 
-                this.beginDialog.push(island.begin_dialog || null);
-                this.endDialog.push(island.end_dialog || null);
+                this.beginDialogs.push(island.begin_dialogs || null);
+                this.endDialogs.push(island.end_dialogs || null);
             }
 
             //console.log("json level loaded !");
@@ -201,12 +201,12 @@ export class LevelReader {
         return this.structure[nb];
     }
 
-    public getBeginDialog(nb: number): string | null {
-        return this.beginDialog[nb];
+    public getBeginDialog(nb: number): string[] | null {
+        return this.beginDialogs[nb];
     }
 
-    public getEndDialog(nb: number): string | null {
-        return this.endDialog[nb];
+    public getEndDialog(nb: number): string[] | null {
+        return this.endDialogs[nb];
     }
 
     public getClues(nb: number): string[] {

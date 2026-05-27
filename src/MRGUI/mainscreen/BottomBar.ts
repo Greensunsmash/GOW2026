@@ -23,8 +23,8 @@ export class BottomBar extends Rectangle {
         onPlayPause: () => void
     ) {
         super("bottombar");
-        this.height= "70px";
-        this.width = "98%";
+        this.height= "50%";
+        this.adaptWidthToChildren = true;
         this.color = "white";
         this.thickness = 0;
         this.background = "#00000000";
@@ -34,9 +34,9 @@ export class BottomBar extends Rectangle {
         this.shadowColor = "#00000040";
         this.shadowBlur = 6;
         this.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
-        this.top = "-5px";
-        this.paddingLeft = "1%";
-        this.paddingRight = "1%";
+        this.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+        this.paddingBottom = "20px";
+        this.paddingRight = "58px";
 
         /*const btn = new IconButton("play-btn-newda", "Lancer", "\ue037", () => {}, 80);
         btn.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
@@ -46,20 +46,26 @@ export class BottomBar extends Rectangle {
         btn.paddingBottomInPixels = 5;
         this.addControl(btn);*/
 
-        this.firstBtn = new BaseButton("first", "⏮   Début", () => onFirst(), 200);
-        this.firstBtn.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
-        this.firstBtn.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
-        this.firstBtn.paddingLeftInPixels = 18;
-        this.addControl(this.firstBtn);
+        const panel = new StackPanel();
+        panel.isVertical = true;
+        panel.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+        panel.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+        panel.spacing = 15;
 
-        this.cdPlaybar = new CDPlaybar(this, onPrev, onNext, onDryAttempt, onPlayPause);
-        this.addControl(this.cdPlaybar);
+        this.cdPlaybar = new CDPlaybar(this, onFirst, onPrev, onNext, onDryAttempt, onPlayPause);
+        this.cdPlaybar.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+        this.cdPlaybar.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
 
         this.leafNav = new LeafNavigator(this, onPrevLeaf, onNextLeaf);
-        this.leafNav.paddingRightInPixels = 18;
-        this.addControl(this.leafNav);
+        this.leafNav.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+        this.leafNav.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
+        //this.leafNav.paddingRightInPixels = 18;
 
-        root.addControl(this);
+        
+        panel.addControl(this.leafNav);
+        panel.addControl(this.cdPlaybar);
+
+        this.addControl(panel);
     }
 
     updateLeafIndicator(text: string) {
@@ -68,21 +74,5 @@ export class BottomBar extends Rectangle {
 
     triggerUpdate() {
         this.cdPlaybar.triggerUpdate();
-
-        const playing = Memory.get().isPlaying();
-        const atStart = !Memory.get().getCurrentInstruction();
-        const hasEnded = Memory.get().hasEnded();
-
-        if (playing) {
-            this.firstBtn.isEnabled = false;
-        } else {
-            if (atStart) {
-                this.firstBtn.isEnabled = false;
-            } else if (hasEnded) {
-                this.firstBtn.isEnabled = true;
-            } else {
-                this.firstBtn.isEnabled = true;
-            }
-        }
     }
 }

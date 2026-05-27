@@ -1,6 +1,7 @@
 import { Container, Control, Rectangle, StackPanel, TextBlock } from "@babylonjs/gui";
 import type { ItemType } from "../../Environment/LevelReader";
 import { Colors } from "../../Shared/Colors";
+import { Animation } from "@babylonjs/core";
 
 export class ItemsHUD extends Rectangle {
     private panel :StackPanel;
@@ -49,8 +50,41 @@ export class ItemsHUD extends Rectangle {
         this.isVisible = true;
         if (itemCount >= goalItemCount) {
             this.background = Colors.Accent;
+            this.punchScale();
+            this.itemsText.fontWeight = "400";
         } else {
             this.background = Colors.AccentDuSud;
+            this.itemsText.fontWeight = "200";
         }
+    }
+
+    private punchScale(intense: boolean = true): void {
+        const anim = new Animation(
+            "scalePunch",
+            "scaleX", 
+            60,
+            Animation.ANIMATIONTYPE_FLOAT,
+            Animation.ANIMATIONLOOPMODE_CONSTANT
+        );
+
+        const keys = [
+            { frame: 0,  value: 1    },
+            { frame: 4,  value: intense ? 0.96 : 0.99 },
+            { frame: 8,  value: intense ? 1.04 : 1.01 },
+            { frame: 12, value: 1    },
+        ];
+        anim.setKeys(keys);
+
+        const animY = new Animation(
+            "scalePunch",
+            "scaleY", 
+            60,
+            Animation.ANIMATIONTYPE_FLOAT,
+            Animation.ANIMATIONLOOPMODE_CONSTANT
+        );
+        animY.setKeys(keys);
+
+        this.animations = [anim, animY];
+        this._host.getScene()!.beginAnimation(this, 0, 12, false);
     }
 }

@@ -6,7 +6,7 @@ import { LevelReader, State, type IslandMap, type ItemType } from "../../Environ
 import { Memory, type GameMode } from "../../Language/Memory";
 import { QuitButton } from "../../MRGUI/buttons/QuitButton";
 import { OneButtonModal } from "../../MRGUI/windows/OneButtonModal";
-import { ASSETS_ROOT, LayerMasks } from "../../Shared/Constants";
+import { ASSETS_ROOT, INTRO_LEVEL, LayerMasks } from "../../Shared/Constants";
 import { ExecutionContext } from "../ExecutionContext";
 import { GameScene } from "./GameScene";
 import { StructureContainer } from "../../Containers/StructureContainer";
@@ -57,10 +57,16 @@ export class PlayScene extends GameScene { // ;)
     async init(levelName: string | undefined = "level1.json", onLevelGaveup?: () => void, onLevelWon?: (succededLevel: string) => void) {
         
         this.topBar = new TopBar(this.advancedTexture, () => {
-            if (onLevelGaveup)
-                onLevelGaveup();
+            new TwoButtonModal(
+                this.advancedTexture,
+                "Abandonner et retourner à la base ?",
+                "Annuler",
+                "Abandonner",
+                () => onLevelGaveup?.()
+            );
         });
-        this.advancedTexture.addControl(this.topBar);
+        if (levelName !== INTRO_LEVEL)
+            this.advancedTexture.addControl(this.topBar);
 
         
         this.btmBar = new BottomBar(this.advancedTexture,
@@ -445,6 +451,7 @@ export class PlayScene extends GameScene { // ;)
     public reset() { // Permet de revenir à l'état initiale
         const effectiveReset = () => {
             this.clearHighlights();
+            this.memory.programEnd();
             this.memory.setPlaying(false);
             this.memory.clear();
             this.level.reinitLevel();
@@ -456,9 +463,10 @@ export class PlayScene extends GameScene { // ;)
 
         if (!this.memory.isPlaying() && !this.memory.isCurrentlyMoving()) {
             effectiveReset();
+            return;
         }
         this.memory.reset_callback = () => effectiveReset();
-        this.memory.wait_reset = true
+        this.memory.wait_reset = true;
     }
 
     public nextStep(skip : boolean = false){
