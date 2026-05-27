@@ -21,8 +21,8 @@ export class TopBar extends Rectangle {
         this.height= "70px";
         this.width = "98%";
         this.color = "white";
-        this.thickness = 2;
-        this.background = Colors.ToolboxBg;
+        this.thickness = 0;
+        this.background = "#00000000";
         this.cornerRadius = Colors.CornerRadiusVraimentArrondi;
         this.shadowOffsetX = 1;
         this.shadowOffsetY = 1;

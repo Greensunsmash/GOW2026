@@ -65,15 +65,22 @@ export class CDPlaybar extends Container {
 
     public triggerUpdate() {
         const playing = Memory.get().isPlaying();
+        const moving = Memory.get().isCurrentlyMoving();
         const atStart = !Memory.get().getCurrentInstruction();
         const hasEnded = Memory.get().hasEnded();
 
-        if (playing) {
+        if (moving) {
             this.backBtn.isEnabled = false;
             this.nextBtn.isEnabled = false;
-            this.playBtn.setText("⏸️ Pause");
-            this.playBtn.setCallback(this.onPlayPause);
+            if (playing) {
+                this.playBtn.isEnabled = true;
+                this.playBtn.setText("⏸️ Pause");
+                this.playBtn.setCallback(this.onPlayPause);
+            } else {
+                this.playBtn.isEnabled = false;
+            }
         } else {
+            this.playBtn.isEnabled = true;
             if (atStart) {
                 this.backBtn.isEnabled = false;
                 this.nextBtn.isEnabled = true;

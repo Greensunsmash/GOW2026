@@ -27,7 +27,6 @@ export class TurnRightInstruction extends Instruction {
 
         if (memory.isPlaying()) this.next();
     }
-
     async back() {
         const memory = Memory.get();
         memory.setCurrentlyMoving(true);

@@ -30,7 +30,8 @@ export class Pour extends Group implements Executable {
         if (val.getType() === "INT") {
             this.max_loop_nb.push(val.getValue() as number);
             this.loop_nb.push(1);
-            this.next();
+            if (this.max_loop_nb[this.max_loop_nb.length-1] == 0) this.jump_next();
+            else this.next();
         }
         else console.log("oups");
     }
