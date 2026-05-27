@@ -39,6 +39,9 @@
                         "itemType": "!"
                     }
                 }
+            ],
+            "clues": [
+                "A part bien compter, il n'y a pas de secret"
             ]
         },
         {
@@ -48,7 +51,7 @@
             "layouts":[
                 [
                     [".  ","...","...","...","  ."],
-                    ["@  "," ! ","! !"," ! ","  x"]
+                    ["@  ","   ","! !","   ","  x"]
                 ]
             ],
             "blockset": {
@@ -80,6 +83,9 @@
                         "itemType": "!"
                     }
                 }
+            ],
+            "clues": [
+                "A part bien compter, il n'y a pas de secret"
             ]
         },
         {
@@ -121,6 +127,9 @@
                         "itemType": "!"
                     }
                 }
+            ],
+            "clues": [
+                "A part bien compter, il n'y a pas de secret"
             ]
         },
         {
@@ -177,6 +186,10 @@
                         "itemType": "!"
                     }
                 }
+            ],
+            "clues": [
+                "Comment faire pour vérifier à chaque case s'il y a un débris ?",
+                "Inspire toi du niveau précédent"
             ]
         }
     ]

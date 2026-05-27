@@ -47,7 +47,10 @@
             {
             "name": "arrival"
             }
-        ]
+        ],
+      "clues": [
+          "Comment se déplacer tant qu'il n'y a rien en face ?"
+      ]
     },
     {
       "nb": 2,
@@ -103,7 +106,13 @@
       "goal": [
         {
           "name": "arrival"
-        }]
+        }],
+      "clues": [
+          "Utilse \"On met la valeur de x à ...\" pour modifier la valeur de x, et \"Variable x\" pour utiliser la valeur actuelle de x",
+          "Tu peux augmenter de 1 la valeur d'une variable x, en utilisant \" ... + 1\" avec \"Variable x\"",
+          "En augmentant la variable à chaque déplacement, je peux compter le nombre de déplacements",
+          "Grâce aux blocs \"Répeter ... fois\" et \"Variable x\", tu peux répeter une action autant de fois que la valeur stockée par x"
+      ]
     },
     {
       "nb": 3,
@@ -166,6 +175,10 @@
                 "itemType": "!"
             }
         }
+      ],
+      "clues": [
+          "Il faut reculer d'autant que l'on a avancé",
+          "Compte le nombre de mouvements aller, et recule d'autant"
       ]
     },
     {

@@ -53,7 +53,13 @@
                     }
                 }
             ],
-            "block_limitation":7
+            "block_limitation":7,
+            "clues": [
+                "Comment mesurer la distance jusqu'au drapeau ?",
+                "Comment se déplacer tant qu'on est sur un débris ?",
+                "Répéter un bloc \"Si ... faire\" permet de s'en rapprocher",
+                "Il faut avancer (afin de se placer correctement pour la suite), répéter 3 fois avancer si sur un débris, et avancer une dernière fois"
+            ]
         },
         {
             "nb":2,
@@ -116,7 +122,12 @@
                     }
                 }
             ],
-            "block_limitation":7
+            "block_limitation":7,
+            "clues": [
+                "Comment mesurer la distance jusqu'au drapeau ?",
+                "Mettre le capteur \"Se trouve sur un débris\" dans le bloc \"Pas\" permet de déterminer si on se trouve pas sur un débris",
+                "En t'inspirant de l'île précédente, déplace toi tant que tu n'es pas sur un débris"
+            ]
         },
         {
             "nb":3,
@@ -179,7 +190,13 @@
                     }
                 }
             ],
-            "block_limitation":9
+            "block_limitation":9,
+            "clues": [
+                "Comment s'arréter sur le débris ?",
+                "Tant que tu n'es pas sur un débris, va au prochain emplacement",
+                "Place toi au premier emplacement, avant la boucle. Ne ramasse pas le débris dans la boucle, sinon elle continuera",
+                "Il faut avancer, répéter tant qu'on n'est pas sur un débris reculer tourner à gauche et avancer, et enfin ramasser et avancer"
+            ]
         },
         {
             "nb":4,
@@ -238,7 +255,12 @@
                     }
                 }
             ],
-            "block_limitation":10
+            "block_limitation":10,
+            "clues": [
+                "Sur la précédente ile, tu t'es déplacé dans la direction du débris a coté de toi",
+                "Comment suivre un chemin formé par des debris",
+                "Répète 6 fois la précédent programme, puis avance une fois"
+            ]
         }
     ]
 }

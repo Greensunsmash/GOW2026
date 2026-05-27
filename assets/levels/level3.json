@@ -25,7 +25,10 @@
                 ]
             },
             "goal":[{"name": "arrival"}],
-            "block_limitation": 6
+            "block_limitation": 6,
+            "clues" : [
+                "Utiliser \"Répéter ... fois\" pour économiser des blocs"
+            ]
         },
         {
             "nb" : 2,
@@ -52,7 +55,12 @@
                 ]
             },
             "goal":[{"name": "arrival"}],
-            "block_limitation": 8
+            "block_limitation": 8,
+            "clues" : [
+                "Cette île ne serait-elle pas similaire à la précédente ?",
+                "Faites attention à bien repartir dans le bon sens",
+                "Ajouter tourner à gauche à la fin du programme précédent, puis répétez le tout 2 fois"
+            ]
         },
         {
             "nb" : 3,
@@ -79,7 +87,12 @@
                 ]
             },
             "goal":[{"name": "arrival"}],
-            "block_limitation": 10
+            "block_limitation": 10,
+            "clues" : [
+                "Cette île ne serait-elle pas similaire à la précédente ?",
+                "Faites attention à bien repartir dans le bon sens",
+                "Ajouter tourner à droite à la fin du programme précédent, puis répétez le tout 2 fois"
+            ]
         }
     ]
 }
