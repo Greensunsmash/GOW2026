@@ -24,7 +24,7 @@ export class WaitInstruction extends Instruction {
         Memory.get().setCurrentInstruction(this);
 
         memory.setCurrentlyMoving(false);
-
+        
         if (Memory.get().isPlaying()) this.next();
     }
 

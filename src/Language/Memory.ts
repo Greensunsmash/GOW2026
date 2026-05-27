@@ -139,6 +139,7 @@ export class Memory {
     public stepBack(): void {
         console.log("stepBack called, current:", this.current_instruction, "moving:", this.currentlyMoving, "playing:", this.playing);
         if (this.currentlyMoving || this.isPlaying()) return;
+        if (this.current_instruction) this.ended = false;
         this.current_instruction?.back();
         //Memory.print();
         this.onUpdate?.();
@@ -201,6 +202,7 @@ export class Memory {
 
     public hasEnded() {return this.ended;}
 
+    public triggerUpdate() {this.onUpdate?.();}
     public setOnStateUpdate(onUpdate: (() => void) | undefined) {this.onUpdate = onUpdate;}
     public setOnProgramEnd(onProgramEnd: (() => void) | undefined) {this.onProgramEnd = onProgramEnd;}
 
@@ -208,6 +210,7 @@ export class Memory {
     public setCurrentlyMoving(isMoving:boolean) {
         if (this.wait_reset) {this.currentlyMoving = false; this.reset_callback();}
         else this.currentlyMoving = isMoving;
+        this.onUpdate?.();
     }
     public getGameMode(): GameMode {return this.gameMode;}
     public setGameMode(gm: GameMode) {this.gameMode = gm;}
