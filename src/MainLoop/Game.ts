@@ -5,11 +5,13 @@ import { LayerMasks } from "../Shared/Constants";
 import { LevelSelectScene } from "./Scene/LevelSelectScene";
 import type { BaseScene } from "./Scene/BaseScene";
 import { LevelReader } from "../Environment/LevelReader";
+import { Save } from "../Shared/Save";
 
 export class Game {
 
     public engine: Engine;
     public currentScene : BaseScene;
+    public static STORAGE_KEY = "succeededLevels";
 
     constructor(canvas: HTMLCanvasElement) {
         DefaultLoadingScreen.DefaultLogoUrl = "/fulltransparent.png";
@@ -64,7 +66,9 @@ export class Game {
                     () => {
                         this.switchToLevelSelect();
                     },
-                    () => {
+                    (suceededLevelFile: string) => {
+                        console.log(`level ${suceededLevelFile} won !`);
+                        Save.completeLevel(suceededLevelFile);
                         this.switchToLevelSelect();
                     }
                 );

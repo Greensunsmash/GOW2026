@@ -11,6 +11,8 @@ export class ArchipelTrigger extends Button {
 
         this.widthInPixels = 300;
         this.heightInPixels = 300;
+        this.cornerRadius = 100;
+        this.background = "#ffffff02";
 
         this.callback = callback;
         this.onPointerClickObservable.add(() => this.onClick());
@@ -48,13 +50,21 @@ export class ArchipelTrigger extends Button {
     onClick() {
         this.innerCircle.isVisible = !this.innerCircle.isVisible;
         this.callback?.();
+
+        if (this.innerCircle.isVisible) {
+            this.background = "#ffffff07";
+        } else {
+            this.background = "#ffffff02";
+        }
     }
 
     setUnselected() {
         this.innerCircle.isVisible = false;
+        this.background = "#ffffff02";
     }
 
     setDone() {
         this.outerCircle.color = Colors.Accent;
+        this.innerCircle.color = Colors.Accent;
     }
 }

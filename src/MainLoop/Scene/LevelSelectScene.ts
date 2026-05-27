@@ -8,12 +8,15 @@ import { BaseButton } from "../../MRGUI/buttons/BaseButton";
 import { LevelPopup } from "../../MRGUI/levelsel/LevelPopup";
 import { ArchipelTrigger } from "../../MRGUI/buttons/ArchipelTrigger";
 import { Control, Rectangle, TextBlock } from "@babylonjs/gui";
+import { Save } from "../../Shared/Save";
+import { LevelCount } from "../../MRGUI/levelsel/LevelCount";
 
 export class LevelSelectScene extends BaseScene {
     public uiCamera: ArcRotateCamera;
     private levelMap: LevelSelectMap;
     private levelPopup: LevelPopup;
     private archipelBtns: ArchipelTrigger[] = [];
+    private levelCount: LevelCount;
 
     constructor(engine: Engine) {
         super(engine);
@@ -28,13 +31,6 @@ export class LevelSelectScene extends BaseScene {
         if (levelIndex.length <= 0) {
             throw new Error("cannot fill level list: level index (index.json) is empty");
         }
-        /*const levelSelectModal = new LevelSelectModal(
-            this.advancedTexture,
-            levelIndex,
-            async (levelName: string) => {
-                await onLevelSelect(levelName);
-            }
-        );*/
         this.levelPopup = new LevelPopup(this.advancedTexture, "T", () => {console.log("callback not set")});
 
         this.levelMap = new LevelSelectMap(this.advancedTexture, this);
@@ -50,6 +46,8 @@ export class LevelSelectScene extends BaseScene {
                 this.levelPopup.switchLevelShown(lvl.file, lvl.name);
                 this.levelPopup.btn.setCallback(async () => await onLevelSelect(lvl.file));
             });
+            if (Save.isCompleted(lvl.file))
+                btn.setDone();
 
             const width = this.levelMap.getContentRoot().widthInPixels;
             const height = this.levelMap.getContentRoot().heightInPixels;
@@ -71,6 +69,21 @@ export class LevelSelectScene extends BaseScene {
         
         this.advancedTexture.addControl(this.levelPopup);
 
+        this.createTitle();
+        
+        this.levelCount = new LevelCount(this.advancedTexture);
+        this.levelCount.setTotal(levelIndex.length);
+        this.levelCount.setCount(Save.getCompletedLevels().length);
+        this.advancedTexture.addControl(this.levelCount);
+        
+        this.uiCamera = new ArcRotateCamera("uiCamera", Math.PI/2, Math.PI/3, 10, Vector3.Zero(), this.scene);
+        this.uiCamera.layerMask = LayerMasks.UI_ONLY;
+
+        this.scene.activeCameras = [];
+        this.scene.activeCameras.push(this.uiCamera);
+    }
+
+    private createTitle() {
         const title = new TextBlock();
         title.text = "Carte du Nouveau Monde";
         title.widthInPixels = title.text.length*20;
@@ -98,12 +111,6 @@ export class LevelSelectScene extends BaseScene {
         titleRect.height = "60px";
 
         this.advancedTexture.addControl(titleRect);
-        
-
-        this.uiCamera = new ArcRotateCamera("uiCamera", Math.PI/2, Math.PI/3, 10, Vector3.Zero(), this.scene);
-        this.uiCamera.layerMask = LayerMasks.UI_ONLY;
-
-        this.scene.activeCameras = [];
-        this.scene.activeCameras.push(this.uiCamera);
     }
+    
 }

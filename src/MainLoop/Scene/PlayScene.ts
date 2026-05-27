@@ -22,6 +22,7 @@ import { TwoButtonModal } from "../../MRGUI/windows/TwoButtonsModal";
 export class PlayScene extends GameScene { // ;)
     //private player: Player;
 
+    private loadedFile: string = "";
     private levelReader: LevelReader;
     private currentIsland: number = 0;
     private currentIslandMap: IslandMap;
@@ -33,7 +34,7 @@ export class PlayScene extends GameScene { // ;)
     public shadowGenerator: ShadowGenerator;
 
     private onLevelGaveup?: () => void;
-    private onLevelWon?: () => void;
+    private onLevelWon?: (levelFile: string) => void;
 
     private canRun: boolean = true;
     private dryAttemptMode: boolean = false;
@@ -53,7 +54,7 @@ export class PlayScene extends GameScene { // ;)
         //this.player.update();
     }
 
-    async init(levelName: string | undefined = "level1.json", onLevelGaveup?: () => void, onLevelWon?: () => void) {
+    async init(levelName: string | undefined = "level1.json", onLevelGaveup?: () => void, onLevelWon?: (succededLevel: string) => void) {
         
         this.topBar = new TopBar(this.advancedTexture, () => {
             if (onLevelGaveup)
@@ -129,6 +130,7 @@ export class PlayScene extends GameScene { // ;)
     }
 
     async initGameScene(levelName: string) {
+        this.loadedFile = levelName;
         this.scene.getEngine().displayLoadingUI();
 
         this.uiCamera = new ArcRotateCamera("uiCamera", Math.PI / 2, Math.PI / 3, 10, Vector3.Zero(), this.scene);
@@ -352,7 +354,7 @@ export class PlayScene extends GameScene { // ;)
                 this.advancedTexture,
                 "Félicitations, vous avez vaincu l'archipel !",
                 "Retour à la base",
-                () => { if (this.onLevelWon) this.onLevelWon() }
+                () => { if (this.onLevelWon) this.onLevelWon(this.loadedFile) }
             );
             return;
         }
