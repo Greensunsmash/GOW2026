@@ -6,7 +6,7 @@ import { LevelReader, State, type IslandMap, type ItemType } from "../../Environ
 import { Memory, type GameMode } from "../../Language/Memory";
 import { QuitButton } from "../../MRGUI/buttons/QuitButton";
 import { OneButtonModal } from "../../MRGUI/windows/OneButtonModal";
-import { ASSETS_ROOT, INTRO_LEVEL, LayerMasks } from "../../Shared/Constants";
+import { ASSETS_ROOT, INTRO_LEVELS, LayerMasks } from "../../Shared/Constants";
 import { ExecutionContext } from "../ExecutionContext";
 import { GameScene } from "./GameScene";
 import { StructureContainer } from "../../Containers/StructureContainer";
@@ -17,6 +17,8 @@ import { SetVarContainer } from "../../Containers/Prefabs/SetVarContainer";
 import { TopBar } from "../../MRGUI/mainscreen/TopBar";
 import { BottomBar } from "../../MRGUI/mainscreen/BottomBar";
 import { TwoButtonModal } from "../../MRGUI/windows/TwoButtonsModal";
+import { RealDialog } from "../../MRGUI/windows/RealDialog";
+import { Save } from "../../Shared/Save";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene { // ;)
@@ -59,13 +61,13 @@ export class PlayScene extends GameScene { // ;)
         this.topBar = new TopBar(this.advancedTexture, () => {
             new TwoButtonModal(
                 this.advancedTexture,
-                "Abandonner et retourner à la base ?",
+                "Abandonner et retourner à la carte ?",
                 "Annuler",
                 "Abandonner",
                 () => onLevelGaveup?.()
             );
         });
-        if (levelName !== INTRO_LEVEL)
+        if (INTRO_LEVELS.includes(levelName) || INTRO_LEVELS.every(Save.isCompleted))
             this.advancedTexture.addControl(this.topBar);
 
         
@@ -81,14 +83,6 @@ export class PlayScene extends GameScene { // ;)
         this.advancedTexture.addControl(this.btmBar);
 
         await this.initGameScene(levelName);
-
-        //this.advancedTexture.addControl(this.mainNav);
-        /*this.advancedTexture.addControl(
-            new QuitButton(this.leftPanel, () => {
-                if (onLevelGaveup)
-                    onLevelGaveup();
-            })
-        );*/
 
         this.scene.onKeyboardObservable.add((kbInfo) => {
             if (kbInfo.type == KeyboardEventTypes.KEYUP) {
@@ -123,11 +117,7 @@ export class PlayScene extends GameScene { // ;)
                 } else if (kbInfo.event.key == "r") {
                     console.log("reset");
                     this.reset();
-                } else if (kbInfo.event.key == "t") {
-                    console.log("toggle mgl");
-                   // this.memory.toggleCurrentBloc();
                 }
-
             }
         });
 
@@ -275,13 +265,18 @@ export class PlayScene extends GameScene { // ;)
         if (next >= this.currentIslandMap.length) {
             console.log("Dernière feuille atteinte. manual : " + manual);
             if (!manual) {
-                console.log(this.levelReader.getEndDialog(this.currentIsland));
-                new OneButtonModal(
-                    this.advancedTexture,
-                    this.levelReader.getEndDialog(this.currentIsland) || "L'île est terminée !",
-                    "Continuer",
-                    async () => await this.nextIsland()
-                );
+                const endDialogs = this.levelReader.getEndDialog(this.currentIsland);
+                if (endDialogs) {
+                    await this.showDialogs(endDialogs);
+                    await this.nextIsland();
+                } else {
+                    new OneButtonModal(
+                        this.advancedTexture,
+                        "L'île est terminée !",
+                        "Continuer",
+                        async () => await this.nextIsland()
+                    );
+                }
                 return false;
             } else {
                 /*new OneButtonModal(
@@ -340,14 +335,16 @@ export class PlayScene extends GameScene { // ;)
             this.btmBar.triggerUpdate();
         });
 
-        const beginDialog = this.levelReader.getBeginDialog(this.currentIsland);
-        if (beginDialog) {
-            new OneButtonModal(
-                this.advancedTexture,
-                beginDialog,
-                "Let's go !",
-                () => { }
-            );
+        const beginDialogs = this.levelReader.getBeginDialogs(this.currentIsland);
+        if (beginDialogs) {
+            this.showDialogs(beginDialogs);
+        }
+    }
+
+    public async showDialogs(dialogs: string []) {
+        for (let i = 0; i < dialogs.length; i++) {
+            const dialog = dialogs[i];
+            await RealDialog.show(this.advancedTexture, this, dialog, (i < dialogs.length - 1));
         }
     }
 
@@ -358,8 +355,8 @@ export class PlayScene extends GameScene { // ;)
             console.log("Dernière île atteinte");
             new OneButtonModal(
                 this.advancedTexture,
-                "Félicitations, vous avez vaincu l'archipel !",
-                "Retour à la base",
+                "Félicitations, tu as vaincu cet archipel !",
+                "Retour à la carte",
                 () => { if (this.onLevelWon) this.onLevelWon(this.loadedFile) }
             );
             return;

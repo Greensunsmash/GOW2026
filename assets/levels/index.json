@@ -1,6 +1,5 @@
 {
   "levels": [
-    {"file": "level0.json", "name": "Test indices"},
     {"file": "level1.json", "name": "Une intro bien assaisonnée", "x": 100 , "y": 200},
     {"file": "level2.json", "name": "C'est quoi des boucles ?", "x": 550, "y": 500},
     {"file": "level3.json", "name": "Ca se complique..."},

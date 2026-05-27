@@ -18,7 +18,7 @@ export class RealDialog extends Rectangle {
         this.auto = auto;
 
         this.blocker = new GreyBlocker();
-        this.blocker.background = "rgba(0, 0, 0, 0.95)";
+        this.blocker.background = "rgba(36, 36, 36, 1)";
         this.blocker.addControl(this);
 
         this.width = "500px";

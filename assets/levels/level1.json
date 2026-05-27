@@ -2,7 +2,10 @@
     "islands": [
         {
             "nb" : 1,
-            "begin_dialog" : "Bienvenue mon coco !",
+            "end_dialogs": [
+                "Bon, tu sembles encore fonctionner.",
+                "Tu peux essayer de te déplacer un petit peu plus pour voir ?"
+            ],
             "layouts": [
                 [
                     ["...", "..."],
@@ -22,7 +25,10 @@
         },
         {
             "nb" : 2,
-            "begin_dialog" : "Vas-y, encore plus !",
+            "end_dialogs": [
+                "Super.",
+                "Maintenant, voyons si tu peux encore tourner comme il faut."
+            ],
             "layouts": [
                 [
                     ["...", "...", "...", "..."],
@@ -42,7 +48,7 @@
         },
         {
             "nb" : 3,
-            "begin_dialog" : "Tourne Francis",
+            "end_dialogs": ["On dirait que tout marche encore bien.", "Bon, sors de cette île et viens me retrouver !"],
             "layouts": [
                 [
                     [" .  ", " .  ", " .  ", " ..."],
@@ -64,8 +70,7 @@
         },
         {
             "nb" : 4,
-            "begin_dialog" : "C'est ton moment de shine",
-            "end_dialog" : "Bravo champion",
+            "end_dialogs" : ["Hmm, c'est étrange.", "Je n'arrive pas encore à te localiser sur le GPS.", "Il va falloir que t'explores encore un peu."],
             "layouts": [
                 [
                     ["  .  ", "...  ", ".    ", ".....", "    .", "  ...", "  .  "],

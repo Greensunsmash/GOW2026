@@ -1,7 +1,7 @@
 import { Engine, ArcRotateCamera, Vector3, Viewport, DefaultLoadingScreen } from "@babylonjs/core";
 import { GameScene } from "./Scene/GameScene";
 import { PlayScene } from "./Scene/PlayScene";
-import { LayerMasks } from "../Shared/Constants";
+import { INTRO_LEVELS, LayerMasks } from "../Shared/Constants";
 import { LevelSelectScene } from "./Scene/LevelSelectScene";
 import type { BaseScene } from "./Scene/BaseScene";
 import { LevelReader } from "../Environment/LevelReader";
@@ -15,8 +15,8 @@ export class Game {
 
     constructor(canvas: HTMLCanvasElement) {
         DefaultLoadingScreen.DefaultLogoUrl = "/fulltransparent.png";
-        DefaultLoadingScreen.DefaultSpinnerUrl = "/marcorobo.png";
-        const loading = new DefaultLoadingScreen(canvas, '');
+        DefaultLoadingScreen.DefaultSpinnerUrl = "/fulltransparent.png";
+        const loading = new DefaultLoadingScreen(canvas, 'chargement');
         this.engine = new Engine(canvas, true, {
             /* horrible */
             //adaptToDeviceRatio: true 

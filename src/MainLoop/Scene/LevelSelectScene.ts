@@ -1,5 +1,5 @@
 import { ArcRotateCamera, Engine, KeyboardEventTypes, Vector3 } from "@babylonjs/core";
-import { INTRO_LEVEL, LayerMasks } from "../../Shared/Constants";
+import { INTRO_LEVELS, LayerMasks } from "../../Shared/Constants";
 import { LevelReader, type LevelIndexEntry } from "../../Environment/LevelReader";
 import { BaseScene } from "./BaseScene";
 import { Colors } from "../../Shared/Colors";
@@ -19,6 +19,9 @@ export class LevelSelectScene extends BaseScene {
     private levelPopup: LevelPopup;
     private archipelBtns: ArchipelTrigger[] = [];
     private levelCount: LevelCount;
+    private debugMode = false;
+    private onLevelSelect: (levelName:string) => void;
+    private levelIndex: LevelIndexEntry[];
 
     constructor(engine: Engine) {
         super(engine);
@@ -27,6 +30,7 @@ export class LevelSelectScene extends BaseScene {
 
     async init(onLevelSelect: (levelName: string) => Promise<void>, onReset: () => void) {
         console.log("init levelselectscene");
+        this.onLevelSelect = onLevelSelect;
 
         
         this.uiCamera = new ArcRotateCamera("uiCamera", Math.PI/2, Math.PI/3, 10, Vector3.Zero(), this.scene);
@@ -35,59 +39,28 @@ export class LevelSelectScene extends BaseScene {
         this.scene.activeCameras = [];
         this.scene.activeCameras.push(this.uiCamera);
 
-        const levelIndex: LevelIndexEntry[] = await LevelReader.getLevelList();
-        console.log(levelIndex);
-        if (levelIndex.length <= 0) {
-            throw new Error("cannot fill level list: level index (index.json) is empty");
-        }
 
-        if(!Save.isCompleted(INTRO_LEVEL)) {
+        if(!Save.isCompleted(INTRO_LEVELS[0])) {
             this.intro(onLevelSelect);
             return;
         }
 
-        this.levelPopup = new LevelPopup(this.advancedTexture, "T", () => {console.log("callback not set")});
-
+        this.levelPopup = new LevelPopup(this.advancedTexture, "T", () => {console.log("callback not set")}, () => {});
         this.levelMap = new LevelSelectMap(this.advancedTexture, this);
-        let x = -2000;
-        let y = 20;
-        levelIndex.forEach((lvl: LevelIndexEntry, i: number) => {
-            if (lvl.name === "")
-                lvl.name = lvl.file;
-
-            const btn = new ArchipelTrigger(lvl.name.replace(" ", "") + "-popupbtn");
-            btn.setCallback(() => {
-                this.archipelBtns.filter(b => b !== btn).map(t => t.setUnselected());
-                this.levelPopup.switchLevelShown(lvl.file, lvl.name);
-                this.levelPopup.btn.setCallback(async () => await onLevelSelect(lvl.file));
-            });
-            if (Save.isCompleted(lvl.file))
-                btn.setDone();
-
-            const width = this.levelMap.getContentRoot().widthInPixels;
-            const height = this.levelMap.getContentRoot().heightInPixels;
-
-            // Coordonnées "images" => coordonnéees "map"
-            btn.leftInPixels = lvl.x ? (lvl.x - width / 2) : x;
-            btn.topInPixels = lvl.y ? (height / 2 - lvl.y) : y;
-
-            this.archipelBtns.push(btn);
-            this.levelMap.getContentRoot().addControl(btn);
-
-            x += 600;
-            if (x >= 2000) {
-                y += 400;
-                x = 20;
-            }
-        });
-
-        
         this.advancedTexture.addControl(this.levelPopup);
+
+        this.levelIndex = await LevelReader.getLevelList();
+        console.log(this.levelIndex);
+        if (this.levelIndex.length <= 0) {
+            throw new Error("cannot fill level list: level index (index.json) is empty");
+        }
+
+        await this.fillMap();
 
         this.createTitle();
         
         this.levelCount = new LevelCount(this.advancedTexture);
-        this.levelCount.setTotal(levelIndex.length);
+        this.levelCount.setTotal(this.levelIndex.length);
         this.levelCount.setCount(Save.getCompletedLevels().length);
         this.advancedTexture.addControl(this.levelCount);
 
@@ -100,6 +73,9 @@ export class LevelSelectScene extends BaseScene {
                             onReset();
                         }
                     );
+                } else if (kbInfo.event.key === "d") {
+                    this.debugMode = !this.debugMode;
+                    this.fillMap();
                 }
             }
         });
@@ -134,12 +110,61 @@ export class LevelSelectScene extends BaseScene {
 
         this.advancedTexture.addControl(titleRect);
     }
+
+    async fillMap() {
+        this.archipelBtns = [];
+        this.levelMap.getContentRoot().clearControls();
+        let x = -2000;
+        let y = 20;
+        for (let i = 0; i < this.levelIndex.length; i++) {
+            if (!this.debugMode
+                && i > 0
+                && !Save.isCompleted(this.levelIndex[i-1].file)
+            ) {
+                break;
+            }
+
+            const lvl = this.levelIndex[i];
+
+            if (lvl.name === "")
+                lvl.name = lvl.file;
+
+            const btn = new ArchipelTrigger(lvl.name.replace(" ", "") + "-popupbtn");
+            btn.setCallback(() => {
+                this.archipelBtns.filter(b => b !== btn).map(t => t.setUnselected());
+                this.levelPopup.switchLevelShown(lvl.file, lvl.name);
+                this.levelPopup.btn.setCallback(async () => await this.onLevelSelect(lvl.file));
+                this.levelPopup.skipBtn.setCallback(() => {
+                    Save.completeLevel(lvl.file);
+                    this.fillMap();
+                });
+            });
+            if (Save.isCompleted(lvl.file))
+                btn.setDone();
+
+            const width = this.levelMap.getContentRoot().widthInPixels;
+            const height = this.levelMap.getContentRoot().heightInPixels;
+
+            // Coordonnées "images" => coordonnéees "map"
+            btn.leftInPixels = lvl.x ? (lvl.x - width / 2) : x;
+            btn.topInPixels = lvl.y ? (height / 2 - lvl.y) : y;
+
+            this.archipelBtns.push(btn);
+            this.levelMap.getContentRoot().addControl(btn);
+
+            x += 600;
+            if (x >= 2000) {
+                y += 400;
+                x = 20;
+            }
+        }
+    }
     
-    async intro(onEnd: (levelFile) => Promise<void>) {
+    async intro(onEnd: (levelFile: string) => Promise<void>) {
         await RealDialog.show(this.advancedTexture, this, "Tout va bien ?", true);
         await RealDialog.show(this.advancedTexture, this, "Où es-tu passé ?", true);
         await RealDialog.show(this.advancedTexture, this, "J'espère que rien n'est cassé...", true);
         await RealDialog.show(this.advancedTexture, this, "Essayons de te déplacer pour vérifier.", false);
-        await onEnd(INTRO_LEVEL);
+        await onEnd(INTRO_LEVELS[0]);
     }
 }

@@ -88,7 +88,7 @@ export class LevelReader {
     private blockLimit: (number | null)[] = [];
     private goals: Goal[][] = [];
     private beginDialogs: (string[] | null)[] = [];
-    private endDialogs: (string | null)[] =  [];
+    private endDialogs: (string[] | null)[] =  [];
     
     static async init() {
         // Aucune interception d'erreurs, on catch ailleurs
@@ -201,7 +201,7 @@ export class LevelReader {
         return this.structure[nb];
     }
 
-    public getBeginDialog(nb: number): string[] | null {
+    public getBeginDialogs(nb: number): string[] | null {
         return this.beginDialogs[nb];
     }
 

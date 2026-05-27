@@ -29,6 +29,8 @@ export class EmptySlot extends GUI.Rectangle {
         this.thickness = 2;
         this.color = Colors.EmptySlotOhShitImHavingAStroke;
         this.isHitTestVisible = true;
+        this.clipChildren = false;
+        this.clipContent = false;
         this.init();
     }
 

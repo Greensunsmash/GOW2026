@@ -3,25 +3,25 @@ export class Save {
 
     static getCompletedLevels(): string[] {
         return JSON.parse(
-            sessionStorage.getItem(this.STORAGE_KEY) ?? "[]"
+            sessionStorage.getItem(Save.STORAGE_KEY) ?? "[]"
         );
     }
 
     static completeLevel(levelName: string) {
-        const completed = this.getCompletedLevels();
+        const completed = Save.getCompletedLevels();
 
         if (!completed.includes(levelName)) {
             completed.push(levelName);
 
             sessionStorage.setItem(
-                this.STORAGE_KEY,
+                Save.STORAGE_KEY,
                 JSON.stringify(completed)
             );
         }
     }
 
     static isCompleted(levelName: string): boolean {
-        return this.getCompletedLevels().includes(levelName);
+        return Save.getCompletedLevels().includes(levelName);
     }
 
     static reset() {

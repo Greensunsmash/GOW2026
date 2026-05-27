@@ -49,6 +49,8 @@ export class BlocContainer extends GUI.Rectangle {
         this.container.adaptWidthToChildren = true;
         this.container.adaptHeightToChildren = true;
         this.container.isHitTestVisible = false;
+        this.container.clipChildren = false;
+        this.container.clipContent = false;
         this.container.paddingTop = "7px";
         this.container.paddingBottom = "7px";
         this.container.paddingLeft = "7px";
@@ -87,6 +89,8 @@ export class BlocContainer extends GUI.Rectangle {
                 slotWrapper.color = "transparent";
                 slotWrapper.isHitTestVisible = false;
                 slotWrapper.height = "80%";
+                slotWrapper.clipChildren = false;
+                slotWrapper.clipContent = false;
 
                 let slot;
                 if (list[i] == "b")

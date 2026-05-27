@@ -60,6 +60,7 @@ export abstract class GridEntity {
         return (
             this.level.isObstacle(targetGridPos)
             || this.level.getMobsAt(targetGridPos).length >= 1
+            || !!this.level.getItemAt(targetGridPos)
         ); // ????????, justifie ça tout de suite
         // personne ne saura jamais pk t'as écrit ca
     }

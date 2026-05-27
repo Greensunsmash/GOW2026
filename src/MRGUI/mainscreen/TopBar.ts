@@ -33,7 +33,7 @@ export class TopBar extends Rectangle {
         this.paddingLeft = "10px";
         this.paddingRight = "10px";
 
-        const btn = new BaseButton("giveup-btn-nouvelleda", "‹   Retour base", onBackClick, 200);
+        const btn = new BaseButton("giveup-btn-nouvelleda", "‹   Retour carte", onBackClick, 200);
         btn.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
         btn.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
         btn.paddingLeftInPixels = 18;

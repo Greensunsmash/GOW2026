@@ -24,7 +24,7 @@ export class BottomBar extends Rectangle {
     ) {
         super("bottombar");
         this.height= "50%";
-        this.adaptWidthToChildren = true;
+        this.width="50%";
         this.color = "white";
         this.thickness = 0;
         this.background = "#00000000";
