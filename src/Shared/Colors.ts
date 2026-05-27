@@ -12,6 +12,8 @@ export class Colors {
     static EmptySlotHover = "#e4dbcfff";
     static EmptySlotOhShitImHavingAStroke = "#E2E2E2";
 
+    static MapBackground = "#010180ff";
+
     /* OUI c'est pas des COULEURS ET BAH JEN AI RIEN A FOUTRE */
     static CornerRadiusCarrePasTrop = 8;
     static CornerRadiusVraimentArrondi = 15;

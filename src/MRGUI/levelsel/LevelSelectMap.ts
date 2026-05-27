@@ -21,16 +21,16 @@ export class LevelSelectMap extends GUI.Rectangle {
         this.width = "100%";
         this.height = "100%";
         this.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
-        this.background = Colors.BehindWorkbench;
+        this.background = Colors.MapBackground;
         this.clipChildren = true;
         this.root.addControl(this);
 
         this.content = new GUI.Rectangle();
         this.content.width = "6000px"; // grand espace de base
         this.content.height = "4000px";
-        this.content.background = Colors.Workbench;
+        this.content.background = Colors.MapBackground;
         this.content.color = Colors.SecondaryEnseignement;
-        this.content.thickness = 16;
+        this.content.thickness = 0;
         this.content.cornerRadius = 22;
         this.content.shadowOffsetX = 1;
         this.content.shadowOffsetY = 1;
@@ -98,7 +98,7 @@ export class LevelSelectMap extends GUI.Rectangle {
     public zoom(x:number) {
         if (x > 0) {
             this.content.scaleX = Math.min(x + this.content.scaleX, 0.6);
-            this.content.scaleY = Math.min(x + this.content.scaleY, 1);
+            this.content.scaleY = Math.min(x + this.content.scaleY, 0.6);
         } else {
             this.content.scaleX = Math.max(x+this.content.scaleX, 0.2); 
             this.content.scaleY = Math.max(x+this.content.scaleY, 0.2); 

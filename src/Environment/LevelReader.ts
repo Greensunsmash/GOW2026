@@ -61,7 +61,7 @@ export type Map3 = Map2[];
 export type IslandMap = Map3[]; // La map d'une ile, c'est la liste des maps de ses feuilles
 export type IslandBlockset = string[]; // Chaque ile à son propre blockset, qui est la liste des ses blocs
 
-export type LevelIndexEntry = {name: string, file: string};
+export type LevelIndexEntry = {name: string, file: string, x?: number, y?: number};
 
 type LevelData = {
     islands: {

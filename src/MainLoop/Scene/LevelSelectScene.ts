@@ -5,12 +5,15 @@ import { BaseScene } from "./BaseScene";
 import { Colors } from "../../Shared/Colors";
 import { LevelSelectMap } from "../../MRGUI/levelsel/LevelSelectMap";
 import { BaseButton } from "../../MRGUI/buttons/BaseButton";
-import type { LevelPopup } from "../../MRGUI/levelsel/LevelPopup";
+import { LevelPopup } from "../../MRGUI/levelsel/LevelPopup";
+import { ArchipelTrigger } from "../../MRGUI/buttons/ArchipelTrigger";
+import { Control, Rectangle, TextBlock } from "@babylonjs/gui";
 
 export class LevelSelectScene extends BaseScene {
     public uiCamera: ArcRotateCamera;
     private levelMap: LevelSelectMap;
     private levelPopup: LevelPopup;
+    private archipelBtns: ArchipelTrigger[] = [];
 
     constructor(engine: Engine) {
         super(engine);
@@ -32,6 +35,8 @@ export class LevelSelectScene extends BaseScene {
                 await onLevelSelect(levelName);
             }
         );*/
+        this.levelPopup = new LevelPopup(this.advancedTexture, "T", () => {console.log("callback not set")});
+
         this.levelMap = new LevelSelectMap(this.advancedTexture, this);
         let x = -2000;
         let y = 20;
@@ -39,15 +44,21 @@ export class LevelSelectScene extends BaseScene {
             if (lvl.name === "")
                 lvl.name = lvl.file;
 
-            /*this.levelMap.addPopup(x, y, lvl.name,  async () => {
-                await onLevelSelect(lvl.file);
-            });*/
-            const btn = new BaseButton(lvl.name.replace(" ", "") + "-popupbtn", lvl.name, /*() => {
-                this.levelPopup.title.text = lvl.name;
+            const btn = new ArchipelTrigger(lvl.name.replace(" ", "") + "-popupbtn");
+            btn.setCallback(() => {
+                this.archipelBtns.filter(b => b !== btn).map(t => t.setUnselected());
+                this.levelPopup.switchLevelShown(lvl.file, lvl.name);
                 this.levelPopup.btn.setCallback(async () => await onLevelSelect(lvl.file));
-            }*/ async () => await onLevelSelect(lvl.file), 0);
-            btn.leftInPixels = x;
-            btn.topInPixels = y;
+            });
+
+            const width = this.levelMap.getContentRoot().widthInPixels;
+            const height = this.levelMap.getContentRoot().heightInPixels;
+
+            // Coordonnées "images" => coordonnéees "map"
+            btn.leftInPixels = lvl.x ? (lvl.x - width / 2) : x;
+            btn.topInPixels = lvl.y ? (height / 2 - lvl.y) : y;
+
+            this.archipelBtns.push(btn);
             this.levelMap.getContentRoot().addControl(btn);
 
             x += 600;
@@ -56,6 +67,38 @@ export class LevelSelectScene extends BaseScene {
                 x = 20;
             }
         });
+
+        
+        this.advancedTexture.addControl(this.levelPopup);
+
+        const title = new TextBlock();
+        title.text = "Carte du Nouveau Monde";
+        title.widthInPixels = title.text.length*20;
+        title.color = Colors.SecondaryEnseignement;
+        title.fontFamily = "Inter";
+        title.fontSize = 22;
+        title.fontWeight = "600";
+        title.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+
+        const titleRect = new Rectangle();
+        titleRect.background = Colors.Workbench;
+        titleRect.color = Colors.BehindWorkbench;
+        titleRect.cornerRadius = Colors.CornerRadiusVraimentArrondi;
+        titleRect.thickness = 2;
+        titleRect.shadowOffsetX = 1;
+        titleRect.shadowOffsetY = 1;
+        titleRect.shadowBlur = 4;
+        titleRect.shadowColor = "#00000065";
+        titleRect.addControl(title);
+        titleRect.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+        titleRect.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+        titleRect.top = "8%";
+        
+        titleRect.adaptWidthToChildren = true;
+        titleRect.height = "60px";
+
+        this.advancedTexture.addControl(titleRect);
+        
 
         this.uiCamera = new ArcRotateCamera("uiCamera", Math.PI/2, Math.PI/3, 10, Vector3.Zero(), this.scene);
         this.uiCamera.layerMask = LayerMasks.UI_ONLY;

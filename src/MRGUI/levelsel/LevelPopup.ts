@@ -4,12 +4,15 @@ import { BaseVSpacer } from "../misc/BaseSpacers";
 import { Colors } from "../../Shared/Colors";
 import { BaseButton } from "../buttons/BaseButton";
 import { OneButtonModal } from "../windows/OneButtonModal";
+import { Animation } from "@babylonjs/core";
 
 export class LevelPopup extends Rectangle {
     public panel: StackPanel;
     public infoPanel: StackPanel;
     public title: TextBlock;
     public btn: BaseButton;
+
+    private currentLvlFileShown: string = "";
    // public blocker: GreyBlocker;
 
     constructor(root: AdvancedDynamicTexture, name: string, callback: () => void) {
@@ -17,8 +20,8 @@ export class LevelPopup extends Rectangle {
        /* this.blocker = new GreyBlocker();
         this.blocker.addControl(this); */
 
-        this.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP; 
-        this.top = "8%";
+        this.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM; 
+        this.paddingBottom = "8%";
         this.width = "500px";
         //window.height = "220px";
         this.adaptHeightToChildren = true;
@@ -76,11 +79,79 @@ export class LevelPopup extends Rectangle {
 
         this.panel.addControl(new BaseVSpacer());
         
-
-    }
+        this.isVisible = false;
+    }  
 
     toggle() {
         console.log("clue drawer toggled!");
         this.isVisible = !this.isVisible;
+    }
+
+    switchLevelShown(file: string, name: string) {
+        if (this.currentLvlFileShown != file)
+            this.isVisible = true;
+        else
+            this.toggle();
+        this.currentLvlFileShown = file;
+        this.title.text = name;
+        this.title.widthInPixels = name.length*10 + 20;
+        this.fadeOut(100);
+        this.punchScale();
+        this.fadeIn(100);
+    }
+
+    getLevelFileShown() {
+        return this.currentLvlFileShown;
+    }
+
+    private fadeOut(durationMs: number): Promise<void> {
+        return new Promise(resolve => {
+            Animation.CreateAndStartAnimation(
+                "fadeOut", this, "alpha", 60, durationMs / (1000/60),
+                1, 0, Animation.ANIMATIONLOOPMODE_CONSTANT,
+                undefined, resolve
+            );
+        });
+    }
+    
+    private fadeIn(durationMs: number): Promise<void> {
+        return new Promise(resolve => {
+            Animation.CreateAndStartAnimation(
+                "fadeOut", this, "alpha", 60, durationMs / (1000/60),
+                0, 1, Animation.ANIMATIONLOOPMODE_CONSTANT,
+                undefined, resolve
+            );
+        });
+    }
+
+
+    punchScale(): void {
+        const anim = new Animation(
+            "scalePunch",
+            "scaleX", 
+            60,
+            Animation.ANIMATIONTYPE_FLOAT,
+            Animation.ANIMATIONLOOPMODE_CONSTANT
+        );
+
+        const keys = [
+            { frame: 0,  value: 1    },
+            { frame: 4,  value: 0.96 },
+            { frame: 8,  value: 1.04 },
+            { frame: 12, value: 1    },
+        ];
+        anim.setKeys(keys);
+
+        const animY = new Animation(
+            "scalePunch",
+            "scaleX", 
+            60,
+            Animation.ANIMATIONTYPE_FLOAT,
+            Animation.ANIMATIONLOOPMODE_CONSTANT
+        );
+        animY.setKeys(keys);
+
+        this.animations = [anim, animY];
+        this._host.getScene()!.beginAnimation(this, 0, 12, false);
     }
 }
