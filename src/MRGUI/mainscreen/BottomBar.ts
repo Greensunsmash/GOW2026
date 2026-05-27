@@ -4,22 +4,26 @@ import { BaseButton, IconButton } from "../buttons/BaseButton";
 import { ColorGradient } from "@babylonjs/core";
 import { CDPlaybar } from "./CDPlaybar";
 import { LeafNavigator } from "./LeafNavigator";
+import { Memory } from "../../Language/Memory";
 
 export class BottomBar extends Rectangle {
-    public leafNav: LeafNavigator
+    
+    private firstBtn: BaseButton;
+    public leafNav: LeafNavigator;
+    public cdPlaybar: CDPlaybar;
 
     constructor(
         root: AdvancedDynamicTexture,
         onFirst: () => void,
         onPrev: () => void,
         onNext: () => void,
-        onLast: () => void,
         onDryAttempt: () => void,
         onPrevLeaf: () => void,
-        onNextLeaf: () => void
+        onNextLeaf: () => void,
+        onPlayPause: () => void
     ) {
         super("bottombar");
-        this.height= "10%";
+        this.height= "70px";
         this.width = "98%";
         this.color = "white";
         this.thickness = 2;
@@ -42,8 +46,14 @@ export class BottomBar extends Rectangle {
         btn.paddingBottomInPixels = 5;
         this.addControl(btn);*/
 
-        const cdPlaybar = new CDPlaybar(this, onFirst, onPrev, onNext, onLast, onDryAttempt);
-        this.addControl(cdPlaybar);
+        this.firstBtn = new BaseButton("first", "⏮   Début", () => onFirst(), 200);
+        this.firstBtn.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+        this.firstBtn.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+        this.firstBtn.paddingLeftInPixels = 18;
+        this.addControl(this.firstBtn);
+
+        this.cdPlaybar = new CDPlaybar(this, onPrev, onNext, onDryAttempt, onPlayPause);
+        this.addControl(this.cdPlaybar);
 
         this.leafNav = new LeafNavigator(this, onPrevLeaf, onNextLeaf);
         this.leafNav.paddingRightInPixels = 18;
@@ -54,5 +64,25 @@ export class BottomBar extends Rectangle {
 
     updateLeafIndicator(text: string) {
         this.leafNav.leafInfoText.text = text;
+    }
+
+    triggerUpdate() {
+        this.cdPlaybar.triggerUpdate();
+
+        const playing = Memory.get().isPlaying();
+        const atStart = !Memory.get().getCurrentInstruction();
+        const hasEnded = Memory.get().hasEnded();
+
+        if (playing) {
+            this.firstBtn.isEnabled = false;
+        } else {
+            if (atStart) {
+                this.firstBtn.isEnabled = false;
+            } else if (hasEnded) {
+                this.firstBtn.isEnabled = true;
+            } else {
+                this.firstBtn.isEnabled = true;
+            }
+        }
     }
 }

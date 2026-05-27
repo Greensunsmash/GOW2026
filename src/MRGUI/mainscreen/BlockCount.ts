@@ -41,8 +41,10 @@ export class BlockCount extends Rectangle {
         this.countText.text = this.limit ? `Blocs: ${count} / ${this.limit}`:  `Blocs : ${count}`;
         if (this.limit && count >= this.limit) {
             this.background = Colors.Accent;
-        } else {
+        } else if (this.limit && count >= 0.8 * this.limit) {
             this.background = Colors.AccentDuSud;
+        } else {
+            this.background = Colors.HighlightStroke;;
         }
     }
 

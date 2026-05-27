@@ -18,7 +18,7 @@ export class TopBar extends Rectangle {
         onBackClick: () => void
     ) {
         super("topbar");
-        this.height= "10%";
+        this.height= "70px";
         this.width = "98%";
         this.color = "white";
         this.thickness = 2;
