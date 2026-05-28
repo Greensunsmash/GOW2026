@@ -1,4 +1,4 @@
-import { ArcRotateCamera, Color3, CubeTexture, DefaultRenderingPipeline, DirectionalLight, Engine, IblShadowsRenderPipeline, KeyboardEventTypes, MeshBuilder, PBRMaterial, SetValueAction, ShadowGenerator, Vector3, Viewport } from "@babylonjs/core";
+import { ArcRotateCamera, Color3, CubeTexture, DefaultRenderingPipeline, DirectionalLight, Engine, IblShadowsRenderPipeline, KeyboardEventTypes, MeshBuilder, PBRMaterial, SetValueAction, ShadowGenerator, TimerState, Vector3, Viewport } from "@babylonjs/core";
 import { ListContainer } from "../../Containers/ListContainer";
 import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
 import { Level } from "../../Environment/Level";
@@ -374,7 +374,7 @@ export class PlayScene extends GameScene { // ;)
     async loadAssets() {
         await Promise.all([
             this._drh.loadSingleAsset("robot", "character-male-e.glb"),
-            this._drh.loadSingleAsset("ground", "roundblock.glb"),
+            this._drh.loadSingleAsset("ground", "grasscube.glb"),
             this._drh.loadSingleAsset("cursed", "cube.glb"),
             this._drh.loadSingleAsset("wall", "stone.02.glb"),
             this._drh.loadSingleAsset("pill", "pill.glb"),
@@ -456,6 +456,7 @@ export class PlayScene extends GameScene { // ;)
             this.memory.wait_reset = false;
             this.memory.reset_callback = () => {};
             this.btmBar.triggerUpdate();
+            this.modeUpdate();
         };
 
         if (!this.memory.isPlaying() && !this.memory.isCurrentlyMoving()) {
@@ -583,7 +584,9 @@ export class PlayScene extends GameScene { // ;)
         let count = 0;
         for (const child of child_list) {
             if (child instanceof ListContainer) {   
-                count += child.getInstructionCount();
+                if (!child.isFirst()) continue;
+                if (child.getFirst() instanceof FlagContainer)
+                    count += child.getInstructionCount();
             }
         } 
         console.log("new instruction count is : ", count);

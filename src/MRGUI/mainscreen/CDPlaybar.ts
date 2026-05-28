@@ -92,7 +92,7 @@ export class CDPlaybar extends Container {
                 this.playBtn.isEnabled = true;
                 this.playBtn.setCallback(this.onPlayPause);
             } else {
-                this.playBtn.isEnabled = false;
+                //this.playBtn.isEnabled = false;
             }
         } else {
             this.playBtn.isEnabled = true;

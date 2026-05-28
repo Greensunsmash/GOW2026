@@ -16,12 +16,16 @@ export class PickupInstruction extends Instruction {
         memory.setCurrentlyMoving(true);
 
         this.gameModeAtExecute = memory.getGameMode();
-        if (this.gameModeAtExecute === "NORMAL")
+        if (this.gameModeAtExecute === "NORMAL") {
+            const itemPresence = await this.ctx.getRobot().pickupItem();
+            if (!itemPresence)
+                this.ctx.die();
             await this.ctx.nextTick(undefined, memory.skip);
-        else
+        }
+        else 
             await this.ctx.nextTick(this.ctx.getRobot().getNextPosIntention("forward"), memory.skip);
 
-        await this.ctx.getRobot().pickupItem();
+
         Memory.get().setCurrentInstruction(this);
 
         memory.setCurrentlyMoving(false);

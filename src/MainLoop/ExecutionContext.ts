@@ -307,4 +307,8 @@ export class ExecutionContext {
                 this.scene.onGoalReached();
         });
     }
+
+    public die() {
+        this.scene.onRobotDead();
+    }
 }

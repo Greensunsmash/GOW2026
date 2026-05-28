@@ -59,7 +59,12 @@
             {
             "name": "arrival"
             }
-        ]
+        ],
+      "clues": [
+        "A chaque virage, il faut avancer d'une case de plus",
+        "Une variable peut t'aider à connaitre le nombre de déplacements à faire par ligne",
+        "Met une variable x à 1 et Répete 5 fois \" Répète Variable x fois \"Avancer\" puis augmente variable x de 1\""
+      ]
     },
     {
       "nb": 2,

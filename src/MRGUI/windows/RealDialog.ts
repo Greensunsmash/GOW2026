@@ -12,7 +12,7 @@ export class RealDialog extends Rectangle {
     private ended = false;
     private auto = false;
 
-    constructor(root: AdvancedDynamicTexture, auto = false) {
+    constructor(root: AdvancedDynamicTexture, scene: BaseScene, auto = false) {
         super("realdialog");
 
         this.auto = auto;
@@ -59,6 +59,7 @@ export class RealDialog extends Rectangle {
         this.panel.addControl(new BaseVSpacer());
 
         this.onPointerClickObservable.add(() => this.end());
+        this.blocker.onPointerClickObservable.add(() => this.end());
         root.addControl(this.blocker);
     }
 
@@ -96,7 +97,7 @@ export class RealDialog extends Rectangle {
 
     public static async show(root: AdvancedDynamicTexture, scene: BaseScene, text: string, auto = false): Promise<void> {
         return new Promise((resolve) => {
-            const dialog = new RealDialog(root, auto);
+            const dialog = new RealDialog(root, scene, auto);
             dialog.blocker.onDisposeObservable.add(() => resolve());
             scene.scene.onAfterRenderObservable.addOnce(() => {
                 dialog.typewriter(text);
