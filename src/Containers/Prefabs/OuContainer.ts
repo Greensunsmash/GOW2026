@@ -9,6 +9,7 @@ export class OuContainer extends BooleenContainer {
 
     constructor(root: Container, content_root:Container, scene: GameScene) {
         super(["", "b", "ou", "b"], root, content_root, scene);
+        this.shortName = "or";
     }
 
     public getValue(): (Booleen)[] {

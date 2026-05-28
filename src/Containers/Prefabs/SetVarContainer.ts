@@ -6,7 +6,9 @@ import { InstructionContainer } from "../InstructionContainer";
 import { isValuable } from "../Valuable";
 import type { ExecutionContext } from "../../MainLoop/ExecutionContext";
 import { Memory } from "../../Language/Memory";
-import type { InputSlot } from "../InputSlot";
+import { InputSlot } from "../InputSlot";
+import { BlocContainer } from "../BlocContainer";
+import type { BlocData, InstructionData } from "../../Shared/types";
 
 export class SetVarContainer extends InstructionContainer {
     
@@ -22,6 +24,7 @@ export class SetVarContainer extends InstructionContainer {
         this.name = name;
         this.ctx = ctx;
         this.firstSlotSave = this.bloc.getFirstSlot();
+        this.shortName = "set_var";
     }
 
     getInstruction(): Instruction {
@@ -49,5 +52,15 @@ export class SetVarContainer extends InstructionContainer {
 
     hasModeUpdateBehavior(): boolean {
         return true;
+    }
+
+    override serialize(): InstructionData {
+        const slots = this.getSlots();
+        const firstChild = slots[0].children[0];
+        return {
+            type: this.shortName, 
+            variable: this.name, 
+            data: (firstChild && (firstChild instanceof BlocContainer || firstChild instanceof InputSlot)) ? firstChild.serialize() : null
+        };
     }
 }

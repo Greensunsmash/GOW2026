@@ -12,6 +12,7 @@ import { FlagContainer } from "./Prefabs/FlagContainer";
 import type { StructureContainer } from "./StructureContainer";
 import { Colors } from "../Shared/Colors";
 import { BaseVSpacer } from "../MRGUI/misc/BaseSpacers";
+import type { InstructionData, ProgramData } from "../Shared/types";
 
 // La classe qui permet de stocker plusieurs instructions container à la suite
 // WARNING : Une instruction ne peut être seule et doit toujours être contenue dans un ListContainer
@@ -525,6 +526,8 @@ export class ListContainer extends GUI.Rectangle {
             if (this.structureList.some(s => s.getQueue() === item)) continue; // pour pas compter les struct en double
             count += 1;
         }
+        // je savais pas ou mettre le debug
+        console.log(this.serializeList());
         return count;
     }
 
@@ -626,6 +629,51 @@ export class ListContainer extends GUI.Rectangle {
     getDetector(): GUI.Rectangle { return this.detector; }
 
     toString(): string { return "ListContainer : " + this.id.toString(); }
+
+    public serializeList(first: number = 0, length?: number): ProgramData {
+        const program: ProgramData = [];
+
+        const serializeInstruction = (inst: InstructionContainer) => {
+            if (inst instanceof InstructionContainer) {
+                const serialized = inst.serialize();
+                if (serialized.type) return serialized;
+                else return null;
+            }
+        };
+
+        if (length === undefined) length = this.list.length;
+        for (let i = first; i < length + first; i++) {
+            let instruction = this.list[i];
+            if (instruction instanceof InstructionContainer) {
+                const serialized = instruction.serialize();
+                if (!serialized) continue;
+                const struct = this.checkHeaders(instruction);
+                if (struct) {
+                    const mid = struct.getMidID();
+                    if (mid) { // Si il est en 2 parties, comme si sinon par exemple
+                        let len1 = mid - struct.getHeaderID() - 1;
+                        let len2 = struct.getQueueID() - mid - 1;
+                        serialized.children1 = this.serializeList(struct.getHeaderID() + 1, len1);
+                        serialized.children2 = this.serializeList(mid + 1, len2);
+                        i += len1 + len2 + 2;
+                    } else {
+                        let len = struct.getQueueID() - struct.getHeaderID() - 1;
+                        serialized.children1 = this.serializeList(struct.getHeaderID() + 1, len); 
+                        i += len + 1;
+                    }
+                }
+                program.push(serialized);
+            }
+        }
+
+        return program;
+    }
+
+    public static BuildFromSerializedList(program: ProgramData, root: GUI.Container, content_root: GUI.Container, scene: GameScene): ListContainer {
+        const l = new ListContainer(root, content_root, scene);
+        
+    }
+
     dispose(): void {
         this.scene.scene.onPointerObservable.remove(this.pointerObserver);
         this.detector.dispose();

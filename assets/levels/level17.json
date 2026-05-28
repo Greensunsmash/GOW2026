@@ -47,7 +47,10 @@
             ]
         },
         "goal": [{"name": "arrival"}],
-        "block_limitation": 6
+        "block_limitation": 6,
+        "clues" : [
+            "Cette île me fait étrangement penser à une autre"
+        ]
         },
         {
         "nb": 2,
@@ -96,7 +99,11 @@
             ]
         },
         "goal": [{"name": "arrival"}],
-        "block_limitation": 8
+        "block_limitation": 8,
+        "clues" : [
+            "L'île précédente ressemblait étrangement à une ancienne, peut-être que celle-ci est la suite altérée ?",
+            "Répète 2 fois (l'ancien programme, tourner à gauche)"
+        ]
         },
         {
         "nb": 3,
@@ -145,7 +152,11 @@
             ]
         },
         "goal": [{"name": "arrival"}],
-        "block_limitation": 10
+        "block_limitation": 10,
+        "clues" : [
+            "La première île ressemblait étrangement à une ancienne, peut-être que celle-ci est la suite altérée ?",
+            "Répète 2 fois (Répèter 2 fois (le premier programme, tourner à gauche), tourner à droite)"
+        ]
         }
     ]
 }

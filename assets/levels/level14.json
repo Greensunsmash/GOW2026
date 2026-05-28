@@ -54,7 +54,11 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"}]
+        "goal": [{"name": "arrival"}],
+        "clues" : [
+            "Tu sais le faire, ne laisse pas le cochon te pertuber (ni te rattraper)",
+            "Avance tant qu'il n'y a pas d'obstacle en face"
+        ]
     },
     {
         "nb": 2,
@@ -102,7 +106,10 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"}]
+        "goal": [{"name": "arrival"}],
+        "clues": [
+            "Ne perds pas ton avance, et tout devrait bien se passer"
+        ]
     },
     {
         "nb": 3,
@@ -150,7 +157,10 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}]
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
+        "clues": [
+            "A part bien compter, il n'y a pas de secret"
+        ]
     }
     ]
 }

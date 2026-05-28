@@ -6,6 +6,7 @@ import { ValeurBrute } from "../Language/Valeur/ValeurBrute";
 import type { Observer, Vector2 } from "@babylonjs/core";
 import type { Valuable } from "./Valuable";
 import { Colors } from "../Shared/Colors";
+import type { RawValueData } from "../Shared/types";
 
 export class InputSlot extends EmptySlot implements Valuable {
     private textInput: InputText;
@@ -56,6 +57,16 @@ export class InputSlot extends EmptySlot implements Valuable {
         const val = isNaN(num) || raw === "" ? raw : num;
         console.log("number turned to ", val);
         return [new ValeurBrute(val)];
+    }
+
+    serialize(): RawValueData | null {
+        const raw = this.textInput.text.replace(" ", "");
+        console.log("read raw from input slot ", raw);
+        const num = Number(raw);
+        if (isNaN(num))
+            return null;
+        else
+            return {type: "raw_value", value: num};
     }
 
     toString(): string {

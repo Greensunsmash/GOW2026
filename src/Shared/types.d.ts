@@ -1,3 +1,4 @@
+import type { BooleanGeometryBlock } from "@babylonjs/core";
 import type { MarcoBozo } from "../Entity/Robot"
 
 
@@ -35,6 +36,9 @@ type VariableBlock = "var_create";
 
 type OpBlock = "plus" | "minus";
 
+type BlockShortName = BooleanBlock | OpBlock | SensorBlock | "var_value";
+type InstructionShortName = InstructionBlock | StartBlock | StructureBlock | "set_var";
+
 type FunctionBlock = "function_create";
 
 type StartBlock = "start";
@@ -57,3 +61,22 @@ type Factory = (root: any, content_root: any) => any;
 // Association d'un type de bloc et de la factory qui crée ce type de bloc
 // (Record c'est juste un dico en TS)
 type CategoryFactories<T extends string> = Record<T, Factory>;
+
+type RawValueData = {type: "raw_value", value: number};
+type BlocData = {
+  type: BlockShortName;
+  children?: (BlocData | null)[];
+  variable? : string;
+  value?: number;
+} | null;
+
+type InstructionData = {
+  type: InstructionShortName;
+  condition?: BlocData | RawValueData | null;
+  children1?: InstructionData[];
+  children2?: InstructionData[] | null;
+  variable?: string;
+  data?: BlocData | null;
+};
+
+type ProgramData = InstructionData[];

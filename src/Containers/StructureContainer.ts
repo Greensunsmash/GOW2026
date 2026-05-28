@@ -2,6 +2,7 @@ import { InstructionContainer } from "./InstructionContainer";
 import type { ListContainer } from "./ListContainer";
 import type { Executable } from "../Language/Executable";
 import { Pour } from "../Language/Group/Structure/Pour";
+import type { InstructionData } from "../Shared/types";
 
 
 // Abstract qui représente une structure, qui est simplement des infos sur le début et la fin de la boucle
@@ -27,8 +28,6 @@ export abstract class StructureContainer  {
     }
 
     public getGroup(e:Executable[], e2?:Executable[]): Executable {return new Pour(e);}
-
-    
 
     // GETTERS / SETTERS
     public getHeader():InstructionContainer {return this.header;}

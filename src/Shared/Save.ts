@@ -1,3 +1,18 @@
+import type { ProgramData } from "./types";
+
+export type IslandSaveData = {
+    program: ProgramData;
+};
+
+export type LevelSaveData = {
+    file: string;
+    completed: boolean;
+    skipped: boolean;
+    islandData: IslandSaveData[];
+};
+
+export type SaveData = LevelSaveData[];
+
 export class Save {
     private static STORAGE_KEY = "completedLevels";
 

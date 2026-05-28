@@ -47,7 +47,10 @@
             {
             "name": "arrival"
             }
-        ]
+        ],
+      "clues" : [
+        "L'heure est aux retrouvailles !"
+      ]
     },
     {
       "nb": 2,
@@ -108,7 +111,11 @@
             {
             "name": "arrival"
             }
-        ]
+        ],
+      "clues" : [
+        "Ce niveau est similaire à un niveau passé",
+        "Tourne sur toi-même, jusqu'à ce que tu sois pas en face d'un rocher"
+      ]
     },
     {
       "nb": 3,
@@ -169,7 +176,12 @@
             {
             "name": "arrival"
             }
-        ]
+        ],
+      "clues": [
+        "Comment analyser un coté ? Prends d'abord le temps d'y arriver, tu pourras ensuite réutiliser ça pour les autres",
+        "Il faut se déplacer contre le bord et se tourner à chaque case pour voir si il y a un rocher. Si il y en a un, on continue à chercher",
+        "Place toi d'abord correctement avant de commencer ta boucle"
+      ]
     }
   ]
 }

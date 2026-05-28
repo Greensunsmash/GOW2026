@@ -131,6 +131,12 @@
                 "itemType": "!"
             }
         }
+      ],
+      "clues" : [
+        "Comment décomposer le niveau en 4 étapes similaires ?",
+        "Il faut répéter le bon nombre de fois \"Avancer puis rammasser\" et reculer autant de fois juste après",
+        "Cela correspond au numéro de la ligne",
+        "Avancer, Mettre une variable x à 1, et repète 4 fois ( tourner à droite, \"Répeter x fois\" (avancer et ramasser), puis  \"Répeter x fois\" reculer, puis tourne à gauche et avancer)"
       ]
     },
     {
@@ -188,7 +194,12 @@
           "start"
         ]
       },
-      "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}]
+      "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
+      "clues":[
+        "En quoi cette île est-elle similaire à la précédente ?",
+        "Sur une même ligne, comment sont placé les débris ?",
+        "Tu dois répeter 2 fois ( \"Répeter x fois\" avancer, puis ramasser), puis reculer d'autant"
+      ]
     }
   ]
 }

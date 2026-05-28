@@ -19,6 +19,8 @@ import { BottomBar } from "../../MRGUI/mainscreen/BottomBar";
 import { TwoButtonModal } from "../../MRGUI/windows/TwoButtonsModal";
 import { RealDialog } from "../../MRGUI/windows/RealDialog";
 import { Save } from "../../Shared/Save";
+import type { ProgramData } from "../../Shared/types";
+import { InstructionContainer } from "../../Containers/InstructionContainer";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene { // ;)
@@ -616,6 +618,53 @@ export class PlayScene extends GameScene { // ;)
                 }
             }
         } 
+    }
+
+    public restoreProgram() {
+        const saved = localStorage.getItem(`program_${this.loadedFile}`);
+        if (!saved) return;
+        const data = JSON.parse(saved) as ProgramData;
+        const factories = this.levelReader.createFactories(this.ctx, this) as any;
+        const allFactories = {
+            ...factories.instructions,
+            ...factories.structures,
+            ...factories.sensors,
+            ...factories.ops,
+            ...factories.booleans
+        };
+
+        const list = this.buildList(data, allFactories);
+        // positionner la liste quelque part dans le workspace
+        list.leftInPixels = 200;
+        list.topInPixels = 100;
+    }
+
+    private buildList(program: ProgramData, allFactories: any): ListContainer {
+        const list = new ListContainer(this.leftPanel, this.workspace.getContentRoot(), this);
+        
+        for (const instrData of program) {
+            if (!instrData.type) continue;
+            const factory = allFactories[instrData.type];
+            if (!factory) continue;
+            const built = factory(this.leftPanel, this.workspace.getContentRoot());
+
+            if (built instanceof ListContainer) {
+                if (instrData.children1) {
+                    const inner = this.buildList(instrData.children1, allFactories);
+                    for (const child of [...inner.getList()]) {
+                        if (child instanceof InstructionContainer) {
+                            inner.removeInstruction(child, true);
+                            built.addInstruction(child, built.getMagnetID(), true);
+                        }
+                    }
+                    built.recomputeInstructions();
+                }
+                list.mergeList(built);
+            } else if (built instanceof InstructionContainer) {
+                list.addInstruction(built, list.getMagnetID());
+            }
+        }
+        return list;
     }
 
     public getCtx() { return this.ctx; }

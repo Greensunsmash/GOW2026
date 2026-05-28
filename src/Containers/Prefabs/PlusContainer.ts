@@ -11,6 +11,7 @@ export class PlusContainer extends ValeurContainer {
     // C'est inacceptable.
     constructor(root: GUI.Container, content_root:GUI.Container, scene: GameScene) {
         super(["", "v", "+", "v"], root, content_root, scene);
+        this.shortName = "plus";
     }
 
     public getValue(): (Valeur)[] {

@@ -53,7 +53,11 @@
             ]
         },
         "goal": [{"name": "arrival"}],
-        "block_limitation": 5
+        "block_limitation": 5,
+        "clues": [
+            "Utilise le bloc \"Tant que ... est vraie, faire\" pour te déplacer jusqu'au rocher",
+            "Tant que tu n'as pas d'obstacle en face avancer, puis tourne à droite et avance"
+        ]
     },
     {
         "nb": 2,
@@ -104,7 +108,12 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"}]
+        "goal": [{"name": "arrival"}],
+        "clues": [
+            "Tu as deux îles bien différentes, le bloc \"Si Sinon\" est fait pour ça",
+            "Comment distinguer les deux îles ?",
+            "Si tu es face à un obstacle, effectue le parcours nécessaire pour la première étape, sinon effectue celui du deuxième"
+        ]
     },
     {
         "nb": 3,
@@ -159,7 +168,13 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"}]
+        "goal": [{"name": "arrival"}],
+        "clues" :[
+            "Quelle logique suivent les rochers ?",
+            "Comment rejoindre celui en face ?",
+            "Cette méthode peut-elle te permettre d'en atteindre un autre ?",
+            "Répète 4 fois (Tant que tu n'est pas face à un obstacle avance)"
+        ]
     },
     {
         "nb": 4,
@@ -218,7 +233,12 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"}]
+        "goal": [{"name": "arrival"}],
+        "clues": [
+            "Les étapes 2 et 4 suivent la même logique",
+            "Comment différencier les deux cas ?",
+            "Si il y a pas d'obstacle en face, utilise le programme précédent. Sinon, fait la même chose en utilisant tournant à droite"
+        ]
     }
     ]
 }

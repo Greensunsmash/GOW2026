@@ -3,6 +3,7 @@ import { ValeurContainer } from "../ValeurContainer";
 import type { GameScene } from "../../MainLoop/Scene/GameScene";
 import type { Valeur } from "../../Language/Valeur/Valeur";
 import { VarValue } from "../../Language/Valeur/VarValue";
+import type { BlocData } from "../../Shared/types";
 
 export class VarValueContainer extends ValeurContainer {
 
@@ -12,9 +13,14 @@ export class VarValueContainer extends ValeurContainer {
     constructor(name:string, root: GUI.Container, content_root:GUI.Container, scene: GameScene) {
         super(["Variable " + name], root, content_root, scene);
         this.name = name;
+        this.shortName = "var_value";
     }
 
     public getValue(): (Valeur)[] {
         return [new VarValue(this.name, this)];
+    }
+
+    override serialize(): BlocData {
+        return {type: this.getShortName(), variable: this.name};
     }
 } 

@@ -9,6 +9,7 @@ export class EtContainer extends BooleenContainer {
 
     constructor(root: Container, content_root:Container, scene: GameScene) {
         super(["", "b", "et", "b"], root, content_root, scene);
+        this.shortName = "and";
     }
 
     public getValue(): (Booleen)[] {

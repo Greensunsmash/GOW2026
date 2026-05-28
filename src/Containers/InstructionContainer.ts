@@ -7,10 +7,13 @@ import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { BlocContainer } from "./BlocContainer";
 import { Colors } from "../Shared/Colors";
 import { ThinSSAO2BlurPostProcess } from "@babylonjs/core/PostProcesses/thinSSAO2BlurPostProcess";
+import type { InstructionData, InstructionShortName } from "../Shared/types";
+import { InputSlot } from "./InputSlot";
 
 // Classe de base pour représenter une instruction. Contient un blocContainer pour la représentation visuelle
 export class InstructionContainer extends GUI.Rectangle {
 
+    protected shortName?: InstructionShortName;
     private readonly mainContainer : GUI.StackPanel;
     protected readonly bloc : BlocContainer;
     private readonly root : GUI.Container;
@@ -20,7 +23,7 @@ export class InstructionContainer extends GUI.Rectangle {
     private hlBAckground: string = "";
     private initShadowColor: string = "";
 
-    constructor(list: string[], root: GUI.Container, content_root: GUI.Container, scene: GameScene, stroke = true) {
+    constructor(list: string[], shortName: InstructionShortName | undefined, root: GUI.Container, content_root: GUI.Container, scene: GameScene, stroke = true) {
         super();
 
         // Setup main rectangle
@@ -56,6 +59,8 @@ export class InstructionContainer extends GUI.Rectangle {
 
         this.root = root;
         this.build();
+
+        this.shortName = shortName;
     }
     
     build():void {
@@ -125,6 +130,20 @@ export class InstructionContainer extends GUI.Rectangle {
             this.bloc.shadowColor = this.initShadowColor;
         }
     }
+
+    public serialize(): InstructionData {
+        if (this.shortName && ["if", "while", "for"].includes(this.shortName)) {
+            
+            const slots = this.getSlots();
+            const firstChild = slots[0].children[0];
+            return {
+                type: this.shortName, 
+                condition: (firstChild && (firstChild instanceof BlocContainer || firstChild instanceof InputSlot)) ? firstChild.serialize() : null
+            };
+        } else
+            return {type: this.shortName};
+    }
+
     // GETTERS
     getRoot():GUI.Container{return this.root;}
     getScene():GameScene{return this.bloc.getScene()};

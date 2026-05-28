@@ -9,12 +9,14 @@ import { Vector2 } from "@babylonjs/core";
 import { InputSlot } from "./InputSlot";
 import { BaseHSpacer } from "../MRGUI/misc/BaseSpacers";
 import { Colors } from "../Shared/Colors";
+import type { BlocData, BlockShortName, SensorBlock } from "../Shared/types";
 
 export type ArgsType = "VALEUR" | "BOOLEEN" | "ALL" | "NONE";
 
 // Cette classe repésente la base d'un bloc scratch. Return une liste de Valeur
 export class BlocContainer extends GUI.Rectangle {
 
+    protected shortName?: BlockShortName;
     private readonly container: GUI.StackPanel;
     private readonly labels: GUI.TextBlock[];
     private readonly args: ArgsType[];
@@ -170,11 +172,21 @@ export class BlocContainer extends GUI.Rectangle {
 
     // Fonction de base pour récupérer la valeur, se contente de renvoyer une liste des valeurs données
     public getValue(): (Valeur | Booleen)[] {
-        return this.slots.map((slot : GUI.Rectangle) => {
+        return this.slots.map((slotWrp : GUI.Rectangle) => {
+            const slot = slotWrp.children[0];
             if (slot instanceof BlocContainer) return slot.getValue()[0];
             else if (slot instanceof InputSlot) return slot.getValue()[0];
             return new ValeurBrute(0);  
         });
+    }
+
+    public getShortName(): BlockShortName | undefined {
+        return this.shortName;
+    }
+
+    // appelée par InstructionContainer.serialize pour sérialiser ses petits enfants oh trop mimsssss
+    public serialize(): BlocData {
+        return {type: "OVERRIDE_THIs!!!"};
     }
 
     // Renvoie si le point donné appartient à ce bloc où un bloc enfant

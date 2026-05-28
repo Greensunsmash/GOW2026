@@ -10,7 +10,7 @@ import { Si } from "../../Language/Group/Structure/Si";
 export class SiContainer extends StructureContainer {
     
     constructor(l:ListContainer, root: GUI.Container, content_root:GUI.Container, scene: GameScene) {
-        super(l, new InstructionContainer(["Si ", "b", " est vrai, faire"], root, content_root, scene, false), new InstructionContainer(["Fin"], root, content_root, scene, false));
+        super(l, new InstructionContainer(["Si ", "b", " est vrai, faire"], "if", root, content_root, scene, false), new InstructionContainer(["Fin"], undefined, root, content_root, scene, false));
     }
 
     public getGroup(e:Executable[]): Executable {

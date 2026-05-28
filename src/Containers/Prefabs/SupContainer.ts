@@ -9,6 +9,7 @@ export class SupContainer extends BooleenContainer {
 
     constructor(root: GUI.Container, content_root:GUI.Container, scene: GameScene) {
         super(["", "v", ">", "v"], root, content_root, scene);
+        this.shortName = "sup";
     }
 
     public getValue(): (Booleen)[] {

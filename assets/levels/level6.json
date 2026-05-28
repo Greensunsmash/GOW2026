@@ -41,6 +41,7 @@
                 }
             ],
             "clues": [
+                "Pour valider, il faut atteindre l'arrivée en ayant ramassé tous les débris",
                 "A part bien compter, il n'y a pas de secret"
             ]
         },
@@ -85,6 +86,7 @@
                 }
             ],
             "clues": [
+                "Pour valider, il faut atteindre l'arrivée en ayant ramassé tous les débris",
                 "A part bien compter, il n'y a pas de secret"
             ]
         },
@@ -129,6 +131,7 @@
                 }
             ],
             "clues": [
+                "Pour valider, il faut atteindre l'arrivée en ayant ramassé tous les débris",
                 "A part bien compter, il n'y a pas de secret"
             ]
         },
@@ -189,7 +192,8 @@
             ],
             "clues": [
                 "Comment faire pour vérifier à chaque case s'il y a un débris ?",
-                "Inspire toi du niveau précédent"
+                "Inspire toi du niveau précédent",
+                "Répète le bon nombre de fois \"si se trouve sur un obstacle ramasser, puis avancer\"" 
             ]
         }
     ]

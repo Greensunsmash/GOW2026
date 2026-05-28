@@ -1,6 +1,7 @@
 import type { Instruction } from "../Language/Instructions/Instruction";
 import { Memory } from "../Language/Memory";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
+import type { InstructionShortName } from "../Shared/types";
 import { InstructionContainer } from "./InstructionContainer";
 import * as GUI from "@babylonjs/gui";
 
@@ -10,8 +11,8 @@ export class BasicInstContainer extends InstructionContainer {
 
     private initName: string;
 
-    constructor(name: string, inst: Instruction, root: GUI.Container, content_root: GUI.Container, scene: GameScene, pigModeInst?: Instruction){
-        super([name], root, content_root, scene);
+    constructor(name: string, shortName: InstructionShortName, inst: Instruction, root: GUI.Container, content_root: GUI.Container, scene: GameScene, pigModeInst?: Instruction){
+        super([name], shortName, root, content_root, scene);
         this.initName = name;
         this.instruction = inst;
         if (pigModeInst)

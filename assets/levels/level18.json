@@ -50,7 +50,12 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}]
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
+        "clues": [
+            "Quel est l'emplacement que l'on peut vérifier sans risque ?",
+            "Si il n'y a pas de débris à droite, alors il y en à un à sa gauche",
+            "Avance, si tu te trouves sur un débris ramasse le sinon tourne à gauche, avance, ramasse, recule, tourne à droite. Ensuite, finis le niveau en rejoignant l'arrivée"
+        ]
         },
         {
         "nb": 2,
@@ -106,7 +111,10 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}]
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
+        "clues":[
+            "No idea"
+        ]
         },
         {
         "nb": 3,
