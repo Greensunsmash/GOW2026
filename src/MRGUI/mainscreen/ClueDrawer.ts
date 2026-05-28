@@ -137,7 +137,9 @@ export class ClueDrawer extends Rectangle {
         this.lastClueIndex++;
         this.addClue(this.clues[this.lastClueIndex]);
 
-        if (this.lastClueIndex === 1)
+        if (this.lastClueIndex === this.clues.length -1) {
+            this.btn.setText("Un dernier ?");
+        } else if (this.lastClueIndex === 1)
             this.btn.setText("Un deuxième ?");
         else if (this.lastClueIndex === 2)
             this.btn.setText("Un troisième ?");

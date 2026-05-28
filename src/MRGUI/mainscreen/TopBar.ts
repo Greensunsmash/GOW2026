@@ -6,16 +6,20 @@ import { BlockCount } from "./BlockCount";
 import type { ItemDisplay } from "../../Entity/ItemDisplay";
 import { ItemsHUD } from "./ItemsHUD";
 import { ClueDrawer } from "./ClueDrawer";
+import { BaseHSpacer } from "../misc/BaseSpacers";
 
 export class TopBar extends Rectangle {
     public blockCount: BlockCount;
     public itemDisp: ItemsHUD;
     public clueDrw: ClueDrawer;
+    public restoreBtn: BaseButton;
+    public topSpSpacer: BaseHSpacer;
     public drawBtn: BaseButton;
 
     constructor(
         root: AdvancedDynamicTexture,
-        onBackClick: () => void
+        onBackClick: () => void,
+        onRestore: () => void
     ) {
         super("topbar");
         this.height= "70px";
@@ -43,13 +47,28 @@ export class TopBar extends Rectangle {
 
         this.clueDrw = new ClueDrawer(root);
 
+        const topSp = new StackPanel();
+        topSp.isVertical = false;
+
+        this.restoreBtn = new BaseButton("restore-btn", "Restaurer", () => onRestore(), 200);
+        this.restoreBtn.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+        this.restoreBtn.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
+        this.restoreBtn.height = "40px";
+        //this.restoreBtn.isVisible = false;
+        topSp.addControl(this.restoreBtn);
+
+        this.topSpSpacer = new BaseHSpacer(15);
+        topSp.addControl(this.topSpSpacer);
+
         const drawBtn = new BaseButton("clue-btn", "P'tit indice ?", () => this.clueDrw.toggle(), 200);
         drawBtn.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
         drawBtn.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
         drawBtn.height = "40px";
         drawBtn.isVisible = false;
-        this.addControl(drawBtn);
+        topSp.addControl(drawBtn);
         this.drawBtn = drawBtn;
+
+        this.addControl(topSp);
 
         const rightPanel = new StackPanel("topbar-right");
         rightPanel.isVertical = false;

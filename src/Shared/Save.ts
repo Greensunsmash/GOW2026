@@ -17,14 +17,14 @@ export class Save {
 
     static getAll(): SaveData {
         const all =  JSON.parse(
-            sessionStorage.getItem(Save.STORAGE_KEY) ?? "{}"
+            localStorage.getItem(Save.STORAGE_KEY) ?? "{}"
         );
         console.log("all save data : ", all);
         return all;
     }
 
     static setAll(data: SaveData) {
-        sessionStorage.setItem(Save.STORAGE_KEY, JSON.stringify(data));
+        localStorage.setItem(Save.STORAGE_KEY, JSON.stringify(data));
     }
 
     static getLevel(file: string): LevelSaveData | undefined {
@@ -120,6 +120,6 @@ export class Save {
     }
 
     static reset() {
-        sessionStorage.setItem(Save.STORAGE_KEY, "{}");
+        localStorage.setItem(Save.STORAGE_KEY, "{}");
     }
 }

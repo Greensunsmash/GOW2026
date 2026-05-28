@@ -18,7 +18,7 @@ import { TopBar } from "../../MRGUI/mainscreen/TopBar";
 import { BottomBar } from "../../MRGUI/mainscreen/BottomBar";
 import { TwoButtonModal } from "../../MRGUI/windows/TwoButtonsModal";
 import { RealDialog } from "../../MRGUI/windows/RealDialog";
-import { Save } from "../../Shared/Save";
+import { Save, type IslandSaveData } from "../../Shared/Save";
 import type { InstructionData, ListData, ProgramData } from "../../Shared/types";
 import { InstructionContainer } from "../../Containers/InstructionContainer";
 import { BlocContainer } from "../../Containers/BlocContainer";
@@ -70,7 +70,15 @@ export class PlayScene extends GameScene { // ;)
                 "Abandonner et retourner à la carte ?",
                 "Annuler",
                 "Abandonner",
-                () => onLevelGaveup?.()
+                () => onLevelGaveup?.(),
+            );
+        },  () => {
+            new TwoButtonModal(
+                this.advancedTexture,
+                "Restaurer le carnet de l'île précédente ?",
+                "Annuler",
+                "Restaurer",
+                () => this.restoreProgram(true)
             );
         });
         if (INTRO_LEVELS.includes(levelName) || INTRO_LEVELS.every(Save.isCompleted))
@@ -161,7 +169,7 @@ export class PlayScene extends GameScene { // ;)
         await this.levelReader.loadLevel(levelName);
         await this.loadIsland(0);
 
-        this.restoreProgram();
+        this.restoreProgram(false);
 
         /* let light = new HemisphericLight("light", new Vector3(0, 1, 0), this.scene);
         light.includeOnlyWithLayerMask = LayerMasks.SCENE_ONLY;
@@ -342,6 +350,19 @@ export class PlayScene extends GameScene { // ;)
         this.memory.setOnStateUpdate(() => {
             this.btmBar.triggerUpdate();
         });
+
+        
+        let saved = undefined;
+        if (this.currentIsland - 1 >= 0 ) {
+            saved = Save.getIslandData(this.loadedFile, this.currentIsland - 1);
+        }
+        if (saved?.program && saved.program.length > 0) {
+            this.topBar.topSpSpacer.isVisible = true;
+            this.topBar.restoreBtn.isVisible = true;
+        } else {
+            this.topBar.topSpSpacer.isVisible = false;
+            this.topBar.restoreBtn.isVisible = false;
+        }
 
         const beginDialogs = this.levelReader.getBeginDialogs(this.currentIsland);
         if (beginDialogs) {
@@ -639,11 +660,33 @@ export class PlayScene extends GameScene { // ;)
         console.log("save data ", data, " at file ", this.loadedFile, " and island ", this.currentIsland);
     }
 
-    public restoreProgram() {
-        const saved = Save.getIslandData(this.loadedFile, this.currentIsland);
-        if (!saved) return console.error("no island data saved ( looked for ", this.loadedFile, " at island ", this.currentIsland);
+    public restoreProgram(manual: boolean = false) {
+        let saved: IslandSaveData | undefined = undefined;
+        if (manual) {
+            if (this.currentIsland - 1 >= 0 ){
+                saved = Save.getIslandData(this.loadedFile, this.currentIsland - 1);
+            }
+        } else {
+            saved = Save.getIslandData(this.loadedFile, this.currentIsland);
+        }
+
+        if (!saved) {
+            if (manual) {
+                new OneButtonModal(this.advancedTexture, "Aucun programme à récupérer", "OK", () => {});
+                return;
+            } else {
+                return console.error("no no program ( looked for ", this.loadedFile, " at island ", this.currentIsland, " found ", saved);
+            }
+        }
         const program = saved.program;
-        if (!program) return console.error("island data found but no program ( looked for ", this.loadedFile, " at island ", this.currentIsland, " found ", saved);
+        if (!program) {
+            if (manual) {
+                new OneButtonModal(this.advancedTexture, "Aucun programme à récupérer", "OK", () => {});
+                return;
+            } else {
+                return console.error("island data found but no program ( looked for ", this.loadedFile, " at island ", this.currentIsland, " found ", saved);
+            }
+        }
         const factories = this.levelReader.createFactories(this.ctx, this) as any;
         const allFactories = {
             ...factories.instructions,
@@ -656,12 +699,15 @@ export class PlayScene extends GameScene { // ;)
             set_var: (root: any, content_root: any) => new SetVarContainer("", root, content_root, this, this.ctx)
         };
 
+        this.workspace.getContentRoot().clearControls();
         for (const listData of program) {
             const list = this.buildList(listData.insts, allFactories);
-            /*list.leftInPixels = listData.x;
-            list.topInPixels = listData.y;*/
-            list.reparent(list, this.workspace.getContentRoot(), new Vector2(listData.x, listData.y));
+            list.leftInPixels = listData.x;
+            list.topInPixels = listData.y;
+            //list.reparent(list, this.workspace.getContentRoot(), new Vector2(listData.x, listData.y));
         }
+
+        this.updateInstructionCount();
     }
 
     private buildBlock(blockData: any, allFactories: any): BlocContainer | null {
@@ -777,8 +823,8 @@ export class PlayScene extends GameScene { // ;)
                 list.addInstruction(built, list.getMagnetID());
             }
         }
-        /*this.leftPanel.removeControl(list);
-        this.workspace.getContentRoot().addControl(list);*/
+        this.leftPanel.removeControl(list);
+        this.workspace.getContentRoot().addControl(list);
         return list;
     }
 
