@@ -113,23 +113,24 @@
         },
         "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
         "clues":[
-            "No idea"
+            "Répete la même opération que l'île précédente pour parcourir tout l'île en évitant de te transformer",
+            "Répete 6 fois ( Avance, si tu te trouves sur un débris ramasse le sinon tourne à gauche, avance, ramasse, recule, tourne à droite) puis rejoins le drapeau"
         ]
         },
         {
         "nb": 3,
         "layouts": [
             [
-                ["..",".O","..","O.","O.","O.","..",".."],
+                ["..","O.","O.","..",".O","..","O.",".."],
+                [" @"," !"," !","! ","! "," !"," !"," x"]
+            ],
+            [
+                ["..","..","..","O.","O.","O.","..",".."],
                 [" @","! "," !"," !"," !"," !","! ","x "]
             ],
             [
-                ["..",".O","..","O.","O.","..",".O",".."],
-                [" @","! ","! "," !"," !","! ","! ","x "]
-            ],
-            [
-                ["..","O.","O.","..",".O","..","O.",".."],
-                [" @"," !"," !","! ","! "," !"," !","x "]
+                ["..","O.","..","..","O.","..",".O",".."],
+                [" @"," !","! "," !"," !","! ","! ","x "]
             ]
         ],
         "blockset": {
@@ -170,7 +171,13 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}]
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
+        "clues": [
+            "Il faut changer de colonne lorsque tu ne trouves pas de débris",
+            "Tu peux utiliser une variable pour enregistre la colonne sur laquelle tu te situes, et tester sa valeur avec le bloc booléen \"... = ...\" et ainsi savoir sur quelle colonne tu es",
+            "Lorsque que tu changes de colonne, sépare le cas ou tu dois aller à droite, et celui ou tu dois aller à gauche",
+            "Mets x à 0, Répète 6 fois (Avance, si tu es sur un débris ramsse le, sinon (si x vaut 0 alors tourne à gauche, avance, ramsse, tourne à droite et mets x à 1 sinon pareil en inversant et en mettant x à 0)) et avance"
+        ]
         }
     ]
 }

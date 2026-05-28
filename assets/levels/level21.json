@@ -4,8 +4,16 @@
         "nb": 1,
         "layouts": [
             [
-                [".......",".......",".......",".......","......."],
-                ["#  @  #","#d    #","#  d  #","# d  d#","#  xd #"]
+                ["..","..","..","..","..",". "],
+                ["@#"," #"," #"," #"," #","x "]
+            ],
+            [
+                ["..","..",". "],
+                ["@#"," #","x "]
+            ],
+            [
+                ["..","..","..","..",". "],
+                ["@#"," #"," #"," #","x "]
             ]
         ],
         "blockset": {
@@ -48,15 +56,25 @@
         },
         "goal": [{"name": "arrival"}],
         "clues": [
-            "Le mieux pour réussir, c'est de tester étape par étape"
-        ]
+            "Comment savoir si tu arrives à la fin ?",
+            "Tourne à droite, puis tant que tu est face à un obstacle, tourne à gauche, avance et tourne à droite"
+        ],
+        "block_limitation":6
         },
         {
         "nb": 2,
         "layouts": [
             [
-                [".O...O.",".O...O.",".O...O.",".O...O.",".O...O.",".O...O."],
-                ["#  @  #","#     #","# d d #","#     #","#  d  #","#  x  #"]
+                ["..  .","..  .",".. ..",".....","....."],
+                ["@#  x"," #  !"," # # "," ### ","     "]
+            ],
+            [
+                ["..","..",". ",". "],
+                ["@#"," #","! ","x "]
+            ],
+            [
+                ["..     ","..       ",".....  ","......."],
+                ["@#     "," #       "," ####  ","     !x"]
             ]
         ],
         "blockset": {
@@ -97,17 +115,28 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"}],
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
+        "block_limitation":8,
         "clues": [
-            "Le mieux pour réussir, c'est de tester étape par étape"
+            "Comment savoir si tu arrives à la fin ? C'est cette condition que tu dois désormais utiliser",
+            "Si il n'y a pas de rocher à ta droite, c'est que tu dois t'y déplacer",
+            "Tant que tu n'est pas sur un débris (tourne à droite, si tu es face à un obstacle (tourne à gauche), avance) "
         ]
         },
         {
         "nb": 3,
         "layouts": [
             [
-                ["   . ","   . ","   . ","   O ",".....",".....",".....","   . ","   . "],
-                ["   @ ","     ","     ","     ","#  r#","#l  #","#  r#","     ","   x "]
+                [" .. "," .. ","... ","..  ","...."],
+                [" @# ","  # ","  # "," #  ","  !x"]
+            ],
+            [
+                [".. ","...","...","..."],
+                ["@# "," #x"," #!","   "]
+            ],
+            [
+                [" .  .."," .  ..","......"," .... "],
+                [" x  @#"," !   #","#    #"," #### "]
             ]
         ],
         "blockset": {
@@ -148,68 +177,27 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"}],
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
+        "block_limitation":8,
         "clues": [
-            "Le mieux pour réussir, c'est de tester étape par étape"
+            "Maintenant, il ne suffit plus d'une vérification d'obstacle",
+            "Tant que tu n'est pas sur un débris (tourne à droite, tant que tu es face à un obstacle (tourne à gauche), avance) "
         ]
         },
         {
         "nb": 4,
         "layouts": [
             [
-                [".     ",".O... ","O...  ","..O.  ","..OO..","     ."],
-                ["@     ","    # ","      ","      ","      ","     x"]
-            ]
-        ],
-        "blockset": {
-            "instructions": [
-                "forward",
-                "backward",
-                "left",
-                "right",
-                "pickup",
-                "wait"
+                ["   .   ","  ...  "," ....  ","...... ",".......","...... "," ....  ","   .   "],
+                ["   #   ","  #@#  "," ## #  ","#    # ","# ##  #","#   ## "," ##!#  ","   x   "]
             ],
-            "structures": [
-                "for",
-                "if",
-                "while",
-                "elif"
-            ],
-            "booleans": [
-                "true",
-                "false",
-                "not",
-                "and",
-                "or",
-                "inf",
-                "sup",
-                "eq"
-            ],
-            "sensors": [
-                "obstacle",
-                "item"
-            ],
-            "variables": [
-                "var_create",
-                "plus",
-                "minus"
-            ],
-            "start": [
-                "start"
-            ]
-        },
-        "goal": [{"name": "arrival"}],
-        "clues": [
-            "Le mieux pour réussir, c'est de tester étape par étape"
-        ]
-        },
-        {
-        "nb": 5,
-        "layouts": [
             [
-                [".   ",".   ",".O.."],
-                ["@   ","    ","   x"]
+                ["   .    "," ....   ","....... ","........","....... "," ...... ","   ...  ","    .   "],
+                ["   #    "," ## #   ","#    ## ","# ##  !x","#  @### "," ##   # ","   # #  ","    #   "]
+            ],
+            [
+                [" ..... ",".......",".......",".......",".......","...... "," .     "],
+                [" ##### ","#     #","# ### #","# #@# #","# #   #","#!#### "," x     "]
             ]
         ],
         "blockset": {
@@ -250,9 +238,10 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"}],
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
+        "block_limitation":8,
         "clues": [
-            "C'est ton moment, fonce"
+            "Lance ton programme et apprécie le résultat !"
         ]
         }
     ]
