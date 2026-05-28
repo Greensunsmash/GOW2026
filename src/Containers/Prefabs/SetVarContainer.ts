@@ -27,6 +27,10 @@ export class SetVarContainer extends InstructionContainer {
         this.shortName = "set_var";
     }
 
+    setVarName(name: string) {
+        this.name = name;
+    }
+
     getInstruction(): Instruction {
         const slots = this.getSlots();
         const firstChild = slots[0].children[0];

@@ -95,7 +95,7 @@ export class DragBehavior {
     }
 
     // Pour changer le parent d'un bloc
-    private reparent(control: GUI.Control, newParent: GUI.Container, position:Vector2) {
+    public reparent(control: GUI.Control, newParent: GUI.Container, position:Vector2) {
         
         control.parent?.removeControl(control);
         newParent.addControl(control);

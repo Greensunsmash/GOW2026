@@ -116,7 +116,7 @@ export class LevelReader {
         }
         const promises = levelList.map(async (levelEntry: LevelIndexEntry) => {
             const lvl = await fetchLevel(levelEntry.file);
-            console.log("storing in cache" + levelEntry.file);
+            //console.log("storing in cache" + levelEntry.file);
             this.levelCache?.set(levelEntry.file, lvl);
         });
         await Promise.all(promises);

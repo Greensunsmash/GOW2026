@@ -1,4 +1,4 @@
-import { ArcRotateCamera, Color3, CubeTexture, DefaultRenderingPipeline, DirectionalLight, Engine, IblShadowsRenderPipeline, KeyboardEventTypes, MeshBuilder, PBRMaterial, SetValueAction, ShadowGenerator, TimerState, Vector3, Viewport } from "@babylonjs/core";
+import { ArcRotateCamera, Color3, CubeTexture, DefaultRenderingPipeline, DirectionalLight, Engine, IblShadowsRenderPipeline, KeyboardEventTypes, MeshBuilder, PBRMaterial, SetValueAction, ShadowGenerator, TimerState, Vector2, Vector3, Viewport } from "@babylonjs/core";
 import { ListContainer } from "../../Containers/ListContainer";
 import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
 import { Level } from "../../Environment/Level";
@@ -19,8 +19,12 @@ import { BottomBar } from "../../MRGUI/mainscreen/BottomBar";
 import { TwoButtonModal } from "../../MRGUI/windows/TwoButtonsModal";
 import { RealDialog } from "../../MRGUI/windows/RealDialog";
 import { Save } from "../../Shared/Save";
-import type { ProgramData } from "../../Shared/types";
+import type { InstructionData, ListData, ProgramData } from "../../Shared/types";
 import { InstructionContainer } from "../../Containers/InstructionContainer";
+import { BlocContainer } from "../../Containers/BlocContainer";
+import { InputSlot } from "../../Containers/InputSlot";
+import { VarValueContainer } from "../../Containers/Prefabs/VarValueContainer";
+import { DragBehavior } from "../../Containers/DragBehavior";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene { // ;)
@@ -156,6 +160,8 @@ export class PlayScene extends GameScene { // ;)
         this.levelReader = new LevelReader();
         await this.levelReader.loadLevel(levelName);
         await this.loadIsland(0);
+
+        this.restoreProgram();
 
         /* let light = new HemisphericLight("light", new Vector3(0, 1, 0), this.scene);
         light.includeOnlyWithLayerMask = LayerMasks.SCENE_ONLY;
@@ -594,6 +600,7 @@ export class PlayScene extends GameScene { // ;)
         console.log("new instruction count is : ", count);
         this.blockCount = count;
         this.topBar.blockCount.setBlockCount(count);
+        //this.saveProgram();
     }
 
     public clearHighlights() {
@@ -620,26 +627,109 @@ export class PlayScene extends GameScene { // ;)
         } 
     }
 
+    public saveProgram() {
+        const lists = [...this.workspace.getContentRoot().children];
+        const data: ProgramData = [];
+        for (const  child of lists) {
+            if (child instanceof ListContainer) {
+                data.push(child.serializeList());
+            }
+        }
+        Save.setIslandData(this.loadedFile, this.currentIsland, data);
+        console.log("save data ", data, " at file ", this.loadedFile, " and island ", this.currentIsland);
+    }
+
     public restoreProgram() {
-        const saved = localStorage.getItem(`program_${this.loadedFile}`);
-        if (!saved) return;
-        const data = JSON.parse(saved) as ProgramData;
+        const saved = Save.getIslandData(this.loadedFile, this.currentIsland);
+        if (!saved) return console.error("no island data saved ( looked for ", this.loadedFile, " at island ", this.currentIsland);
+        const program = saved.program;
+        if (!program) return console.error("island data found but no program ( looked for ", this.loadedFile, " at island ", this.currentIsland, " found ", saved);
         const factories = this.levelReader.createFactories(this.ctx, this) as any;
         const allFactories = {
             ...factories.instructions,
             ...factories.structures,
             ...factories.sensors,
             ...factories.ops,
-            ...factories.booleans
+            ...factories.booleans,
+            start: (root: any, content_root: any) => new FlagContainer(root, content_root, this),
+            var_value: (root: any, content_root: any) => new VarValueContainer("", root, content_root, this),
+            set_var: (root: any, content_root: any) => new SetVarContainer("", root, content_root, this, this.ctx)
         };
 
-        const list = this.buildList(data, allFactories);
-        // positionner la liste quelque part dans le workspace
-        list.leftInPixels = 200;
-        list.topInPixels = 100;
+        for (const listData of program) {
+            const list = this.buildList(listData.insts, allFactories);
+            /*list.leftInPixels = listData.x;
+            list.topInPixels = listData.y;*/
+            list.reparent(list, this.workspace.getContentRoot(), new Vector2(listData.x, listData.y));
+        }
     }
 
-    private buildList(program: ProgramData, allFactories: any): ListContainer {
+    private buildBlock(blockData: any, allFactories: any): BlocContainer | null {
+        if (!blockData || !blockData.type) return null;
+
+        if (blockData.type === "raw_value") {
+            return null; 
+        }
+
+        const factory = allFactories[blockData.type];
+        if (!factory) {
+            console.error(`zerou factory pour le type de bloc: ${blockData.type}`);
+            return null;
+        }
+
+        const blockInstance = factory(this.leftPanel, this.workspace.getContentRoot());
+        this.leftPanel.removeControl(blockInstance);
+        this.workspace.getContentRoot().addControl(blockInstance);
+
+        new DragBehavior(blockInstance);
+        
+        let actualBlock: BlocContainer | null = null;
+        if (blockInstance instanceof BlocContainer) {
+            actualBlock = blockInstance;
+        } else if (blockInstance instanceof InstructionContainer) {
+            actualBlock = blockInstance.bloc;
+        } else if (blockInstance instanceof ListContainer) {
+            const targetInst = blockInstance.getList().find(e => e instanceof InstructionContainer) as InstructionContainer;
+            if (targetInst) actualBlock = targetInst.bloc;
+        }
+
+        if (!actualBlock) return null;
+
+        if (blockData.variable) {
+            if (typeof (actualBlock as any).setVarName === "function") {
+                (actualBlock as any).setVariableName(blockData.variable);
+            }
+        }
+
+        if (blockData.children && Array.isArray(blockData.children)) {
+            const slots = actualBlock.getSlots(); 
+            
+            for (let i = 0; i < blockData.children.length; i++) {
+                const childData = blockData.children[i];
+                if (!childData) continue; 
+
+                const slotWrapper = slots[i];
+                if (!slotWrapper) continue;
+
+                if (childData.type === "raw_value" && childData.value !== undefined) {
+                    const inputSlot = slotWrapper.children[0];
+                    if (inputSlot && inputSlot instanceof InputSlot) {
+                        (inputSlot as any).textInput.text = String(childData.value);
+                    }
+                } 
+                else {
+                    const childBlock = this.buildBlock(childData, allFactories);
+                    if (childBlock) {
+                        actualBlock.insertControlAt(childBlock, slotWrapper);
+                    }
+                }
+            }
+        }
+
+        return actualBlock;
+    }
+
+    private buildList(program: InstructionData[], allFactories: any): ListContainer {
         const list = new ListContainer(this.leftPanel, this.workspace.getContentRoot(), this);
         
         for (const instrData of program) {
@@ -649,21 +739,46 @@ export class PlayScene extends GameScene { // ;)
             const built = factory(this.leftPanel, this.workspace.getContentRoot());
 
             if (built instanceof ListContainer) {
-                if (instrData.children1) {
-                    const inner = this.buildList(instrData.children1, allFactories);
-                    for (const child of [...inner.getList()]) {
-                        if (child instanceof InstructionContainer) {
-                            inner.removeInstruction(child, true);
-                            built.addInstruction(child, built.getMagnetID(), true);
+                if (instrData.condition) {
+                    const instContainer = built.getList().find(e => e instanceof InstructionContainer) as InstructionContainer;
+                    if (instContainer) {
+                        const slots = instContainer.getSlots();
+                        if (slots && slots.length > 0) {
+                            const childBlock = this.buildBlock(instrData.condition, allFactories);
+                            if (childBlock) {
+                                instContainer.bloc.insertControlAt(childBlock, slots[0]);
+                            }
                         }
                     }
+                }
+                if (instrData.children1) {
+                    const inner = this.buildList(instrData.children1, allFactories);
+                    built.moveMagnet(1);
+                    console.log(built.getList().map(e => e.constructor.name));
+                    built.mergeList(inner);
+                    built.recomputeInstructions();
+                }
+                if (instrData.children2) {
+                    const inner = this.buildList(instrData.children2, allFactories);
+                    built.moveMagnet(built.getList().length - 2);
+                    console.log(built.getList().map(e => e.constructor.name));
+                    built.mergeList(inner);
                     built.recomputeInstructions();
                 }
                 list.mergeList(built);
             } else if (built instanceof InstructionContainer) {
+                if (instrData.condition) { 
+                    const slots = built.getSlots();
+                    if (slots && slots.length > 0) {
+                        const childBlock = this.buildBlock(instrData.condition, allFactories);
+                        if (childBlock) built.bloc.insertControlAt(childBlock, slots[0]);
+                    }
+                }
                 list.addInstruction(built, list.getMagnetID());
             }
         }
+        /*this.leftPanel.removeControl(list);
+        this.workspace.getContentRoot().addControl(list);*/
         return list;
     }
 

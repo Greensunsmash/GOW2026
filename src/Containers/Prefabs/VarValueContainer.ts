@@ -16,6 +16,10 @@ export class VarValueContainer extends ValeurContainer {
         this.shortName = "var_value";
     }
 
+    setVarName(name: string) {
+        this.name = name;
+    }
+
     public getValue(): (Valeur)[] {
         return [new VarValue(this.name, this)];
     }
