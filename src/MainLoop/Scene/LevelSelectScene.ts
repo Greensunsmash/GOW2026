@@ -44,7 +44,29 @@ export class LevelSelectScene extends BaseScene {
 
 
         if(!Save.isCompleted(INTRO_LEVELS[0])) {
-            this.intro(onLevelSelect);
+            if (LevelSelectScene.firstOpen) {
+                LevelSelectScene.firstOpen = false;
+                new TwoButtonModal(
+                    this.advancedTexture,
+                    "Activer le son ?",
+                    "Non",
+                    "Oui",
+                    async () =>  {
+                        const manager = await SoundManager.get();
+                        await manager.init();
+                        SoundManager.playAmbient("Interplanetary_Odyssey.ogg", true, 0.2);
+                        this.intro(onLevelSelect);
+                    },
+                    async () => {
+                        const manager = await SoundManager.get();
+                        await manager.init();
+                        SoundManager.playAmbient("Interplanetary_Odyssey.ogg", true, 0.2);
+                        SoundManager.toggleMute();
+                        this.intro(onLevelSelect);
+                    },
+                    true /* fullBlack */
+                );
+            }
             return;
         }
 
