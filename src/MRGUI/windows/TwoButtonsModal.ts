@@ -33,7 +33,7 @@ export class TwoButtonModal extends ModalWindow {
         const btnCancel = new CancelButton(() => {
             onCancel?.();
             this.blocker.dispose(); 
-        });
+        }, cancelLabel);
         buttonPanel.addControl(btnCancel);
 
         buttonPanel.addControl(new BaseHSpacer());
@@ -42,7 +42,7 @@ export class TwoButtonModal extends ModalWindow {
         const btnOk = new OkButton(() => {
             onValidate();
             if (disposeOnValidate) this.blocker.dispose(); 
-        });
+        }, validateLabel);
         buttonPanel.addControl(btnOk);
 
         buttonPanel.clipChildren = false;
