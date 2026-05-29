@@ -26,8 +26,10 @@ export abstract class RealBaseButton extends Button {
 export class BaseButton extends RealBaseButton {
     public mrTextBlock: TextBlock; 
 
-    constructor(name: string, label: string, callback: () => void, width: number = 120, height: number = 40, useSecretAlgorithm = false) {
-        super(name, label, callback, width, height, useSecretAlgorithm);
+    constructor(name: string, label: string, callback: () => void, width: number = 120, height: number = 40, bgColor?: string, outlineColor?: string) {
+        super(name, label, callback, width, height);
+        if (bgColor) this.background = bgColor;
+        if (outlineColor) this.color = outlineColor;
         this.mrTextBlock = new TextBlock();
         this.mrTextBlock.text = label;
         this.mrTextBlock.fontFamily = "Inter";

@@ -12,9 +12,13 @@ export class TwoButtonModal extends ModalWindow {
         title: string,
         cancelLabel: string,
         validateLabel: string,
-        onValidate: () => void, // callback
+        onValidate: () => void, // callback,
+        onCancel?: () => void,
+        fullBlack = false,
+        disposeOnValidate = true
     ) {
         super(root, title);
+        if (fullBlack) this.blocker.background = "#000000";
 
         // Panel horizontal des boutons
         const buttonPanel = new GUI.StackPanel();
@@ -27,6 +31,7 @@ export class TwoButtonModal extends ModalWindow {
 
         // Annuler
         const btnCancel = new CancelButton(() => {
+            onCancel?.();
             this.blocker.dispose(); 
         });
         buttonPanel.addControl(btnCancel);
@@ -36,7 +41,7 @@ export class TwoButtonModal extends ModalWindow {
         // Valider
         const btnOk = new OkButton(() => {
             onValidate();
-            this.blocker.dispose(); 
+            if (disposeOnValidate) this.blocker.dispose(); 
         });
         buttonPanel.addControl(btnOk);
 

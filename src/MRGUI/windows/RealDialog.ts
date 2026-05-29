@@ -13,9 +13,12 @@ export class RealDialog extends Rectangle {
     private textBlock: TextBlock;
     private ended = false;
     private auto = false;
+    private speaker: DialogSpeakername
 
-    constructor(root: AdvancedDynamicTexture, scene: BaseScene, speaker: DialogSpeakername, auto = false) {
+    constructor(root: AdvancedDynamicTexture, scene: BaseScene, speaker: DialogSpeakername, auto = false, hideName = false) {
         super("realdialog");
+
+        this.speaker = speaker;
 
         this.auto = auto;
 
@@ -35,11 +38,34 @@ export class RealDialog extends Rectangle {
         this.shadowBlur = 6;
         this.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
         this.verticalAlignment = (speaker === "SCIENTIFIQUE") ? Control.VERTICAL_ALIGNMENT_BOTTOM : Control.VERTICAL_ALIGNMENT_TOP;
-        this.paddingBottom = "10%";
+        this.paddingBottom = (speaker === "SCIENTIFIQUE") ? "10%" : "0%";
+        this.paddingTop = (speaker === "SCIENTIFIQUE") ? "0%" : "10%";
 
         this.panel = new StackPanel();
         this.addControl(this.panel);
         this.panel.addControl(new BaseVSpacer());
+
+        if (!hideName) {
+            const title = (speaker === "SCIENTIFIQUE") ? "La scientifique" : "Sir C";
+            const titleBlock = new TextBlock("dialogTitle", title);
+            titleBlock.height = "50px";
+            titleBlock.color = "white";
+            titleBlock.fontSize = 18;
+            titleBlock.fontWeight = "400";
+            titleBlock.fontFamily = "Inter";
+            titleBlock.widthInPixels = title.length*15 + 20;
+
+            const titleBlockRect = new Rectangle("dialogTitleRect");
+            titleBlockRect.height = "50px";
+            titleBlockRect.background = (speaker === "SCIENTIFIQUE") ? Colors.PtitRoseDuSoir : Colors.SirCDialogStroke;
+            titleBlockRect.cornerRadius = 22;
+            titleBlockRect.thickness = 0;
+            titleBlockRect.adaptWidthToChildren = true;
+
+            titleBlockRect.addControl(titleBlock);
+            this.panel.addControl(titleBlockRect);
+            this.panel.addControl(new BaseVSpacer());
+        }
 
         const textBlockRect = new Rectangle("dialogTextRect");
         textBlockRect.adaptHeightToChildren = true;
@@ -50,7 +76,7 @@ export class RealDialog extends Rectangle {
         this.textBlock = new TextBlock("dialogText");
         this.textBlock.resizeToFit = true;
         this.textBlock.textWrapping = true;
-        this.textBlock.color = "black";
+        this.textBlock.color = (speaker === "SCIENTIFIQUE") ? "black" : "white";
         this.textBlock.fontSize = 20;
         this.textBlock.fontWeight = "300";
         this.textBlock.fontFamily = "Inter";
@@ -76,9 +102,15 @@ export class RealDialog extends Rectangle {
             this.blocker.dispose();
             return;
         }
-        this.panel.addControl(new BaseButton("continuer-btn", "Continuer", () => {
-            this.blocker.dispose();
-        }, 0));
+        this.panel.addControl(new BaseButton(
+            "continuer-btn", 
+            "Continuer",
+            () => {
+                this.blocker.dispose();
+            }, 0, 40, 
+            (this.speaker === "SIRC" ? Colors.SirCDialogBtn : undefined),
+            (this.speaker === "SIRC" ? Colors.SirCDialogStroke : undefined),
+        ));
         this.panel.addControl(new BaseVSpacer());
     }
 
@@ -97,7 +129,7 @@ export class RealDialog extends Rectangle {
         }
     }
 
-    public static async show(root: AdvancedDynamicTexture, scene: BaseScene, text: string, speaker: DialogSpeakername, auto = false): Promise<void> {
+    public static async show(root: AdvancedDynamicTexture, scene: BaseScene, text: string, speaker: DialogSpeakername, auto = false, hideName = false): Promise<void> {
         return new Promise((resolve) => {
             const dialog = new RealDialog(root, scene, speaker, auto);
             dialog.blocker.onDisposeObservable.add(() => resolve());

@@ -16,6 +16,7 @@ import type { InstructionData, ListData, ProgramData } from "../Shared/types";
 import { _setProgram } from "@babylonjs/core/Engines/thinEngine.functions";
 import type { InstructionData, ProgramData } from "../Shared/types";
 import { SoundManager } from "../Shared/Sounds";
+import { TwoButtonModal } from "../MRGUI/windows/TwoButtonsModal";
 
 // La classe qui permet de stocker plusieurs instructions container à la suite
 // WARNING : Une instruction ne peut être seule et doit toujours être contenue dans un ListContainer
@@ -266,14 +267,34 @@ export class ListContainer extends GUI.Rectangle {
                     this.scene.scene.onPointerUp = undefined as any;
 
                     if (l.isDragging && (!this.root.contains(_evt.x + decalX, _evt.y + decalY) || !this.content_root.contains(_evt.x + decalX, _evt.y+decalY) || this.scene.getToolbox().contains(_evt.x+decalX, _evt.y+decalY))) {
-                        l.parent?.removeControl(l);
-                        l.isDragging = false;
-                        l.dispose();
-                        // on compte le nb de blocs dans la liste 
-                        this.scene.updateInstructionCount?.();
-                        this.scene.saveProgram?.();
-                        this.scene.setDragging(false);
-                        this.scene.setDecal(new Vector2(0,0));
+                        const deleteList = () => {  
+                            l.parent?.removeControl(l);
+                            l.isDragging = false;
+                            l.dispose();
+                            // on compte le nb de blocs dans la liste 
+                            this.scene.updateInstructionCount?.();
+                            this.scene.saveProgram?.();
+                            this.scene.setDragging(false);
+                            this.scene.setDecal(new Vector2(0,0));
+                        };
+                        const cancelDelete = () => {
+                            l.isDragging = false;
+                            this.scene.setDragging(false);
+                            this.reparent(l, this.content_root, new Vector2(x + decalX, y + decalY));
+                            l.detector.isHitTestVisible = true;
+                            this.scene.setDecal(new Vector2(0, 0));
+                            this.scene.saveProgram?.();
+                        };
+                        if (l.getList().length > 2) { // tjr un magnet donc 2
+                            new TwoButtonModal(
+                                this.scene.advancedTexture,
+                                "Es-tu sûr de supprimer ces blocs ?",
+                                "Annuler",
+                                "Supprimer",
+                                () => deleteList(),
+                                () => cancelDelete()
+                            );
+                        } else deleteList();
                         return;
                     }
                     l.isDragging = false;

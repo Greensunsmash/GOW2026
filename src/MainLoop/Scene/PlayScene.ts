@@ -1,4 +1,4 @@
-import { ArcRotateCamera, Color3, CubeTexture, DefaultRenderingPipeline, DirectionalLight, Engine, IblShadowsRenderPipeline, KeyboardEventTypes, MeshBuilder, PBRMaterial, SetValueAction, ShadowGenerator, TimerState, Vector2, Vector3, Viewport } from "@babylonjs/core";
+import { ArcRotateCamera, Color3, CubeTexture, DefaultRenderingPipeline, DirectionalLight, Engine, IblShadowsRenderPipeline, KeyboardEventTypes, MeshBuilder, PBRMaterial, SetValueAction, ShadowGenerator, Sound, TimerState, Vector2, Vector3, Viewport } from "@babylonjs/core";
 import { ListContainer } from "../../Containers/ListContainer";
 import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
 import { Level } from "../../Environment/Level";
@@ -389,11 +389,18 @@ export class PlayScene extends GameScene { // ;)
 
         if (next >= (this.levelReader as any).structure.length) {
             console.log("Dernière île atteinte");
-            new OneButtonModal(
+            const jinglePromise = SoundManager.playAmbient("success.mp3", false, 1);
+            const m = new OneButtonModal(
                 this.advancedTexture,
                 "Félicitations, tu as vaincu cet archipel !",
                 "Retour à la carte",
-                () => { if (this.onLevelWon) this.onLevelWon(this.loadedFile) }
+                async () => { 
+                    await jinglePromise; 
+                    m.goAway();
+                    if (this.onLevelWon) this.onLevelWon(this.loadedFile); 
+                },
+                undefined,
+                false
             );
             return;
         }

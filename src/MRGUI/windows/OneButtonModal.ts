@@ -10,13 +10,20 @@ export class OneButtonModal extends ModalWindow {
         buttonText: string,
         onClose: () => void, // Callback quand on appuie
         text?: string,
+        disposeOnValidate = true
     ) {
         super(root, title);
         //this.panel.addControl(new BaseVSpacer());
-        this.panel.addControl(new BaseButton(buttonText.trim(), buttonText, () => {
-            this.blocker.dispose();
+        const btn = new BaseButton(buttonText.trim(), buttonText, () => {
+            if (disposeOnValidate) this.blocker.dispose();
+            if (!disposeOnValidate) btn.isEnabled = false;
             onClose();
-        }, 0 /* auto */));
+        }, 0 /* auto */);
+        this.panel.addControl(btn);
         this.panel.addControl(new BaseVSpacer());
+    }
+
+    goAway() {
+        this.blocker.dispose();
     }
 }

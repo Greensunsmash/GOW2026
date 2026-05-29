@@ -14,7 +14,7 @@ export class SoundManager {
 
     private constructor() {}
 
-    private async init() {
+    public async init() {
         this.engine = await BABYLON.CreateAudioEngineAsync();
         await this.engine.unlockAsync();
     }
@@ -30,7 +30,6 @@ export class SoundManager {
 
         this.instancePromise = (async () => {
             const manager = new SoundManager();
-            await manager.init();
             this.instance = manager;
             return manager;
         })();
@@ -42,6 +41,8 @@ export class SoundManager {
 
         const manager = await SoundManager.get();
 
+        if (!manager.engine) {return;}
+
         // stop ancienne musique
         if (manager.currentAmbient) {
             manager.currentAmbient.stop();
@@ -52,13 +53,35 @@ export class SoundManager {
         const sound = await BABYLON.CreateStreamingSoundAsync("ambient",`assets/music/${name}`);
         sound.loop = loop;
         sound.setVolume(volume);
-        sound.play();
-        manager.currentAmbient = sound;
+
+        return new Promise<void>((resolve) => {
+            if (!loop) {
+                if (sound.onEndedObservable) {
+                    sound.onEndedObservable.addOnce(() => {
+                        resolve(); // La promesse se termine ici !
+                    });
+                } else if ('onended' in sound || (sound as any).onended !== undefined) {
+                    (sound as any).onended = () => {
+                        resolve(); // La promesse se termine ici !
+                    };
+                } else {
+                    // Au cas où le moteur audio bug, on débloque quand même
+                    resolve();
+                }
+            } else {
+                // Si c'est en boucle, pas d'attente de fin
+                resolve();
+            }
+
+            sound.play();
+            manager.currentAmbient = sound;
+        });
     }
 
     public static async playSound(name: string, volume: number = 1): Promise<void> {
 
-        await SoundManager.get();
+        const manager = await SoundManager.get();
+        if (!manager.engine) return;
         const sound = await BABYLON.CreateSoundAsync(name,`assets/sounds/${name}`);
         sound.volume = volume;
         sound.play();
@@ -84,6 +107,7 @@ export class SoundManager {
 
     public static async toggleMute(): Promise<boolean> {
         const manager = await SoundManager.get();
+        if (!manager.engine) await manager.init();
         if (manager.muted) await SoundManager.unmute(); 
         else await SoundManager.mute();
         return manager.muted;

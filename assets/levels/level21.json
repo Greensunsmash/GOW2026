@@ -4,7 +4,7 @@
         "nb": 1,
         "begin_dialogs":[
             {"speaker": "SCIENTIFIQUE", "text":"Bon allez courage, on est sur la dernière ligne droite."}, 
-            {"speaker": "SCIENTIFIQUE", "text":"Encore un petit peu et on y est"}
+            {"speaker": "SCIENTIFIQUE", "text":"Encore un petit peu et on y est !"}
         ],
         "layouts": [
             [

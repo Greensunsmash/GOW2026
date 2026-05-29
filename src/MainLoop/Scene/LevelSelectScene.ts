@@ -15,6 +15,8 @@ import { TwoButtonModal } from "../../MRGUI/windows/TwoButtonsModal";
 import { SoundManager } from "../../Shared/Sounds";
 
 export class LevelSelectScene extends BaseScene {
+    private static firstOpen = true;
+
     public uiCamera: ArcRotateCamera;
     private levelMap: LevelSelectMap;
     private levelPopup: LevelPopup;
@@ -80,7 +82,27 @@ export class LevelSelectScene extends BaseScene {
                 }
             }
         });
-        SoundManager.playAmbient("Interplanetary_Odyssey.ogg", true, 0.2);
+        if (LevelSelectScene.firstOpen) {
+            LevelSelectScene.firstOpen = false;
+            new TwoButtonModal(
+                this.advancedTexture,
+                "Activer le son ?",
+                "Non",
+                "Oui",
+                async () =>  {
+                    const manager = await SoundManager.get();
+                    await manager.init();
+                    SoundManager.playAmbient("Interplanetary_Odyssey.ogg", true, 0.2);
+                },
+                async () => {
+                    const manager = await SoundManager.get();
+                    await manager.init();
+                    SoundManager.playAmbient("Interplanetary_Odyssey.ogg", true, 0.2);
+                    SoundManager.toggleMute();
+                },
+                true /* fullBlack */
+            );
+        }
     }
 
     private createTitle() {

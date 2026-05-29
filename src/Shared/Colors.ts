@@ -13,6 +13,7 @@ export class Colors {
     static EmptySlotOhShitImHavingAStroke = "#E2E2E2";
     static SirCDialogStroke = "#440072ff";
     static SirCDialogBg = "rgba(26, 0, 44, 1)";
+    static SirCDialogBtn = "rgba(13, 0, 22, 1)";
 
     static MapBackground = "#4980d1ff";
 
