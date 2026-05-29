@@ -3,6 +3,7 @@ import * as GUI from "@babylonjs/gui";
 import type { GameScene } from "../MainLoop/Scene/GameScene";
 import { BlocContainer } from "./BlocContainer";
 import { EmptySlot } from "./EmptySlot";
+import { SoundManager } from "../Shared/Sounds";
 
 // Class permettant au blocContainer d'être déplaçable
 export class DragBehavior {
@@ -93,6 +94,7 @@ export class DragBehavior {
         this.target.getScene().dragging_bloc = false;
         this.scene.saveProgram?.();
         this.isDragging = false;
+        SoundManager.playSound("clip.ogg", 1);
     }
 
     // Pour changer le parent d'un bloc
