@@ -119,6 +119,9 @@
         },
         {
         "nb": 3,
+        "end_dialog": [
+            "Bravo, tu te débrouilles de mieux en mieux !"
+        ],
         "layouts": [
             [
                 ["..","O.","O.","..",".O","..","O.",".."],

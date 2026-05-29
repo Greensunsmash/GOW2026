@@ -21,6 +21,7 @@ import { RealDialog } from "../../MRGUI/windows/RealDialog";
 import { Save } from "../../Shared/Save";
 import type { ProgramData } from "../../Shared/types";
 import { InstructionContainer } from "../../Containers/InstructionContainer";
+import { SoundManager } from "../../Shared/Sounds";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene { // ;)

@@ -12,6 +12,7 @@ import { Save } from "../../Shared/Save";
 import { LevelCount } from "../../MRGUI/levelsel/LevelCount";
 import { RealDialog } from "../../MRGUI/windows/RealDialog";
 import { TwoButtonModal } from "../../MRGUI/windows/TwoButtonsModal";
+import { SoundManager } from "../../Shared/Sounds";
 
 export class LevelSelectScene extends BaseScene {
     public uiCamera: ArcRotateCamera;
@@ -79,6 +80,7 @@ export class LevelSelectScene extends BaseScene {
                 }
             }
         });
+        SoundManager.playAmbient("Interplanetary_Odyssey.ogg");
     }
 
     private createTitle() {

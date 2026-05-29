@@ -2,6 +2,7 @@
     "islands": [
         {
         "nb": 1,
+        "begin_dialog":["Bon allez courage, on est sur la dernière ligne droite.", "Encore un petit peu et on y est"],
         "layouts": [
             [
                 ["..","..","..","..","..",". "],
@@ -186,6 +187,8 @@
         },
         {
         "nb": 4,
+        "begin_dialog":["Si on passe ces dédales, on atteindra enfin le dméarreur cosmique !"],
+        "end_dialog":["Bravo !", "On a enfin retrouvé le démarreur cosmique.", "Sortons d'ici !"],
         "layouts": [
             [
                 ["   .   ","  ...  "," ....  ","...... ",".......","...... "," ....  ","   .   "],

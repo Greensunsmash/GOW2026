@@ -6,6 +6,7 @@ import { LevelSelectScene } from "./Scene/LevelSelectScene";
 import type { BaseScene } from "./Scene/BaseScene";
 import { LevelReader } from "../Environment/LevelReader";
 import { Save } from "../Shared/Save";
+import { SoundManager } from "../Shared/Sounds";
 
 export class Game {
 
@@ -35,6 +36,7 @@ export class Game {
         game.engine.displayLoadingUI();
         
         await LevelReader.init();
+        await SoundManager.get();
         await game.switchToLevelSelect();
 
         game.engine.runRenderLoop(() => {
