@@ -122,15 +122,23 @@ export class ListContainer extends GUI.Rectangle {
             const decal = this.scene.getDecal();
 
             if (this.detector.isHitTestVisible && pointerInfo.type === PointerEventTypes.POINTERMOVE) {
-                const evt = pointerInfo.event;
+                
+                // ─── LE FIX ANTI-BUG D'ÉCRAN EST ICI ───
+                // On utilise les coordonnées internes corrigées par le moteur 3D,
+                // qui prennent en compte la résolution et le zoom de n'importe quel PC !
+                const pointerX = this.scene.scene.pointerX;
+                const pointerY = this.scene.scene.pointerY;
+
                 if (this.getHover()) {
-                    if (!this.detector.contains(evt.x + decal.x, evt.y + decal.y) && this.scene.getHoverList() === this) {
+                    // On utilise pointerX et pointerY pour les vérifications de survol
+                    if (!this.detector.contains(pointerX + decal.x, pointerY + decal.y) && this.scene.getHoverList() === this) {
                         this.scene.setHoverList(null);
                     } else if (this.scene.isDragging()) {
-                        const pointerY = evt.y;
                         
                         let closestIndex = -1;
                         let minDistance = Infinity;
+
+                        // 1. On cherche le bloc dont le centre vertical est le plus proche de la souris
                         for (let i = 0; i < this.list.length; i++) {
                             const item = this.list[i];
                             if (item === this.magnet) continue; 
@@ -139,7 +147,7 @@ export class ListContainer extends GUI.Rectangle {
                             if (!measure) continue;
 
                             const itemCenterY = measure.top + (measure.height / 2);
-                            const distance = Math.abs(pointerY - itemCenterY);
+                            const distance = Math.abs(pointerY - itemCenterY); // Comparaison parfaite !
 
                             if (distance < minDistance) {
                                 minDistance = distance;
@@ -147,9 +155,11 @@ export class ListContainer extends GUI.Rectangle {
                             }
                         }
 
+                        // 2. On place l'aimant au-dessus ou en dessous de ce bloc
                         if (closestIndex !== -1) {
                             const closestItem = this.list[closestIndex];
                             const closestCenterY = closestItem.transformedMeasure.top + (closestItem.transformedMeasure.height / 2);
+                            
                             let insertIndex = closestIndex;
                             if (pointerY > closestCenterY) {
                                 insertIndex += 1;
@@ -167,7 +177,7 @@ export class ListContainer extends GUI.Rectangle {
                         
                     }
                 } else {
-                    if (this.detector.contains(evt.x + decal.x, evt.y + decal.y)) {
+                    if (this.detector.contains(pointerX + decal.x, pointerY + decal.y)) {
                         this.scene.setHoverList(this);
                     }
                 }
