@@ -177,7 +177,10 @@ export class PlayScene extends GameScene { // ;)
         light.intensity = 1.0; */
 
         const worldNo = LevelReader.getWorldNo(levelName);
-        SoundManager.playAmbient(`world${worldNo}.mp3`, true);
+        let vol = 1;
+        if (worldNo == 2) vol = 0.4;
+        else if (worldNo == 3) vol = 0.7;
+        SoundManager.playAmbient(`world${worldNo}.mp3`, true, vol);
 
         this._isLoaded = true;
         this.scene.getEngine().hideLoadingUI();

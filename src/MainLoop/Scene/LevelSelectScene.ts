@@ -80,7 +80,7 @@ export class LevelSelectScene extends BaseScene {
                 }
             }
         });
-        SoundManager.playAmbient("Interplanetary_Odyssey.ogg", true, 0.5);
+        SoundManager.playAmbient("Interplanetary_Odyssey.ogg", true, 0.2);
     }
 
     private createTitle() {
