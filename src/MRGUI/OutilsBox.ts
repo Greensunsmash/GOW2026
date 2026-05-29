@@ -421,6 +421,9 @@ export class OutilsBox extends Rectangle {
     }
 
     rebuildVariables(scene: GameScene, ctx: ExecutionContext) {
+        if (this.vars.length === 0 || !this.varPanel)
+            return;
+
         // on rebuild les composants stack panel "variables"
         // du haut vers le bas
         const btn = this.varPanel.getChildByType("variables", "Button");

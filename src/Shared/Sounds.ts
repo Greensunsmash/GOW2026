@@ -35,7 +35,7 @@ export class SoundManager {
         return this.instancePromise;
     }
 
-    public static async playAmbient(name: string): Promise<void> {
+    public static async playAmbient(name: string, loop = true): Promise<void> {
 
         const manager = await SoundManager.get();
 
@@ -47,7 +47,7 @@ export class SoundManager {
         }
 
         const sound = await BABYLON.CreateStreamingSoundAsync("ambient",`assets/music/${name}`);
-        sound.loop = true;
+        sound.loop = loop;
         sound.play();
         manager.currentAmbient = sound;
     }

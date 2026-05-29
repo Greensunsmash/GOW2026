@@ -176,6 +176,9 @@ export class PlayScene extends GameScene { // ;)
         light.includeOnlyWithLayerMask = LayerMasks.SCENE_ONLY;
         light.intensity = 1.0; */
 
+        const worldNo = LevelReader.getWorldNo(levelName);
+        SoundManager.playAmbient(`world${worldNo}.mp3`, true);
+
         this._isLoaded = true;
         this.scene.getEngine().hideLoadingUI();
     }

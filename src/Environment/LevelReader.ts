@@ -61,7 +61,7 @@ export type Map3 = Map2[];
 export type IslandMap = Map3[]; // La map d'une ile, c'est la liste des maps de ses feuilles
 export type IslandBlockset = string[]; // Chaque ile à son propre blockset, qui est la liste des ses blocs
 
-export type LevelIndexEntry = {name: string, file: string, x?: number, y?: number};
+export type LevelIndexEntry = {name: string, file: string, x?: number, y?: number, worldNo?: number};
 
 type LevelData = {
     islands: {
@@ -157,6 +157,7 @@ export class LevelReader {
             const data = LevelReader.levelCache?.get(name);
             if (!data)
                 throw new Error(`cant retrieve ${name} from level reader cache`);
+
             const list: any[] = data.islands;
             this.nb_islands = list.length;
 
@@ -187,6 +188,10 @@ export class LevelReader {
             console.error("gave up while trying to lead level :", error);
             this.structure = []; 
         }
+    }
+
+    public static getWorldNo(file: string): number {
+        return LevelReader.indexCache?.find(entry => entry.file === file)?.worldNo ?? 1;
     }
 
     public getBlockLimitForIsland(nb: number): number | null {
