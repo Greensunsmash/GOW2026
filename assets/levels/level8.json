@@ -54,7 +54,7 @@
     },
     {
       "nb": 2,
-      "begin_dialog": [
+      "begin_dialogs": [
         "Si tu veux pouvoir plus progresser, il va te falloir apprendre les variables.",
         "Une variable représente une valeur, que tu peux modifier à tout moment.",
         "Par exemple, en l'augmentant à chaque fois que tu te déplaces, tu peux compter le nombre de déplacements.",
@@ -123,7 +123,7 @@
     },
     {
       "nb": 3,
-      "begin_dialog": [
+      "begin_dialogs": [
         "Bravo ! Essaye maintenant sur une autre île pour voir si tu as bien compris."
       ],
       "layouts": [
@@ -194,7 +194,7 @@
     },
     {
       "nb": 4,
-      "begin_dialog": [
+      "begin_dialogs": [
         "Cette île me rappelle les précédentes..."
       ],
       "layouts": [

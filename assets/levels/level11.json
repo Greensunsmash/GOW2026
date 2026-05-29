@@ -2,7 +2,7 @@
     "islands": [
     {
         "nb": 1,
-        "begin_dialog" : [
+        "begin_dialogs" : [
             "Tiens, j'ai 2 blocs qui t'aideront à trouver le démarreur cosmique.", 
             "Tout d'abord, voici \"Tant que ... est vrai, faire\". Cela te permet de répéter des instructions tant que la condition est vraie"
         ],
@@ -65,7 +65,7 @@
     },
     {
         "nb": 2,
-        "begin_dialog" : [
+        "begin_dialogs" : [
             "Bravo c'est ça ! Et voilà le bloc \"Si Sinon\". C'est comme le bloc \"Si\", mais avec une deuxième possibilité"
         ],
         "layouts": [
@@ -185,7 +185,7 @@
     },
     {
         "nb": 4,
-        "end_dialog": [
+        "s": [
             "Bien joué ! Maitrîse ces blocs et il te rendront de grands services."
         ],
         "layouts": [

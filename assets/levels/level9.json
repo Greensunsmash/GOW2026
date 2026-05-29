@@ -2,7 +2,7 @@
   "islands": [
     {
       "nb": 1,
-      "begin_dialog": [
+      "begin_dialogs": [
         "Tu peux aussi te servir des variables pour compter le nombre de boucles effectuées, ça devrait t’être très utile pour les prochaines îles"
       ],
       "layouts": [[
@@ -144,7 +144,7 @@
     },
     {
       "nb": 3,
-      "end_dialog":[
+      "end_dialogs":[
         "Bravo, tu as avancé plus vite que prévu ! Tu es très proche de me retrouver !"
       ],
       "layouts": [[

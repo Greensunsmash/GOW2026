@@ -2,7 +2,7 @@
     "islands": [
         {
             "nb":1,
-            "begin_dialog": [
+            "begin_dialogs": [
                 "Tu devrais bientôt arriver jusqu'à moi. Si jamais tu croises des débris sur le chemin, récupère les.", 
                 "Ça peut nous être utile. Il te suffit de te placer dessus et d'utiliser le bloc \"Ramasser\".",
                 "Attention, si tu tentes de ramasser un débris alors qu'il n'y en a pas, le programme échouera."],
@@ -49,7 +49,7 @@
         },
         {
             "nb":2,
-            "begin_dialog": ["C'est ça, continue comme ça"],
+            "begin_dialogs": ["C'est ça, continue comme ça"],
             "layouts":[
                 [
                     [".  ","...","...","...","  ."],
@@ -136,11 +136,11 @@
         },
         {
             "nb":4,
-            "begin_dialog": [
+            "begin_dialogs": [
                 "Avec tous les débris ramassés, tu peux maintenant créer un capteur pour savoir si tu te trouves sur un débris.",
                 "Ça va être très utile, hésites pas à t'en servir !"
             ],
-            "end_dialog" : [
+            "end_dialogs" : [
                 "Je vis que tu maitrises. A ce rythme, on devrait pas tarder à se retrouver !"
             ],
             "layouts":[

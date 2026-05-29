@@ -2,7 +2,7 @@
     "islands": [
         {
         "nb": 1,
-        "begin_dialog": [
+        "begin_dialogs": [
             "C'est vraiment un phénomène étrange..."
         ],
         "layouts": [

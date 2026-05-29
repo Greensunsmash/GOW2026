@@ -8,7 +8,6 @@
                 "Avec le capteur que tu as là, tu peux par exemple détecter si il y a un mur juste en face de toi.",
                 "Teste ça !"
             ],
-            "end_dialog": "ahah",
             "layouts": [
                 [
                     [ ".   ", ".   ", ".   ", ".   "],

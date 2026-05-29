@@ -2,7 +2,7 @@
     "islands": [
         {
             "nb":1,
-            "begin_dialog": [
+            "begin_dialogs": [
                 "J'ai découvert un certain nombres d'endroits où je ne pourrais pas te contacter.",
                 "Il faudra donc qu'un seu programme marche pour plusieurs étapes. Bon courage !"
             ],
@@ -67,7 +67,7 @@
         },
         {
             "nb": 2,
-            "end_dialog": ["Bravo ! Tiens, qu'as tu récupéré ?", "Un capteur ?", "Parfait, ça va nous être très utile."],
+            "end_dialogs": ["Bravo ! Tiens, qu'as tu récupéré ?", "Un capteur ?", "Parfait, ça va nous être très utile."],
             "layouts": [
                 [
                     ["......", "......","......","......","......","......","     ."],

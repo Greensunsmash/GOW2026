@@ -2,7 +2,7 @@
     "islands": [
         {
             "nb" : 1,
-            "begin_dialog" : [
+            "begin_dialogs" : [
                 "C'est étrange, je ne parviens pas à te localiser.",
                 "Il va falloir explorer encore un peu"
             ],
@@ -30,7 +30,7 @@
         },
         {
             "nb" : 2,
-            "begin_dialog" : [
+            "begin_dialogs" : [
                 "Fais attention, il va falloir economiser des ressource si tu veux pouvoir le rejoindre.",
                 "Utilise le bloc \"Répeter ... fois\" ça te permettra d'économiser des précieux blocs"
             ],
@@ -65,7 +65,7 @@
         },
         {
             "nb" : 2,
-            "begin_dialog" : [
+            "begin_dialogs" : [
                 "Bravo, tu te débrouille bien.",
                 "Et tu peux également répéter plusieurs instructions, essaye un peu !"
             ],
