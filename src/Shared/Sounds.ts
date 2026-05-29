@@ -5,6 +5,9 @@ export class SoundManager {
     private static instance: SoundManager | null = null;
     private static instancePromise: Promise<SoundManager> | null = null;
 
+    private muted: boolean = false;
+    private previousVolume: number = 1;
+
     private engine!: BABYLON.AudioEngineV2;
 
     private currentAmbient: BABYLON.StreamingSound | null = null;
@@ -65,5 +68,29 @@ export class SoundManager {
         });
     }
 
-    
+    private static async mute(): Promise<void> {
+        const manager = await SoundManager.get();
+        manager.previousVolume = manager.engine.volume;
+        manager.engine.setVolume(0);
+        manager.muted = true;
+    }
+
+    private static async unmute(): Promise<void> {
+        const manager = await SoundManager.get();
+        manager.engine.setVolume(manager.previousVolume);
+        manager.muted = false;
+    }
+
+    public static async toggleMute(): Promise<boolean> {
+        const manager = await SoundManager.get();
+        if (manager.muted) await SoundManager.unmute(); 
+        else await SoundManager.mute();
+        return manager.muted;
+    }
+
+    public static async isMuted(): Promise<boolean> {
+        const manager = await SoundManager.get();
+        return manager.muted;
+    }
+
 }
