@@ -2,7 +2,7 @@
     "islands": [
     {
         "nb": 1,
-        "begin_dialog": [
+        "begin_dialogs": [
             "Bon, continuons à chercher, en évitant tous ces cochons"
         ],
         "layouts": [
@@ -67,7 +67,7 @@
     },
     {
         "nb": 2,
-        "end_dialog": [
+        "end_dialogs": [
             "Bien joué, tu débrouilles très bien!"
         ],
         "layouts": [

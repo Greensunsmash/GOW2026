@@ -2,7 +2,7 @@
     "islands": [
         {
             "nb":1,
-            "begin_dialog": ["Tu vas devoir appliquer ce qu’on a vu depuis le début, bon courage !"],
+            "begin_dialogs": ["Tu vas devoir appliquer ce qu’on a vu depuis le début, bon courage !"],
             "layouts":[
                 [
                     [".",".","."],
@@ -62,8 +62,6 @@
         },
         {
             "nb":2,
-            "begin_dialog": "Ramassez vos poubelles.",
-            "end_dialog" : "Bravo camion.",
             "layouts":[
                 [
                     [".",".","."],
@@ -130,8 +128,6 @@
         },
         {
             "nb":3,
-            "begin_dialog": "Ramassez vos poubelles.",
-            "end_dialog" : "Bravo camion.",
             "layouts":[
                 [
                     [" . ","..."," . "," . "],
@@ -199,11 +195,11 @@
         },
         {
             "nb":4,
-            "begin_dialog": [
+            "begin_dialogs": [
                 "Bravo, tu as fait le plus dur !",
                 "En ré-utilisant ton programme, tu devrais être capable de passer cette île."
             ],
-            "end_dialog": [
+            "end_dialogs": [
                 "Super, tu as bien géré !"
             ],
             "layouts":[

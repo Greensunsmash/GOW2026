@@ -54,7 +54,7 @@
         },
         {
         "nb": 2,
-        "begin_dialog": [
+        "begin_dialogs": [
             "C'est étrange, j'ai une impression de déjà-vu..."
         ],
         "layouts": [

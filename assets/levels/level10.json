@@ -2,7 +2,7 @@
   "islands": [
     {
       "nb": 1,
-      "begin_dialog":[
+      "begin_dialogs":[
         "Je te vois !",
         "Rejoins-moi vite !"
       ],
@@ -58,7 +58,7 @@
     },
     {
       "nb": 2,
-      "begin_dialog":[
+      "begin_dialogs":[
         "Quel plaisir de te revoir !",
         "Je suis contente de te retrouver !",
         "Bon, maintenant trouvons un moyen de sortir de là"
@@ -128,10 +128,10 @@
     },
     {
       "nb": 3,
-      "begin_dialog":[
+      "begin_dialogs":[
         "Très bien, continue comme ça et nous sommes serons sortis d'affaire."
       ],
-      "end_dialog":[
+      "end_dialogs":[
         "Merci pour ton aide !",
         "Malheureusement, je vais encore avoir besoin de ton aide.",
         "Lors du crash, on a perdu le démarreur cosmique. Sans lui, impossible de repartir",
