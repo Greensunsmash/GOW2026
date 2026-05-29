@@ -99,6 +99,7 @@ export class MarcoBozo extends GridEntity {
 
     public turnToAPig() {
         console.log("entering turntoapig");
+        SoundManager.playSound("transform.ogg", 0.2);
         this.affectedByADivineCurse = true;
         this.origMesh.setEnabled(false);
         this.pigMesh.position = this.origMesh.position;
