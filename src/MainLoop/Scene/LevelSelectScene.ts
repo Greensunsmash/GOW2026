@@ -66,7 +66,8 @@ export class LevelSelectScene extends BaseScene {
                     },
                     true /* fullBlack */
                 );
-            }
+            } else 
+                this.intro(onLevelSelect);
             return;
         }
 

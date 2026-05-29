@@ -194,6 +194,8 @@ export class PlayScene extends GameScene { // ;)
         waterMat.alpha = 0.6;
         waterMat.metallic = 0.0;
         waterMat.roughness = 0.1;
+        //const waterMat = createAdvancedOceanMaterial(this.scene);
+
 
         ground.material = waterMat;
         ground.layerMask = LayerMasks.SCENE_ONLY;
