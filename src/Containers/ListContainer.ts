@@ -87,7 +87,7 @@ export class ListContainer extends GUI.Rectangle {
         this.stack.addControl(this.magnet);
 
         // Même moi j'y comprends rien
-        this.pointerObserver = this.scene.scene.onPointerObservable.add((pointerInfo) => {
+        /*this.pointerObserver = this.scene.scene.onPointerObservable.add((pointerInfo) => {
             const decal = this.scene.getDecal();
 
             if (this.detector.isHitTestVisible && pointerInfo.type === PointerEventTypes.POINTERMOVE) {
@@ -98,7 +98,10 @@ export class ListContainer extends GUI.Rectangle {
                     } else if (scene.isDragging()) {
                         let x = evt.x + decal.x - this.stack.leftInPixels;
                         let y = evt.y + decal.y - this.stack.topInPixels;
-                        y = this.moveTowards(y, this.magnet.centerY, 5);
+                        //let x = evt.x + decal.x - this.leftInPixels;
+                        //let y = evt.y + decal.y - this.topInPixels;
+                        //y = this.moveTowards(y, this.magnet.centerY, 5);
+                        y = this.moveTowards(y, this.magnet.centerY, 60);
                         if (!this.magnet.contains(x, y)) {
                             //console.log("Recalcul");
                             let found = false;
@@ -110,6 +113,61 @@ export class ListContainer extends GUI.Rectangle {
                     }
                 } else {
                     if (this.detector.contains(evt.x+decal.x, evt.y+decal.y)) {
+                        this.scene.setHoverList(this);
+                    }
+                }
+            }
+        });*/
+        this.pointerObserver = this.scene.scene.onPointerObservable.add((pointerInfo) => {
+            const decal = this.scene.getDecal();
+
+            if (this.detector.isHitTestVisible && pointerInfo.type === PointerEventTypes.POINTERMOVE) {
+                const evt = pointerInfo.event;
+                if (this.getHover()) {
+                    if (!this.detector.contains(evt.x + decal.x, evt.y + decal.y) && this.scene.getHoverList() === this) {
+                        this.scene.setHoverList(null);
+                    } else if (this.scene.isDragging()) {
+                        const pointerY = evt.y;
+                        
+                        let closestIndex = -1;
+                        let minDistance = Infinity;
+                        for (let i = 0; i < this.list.length; i++) {
+                            const item = this.list[i];
+                            if (item === this.magnet) continue; 
+                            
+                            const measure = item.transformedMeasure;
+                            if (!measure) continue;
+
+                            const itemCenterY = measure.top + (measure.height / 2);
+                            const distance = Math.abs(pointerY - itemCenterY);
+
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                closestIndex = i;
+                            }
+                        }
+
+                        if (closestIndex !== -1) {
+                            const closestItem = this.list[closestIndex];
+                            const closestCenterY = closestItem.transformedMeasure.top + (closestItem.transformedMeasure.height / 2);
+                            let insertIndex = closestIndex;
+                            if (pointerY > closestCenterY) {
+                                insertIndex += 1;
+                            }
+
+                            const currentMagnetIndex = this.list.indexOf(this.magnet);
+                            if (insertIndex > currentMagnetIndex) {
+                                insertIndex -= 1;
+                            }
+
+                            if (currentMagnetIndex !== insertIndex) {
+                                this.moveMagnet(insertIndex);
+                            }
+                        }
+                        
+                    }
+                } else {
+                    if (this.detector.contains(evt.x + decal.x, evt.y + decal.y)) {
                         this.scene.setHoverList(this);
                     }
                 }
