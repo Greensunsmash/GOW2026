@@ -115,6 +115,15 @@
     },
     {
         "nb": 3,
+        "begin_dialogs": [
+            "Attention, je ressens une énergie particulière ici.",
+            "Je ne sais pas ce que c'est, mais reste sur tes gardes"
+        ],
+        "end_dialogs": [
+            "Tout va bien ? J'ai perdu le contact pendant un petit moment",
+            "Tu t'es transformé en cochon ?",
+            "Comment cela est-il possible ?"
+        ],
         "layouts": [
             [
                 ["  .","  .","  O","...","  .","  ."],

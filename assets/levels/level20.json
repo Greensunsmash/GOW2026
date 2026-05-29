@@ -46,7 +46,10 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"}]
+        "goal": [{"name": "arrival"}],
+        "clues": [
+            "Le mieux pour réussir, c'est de tester étape par étape"
+        ]
         },
         {
         "nb": 2,
@@ -94,7 +97,10 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"}]
+        "goal": [{"name": "arrival"}],
+        "clues": [
+            "Le mieux pour réussir, c'est de tester étape par étape"
+        ]
         },
         {
         "nb": 3,
@@ -142,7 +148,10 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"}]
+        "goal": [{"name": "arrival"}],
+        "clues": [
+            "Le mieux pour réussir, c'est de tester étape par étape"
+        ]
         },
         {
         "nb": 4,
@@ -190,7 +199,10 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"}]
+        "goal": [{"name": "arrival"}],
+        "clues": [
+            "Le mieux pour réussir, c'est de tester étape par étape"
+        ]
         },
         {
         "nb": 5,
@@ -238,7 +250,10 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"}]
+        "goal": [{"name": "arrival"}],
+        "clues": [
+            "C'est ton moment, fonce"
+        ]
         }
     ]
 }

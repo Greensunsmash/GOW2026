@@ -64,8 +64,8 @@
         "nb": 2,
         "layouts": [
             [
-                ["  .  ","  .  ","  .  ","  .  ",".....",".....",".....","  .  "," ..  "],
-                ["  u  ","     ","  @  ","     ","# l #","#  l#","#  r#","     "," x   "]
+                ["  .  ","  .  ","  .  ",".....",".....",".....","  .  "," ..  "],
+                ["  u  ","  @  ","     ","# l #","#  l#","#  r#","     "," x   "]
             ]
         ],
         "blockset": {
@@ -108,11 +108,15 @@
         },
         "goal": [{"name": "arrival"}],
         "clues": [
-            "Ne perds pas ton avance, et tout devrait bien se passer"
+            "Ne te laisse pas attraper et tout devrait bien se passer"
         ]
     },
     {
         "nb": 3,
+        "end_dialogs" : [
+            "Ils sont de plus en plus nombreux.",
+            "Je n'arrive pas à comprendre pourquoi..."
+        ],
         "layouts": [
             [
                 [" .  "," .. "," .. "," .. ","...."," .. "," .. "," .. "," .  "],

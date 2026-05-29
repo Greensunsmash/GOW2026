@@ -1,176 +1,19 @@
 {
     "islands": [
-    {
+        {
         "nb": 1,
-        "begin_dialogs": [
-            "Je détecte une présence dans les environs. Y aurait-il d'autres créatures vivantes ?",
-            "Reste prudent"
-        ],
         "layouts": [
             [
-                [".......",".......",".......",".......",".......","   .   "],
-                ["   @   ","       "," #  r# ","       ","       ","   x   "]
-            ]
-        ],
-        "blockset": {
-            "instructions": [
-                "forward",
-                "backward",
-                "left",
-                "right",
-                "pickup"
+                ["..","..","..","..","..",". "],
+                ["@#"," #"," #"," #"," #","x "]
             ],
-            "structures": [
-                "for",
-                "if",
-                "while",
-                "elif"
-            ],
-            "booleans": [
-                "true",
-                "false",
-                "not",
-                "and",
-                "or",
-                "inf",
-                "sup",
-                "eq"
-            ],
-            "sensors": [
-                "obstacle",
-                "item"
-            ],
-            "variables": [
-                "var_create",
-                "plus",
-                "minus"
-            ],
-            "start": [
-                "start"
-            ]
-        },
-        "goal": [{"name": "arrival"}],
-        "clues" : [
-            "Comment se comporte le cochon ?",
-            "A chacune de tes actions, le cochon se déplace"
-        ]
-    },
-    {
-        "nb": 2,
-        "begin_dialogs":[
-            "Un cochon ? Mais qu'est ce qu'il fait là ?",
-            "Bon fais attention, si tu te cognes contre lui ou s'il te fonce dessus, on sera dans de beaux draps."
-        ],
-        "layouts": [
             [
-                ["  .  ","  .  "," ....","  .  ","  .  "],
-                ["  @  ","     "," # r#","     ","  x  "]
-            ]
-        ],
-        "blockset": {
-            "instructions": [
-                "forward",
-                "backward",
-                "left",
-                "right",
-                "pickup",
-                "wait"
+                ["..","..",". "],
+                ["@#"," #","x "]
             ],
-            "structures": [
-                "for",
-                "if",
-                "while",
-                "elif"
-            ],
-            "booleans": [
-                "true",
-                "false",
-                "not",
-                "and",
-                "or",
-                "inf",
-                "sup",
-                "eq"
-            ],
-            "sensors": [
-                "obstacle",
-                "item"
-            ],
-            "variables": [
-                "var_create",
-                "plus",
-                "minus"
-            ],
-            "start": [
-                "start"
-            ]
-        },
-        "goal": [{"name": "arrival"}],
-        "clues" : [
-            "Le bloc \"Attendre\" peut te permettre d'éviter le cochon"
-        ]
-    },
-    {
-        "nb": 3,
-        "layouts": [
             [
-                ["     .     ","  .......  "," ......... ","...........","     .    "],
-                ["     @     ","  #r   l#  "," #r     l# ","#r       l#","     x    "]
-            ]
-        ],
-        "blockset": {
-            "instructions": [
-                "forward",
-                "backward",
-                "left",
-                "right",
-                "pickup",
-                "wait"
-            ],
-            "structures": [
-                "for",
-                "if",
-                "while",
-                "elif"
-            ],
-            "booleans": [
-                "true",
-                "false",
-                "not",
-                "and",
-                "or",
-                "inf",
-                "sup",
-                "eq"
-            ],
-            "sensors": [
-                "obstacle",
-                "item"
-            ],
-            "variables": [
-                "var_create",
-                "plus",
-                "minus"
-            ],
-            "start": [
-                "start"
-            ]
-        },
-        "goal": [{"name": "arrival"}],
-        "clues" : [
-            "Des fois, il faut savoir arréter de réfléchir et courir"
-        ]
-    },
-    {
-        "nb": 4,
-        "end_dialogs": [
-            "Mais pourquoi il y en a autant ? C'est vraiment étrange...",
-            "Bon, dans tout les cas, continuons de chercher le démarreur cosmique."
-        ],
-        "layouts": [
-            [
-                ["     .     ","  .......  "," ......... ","...........","...........","     .    "],
-                ["     @     ","  #r   l#  "," #r     l# ","#         #","#r       l#","     x    "]
+                ["..","..","..","..",". "],
+                ["@#"," #"," #"," #","x "]
             ]
         ],
         "blockset": {
@@ -213,8 +56,193 @@
         },
         "goal": [{"name": "arrival"}],
         "clues": [
-            "A part bien compter, il n'y a pas de secret"
+            "Comment savoir si tu arrives à la fin ?",
+            "Tourne à droite, puis tant que tu est face à un obstacle, tourne à gauche, avance et tourne à droite"
+        ],
+        "block_limitation":6
+        },
+        {
+        "nb": 2,
+        "layouts": [
+            [
+                ["..  .","..  .",".. ..",".....","....."],
+                ["@#  x"," #  !"," # # "," ### ","     "]
+            ],
+            [
+                ["..","..",". ",". "],
+                ["@#"," #","! ","x "]
+            ],
+            [
+                ["..     ","..       ",".....  ","......."],
+                ["@#     "," #       "," ####  ","     !x"]
+            ]
+        ],
+        "blockset": {
+            "instructions": [
+                "forward",
+                "backward",
+                "left",
+                "right",
+                "pickup",
+                "wait"
+            ],
+            "structures": [
+                "for",
+                "if",
+                "while",
+                "elif"
+            ],
+            "booleans": [
+                "true",
+                "false",
+                "not",
+                "and",
+                "or",
+                "inf",
+                "sup",
+                "eq"
+            ],
+            "sensors": [
+                "obstacle",
+                "item"
+            ],
+            "variables": [
+                "var_create",
+                "plus",
+                "minus"
+            ],
+            "start": [
+                "start"
+            ]
+        },
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
+        "block_limitation":8,
+        "clues": [
+            "Comment savoir si tu arrives à la fin ? C'est cette condition que tu dois désormais utiliser",
+            "Si il n'y a pas de rocher à ta droite, c'est que tu dois t'y déplacer",
+            "Tant que tu n'est pas sur un débris (tourne à droite, si tu es face à un obstacle (tourne à gauche), avance) "
         ]
-    }
+        },
+        {
+        "nb": 3,
+        "layouts": [
+            [
+                [" .. "," .. ","... ","..  ","...."],
+                [" @# ","  # ","  # "," #  ","  !x"]
+            ],
+            [
+                [".. ","...","...","..."],
+                ["@# "," #x"," #!","   "]
+            ],
+            [
+                [" .  .."," .  ..","......"," .... "],
+                [" x  @#"," !   #","#    #"," #### "]
+            ]
+        ],
+        "blockset": {
+            "instructions": [
+                "forward",
+                "backward",
+                "left",
+                "right",
+                "pickup",
+                "wait"
+            ],
+            "structures": [
+                "for",
+                "if",
+                "while",
+                "elif"
+            ],
+            "booleans": [
+                "true",
+                "false",
+                "not",
+                "and",
+                "or",
+                "inf",
+                "sup",
+                "eq"
+            ],
+            "sensors": [
+                "obstacle",
+                "item"
+            ],
+            "variables": [
+                "var_create",
+                "plus",
+                "minus"
+            ],
+            "start": [
+                "start"
+            ]
+        },
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
+        "block_limitation":8,
+        "clues": [
+            "Maintenant, il ne suffit plus d'une vérification d'obstacle",
+            "Tant que tu n'est pas sur un débris (tourne à droite, tant que tu es face à un obstacle (tourne à gauche), avance) "
+        ]
+        },
+        {
+        "nb": 4,
+        "layouts": [
+            [
+                ["   .   ","  ...  "," ....  ","...... ",".......","...... "," ....  ","   .   "],
+                ["   #   ","  #@#  "," ## #  ","#    # ","# ##  #","#   ## "," ##!#  ","   x   "]
+            ],
+            [
+                ["   .    "," ....   ","....... ","........","....... "," ...... ","   ...  ","    .   "],
+                ["   #    "," ## #   ","#    ## ","# ##  !x","#  @### "," ##   # ","   # #  ","    #   "]
+            ],
+            [
+                [" ..... ",".......",".......",".......",".......","...... "," .     "],
+                [" ##### ","#     #","# ### #","# #@# #","# #   #","#!#### "," x     "]
+            ]
+        ],
+        "blockset": {
+            "instructions": [
+                "forward",
+                "backward",
+                "left",
+                "right",
+                "pickup",
+                "wait"
+            ],
+            "structures": [
+                "for",
+                "if",
+                "while",
+                "elif"
+            ],
+            "booleans": [
+                "true",
+                "false",
+                "not",
+                "and",
+                "or",
+                "inf",
+                "sup",
+                "eq"
+            ],
+            "sensors": [
+                "obstacle",
+                "item"
+            ],
+            "variables": [
+                "var_create",
+                "plus",
+                "minus"
+            ],
+            "start": [
+                "start"
+            ]
+        },
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
+        "block_limitation":8,
+        "clues": [
+            "Lance ton programme et apprécie le résultat !"
+        ]
+        }
     ]
 }

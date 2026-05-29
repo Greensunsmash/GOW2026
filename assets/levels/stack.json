@@ -50,8 +50,6 @@
         },
         {
             "nb":1,
-            "begin_dialog": "Grosse spirale, faisable a priori avec un for, un while (ou fonction récursive si on a). variable indispensable",
-            "end_dialog" : "Bravo champion",
             "layouts":[
                 [
                     [

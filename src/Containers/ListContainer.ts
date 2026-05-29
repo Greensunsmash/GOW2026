@@ -527,6 +527,7 @@ export class ListContainer extends GUI.Rectangle {
             //if (item instanceof FlagContainer) continue;
             if (!(item instanceof InstructionContainer)) continue;
             if (this.structureList.some(s => s.getQueue() === item)) continue; // pour pas compter les struct en double
+            if (this.structureList.some(s => s.getMid() === item)) continue; // pour pas compter les struct en double
             count += 1;
         }
         // je savais pas ou mettre le debug
