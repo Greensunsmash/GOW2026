@@ -3,8 +3,8 @@
     {
       "nb": 1,
       "begin_dialogs":[
-        "Je te vois !",
-        "Rejoins-moi vite !"
+        {"speaker": "SCIENTIFIQUE", "text":"Je te vois !"},
+        {"speaker": "SCIENTIFIQUE", "text":"Rejoins-moi vite !"}
       ],
       "layouts": [
         [
@@ -59,9 +59,9 @@
     {
       "nb": 2,
       "begin_dialogs":[
-        "Quel plaisir de te revoir !",
-        "Je suis contente de te retrouver !",
-        "Bon, maintenant trouvons un moyen de sortir de là"
+        {"speaker": "SCIENTIFIQUE", "text":"Quel plaisir de te revoir !"},
+        {"speaker": "SCIENTIFIQUE", "text":"Je suis contente de te retrouver !"},
+        {"speaker": "SCIENTIFIQUE", "text":"Bon, maintenant trouvons un moyen de sortir de là"}
       ],
       "layouts": [
         [
@@ -129,14 +129,14 @@
     {
       "nb": 3,
       "begin_dialogs":[
-        "Très bien, continue comme ça et nous sommes serons sortis d'affaire."
+        {"speaker": "SCIENTIFIQUE", "text":"Très bien, continue comme ça et nous sommes serons sortis d'affaire."}
       ],
       "end_dialogs":[
-        "Merci pour ton aide !",
-        "Malheureusement, je vais encore avoir besoin de ton aide.",
-        "Lors du crash, on a perdu le démarreur cosmique. Sans lui, impossible de repartir",
-        "Comme je suis blessée, je suis obligé de te confier cette tâche.",
-        "Mais n'aie crainte, je serai là pour t'épauler !"
+        {"speaker": "SCIENTIFIQUE", "text":"Merci pour ton aide !"},
+        {"speaker": "SCIENTIFIQUE", "text":"Malheureusement, je vais encore avoir besoin de ton aide."},
+        {"speaker": "SCIENTIFIQUE", "text":"Lors du crash, on a perdu le démarreur cosmique. Sans lui, impossible de repartir"},
+        {"speaker": "SCIENTIFIQUE", "text":"Comme je suis blessée, je suis obligé de te confier cette tâche."},
+        {"speaker": "SCIENTIFIQUE", "text":"Mais n'aie crainte, je serai là pour t'épauler !"}
       ],
       "layouts": [
         [

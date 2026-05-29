@@ -2,9 +2,9 @@
     "islands": [
         {
         "nb": 1,
-        "begin_dialog": [
-            "J'ai une idée de ce qui pourrait causer les transformations.",
-            "Continue dans cette direction."
+        "begin_dialogs": [
+            {"speaker": "SCIENTIFIQUE", "text":"J'ai une idée de ce qui pourrait causer les transformations."},
+            {"speaker": "SCIENTIFIQUE", "text":"Continue dans cette direction."}
         ],
         "layouts": [
             [
@@ -126,10 +126,10 @@
         },
         {
         "nb": 3,
-        "end_dialog": [
-            "Les transformations sont causées par une sorcière !",
-            "Elle pourra peut-être nous indiquer ou se trouve le démarreur cosmique",
-            "Mais fait attention en l'approchant, il se pourrait qu'elle nous attaque"
+        "end_dialogs": [
+            {"speaker": "SCIENTIFIQUE", "text":"Les transformations sont causées par une sorcière !"},
+            {"speaker": "SCIENTIFIQUE", "text":"Elle pourra peut-être nous indiquer ou se trouve le démarreur cosmique"},
+            {"speaker": "SCIENTIFIQUE", "text":"Mais fait attention en l'approchant, il se pourrait qu'elle nous attaque"}
         ],
         "layouts": [
             [

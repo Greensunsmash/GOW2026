@@ -3,10 +3,10 @@
         {
             "nb": 1,
             "begin_dialog": [
-                "Pour continuer, on va avoir besoin du bloc \"Si ... faire\".",
-                "Il sert à réaliser des actions uniquement si la condition est remplie.",
-                "Avec le capteur que tu as là, tu peux par exemple détecter si il y a un mur juste en face de toi.",
-                "Teste ça !"
+                {"speaker": "SCIENTIFIQUE", "text":"Pour continuer, on va avoir besoin du bloc \"Si ... faire\"."},
+                {"speaker": "SCIENTIFIQUE", "text":"Il sert à réaliser des actions uniquement si la condition est remplie."},
+                {"speaker": "SCIENTIFIQUE", "text":"Avec le capteur que tu as là, tu peux par exemple détecter si il y a un mur juste en face de toi."},
+                {"speaker": "SCIENTIFIQUE", "text":"Teste ça !"}
             ],
             "layouts": [
                 [
@@ -45,7 +45,7 @@
         },
         {
             "nb": 2,
-            "begin_dialog": [ "Très bien, tu as compris comment ça fonctionne. Continue comme ça !"],
+            "begin_dialog": [ {"speaker": "SCIENTIFIQUE", "text":"Très bien, tu as compris comment ça fonctionne. Continue comme ça !"}],
             "layouts": [
                 [
                     [

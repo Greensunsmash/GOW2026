@@ -3,8 +3,8 @@
         {
             "nb" : 1,
             "begin_dialogs" : [
-                "C'est étrange, je ne parviens pas à te localiser.",
-                "Il va falloir explorer encore un peu"
+                {"speaker": "SCIENTIFIQUE", "text":"C'est étrange, je ne parviens pas à te localiser."},
+                {"speaker": "SCIENTIFIQUE", "text":"Il va falloir explorer encore un peu"}
             ],
             "layouts": [
                 [
@@ -31,8 +31,8 @@
         {
             "nb" : 2,
             "begin_dialogs" : [
-                "Fais attention, il va falloir economiser des ressource si tu veux pouvoir le rejoindre.",
-                "Utilise le bloc \"Répeter ... fois\" ça te permettra d'économiser des précieux blocs"
+                {"speaker": "SCIENTIFIQUE", "text":"Fais attention, il va falloir economiser des ressource si tu veux pouvoir le rejoindre."},
+                {"speaker": "SCIENTIFIQUE", "text":"Utilise le bloc \"Répeter ... fois\" ça te permettra d'économiser des précieux blocs"}
             ],
             "layouts": [
                 [
@@ -66,8 +66,8 @@
         {
             "nb" : 2,
             "begin_dialogs" : [
-                "Bravo, tu te débrouille bien.",
-                "Et tu peux également répéter plusieurs instructions, essaye un peu !"
+                {"speaker": "SCIENTIFIQUE", "text":"Bravo, tu te débrouille bien."},
+                {"speaker": "SCIENTIFIQUE", "text":"Et tu peux également répéter plusieurs instructions, essaye un peu !"}
             ],
             "layouts": [
                 [

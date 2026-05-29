@@ -163,10 +163,10 @@ export class LevelSelectScene extends BaseScene {
     }
     
     async intro(onEnd: (levelFile: string) => Promise<void>) {
-        await RealDialog.show(this.advancedTexture, this, "Tout va bien ?", true);
-        await RealDialog.show(this.advancedTexture, this, "Où es-tu passé ?", true);
-        await RealDialog.show(this.advancedTexture, this, "J'espère que rien n'est cassé...", true);
-        await RealDialog.show(this.advancedTexture, this, "Essayons de te déplacer pour vérifier.", false);
+        await RealDialog.show(this.advancedTexture, this, "Tout va bien ?", "SCIENTIFIQUE", true);
+        await RealDialog.show(this.advancedTexture, this, "Où es-tu passé ?", "SCIENTIFIQUE", true);
+        await RealDialog.show(this.advancedTexture, this, "J'espère que rien n'est cassé...", "SCIENTIFIQUE", true);
+        await RealDialog.show(this.advancedTexture, this, "Essayons de te déplacer pour vérifier.", "SCIENTIFIQUE", false);
         await onEnd(INTRO_LEVELS[0]);
     }
 }

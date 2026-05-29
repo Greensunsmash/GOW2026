@@ -2,7 +2,7 @@ import { ArcRotateCamera, Color3, CubeTexture, DefaultRenderingPipeline, Directi
 import { ListContainer } from "../../Containers/ListContainer";
 import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
 import { Level } from "../../Environment/Level";
-import { LevelReader, State, type IslandMap, type ItemType } from "../../Environment/LevelReader";
+import { LevelReader, State, type DialogLine, type IslandMap, type ItemType } from "../../Environment/LevelReader";
 import { Memory, type GameMode } from "../../Language/Memory";
 import { QuitButton } from "../../MRGUI/buttons/QuitButton";
 import { OneButtonModal } from "../../MRGUI/windows/OneButtonModal";
@@ -377,10 +377,10 @@ export class PlayScene extends GameScene { // ;)
         }
     }
 
-    public async showDialogs(dialogs: string []) {
+    public async showDialogs(dialogs: DialogLine []) {
         for (let i = 0; i < dialogs.length; i++) {
             const dialog = dialogs[i];
-            await RealDialog.show(this.advancedTexture, this, dialog, (i < dialogs.length - 1));
+            await RealDialog.show(this.advancedTexture, this, dialog.text, dialog.speaker, (i < dialogs.length - 1));
         }
     }
 
@@ -682,7 +682,7 @@ export class PlayScene extends GameScene { // ;)
                 new OneButtonModal(this.advancedTexture, "Aucun programme à récupérer", "OK", () => {});
                 return;
             } else {
-                return console.error("no no program ( looked for ", this.loadedFile, " at island ", this.currentIsland, " found ", saved);
+                return console.info("no no program ( looked for ", this.loadedFile, " at island ", this.currentIsland, " found ", saved);
             }
         }
         const program = saved.program;
@@ -691,7 +691,7 @@ export class PlayScene extends GameScene { // ;)
                 new OneButtonModal(this.advancedTexture, "Aucun programme à récupérer", "OK", () => {});
                 return;
             } else {
-                return console.error("island data found but no program ( looked for ", this.loadedFile, " at island ", this.currentIsland, " found ", saved);
+                return console.info("island data found but no program ( looked for ", this.loadedFile, " at island ", this.currentIsland, " found ", saved);
             }
         }
         const factories = this.levelReader.createFactories(this.ctx, this) as any;

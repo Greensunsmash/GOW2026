@@ -116,13 +116,13 @@
     {
         "nb": 3,
         "begin_dialogs": [
-            "Attention, je ressens une énergie particulière ici.",
-            "Je ne sais pas ce que c'est, mais reste sur tes gardes"
+            {"speaker": "SCIENTIFIQUE", "text":"Attention, je ressens une énergie particulière ici."},
+            {"speaker": "SCIENTIFIQUE", "text":"Je ne sais pas ce que c'est, mais reste sur tes gardes"}
         ],
         "end_dialogs": [
-            "Tout va bien ? J'ai perdu le contact pendant un petit moment",
-            "Tu t'es transformé en cochon ?",
-            "Comment cela est-il possible ?"
+            {"speaker": "SCIENTIFIQUE", "text":"Tout va bien ? J'ai perdu le contact pendant un petit moment"},
+            {"speaker": "SCIENTIFIQUE", "text":"Tu t'es transformé en cochon ?"},
+            {"speaker": "SCIENTIFIQUE", "text":"Comment cela est-il possible ?"}
         ],
         "layouts": [
             [

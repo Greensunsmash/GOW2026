@@ -3,7 +3,7 @@
     {
         "nb": 1,
         "begin_dialogs": [
-            "Bon, continuons à chercher, en évitant tous ces cochons"
+            {"speaker": "SCIENTIFIQUE", "text":"Bon, continuons à chercher, en évitant tous ces cochons"}
         ],
         "layouts": [
             [
@@ -68,7 +68,7 @@
     {
         "nb": 2,
         "end_dialogs": [
-            "Bien joué, tu débrouilles très bien!"
+            {"speaker": "SCIENTIFIQUE", "text":"Bien joué, tu débrouilles très bien!"}
         ],
         "layouts": [
             [

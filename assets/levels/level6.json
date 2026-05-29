@@ -3,9 +3,9 @@
         {
             "nb":1,
             "begin_dialogs": [
-                "Tu devrais bientôt arriver jusqu'à moi. Si jamais tu croises des débris sur le chemin, récupère les.", 
-                "Ça peut nous être utile. Il te suffit de te placer dessus et d'utiliser le bloc \"Ramasser\".",
-                "Attention, si tu tentes de ramasser un débris alors qu'il n'y en a pas, le programme échouera."],
+                {"speaker": "SCIENTIFIQUE", "text":"Tu devrais bientôt arriver jusqu'à moi. Si jamais tu croises des débris sur le chemin, récupère les."}, 
+                {"speaker": "SCIENTIFIQUE", "text":"Ça peut nous être utile. Il te suffit de te placer dessus et d'utiliser le bloc \"Ramasser\"."},
+                {"speaker": "SCIENTIFIQUE", "text":"Attention, si tu tentes de ramasser un débris alors qu'il n'y en a pas, le programme échouera."}],
             "layouts":[
                 [
                     [".",".",".",".",".",".","."],
@@ -49,7 +49,7 @@
         },
         {
             "nb":2,
-            "begin_dialogs": ["C'est ça, continue comme ça"],
+            "begin_dialogs": [{"speaker": "SCIENTIFIQUE", "text":"C'est ça, continue comme ça"}],
             "layouts":[
                 [
                     [".  ","...","...","...","  ."],
@@ -137,8 +137,8 @@
         {
             "nb":4,
             "begin_dialogs": [
-                "Avec tous les débris ramassés, tu peux maintenant créer un capteur pour savoir si tu te trouves sur un débris.",
-                "Ça va être très utile, hésites pas à t'en servir !"
+                {"speaker": "SCIENTIFIQUE", "text":"Avec tous les débris ramassés, tu peux maintenant créer un capteur pour savoir si tu te trouves sur un débris."},
+                {"speaker": "SCIENTIFIQUE", "text":"Ça va être très utile, hésites pas à t'en servir !"}
             ],
             "end_dialogs" : [
                 "Je vis que tu maitrises. A ce rythme, on devrait pas tarder à se retrouver !"

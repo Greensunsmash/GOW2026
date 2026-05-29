@@ -3,8 +3,8 @@
         {
             "nb" : 1,
             "begin_dialogs" : [
-                "Je pense que tu as ce qu'il faut pour te débrouiller, je vais prendre un peu de temps pour te localiser.",
-                "En attendant, continue à avancer !"
+                {"speaker": "SCIENTIFIQUE", "text":"Je pense que tu as ce qu'il faut pour te débrouiller, je vais prendre un peu de temps pour te localiser."},
+                {"speaker": "SCIENTIFIQUE", "text":"En attendant, continue à avancer !"}
             ],
             "layouts": [
                 [
@@ -65,8 +65,8 @@
         {
             "nb" : 3,
             "end_dialogs" : [
-                "Bravo, tu te débrouilles bien !",
-                "J'ai réussie à te localiser, mais j'ai une mauvaise nouvelle..."
+                {"speaker": "SCIENTIFIQUE", "text":"Bravo, tu te débrouilles bien !"},
+                {"speaker": "SCIENTIFIQUE", "text":"J'ai réussie à te localiser, mais j'ai une mauvaise nouvelle..."}
             ],
             "layouts": [
                 [

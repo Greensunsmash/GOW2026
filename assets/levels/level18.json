@@ -119,8 +119,8 @@
         },
         {
         "nb": 3,
-        "end_dialog": [
-            "Bravo, tu te débrouilles de mieux en mieux !"
+        "end_dialogs": [
+            {"speaker": "SCIENTIFIQUE", "text":"Bravo, tu te débrouilles de mieux en mieux !"}
         ],
         "layouts": [
             [

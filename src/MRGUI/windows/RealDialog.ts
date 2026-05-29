@@ -5,6 +5,8 @@ import { Colors } from "../../Shared/Colors";
 import { BaseButton } from "../buttons/BaseButton";
 import type { BaseScene } from "../../MainLoop/Scene/BaseScene";
 
+export type  DialogSpeakername = "SCIENTIFIQUE" | "SIRC";
+
 export class RealDialog extends Rectangle {
     private panel: StackPanel;
     private blocker: GreyBlocker;
@@ -12,7 +14,7 @@ export class RealDialog extends Rectangle {
     private ended = false;
     private auto = false;
 
-    constructor(root: AdvancedDynamicTexture, scene: BaseScene, auto = false) {
+    constructor(root: AdvancedDynamicTexture, scene: BaseScene, speaker: DialogSpeakername, auto = false) {
         super("realdialog");
 
         this.auto = auto;
@@ -23,16 +25,16 @@ export class RealDialog extends Rectangle {
 
         this.width = "500px";
         this.adaptHeightToChildren = true;
-        this.background = Colors.ToolboxBg;
+        this.background = (speaker === "SCIENTIFIQUE") ? Colors.ToolboxBg : Colors.SirCDialogBg;
         this.cornerRadius = 10;
         this.thickness = 2;
-        this.color = Colors.AccentDuSud;
+        this.color = (speaker === "SCIENTIFIQUE") ? Colors.AccentDuSud : Colors.SirCDialogStroke;
         this.shadowOffsetX = 1;
         this.shadowOffsetY = 1;
         this.shadowColor = "#00000040";
         this.shadowBlur = 6;
         this.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
-        this.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
+        this.verticalAlignment = (speaker === "SCIENTIFIQUE") ? Control.VERTICAL_ALIGNMENT_BOTTOM : Control.VERTICAL_ALIGNMENT_TOP;
         this.paddingBottom = "10%";
 
         this.panel = new StackPanel();
@@ -95,9 +97,9 @@ export class RealDialog extends Rectangle {
         }
     }
 
-    public static async show(root: AdvancedDynamicTexture, scene: BaseScene, text: string, auto = false): Promise<void> {
+    public static async show(root: AdvancedDynamicTexture, scene: BaseScene, text: string, speaker: DialogSpeakername, auto = false): Promise<void> {
         return new Promise((resolve) => {
-            const dialog = new RealDialog(root, scene, auto);
+            const dialog = new RealDialog(root, scene, speaker, auto);
             dialog.blocker.onDisposeObservable.add(() => resolve());
             scene.scene.onAfterRenderObservable.addOnce(() => {
                 dialog.typewriter(text);

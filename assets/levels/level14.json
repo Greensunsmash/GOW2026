@@ -114,8 +114,8 @@
     {
         "nb": 3,
         "end_dialogs" : [
-            "Ils sont de plus en plus nombreux.",
-            "Je n'arrive pas à comprendre pourquoi..."
+            {"speaker": "SCIENTIFIQUE", "text":"Ils sont de plus en plus nombreux."},
+            {"speaker": "SCIENTIFIQUE", "text":"Je n'arrive pas à comprendre pourquoi..."}
         ],
         "layouts": [
             [

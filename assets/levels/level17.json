@@ -55,7 +55,7 @@
         {
         "nb": 2,
         "begin_dialogs": [
-            "C'est étrange, j'ai une impression de déjà-vu..."
+            {"speaker": "SCIENTIFIQUE", "text":"C'est étrange, j'ai une impression de déjà-vu..."}
         ],
         "layouts": [
             [

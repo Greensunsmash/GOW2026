@@ -3,8 +3,8 @@
     {
         "nb": 1,
         "begin_dialogs": [
-            "Je détecte une présence dans les environs. Y aurait-il d'autres créatures vivantes ?",
-            "Reste prudent"
+            {"speaker": "SCIENTIFIQUE", "text":"Je détecte une présence dans les environs. Y aurait-il d'autres créatures vivantes ?"},
+            {"speaker": "SCIENTIFIQUE", "text":"Reste prudent"}
         ],
         "layouts": [
             [
@@ -58,8 +58,8 @@
     {
         "nb": 2,
         "begin_dialogs":[
-            "Un cochon ? Mais qu'est ce qu'il fait là ?",
-            "Bon fais attention, si tu te cognes contre lui ou s'il te fonce dessus, on sera dans de beaux draps."
+            {"speaker": "SCIENTIFIQUE", "text":"Un cochon ? Mais qu'est ce qu'il fait là ?"},
+            {"speaker": "SCIENTIFIQUE", "text":"Bon fais attention, si tu te cognes contre lui ou s'il te fonce dessus, on sera dans de beaux draps."}
         ],
         "layouts": [
             [
@@ -164,8 +164,8 @@
     {
         "nb": 4,
         "end_dialogs": [
-            "Mais pourquoi il y en a autant ? C'est vraiment étrange...",
-            "Bon, dans tout les cas, continuons de chercher le démarreur cosmique."
+            {"speaker": "SCIENTIFIQUE", "text":"Mais pourquoi il y en a autant ? C'est vraiment étrange..."},
+            {"speaker": "SCIENTIFIQUE", "text":"Bon, dans tout les cas, continuons de chercher le démarreur cosmique."}
         ],
         "layouts": [
             [

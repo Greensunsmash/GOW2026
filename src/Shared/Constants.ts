@@ -21,4 +21,4 @@ export class LayerMasks {
 
 export let ASSETS_ROOT = import.meta.env.BASE_URL + "./assets/";
 
-export const INTRO_LEVELS = ["level1.json", "level2.json"];
+export const INTRO_LEVELS = ["level1.json"];

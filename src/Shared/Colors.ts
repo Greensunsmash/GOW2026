@@ -11,6 +11,8 @@ export class Colors {
     static EmptySlot = "#FFFFFF";
     static EmptySlotHover = "#e4dbcfff";
     static EmptySlotOhShitImHavingAStroke = "#E2E2E2";
+    static SirCDialogStroke = "#440072ff";
+    static SirCDialogBg = "rgba(26, 0, 44, 1)";
 
     static MapBackground = "#4980d1ff";
 

@@ -3,8 +3,8 @@
         {
             "nb" : 1,
             "end_dialogs": [
-                "Bon, tu sembles encore fonctionner.",
-                "Tu peux essayer de te déplacer un petit peu plus pour voir ?"
+                {"speaker": "SCIENTIFIQUE", "text": "Bon, tu sembles encore fonctionner."},
+                {"speaker": "SCIENTIFIQUE", "text": "Tu peux essayer de te déplacer un petit peu plus pour voir ?"}
             ],
             "layouts": [
                 [
@@ -30,8 +30,8 @@
         {
             "nb" : 2,
             "end_dialogs": [
-                "Super.",
-                "Maintenant, voyons si tu peux encore tourner comme il faut."
+                {"speaker": "SCIENTIFIQUE", "text": "Super."},
+                {"speaker": "SCIENTIFIQUE", "text":"Maintenant, voyons si tu peux encore tourner comme il faut."}
             ],
             "layouts": [
                 [
@@ -56,7 +56,7 @@
         },
         {
             "nb" : 3,
-            "end_dialogs": ["On dirait que tout marche encore bien.", "Bon, sors de cette île et viens me retrouver !"],
+            "end_dialogs": [{"speaker": "SCIENTIFIQUE", "text":"On dirait que tout marche encore bien."}, {"speaker": "SCIENTIFIQUE", "text":"Bon, sors de cette île et viens me retrouver !"}],
             "layouts": [
                 [
                     [" .  ", " .  ", " .  ", " ..."],
@@ -82,7 +82,7 @@
         },
         {
             "nb" : 4,
-            "end_dialogs" : ["Bravo !"],
+            "end_dialogs" : [{"speaker": "SCIENTIFIQUE", "text":"Bravo !"}],
             "layouts": [
                 [
                     ["  .  ", "...  ", ".    ", ".....", "    .", "  ...", "  .  "],

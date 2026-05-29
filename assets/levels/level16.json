@@ -3,7 +3,7 @@
         {
         "nb": 1,
         "begin_dialogs": [
-            "C'est vraiment un phénomène étrange..."
+            {"speaker": "SCIENTIFIQUE", "text":"C'est vraiment un phénomène étrange..."}
         ],
         "layouts": [
             [

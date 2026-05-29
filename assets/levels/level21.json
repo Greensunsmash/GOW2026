@@ -2,7 +2,10 @@
     "islands": [
         {
         "nb": 1,
-        "begin_dialog":["Bon allez courage, on est sur la dernière ligne droite.", "Encore un petit peu et on y est"],
+        "begin_dialogs":[
+            {"speaker": "SCIENTIFIQUE", "text":"Bon allez courage, on est sur la dernière ligne droite."}, 
+            {"speaker": "SCIENTIFIQUE", "text":"Encore un petit peu et on y est"}
+        ],
         "layouts": [
             [
                 ["..","..","..","..","..",". "],
@@ -187,8 +190,12 @@
         },
         {
         "nb": 4,
-        "begin_dialog":["Si on passe ces dédales, on atteindra enfin le dméarreur cosmique !"],
-        "end_dialog":["Bravo !", "On a enfin retrouvé le démarreur cosmique.", "Sortons d'ici !"],
+        "begin_dialogs":[{"speaker": "SCIENTIFIQUE", "text":"Si on passe ces dédales, on atteindra enfin le dméarreur cosmique !"}],
+        "end_dialogs":[
+            {"speaker": "SCIENTIFIQUE", "text":"Bravo !"}, 
+            {"speaker": "SCIENTIFIQUE", "text":"On a enfin retrouvé le démarreur cosmique."}, 
+            {"speaker": "SCIENTIFIQUE", "text":"Sortons d'ici !"}
+        ],
         "layouts": [
             [
                 ["   .   ","  ...  "," ....  ","...... ",".......","...... "," ....  ","   .   "],

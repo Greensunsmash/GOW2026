@@ -35,6 +35,7 @@ import { SinonContainer } from "../Containers/Prefabs/SinonContainer";
 import { WaitInstruction } from "../Language/Instructions/WaitInstruction";
 import { ObstacleSensorContainer } from "../Containers/Prefabs/ObstacleSensorContainer";
 import { ItemSensorContainer } from "../Containers/Prefabs/ItemSensorContainer";
+import type { DialogSpeakername } from "../MRGUI/windows/RealDialog";
 
 export const State = { // Proposition, avoir différents symboles pour différetentes orientations : L = robot left, R = robot right etc
     Empty: " ",
@@ -63,14 +64,15 @@ export type IslandBlockset = string[]; // Chaque ile à son propre blockset, qui
 
 export type LevelIndexEntry = {name: string, file: string, x?: number, y?: number, worldNo?: number};
 
+export type DialogLine = {speaker: DialogSpeakername, text: string};
 type LevelData = {
     islands: {
         layouts: State[][];
         blockset: any;
         block_limitation: number | undefined;
         goal: any;
-        begin_dialogs: string[];
-        end_dialogs: string[];
+        begin_dialogs: DialogLine[];
+        end_dialogs: DialogLine[];
         clues: string[];
     }[];
 };
@@ -87,8 +89,8 @@ export class LevelReader {
     private clues: string[][] = [];
     private blockLimit: (number | null)[] = [];
     private goals: Goal[][] = [];
-    private beginDialogs: (string[] | null)[] = [];
-    private endDialogs: (string[] | null)[] =  [];
+    private beginDialogs: (DialogLine[] | null)[] = [];
+    private endDialogs: (DialogLine[] | null)[] =  [];
     
     static async init() {
         // Aucune interception d'erreurs, on catch ailleurs
@@ -206,11 +208,11 @@ export class LevelReader {
         return this.structure[nb];
     }
 
-    public getBeginDialogs(nb: number): string[] | null {
+    public getBeginDialogs(nb: number): DialogLine[] | null {
         return this.beginDialogs[nb];
     }
 
-    public getEndDialog(nb: number): string[] | null {
+    public getEndDialog(nb: number): DialogLine[] | null {
         return this.endDialogs[nb];
     }
 

@@ -2,7 +2,7 @@
     "islands": [
         {
             "nb":1,
-            "begin_dialogs": ["Tu vas devoir appliquer ce qu’on a vu depuis le début, bon courage !"],
+            "begin_dialogs": [{"speaker": "SCIENTIFIQUE", "text":"Tu vas devoir appliquer ce qu’on a vu depuis le début, bon courage !"}],
             "layouts":[
                 [
                     [".",".","."],
@@ -196,8 +196,8 @@
         {
             "nb":4,
             "begin_dialogs": [
-                "Bravo, tu as fait le plus dur !",
-                "En ré-utilisant ton programme, tu devrais être capable de passer cette île."
+                {"speaker": "SCIENTIFIQUE", "text":"Bravo, tu as fait le plus dur !"},
+                {"speaker": "SCIENTIFIQUE", "text":"En ré-utilisant ton programme, tu devrais être capable de passer cette île."}
             ],
             "end_dialogs": [
                 "Super, tu as bien géré !"
