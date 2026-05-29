@@ -54,13 +54,13 @@ export class LevelSelectScene extends BaseScene {
                     async () =>  {
                         const manager = await SoundManager.get();
                         await manager.init();
-                        SoundManager.playAmbient("Interplanetary_Odyssey.ogg", true, 0.2);
+                        SoundManager.playAmbient("world1.mp3", true, 0.2);
                         this.intro(onLevelSelect);
                     },
                     async () => {
                         const manager = await SoundManager.get();
                         await manager.init();
-                        SoundManager.playAmbient("Interplanetary_Odyssey.ogg", true, 0.2);
+                        SoundManager.playAmbient("world1.mp3", true, 0.2);
                         SoundManager.toggleMute();
                         this.intro(onLevelSelect);
                     },
