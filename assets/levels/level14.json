@@ -113,6 +113,10 @@
     },
     {
         "nb": 3,
+        "end_dialog" : [
+            "Ils sont de plus en plus nombreux.",
+            "Je n'arrive pas à comprendre pourquoi..."
+        ],
         "layouts": [
             [
                 [" .  "," .. "," .. "," .. ","...."," .. "," .. "," .. "," .  "],

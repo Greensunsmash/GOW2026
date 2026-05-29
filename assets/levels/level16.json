@@ -2,6 +2,9 @@
     "islands": [
         {
         "nb": 1,
+        "begin_dialog": [
+            "C'est vraiment un phénomène étrange..."
+        ],
         "layouts": [
             [
                 [".",".",".","O",".",".","."],
