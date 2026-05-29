@@ -51,4 +51,19 @@ export class SoundManager {
         sound.play();
         manager.currentAmbient = sound;
     }
+
+    public static async playSound(name: string, volume: number = 1): Promise<void> {
+
+        await SoundManager.get();
+        const sound = await BABYLON.CreateSoundAsync(name,`assets/sounds/${name}`);
+        sound.volume = volume;
+        sound.play();
+
+        // nettoyage automatique une fois terminé
+        sound.onEndedObservable.addOnce(() => {
+            sound.dispose();
+        });
+    }
+
+    
 }

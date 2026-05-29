@@ -5,6 +5,7 @@ import { Value } from "../../Valeur/Value";
 import { Bloc } from "../../Bloc";
 import { Memory } from "../../Memory";
 import type { DepartContainer } from "../../../Containers/DepartContainer";
+import { SoundManager } from "../../../Shared/Sounds";
 
 export class Flag extends Group implements Launchable {
     private memory : Memory;
@@ -28,6 +29,7 @@ export class Flag extends Group implements Launchable {
     public next():void {
         //console.log("next ", this.next_inst);
         const i = this.next_inst.length -1;
+        SoundManager.playSound("tick.ogg", 0.2);
         if (this.next_inst[i] >= this.list.length) {this.memory.programEnd(); this.memory.setCurrentInstruction(this.getBaseInstruction());}
         else super.next();
     }

@@ -14,6 +14,8 @@ import { Colors } from "../Shared/Colors";
 import { BaseVSpacer } from "../MRGUI/misc/BaseSpacers";
 import type { InstructionData, ListData, ProgramData } from "../Shared/types";
 import { _setProgram } from "@babylonjs/core/Engines/thinEngine.functions";
+import type { InstructionData, ProgramData } from "../Shared/types";
+import { SoundManager } from "../Shared/Sounds";
 
 // La classe qui permet de stocker plusieurs instructions container à la suite
 // WARNING : Une instruction ne peut être seule et doit toujours être contenue dans un ListContainer
@@ -297,6 +299,7 @@ export class ListContainer extends GUI.Rectangle {
                         this.scene.saveProgram?.();
                     }
                     this.scene.setDecal(new Vector2(0,0));
+                    SoundManager.playSound("clip.ogg", 1);
                 }
                 break;
 

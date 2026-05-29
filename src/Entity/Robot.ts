@@ -5,6 +5,7 @@ import type { AssetLibrary } from "../Shared/AssetLibrary";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
 import { GridEntity, type EntityState } from "./GridEntity";
 import { Memory } from "../Language/Memory";
+import { SoundManager } from "../Shared/Sounds";
 
 export class MarcoBozo extends GridEntity {
     private speed : number = 0.1;
@@ -156,6 +157,7 @@ export class MarcoBozo extends GridEntity {
 
     public die() {
         this.dead = true;
+        SoundManager.playSound("hurt.ogg", 0.2);
         /* faire une anim */
     }
 
