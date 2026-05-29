@@ -130,6 +130,6 @@ export abstract class GameScene extends BaseScene {
         return this.toolbox;
     }
 
-    
+    public saveProgram?(): void;
     public updateInstructionCount?(): void;
 }

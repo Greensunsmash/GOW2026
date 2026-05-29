@@ -59,7 +59,7 @@ export class AssetLibrary {
         fitInCube?: boolean,
         scaleFactor?: number
     ): TransformNode {
-        console.log("creating new ", name, " instnace");
+        //console.log("creating new ", name, " instnace");
 
         const container = this.containers[name];
         if (!container) throw new Error(`asset '${name}' container not found.`);
@@ -70,7 +70,7 @@ export class AssetLibrary {
             { doNotInstantiate: true }
         );
 
-        console.log(instantiatedEntries);
+        //console.log(instantiatedEntries);
         let instance = instantiatedEntries.rootNodes[0] as TransformNode;
         instance.parent = null; 
         instance.setEnabled(true);
@@ -150,7 +150,7 @@ export class AssetLibrary {
     }
 
     printLoadedAssets() {
-        console.log(this.assets);
+        //console.log(this.assets);
     }
 
 }

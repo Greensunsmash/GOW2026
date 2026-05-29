@@ -132,7 +132,7 @@ export class InstructionContainer extends GUI.Rectangle {
     }
 
     public serialize(): InstructionData {
-        if (this.shortName && ["if", "while", "for"].includes(this.shortName)) {
+        if (this.shortName && ["if", "elif", "while", "for"].includes(this.shortName)) {
             
             const slots = this.getSlots();
             const firstChild = slots[0].children[0];

@@ -91,11 +91,12 @@ export class DragBehavior {
         if (slot instanceof EmptySlot) {slot.replaceIfMatch(this.target);}
         this.target.getScene().setDecal(new Vector2(0,0));
         this.target.getScene().dragging_bloc = false;
+        this.scene.saveProgram?.();
         this.isDragging = false;
     }
 
     // Pour changer le parent d'un bloc
-    private reparent(control: GUI.Control, newParent: GUI.Container, position:Vector2) {
+    public reparent(control: GUI.Control, newParent: GUI.Container, position:Vector2) {
         
         control.parent?.removeControl(control);
         newParent.addControl(control);

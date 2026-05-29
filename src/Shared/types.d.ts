@@ -79,4 +79,10 @@ type InstructionData = {
   data?: BlocData | null;
 };
 
-type ProgramData = InstructionData[];
+type ListData = {
+  insts: InstructionData[];
+  x: number;
+  y: number;
+};
+
+type ProgramData = ListData[];

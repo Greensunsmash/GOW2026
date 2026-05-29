@@ -19,12 +19,11 @@ export class SetVarContainer extends InstructionContainer {
 
     constructor(name:string, root: GUI.Container, content_root:GUI.Container, scene: GameScene, ctx: ExecutionContext){
         const realName = "On met la valeur de " + name + " à ";
-        super([realName, "a"], root, content_root, scene);
+        super([realName, "a"], "set_var", root, content_root, scene);
         this.realName = realName;
         this.name = name;
         this.ctx = ctx;
         this.firstSlotSave = this.bloc.getFirstSlot();
-        this.shortName = "set_var";
     }
 
     getInstruction(): Instruction {

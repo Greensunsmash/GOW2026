@@ -80,7 +80,7 @@ export class RealDialog extends Rectangle {
         this.panel.addControl(new BaseVSpacer());
     }
 
-    private async typewriter(text: string, speed = 100) {
+    private async typewriter(text: string, speed = 50) {
         this.textBlock.text = "";
         for (let i = 0; i < text.length; i++) {
             if (this.ended) { this.textBlock.text = text; return; }

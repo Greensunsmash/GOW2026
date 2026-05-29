@@ -12,7 +12,8 @@ import { FlagContainer } from "./Prefabs/FlagContainer";
 import type { StructureContainer } from "./StructureContainer";
 import { Colors } from "../Shared/Colors";
 import { BaseVSpacer } from "../MRGUI/misc/BaseSpacers";
-import type { InstructionData, ProgramData } from "../Shared/types";
+import type { InstructionData, ListData, ProgramData } from "../Shared/types";
+import { _setProgram } from "@babylonjs/core/Engines/thinEngine.functions";
 
 // La classe qui permet de stocker plusieurs instructions container à la suite
 // WARNING : Une instruction ne peut être seule et doit toujours être contenue dans un ListContainer
@@ -134,7 +135,7 @@ export class ListContainer extends GUI.Rectangle {
                 // Si jamais on a appuyé sur un Valeur/BooleenContainer, on lui transmet le drag
                 let b = c.isPointHandle(new Vector2(x, y));
                 if (b) {
-                    console.log("ispointhandle propagated")
+                    //console.log("ispointhandle propagated")
                     b.onPointerDownObservable.notifyObservers(new GUI.Vector2WithInfo(new Vector2(x, y)));
                     return;
                 }
@@ -219,7 +220,7 @@ export class ListContainer extends GUI.Rectangle {
                             structToMove = this.structureList.filter((x) => x.getHeaderID() >= nb);
                         }
                         
-                        console.log(toMove, structToMove);
+                        //console.log(toMove, structToMove);
                         // Et maintenant on déplace tout
                         for (const item of toMove) {
                             this.removeInstruction(item, true);
@@ -268,6 +269,7 @@ export class ListContainer extends GUI.Rectangle {
                         l.dispose();
                         // on compte le nb de blocs dans la liste 
                         this.scene.updateInstructionCount?.();
+                        this.scene.saveProgram?.();
                         this.scene.setDragging(false);
                         this.scene.setDecal(new Vector2(0,0));
                         return;
@@ -287,10 +289,12 @@ export class ListContainer extends GUI.Rectangle {
                             this.reparent(l, this.content_root, new Vector2(_evt.x+decalX, _evt.y+decalY));
                             l.detector.isHitTestVisible = true;
                         }
+                        this.scene.saveProgram?.();
                     } else {
                         this.scene.setDragging(false);
                         this.reparent(l, this.content_root, new Vector2(_evt.x+decalX, _evt.y+decalY));
                         l.detector.isHitTestVisible = true;
+                        this.scene.saveProgram?.();
                     }
                     this.scene.setDecal(new Vector2(0,0));
                 }
@@ -332,7 +336,7 @@ export class ListContainer extends GUI.Rectangle {
     }
 
     recomputeInstructions() {
-        console.log(this.list);
+        //console.log(this.list);
 
         this.stack.clearControls();
         const listNoMagnet = this.list.filter(e => !(e instanceof Magnet));
@@ -367,12 +371,12 @@ export class ListContainer extends GUI.Rectangle {
                 this.stack.addControl(spacer);
             }
 
-            console.log("currIdent is " + currIdent + " nextIdent is " + nextIndent + " so islastinstructu is " + isLastInStruct);
+            //console.log("currIdent is " + currIdent + " nextIdent is " + nextIndent + " so islastinstructu is " + isLastInStruct);
 
             if (!(this.list[i] instanceof Magnet) && !isHeader && !isMid && !isLastInStruct) {
                 const indexInNoMagnet = listNoMagnet.indexOf(this.list[i] as InstructionContainer);
                 if (indexInNoMagnet + 1 < listNoMagnet.length) {
-                    console.log("creating the whisky scotch");
+                    //console.log("creating the whisky scotch");
                 
                     const scotch = new GUI.Container();
                     scotch.heightInPixels = 5;
@@ -384,7 +388,7 @@ export class ListContainer extends GUI.Rectangle {
                     la val. min de la largeur des deux blocs à relier comme base
                     */
                     const minWidth = Math.min(this.list[i].widthInPixels, this.list[i+1].widthInPixels);
-                    console.log("min width : " + minWidth);
+                    //console.log("min width : " + minWidth);
                     const scotchGauche = new GUI.Rectangle();
                     scotchGauche.widthInPixels = 12;
                     scotchGauche.heightInPixels = 15;
@@ -459,7 +463,7 @@ export class ListContainer extends GUI.Rectangle {
         let new_list = list.getList().filter((x) => x instanceof InstructionContainer);
         let id = this.getMagnetID();
 
-        console.log("Merge : ", new_list)
+        //console.log("Merge : ", new_list)
         for (let i = 0; i < new_list.length; i++) {
             this.addInstruction(new_list[i], i + id, true /*skipRebuud*/);
         }
@@ -470,6 +474,7 @@ export class ListContainer extends GUI.Rectangle {
         this.root.removeControl(list);
 
         this.scene.updateInstructionCount?.();
+        this.scene.saveProgram?.();
     }
 
     // Renvoie la liste d'instructions, si elle est valide (possède un Depart)
@@ -528,7 +533,7 @@ export class ListContainer extends GUI.Rectangle {
             count += 1;
         }
         // je savais pas ou mettre le debug
-        console.log(this.serializeList());
+        //console.log(this.serializeList());
         return count;
     }
 
@@ -561,6 +566,7 @@ export class ListContainer extends GUI.Rectangle {
         control.topInPixels  = (new_pos.y - centerY) / newParent.scaleY + centerY;
 
         this.scene.updateInstructionCount?.();
+        this.scene.saveProgram?.();
     }
 
     private applyDosC(composant: GUI.Container, indent: number, height: number = 10) {
@@ -631,9 +637,7 @@ export class ListContainer extends GUI.Rectangle {
 
     toString(): string { return "ListContainer : " + this.id.toString(); }
 
-    public serializeList(first: number = 0, length?: number): ProgramData {
-        const program: ProgramData = [];
-
+    public serializeList(): ListData {
         const serializeInstruction = (inst: InstructionContainer) => {
             if (inst instanceof InstructionContainer) {
                 const serialized = inst.serialize();
@@ -642,37 +646,36 @@ export class ListContainer extends GUI.Rectangle {
             }
         };
 
-        if (length === undefined) length = this.list.length;
-        for (let i = first; i < length + first; i++) {
-            let instruction = this.list[i];
-            if (instruction instanceof InstructionContainer) {
-                const serialized = instruction.serialize();
-                if (!serialized) continue;
-                const struct = this.checkHeaders(instruction);
-                if (struct) {
-                    const mid = struct.getMidID();
-                    if (mid) { // Si il est en 2 parties, comme si sinon par exemple
-                        let len1 = mid - struct.getHeaderID() - 1;
-                        let len2 = struct.getQueueID() - mid - 1;
-                        serialized.children1 = this.serializeList(struct.getHeaderID() + 1, len1);
-                        serialized.children2 = this.serializeList(mid + 1, len2);
-                        i += len1 + len2 + 2;
-                    } else {
-                        let len = struct.getQueueID() - struct.getHeaderID() - 1;
-                        serialized.children1 = this.serializeList(struct.getHeaderID() + 1, len); 
-                        i += len + 1;
+        const serializeListAux = (first: number = 0, length?: number): InstructionData[] => {
+            const program: InstructionData[] = [];
+            if (length === undefined) length = this.list.length;
+            for (let i = first; i < length + first; i++) {
+                let instruction = this.list[i];
+                if (instruction instanceof InstructionContainer) {
+                    const serialized = instruction.serialize();
+                    if (!serialized) continue;
+                    const struct = this.checkHeaders(instruction);
+                    if (struct) {
+                        const mid = struct.getMidID();
+                        if (mid) { // Si il est en 2 parties, comme si sinon par exemple
+                            let len1 = mid - struct.getHeaderID() - 1;
+                            let len2 = struct.getQueueID() - mid - 1;
+                            serialized.children1 = serializeListAux(struct.getHeaderID() + 1, len1);
+                            serialized.children2 = serializeListAux(mid + 1, len2);
+                            i += len1 + len2 + 2;
+                        } else {
+                            let len = struct.getQueueID() - struct.getHeaderID() - 1;
+                            serialized.children1 = serializeListAux(struct.getHeaderID() + 1, len); 
+                            i += len + 1;
+                        }
                     }
+                    program.push(serialized);
                 }
-                program.push(serialized);
             }
+            return program;
         }
 
-        return program;
-    }
-
-    public static BuildFromSerializedList(program: ProgramData, root: GUI.Container, content_root: GUI.Container, scene: GameScene): ListContainer {
-        const l = new ListContainer(root, content_root, scene);
-        
+        return {insts: serializeListAux(), x: this.leftInPixels, y: this.topInPixels};
     }
 
     dispose(): void {

@@ -14,7 +14,6 @@ export class Colors {
 
     static MapBackground = "#4980d1ff";
 
-    /* OUI c'est pas des COULEURS ET BAH JEN AI RIEN A FOUTRE */
     static CornerRadiusCarrePasTrop = 8;
     static CornerRadiusVraimentArrondi = 15;
 
