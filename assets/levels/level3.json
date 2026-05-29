@@ -2,8 +2,10 @@
     "islands": [
         {
             "nb" : 1,
-            "begin_dialog" : "On tourne ...",
-            "end_dialog" : "Bravo champion",
+            "begin_dialog" : [
+                "Je pense que tu as ce qu'il faut pour te débrouiller, je vais prendre un peu de temps pour te localiser.",
+                "En attendant, continue à avancer !"
+            ],
             "layouts": [
                 [
                     [".    ", ".   ", ".   ", "...."],
@@ -64,8 +66,10 @@
         },
         {
             "nb" : 3,
-            "begin_dialog" : "... et on tourne !",
-            "end_dialog" : "Bravo champion",
+            "end_dialog" : [
+                "Bravo, tu te débrouilles bien !",
+                "J'ai réussie à te localiser, mais j'ai une mauvaise nouvelle..."
+            ],
             "layouts": [
                 [
                     [".           .", ".           .", ".           .", "....     ....", "   .     .   ", "   .     .   ", "   .......   "],

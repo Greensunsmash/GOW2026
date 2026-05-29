@@ -82,7 +82,7 @@
         },
         {
             "nb" : 4,
-            "end_dialogs" : ["Hmm, c'est étrange.", "Je n'arrive pas encore à te localiser sur le GPS.", "Il va falloir que t'explores encore un peu."],
+            "end_dialogs" : ["Bravo !"],
             "layouts": [
                 [
                     ["  .  ", "...  ", ".    ", ".....", "    .", "  ...", "  .  "],

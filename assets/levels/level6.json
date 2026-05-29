@@ -2,8 +2,10 @@
     "islands": [
         {
             "nb":1,
-            "begin_dialog": "Ramassez vos poubelles.",
-            "end_dialog" : "Bravo camion.",
+            "begin_dialog": [
+                "Tu devrais bientôt arriver jusqu'à moi. Si jamais tu croises des débris sur le chemin, récupère les.", 
+                "Ça peut nous être utile. Il te suffit de te placer dessus et d'utiliser le bloc \"Ramasser\".",
+                "Attention, si tu tentes de ramasser un débris alors qu'il n'y en a pas, le programme échouera."],
             "layouts":[
                 [
                     [".",".",".",".",".",".","."],
@@ -47,8 +49,7 @@
         },
         {
             "nb":2,
-            "begin_dialog": "Ramassez vos poubelles.",
-            "end_dialog" : "Bravo camion.",
+            "begin_dialog": ["C'est ça, continue comme ça"],
             "layouts":[
                 [
                     [".  ","...","...","...","  ."],
@@ -92,8 +93,6 @@
         },
         {
             "nb":3,
-            "begin_dialog": "Ramassez vos poubelles.",
-            "end_dialog" : "Bravo camion.",
             "layouts":[
                 [
                     [".",".",".",".",".",".","."],
@@ -137,8 +136,13 @@
         },
         {
             "nb":4,
-            "begin_dialog": "Ramassez vos poubelles.",
-            "end_dialog" : "Bravo camion.",
+            "begin_dialog": [
+                "Avec tous les débris ramassés, tu peux maintenant créer un capteur pour savoir si tu te trouves sur un débris.",
+                "Ça va être très utile, hésites pas à t'en servir !"
+            ],
+            "end_dialog" : [
+                "Je vis que tu maitrises. A ce rythme, on devrait pas tarder à se retrouver !"
+            ],
             "layouts":[
                 [
                     [".",".",".",".",".",".",".","."],

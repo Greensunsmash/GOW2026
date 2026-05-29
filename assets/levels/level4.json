@@ -2,8 +2,10 @@
     "islands": [
         {
             "nb":1,
-            "begin_dialog": "Plusieurs feuilles ???",
-            "end_dialog" : "Bravo champion",
+            "begin_dialog": [
+                "J'ai découvert un certain nombres d'endroits où je ne pourrais pas te contacter.",
+                "Il faudra donc qu'un seu programme marche pour plusieurs étapes. Bon courage !"
+            ],
             "layouts":[
                 [
                     [
@@ -65,8 +67,7 @@
         },
         {
             "nb": 2,
-            "begin_dialog": "Bienvenue en enfer",
-            "end_dialog": "Bravo champion",
+            "end_dialog": ["Bravo ! Tiens, qu'as tu récupéré ?", "Un capteur ?", "Parfait, ça va nous être très utile."],
             "layouts": [
                 [
                     ["......", "......","......","......","......","......","     ."],
