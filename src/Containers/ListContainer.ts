@@ -289,10 +289,12 @@ export class ListContainer extends GUI.Rectangle {
                             this.reparent(l, this.content_root, new Vector2(_evt.x+decalX, _evt.y+decalY));
                             l.detector.isHitTestVisible = true;
                         }
+                        this.scene.saveProgram?.();
                     } else {
                         this.scene.setDragging(false);
                         this.reparent(l, this.content_root, new Vector2(_evt.x+decalX, _evt.y+decalY));
                         l.detector.isHitTestVisible = true;
+                        this.scene.saveProgram?.();
                     }
                     this.scene.setDecal(new Vector2(0,0));
                 }

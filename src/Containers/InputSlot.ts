@@ -45,7 +45,7 @@ export class InputSlot extends EmptySlot implements Valuable {
     }
 
     isPointHandle(coords: Vector2) {
-        console.log("ispointhandle, inputslot");
+        //console.log("ispointhandle, inputslot");
         if (this.contains(coords.x, coords.y)) return this;
         return null;
     }
@@ -67,6 +67,10 @@ export class InputSlot extends EmptySlot implements Valuable {
             return null;
         else
             return {type: "raw_value", value: num};
+    }
+
+    setValue(num: number) {
+        this.textInput.text = num.toString();
     }
 
     toString(): string {

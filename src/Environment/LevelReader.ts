@@ -353,6 +353,7 @@ export class LevelReader {
 
 
         tb.setBlockLimit(this.blockLimit[nb]);
+        tb.rebuildVariables(scene, ctx);
 
         tb.finish();
     }

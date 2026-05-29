@@ -618,7 +618,7 @@ export class PlayScene extends GameScene { // ;)
                     count += child.getInstructionCount();
             }
         } 
-        console.log("new instruction count is : ", count);
+        //console.log("new instruction count is : ", count);
         this.blockCount = count;
         this.topBar.blockCount.setBlockCount(count);
         //this.saveProgram();
@@ -694,14 +694,13 @@ export class PlayScene extends GameScene { // ;)
             ...factories.sensors,
             ...factories.ops,
             ...factories.booleans,
-            start: (root: any, content_root: any) => new FlagContainer(root, content_root, this),
-            var_value: (root: any, content_root: any) => new VarValueContainer("", root, content_root, this),
-            set_var: (root: any, content_root: any) => new SetVarContainer("", root, content_root, this, this.ctx)
+            start: (root: any, content_root: any) => new FlagContainer(root, content_root, this)
         };
 
         this.workspace.getContentRoot().clearControls();
         for (const listData of program) {
             const list = this.buildList(listData.insts, allFactories);
+            list.moveMagnet(list.getList().length - 1);
             list.leftInPixels = listData.x;
             list.topInPixels = listData.y;
             //list.reparent(list, this.workspace.getContentRoot(), new Vector2(listData.x, listData.y));
@@ -717,13 +716,21 @@ export class PlayScene extends GameScene { // ;)
             return null; 
         }
 
-        const factory = allFactories[blockData.type];
-        if (!factory) {
-            console.error(`zerou factory pour le type de bloc: ${blockData.type}`);
-            return null;
+        let blockInstance;
+        if (blockData.type === "var_value") {
+            this.toolbox.addVariable(blockData.variable ?? "PB", this, this.ctx);
+            blockInstance = new VarValueContainer(blockData.variable ?? "PB", this.leftPanel, this.workspace.getContentRoot(), this);
+        } else {
+            console.log("using factory to build ", blockData.type);
+            const factory = allFactories[blockData.type];
+            if (!factory) {
+                console.error(`zerou factory pour le type de bloc: ${blockData.type}`);
+                return null;
+            }
+
+            blockInstance = factory(this.leftPanel, this.workspace.getContentRoot());
         }
 
-        const blockInstance = factory(this.leftPanel, this.workspace.getContentRoot());
         this.leftPanel.removeControl(blockInstance);
         this.workspace.getContentRoot().addControl(blockInstance);
 
@@ -743,7 +750,7 @@ export class PlayScene extends GameScene { // ;)
 
         if (blockData.variable) {
             if (typeof (actualBlock as any).setVarName === "function") {
-                (actualBlock as any).setVariableName(blockData.variable);
+                (actualBlock as any).setVarName(blockData.variable);
             }
         }
 
@@ -760,7 +767,7 @@ export class PlayScene extends GameScene { // ;)
                 if (childData.type === "raw_value" && childData.value !== undefined) {
                     const inputSlot = slotWrapper.children[0];
                     if (inputSlot && inputSlot instanceof InputSlot) {
-                        (inputSlot as any).textInput.text = String(childData.value);
+                        (inputSlot as any).setValue(childData.value);
                     }
                 } 
                 else {
@@ -780,9 +787,16 @@ export class PlayScene extends GameScene { // ;)
         
         for (const instrData of program) {
             if (!instrData.type) continue;
-            const factory = allFactories[instrData.type];
-            if (!factory) continue;
-            const built = factory(this.leftPanel, this.workspace.getContentRoot());
+
+            let built;
+            if (instrData.type === "set_var") {
+                this.toolbox.addVariable(instrData.variable ?? "PB", this, this.ctx);
+                built = new SetVarContainer(instrData.variable ?? "PB", this.leftPanel, this.workspace.getContentRoot(), this, this.ctx)
+            } else {
+                const factory = allFactories[instrData.type];
+                if (!factory) continue;
+                built = factory(this.leftPanel, this.workspace.getContentRoot());
+            }
 
             if (built instanceof ListContainer) {
                 if (instrData.condition) {
@@ -817,6 +831,12 @@ export class PlayScene extends GameScene { // ;)
                     const slots = built.getSlots();
                     if (slots && slots.length > 0) {
                         const childBlock = this.buildBlock(instrData.condition, allFactories);
+                        if (childBlock) built.bloc.insertControlAt(childBlock, slots[0]);
+                    }
+                } else if (instrData.data) {
+                    const slots = built.getSlots();
+                    if (slots && slots.length > 0) {
+                        const childBlock = this.buildBlock(instrData.data, allFactories);
                         if (childBlock) built.bloc.insertControlAt(childBlock, slots[0]);
                     }
                 }

@@ -409,7 +409,7 @@ export class OutilsBox extends Rectangle {
 
     // Ajtr une variable dans le panel "Variable"
     addVariable(name: string, scene: GameScene, ctx: ExecutionContext) {
-        if (name in this.vars) {
+        if (this.vars.includes(name)) {
             console.error("variable already exists.");
             return;
         }
@@ -417,6 +417,10 @@ export class OutilsBox extends Rectangle {
         // on doit tenir un registre des variables dans la toolbox
         this.vars.push(name);
         
+        this.rebuildVariables(scene, ctx);
+    }
+
+    rebuildVariables(scene: GameScene, ctx: ExecutionContext) {
         // on rebuild les composants stack panel "variables"
         // du haut vers le bas
         const btn = this.varPanel.getChildByType("variables", "Button");
@@ -472,7 +476,7 @@ export class OutilsBox extends Rectangle {
         this.facticeBlocks = [];
         this.categories.clear();
         this.stack.clearControls();
-        this.vars = [];
+        //this.vars = [];
         this.buttons = [];
         this.varPanel = undefined as any;
         this.templateRegistry.clear();
