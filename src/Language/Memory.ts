@@ -112,7 +112,6 @@ export class Memory {
         if (!v) {
             this.setVariable(name, new Value(0));
             v = new Value(0);
-            console.log("hopla ni vu ni connu");
         }
         return v;
         
