@@ -1,32 +1,29 @@
-import {Texture, DefaultRenderingPipeline, NodeMaterial, ArcRotateCamera, Color3, CubeTexture, DirectionalLight, Engine, IblShadowsRenderPipeline, KeyboardEventTypes, MeshBuilder, PBRMaterial, SetValueAction, ShadowGenerator, Sound, TimerState, Vector2, Vector3, Viewport } from "@babylonjs/core";
-import { WaterMaterial } from "@babylonjs/materials";
+import { AbstractMesh, ArcRotateCamera, BloomEffect, Color3, Color4, CreateBox, CubeTexture, DirectionalLight, Engine, FxaaPostProcess, GPUParticleSystem, KeyboardEventTypes, MeshBuilder, ParticleSystem, PBRMaterial, ShadowGenerator, Texture, Vector3, Viewport } from "@babylonjs/core";
+import { BasicInstContainer } from "../../Containers/BasicInstContainer";
+import { BlocContainer } from "../../Containers/BlocContainer";
+import { DragBehavior } from "../../Containers/DragBehavior";
+import { InputSlot } from "../../Containers/InputSlot";
+import { InstructionContainer } from "../../Containers/InstructionContainer";
 import { ListContainer } from "../../Containers/ListContainer";
 import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
+import { SetVarContainer } from "../../Containers/Prefabs/SetVarContainer";
+import { VarValueContainer } from "../../Containers/Prefabs/VarValueContainer";
 import { Level } from "../../Environment/Level";
 import { LevelReader, State, type DialogLine, type IslandMap, type ItemType } from "../../Environment/LevelReader";
-import { Memory, type GameMode } from "../../Language/Memory";
-import { QuitButton } from "../../MRGUI/buttons/QuitButton";
+import { Memory } from "../../Language/Memory";
+import { BlockCount } from "../../MRGUI/mainscreen/BlockCount";
+import { BottomBar } from "../../MRGUI/mainscreen/BottomBar";
+import { ItemsHUD } from "../../MRGUI/mainscreen/ItemsHUD";
+import { TopBar } from "../../MRGUI/mainscreen/TopBar";
 import { OneButtonModal } from "../../MRGUI/windows/OneButtonModal";
+import { RealDialog } from "../../MRGUI/windows/RealDialog";
+import { TwoButtonModal } from "../../MRGUI/windows/TwoButtonsModal";
 import { ASSETS_ROOT, INTRO_LEVELS, LayerMasks } from "../../Shared/Constants";
+import { Save, type IslandSaveData } from "../../Shared/Save";
+import { SoundManager } from "../../Shared/Sounds";
+import type { InstructionData, ProgramData } from "../../Shared/types";
 import { ExecutionContext } from "../ExecutionContext";
 import { GameScene } from "./GameScene";
-import { StructureContainer } from "../../Containers/StructureContainer";
-import { BlockCount } from "../../MRGUI/mainscreen/BlockCount";
-import { ItemsHUD } from "../../MRGUI/mainscreen/ItemsHUD";
-import { BasicInstContainer } from "../../Containers/BasicInstContainer";
-import { SetVarContainer } from "../../Containers/Prefabs/SetVarContainer";
-import { TopBar } from "../../MRGUI/mainscreen/TopBar";
-import { BottomBar } from "../../MRGUI/mainscreen/BottomBar";
-import { TwoButtonModal } from "../../MRGUI/windows/TwoButtonsModal";
-import { RealDialog } from "../../MRGUI/windows/RealDialog";
-import { Save, type IslandSaveData } from "../../Shared/Save";
-import type { InstructionData, ListData, ProgramData } from "../../Shared/types";
-import { InstructionContainer } from "../../Containers/InstructionContainer";
-import { SoundManager } from "../../Shared/Sounds";
-import { BlocContainer } from "../../Containers/BlocContainer";
-import { InputSlot } from "../../Containers/InputSlot";
-import { VarValueContainer } from "../../Containers/Prefabs/VarValueContainer";
-import { DragBehavior } from "../../Containers/DragBehavior";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene { // ;)
@@ -153,8 +150,8 @@ export class PlayScene extends GameScene { // ;)
         this.mapCamera.layerMask = LayerMasks.SCENE_ONLY;
 
         this.mapCamera.attachControl(this.scene.getEngine().getRenderingCanvas(), true);
-        this.mapCamera.upperBetaLimit = Math.PI / 2.5;
-        this.mapCamera.lowerRadiusLimit = 10;
+        this.mapCamera.upperBetaLimit = Math.PI / 2.1;
+        this.mapCamera.lowerRadiusLimit = 12;
         this.mapCamera.upperRadiusLimit = 25;
 
         this.dirLight = new DirectionalLight("sun", new Vector3(0.5, -1, 0.5), this.scene);
@@ -174,6 +171,7 @@ export class PlayScene extends GameScene { // ;)
         this.setupSkybox();
         this.setupShadows();
         this.setupThePipeToTheline();
+        this.setupCloud();
 
         await this.loadAssets();
         this.levelReader = new LevelReader();
@@ -246,11 +244,13 @@ export class PlayScene extends GameScene { // ;)
         this.shadowGenerator = new ShadowGenerator(2048, this.dirLight);
     
         //this.shadowGenerator.useBlurExponentialShadowMap = true;
-        //this.shadowGenerator.useKernelBlur = true;
-        //this.shadowGenerator.blurKernel = 32;
+        this.shadowGenerator.useKernelBlur = true;
+        this.shadowGenerator.blurKernel = 32;
+        this.shadowGenerator.usePoissonSampling = true;
         //this.shadowGenerator.blurScale = 2;
         this.shadowGenerator.bias = 0.001;
 	    this.shadowGenerator.normalBias = 0.02;
+        this.shadowGenerator.depthScale = 25.0;
         //this.shadowGenerator.useContactHardeningShadow = true;
         //this.shadowGenerator.contactHardeningLightSizeUVRatio = 0.025;
     }
@@ -260,7 +260,71 @@ export class PlayScene extends GameScene { // ;)
     }
 
     private setupThePipeToTheline() {
-        
+        const engine = this.scene.getEngine();
+        const pp = new BloomEffect(this.scene, 0.8, 0.8, 0.1);
+        pp._attachCameras(this.mapCamera);
+        pp._enable(this.mapCamera);
+
+        const fxaa = new FxaaPostProcess("fxaa", {
+            camera: this.mapCamera,
+            engine: this.scene.getEngine(),
+            size: { 
+                width: this.scene.getEngine().getRenderWidth() * 0.5, 
+                height: this.scene.getEngine().getRenderHeight() 
+            },
+            samplingMode: BABYLON.Constants.TEXTURE_BILINEAR_SAMPLINGMODE,
+            reusable: false
+        }, this.mapCamera);
+        this.mapCamera.attachPostProcess(fxaa);
+    }
+
+    private setupCloud() {
+        let fogTexture = new Texture(ASSETS_ROOT + "other/cloud.png", this.scene);
+        const fountainPos = new Vector3(0, 8, 0);
+        const minEmitOffset = new Vector3(-100,0,-100);
+        const maxEmitOffset = new Vector3(100, 8, 100);
+
+        const minColor =new Color4(1, 1, 1, 0.05);
+        const maxColor = new Color4(1,1,1, 0.15);
+
+        let volCloudParticles;
+        let volCloudFountain;
+        if (GPUParticleSystem.IsSupported) {
+            volCloudParticles = new GPUParticleSystem( `volClouds`, {capacity: 50000}, this.scene);
+            volCloudParticles.activeParticleCount = 1000;
+            volCloudParticles.manualEmitCount = volCloudParticles.activeParticleCount;
+        } else {
+            volCloudParticles = new ParticleSystem(`volClouds`, 1000, this.scene);
+            volCloudParticles.manualEmitCount = volCloudParticles.getCapacity();
+        }
+        volCloudParticles.minEmitBox = minEmitOffset;
+        volCloudParticles.maxEmitBox = maxEmitOffset;
+        volCloudParticles.particleTexture = fogTexture.clone();
+
+        volCloudFountain = CreateBox(`volCloudsFountain`, {size: .01}, this.scene);
+        volCloudFountain.position = fountainPos;
+        volCloudFountain.visibility = 0;
+        volCloudParticles.emitter = volCloudFountain;
+
+        volCloudParticles.color1 = minColor;
+        volCloudParticles.color2 = maxColor;
+        volCloudParticles.colorDead = minColor;
+        volCloudParticles.minSize = 5;
+        volCloudParticles.maxSize = 10;
+        volCloudParticles.minLifeTime = 15;
+        volCloudParticles.maxLifeTime = 15;
+        volCloudParticles.emitRate = 50000;
+        volCloudParticles.blendMode = ParticleSystem.BLENDMODE_STANDARD;
+        volCloudParticles.gravity = new Vector3(0, 0, 0);
+        volCloudParticles.direction1 = new Vector3(2, 0, 0);
+        volCloudParticles.direction2 = new Vector3(6, 0, 0);
+        volCloudParticles.minAngularSpeed = -2;
+        volCloudParticles.maxAngularSpeed = 2;
+        volCloudParticles.minEmitPower = .5;
+        volCloudParticles.maxEmitPower = 2;
+        volCloudParticles.updateSpeed = 0.005;
+
+        volCloudParticles.start();
     }
 
     private focusCamera() {
@@ -388,7 +452,7 @@ export class PlayScene extends GameScene { // ;)
 
         this.toolbox.clear();
         this.blockCount = 0;
-        //this.ctx = new ExecutionContext(this.level.getRobot(), this);
+        //this.ctx = new ExecutionContext(this.level.(), this);
         this.levelReader.setupToolbox(index, this.toolbox, this.ctx, this);
         this.topBar.blockCount.setLimit(this.levelReader.getBlockLimitForIsland(this.currentIsland));
 
@@ -461,7 +525,7 @@ export class PlayScene extends GameScene { // ;)
 
     async loadAssets() {
         await Promise.all([
-            this._drh.loadSingleAsset("robot", "character-male-e.glb"),
+            this._drh.loadSingleAsset("robot", "custom/robo.glb"),
 
             //this._drh.loadSingleAsset("ground", "grasscube.glb"),
             this._drh.loadSingleAsset("sand", "blockbits/sand.glb"),
@@ -577,8 +641,8 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public nextStep(skip : boolean = false){
-        if (this.ctx && this.level.getRobot().isDead()) { 
-            console.warn("cant forward, robot dead !");
+        if (this.ctx && this.ctx.getRobot().isDead()) { 
+            console.warn("cant forwar dead !");
             return;
         }
         this.memory.skip = skip;

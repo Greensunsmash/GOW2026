@@ -410,7 +410,7 @@ export class OutilsBox extends Rectangle {
     // Ajtr une variable dans le panel "Variable"
     addVariable(name: string, scene: GameScene, ctx: ExecutionContext) {
         if (this.vars.includes(name)) {
-            console.error("variable already exists.");
+            //console.error("variable already exists.");
             return;
         }
 
