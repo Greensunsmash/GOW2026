@@ -108,6 +108,7 @@ export class Level {
     private createGround(pos: Vector3): TransformNode {
         const grounds = [
             ["sand"],
+            ["grass"],
             ["grass"]
         ];
         console.log("world no in levle.createwall ", this.worldNo);
@@ -122,6 +123,7 @@ export class Level {
         const obstacles = [
             ["palm1", 0.35, 0.4],
             ["tree1", 0.5, 0.1],
+            ["tree1", 0.5, 0.1],
         ];
         console.log("world no in levle.createwall ", this.worldNo);
         const worldObstacles = obstacles[this.worldNo - 1];
@@ -132,7 +134,7 @@ export class Level {
     }
 
     private createFlag(pos: Vector3): TransformNode {
-        const flags = [["boat2", 0.35], ["boat", 0.35]];
+        const flags = [["boat2", 0.35], ["boat", 0.35], ["boat", 0.35]];
         console.log("world no in levle.createwall ", this.worldNo);
         return this.drh.createSingleInstance(flags[this.worldNo - 1][0], pos, false, flags[this.worldNo - 1][1]);
     }
