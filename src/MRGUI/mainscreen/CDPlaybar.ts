@@ -52,9 +52,13 @@ export class CDPlaybar extends Container {
         first: \ue045*/
 
         this.firstBtn = new IconButton("first", "", "\ue045",  () => onFirst(), 50);
+        this.firstBtn.shadowColor = "#00000065";
         this.backBtn = new IconButton("prev", "", "\ue020", () => onPrev(), 50);
+        this.backBtn.shadowColor = "#00000065";
         this.playBtn = new IconButton("fullattempt", "Lancer", "\ue037", () => onFullRun(), 150);
+        this.playBtn.shadowColor = "#00000065";
         this.nextBtn = new IconButton("next", "", "\ue01f", () => onNext(), 50);
+        this.nextBtn.shadowColor = "#00000065";
 
         this.onFullRun = onFullRun;
         this.onPlayPause = onPlayPause;

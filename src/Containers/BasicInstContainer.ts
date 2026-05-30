@@ -32,7 +32,7 @@ export class BasicInstContainer extends InstructionContainer {
     triggerModeUpdate() {
         if (this.pigModeInstruction) {
             if (Memory.get().getGameMode() === "PIGMODE")
-                this.bloc.updateFirstLabel("Avancer d'une case");
+                this.bloc.updateFirstLabel("▲   Avancer d'une case");
             else
                 this.bloc.updateFirstLabel(this.initName);
         }

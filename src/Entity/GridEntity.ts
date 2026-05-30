@@ -30,7 +30,7 @@ export abstract class GridEntity {
     
     public posListeners: ((entity: GridEntity) => Promise<void>)[] = [];
 
-    constructor(drh : AssetLibrary, assetName : string, level : Level, gridPos : GridPoint, scale: boolean = true) {
+    constructor(drh : AssetLibrary, assetName : string, level : Level, gridPos : GridPoint, scale: boolean = true, scaleF = 1.0) {
         this.level = level;
         //this.logicalGridPos = gridPos;
         this.gridPos = {...gridPos};
@@ -39,7 +39,7 @@ export abstract class GridEntity {
         if (scale)
             this.mesh = drh.createSingleInstance(assetName, pos);
         else
-            this.mesh = drh.createSingleInstance(assetName, pos, false, 1.0);
+            this.mesh = drh.createSingleInstance(assetName, pos, false, scaleF);
         this.anims = (this.mesh as any).animations;
         this.initRotation = this.facingIndex;
         this.mesh.rotation.y = this.initRotation * (Math.PI / 2);

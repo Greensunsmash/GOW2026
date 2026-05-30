@@ -12,12 +12,14 @@ import { stringArraysEq } from "../Shared/utils";
 export type ArrivalGoalArgs = { flagPos: GridPoint };
 export type pickupSpecific = { itemType: ItemType };
 export type PickupBringGoalArgs = { bringPos: GridPoint, itemType: ItemType };
+export type SurviveGoalArgs = {ticks: number};
 
 export type Goal =
     | { name: "arrival"; args: ArrivalGoalArgs }
     | { name: "pickupSpecifics"; args: pickupSpecific }
     | { name: "pickup", args: {}}
-    | { name: "pickup_and_bring"; args: PickupBringGoalArgs };
+    | { name: "pickup_and_bring"; args: PickupBringGoalArgs }
+    | {name: "survive", args: SurviveGoalArgs};
 
 export type MobIntention = {
     nextPos: GridPoint;
@@ -38,6 +40,8 @@ export class ExecutionContext {
     private memory: Memory;
 
     private ticksSinceLastModeChange = 0;
+    private totalTicks = 0;
+    private ticksToSurvive: number | undefined = undefined;
 
     constructor(level: Level, scene: PlayScene) {
         this.robot = level.getRobot();
@@ -55,6 +59,8 @@ export class ExecutionContext {
         this.robot = level.getRobot();
         this.robot.posListeners = [];
         this.ticksSinceLastModeChange = 0;
+        this.totalTicks = 0;
+        this.ticksToSurvive = undefined;
     }
 
     // BOUCLE S'EXECUTANT A CHAQUE TICK DE JEU
@@ -67,7 +73,7 @@ export class ExecutionContext {
         // sauvegarder les états des entités
         this.level.pushEntityState();
 
-        this.memory.onNextTick(this.ticksSinceLastModeChange);
+        this.memory.onNextTick(this.ticksSinceLastModeChange, this.totalTicks);
 
         // process l'intention du robot
 
@@ -263,6 +269,14 @@ export class ExecutionContext {
             else
                 this.ticksSinceLastModeChange++;
         }
+
+        this.totalTicks++;
+        console.log("total ticks passed are now ", this.totalTicks);
+
+        if (this.ticksToSurvive && this.totalTicks >= this.ticksToSurvive) {
+            this.scene.onGoalReached();
+            return;
+        }
         
         this.scene.modeUpdate();
 
@@ -276,12 +290,18 @@ export class ExecutionContext {
             return;
         }
         this.ticksSinceLastModeChange = gmStackInfo?.ticksSinceLastModeChange;
+        this.totalTicks = gmStackInfo?.totalTicks;
         this.scene.modeUpdate();
         await this.level.popEntityState(instant);
     }
 
     public setGoals(goals: Goal[]) {
         console.log(goals);
+        for (const goal of goals) {
+            if (goal.name === "survive") {
+                this.ticksToSurvive = goal.args.ticks;
+            }
+        }
         this.memory.setOnProgramEnd(() => {
             let unreached: boolean = false;
             for (const goal of goals) {

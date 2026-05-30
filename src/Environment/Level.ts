@@ -13,6 +13,7 @@ import { SirCEye } from "../Entity/SirCEye";
 
 export class Level {
     private map: Map3;
+    private worldNo: number;
     private readonly drh: AssetLibrary;
     private readonly scene: Scene;
     private robot?: MarcoBozo;
@@ -20,8 +21,9 @@ export class Level {
     private otherEntities: GridEntity[] = [];
     private entityStates: (Map<GridEntity, EntityState>)[] = [];
 
-    constructor(map: Map3, drh: AssetLibrary, scene: Scene) {
+    constructor(map: Map3, worldNo: number, drh: AssetLibrary, scene: Scene) {
         this.map = map;
+        this.worldNo = worldNo;
         this.drh = drh;
         this.scene = scene;
     }
@@ -57,7 +59,7 @@ export class Level {
                             this.meshes.push(this.createFlag(pos));
                             break;
                         case State.Item:
-                            this.otherEntities.push(new ItemDisplay(this.drh, this, gridPos, State.Item));
+                            this.otherEntities.push(new ItemDisplay(this.drh, this, this.worldNo, gridPos, State.Item));
                             break;
                         case State.PigUp:
                             this.otherEntities.push(new Pig(this.drh, this, gridPos, 0));
@@ -80,6 +82,10 @@ export class Level {
                             this.otherEntities.push(new SirCEye(this.drh, this, gridPosAbove));
                             this.meshes.push(this.createCursedGround(pos));
                             break;
+                        case State.Scientifique:
+                            break;
+                        case State.LeGrandSirC:
+                            break;
                     default:
                             break;
                     }
@@ -95,7 +101,12 @@ export class Level {
     }
 
     private createGround(pos: Vector3): TransformNode {
-        return this.drh.createSingleInstance("ground", pos, true);
+        const grounds = [
+            ["ground"],
+            ["grass"]
+        ];
+        console.log("world no in levle.createwall ", this.worldNo);
+        return this.drh.createSingleInstance(grounds[this.worldNo - 1][0], pos, true);
     }
 
     private createCursedGround(pos: Vector3): TransformNode {
@@ -103,11 +114,22 @@ export class Level {
     }
 
     private createWall(pos: Vector3): TransformNode {
-        return this.drh.createSingleInstance("wall", pos, true);
+        const obstacles = [
+            ["palm1", 0.35, 0.4],
+            ["tree1", 0.5, 0.1],
+        ];
+        console.log("world no in levle.createwall ", this.worldNo);
+        const worldObstacles = obstacles[this.worldNo - 1];
+        //const randomIndex = Math.floor(Math.random() * worldObstacles.length);
+        const tree = this.drh.createSingleInstance(obstacles[this.worldNo - 1][0], pos, false, obstacles[this.worldNo - 1][1]);
+        tree.position.y -= obstacles[this.worldNo - 1][2];
+        return tree;
     }
 
     private createFlag(pos: Vector3): TransformNode {
-        return this.drh.createSingleInstance("heart", pos, false, 1.0);
+        const flags = [["boat2", 0.35], ["boat", 0.35]];
+        console.log("world no in levle.createwall ", this.worldNo);
+        return this.drh.createSingleInstance(flags[this.worldNo - 1][0], pos, false, flags[this.worldNo - 1][1]);
     }
 
 

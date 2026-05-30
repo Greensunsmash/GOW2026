@@ -199,7 +199,7 @@ export class PlayScene extends GameScene { // ;)
 
         ground.material = waterMat;
         ground.layerMask = LayerMasks.SCENE_ONLY;
-        ground.position.y = 0.35;
+        ground.position.y = 0.65;
     }
 
     private setupSkybox() {
@@ -242,7 +242,7 @@ export class PlayScene extends GameScene { // ;)
         if (this.level) this.level.dispose();
 
         const map = this.currentIslandMap[index];
-        this.level = new Level(map, this._drh, this.scene);
+        this.level = new Level(map, LevelReader.getWorldNo(this.loadedFile), this._drh, this.scene);
         await this.level.init();
 
         this.focusCamera();
@@ -419,12 +419,28 @@ export class PlayScene extends GameScene { // ;)
     async loadAssets() {
         await Promise.all([
             this._drh.loadSingleAsset("robot", "character-male-e.glb"),
+
             this._drh.loadSingleAsset("ground", "grasscube.glb"),
+            this._drh.loadSingleAsset("grass", "platformkit/block-grass.glb"),
             this._drh.loadSingleAsset("cursed", "cube.glb"),
+
             this._drh.loadSingleAsset("wall", "stone.02.glb"),
+            this._drh.loadSingleAsset("palm1", "piratekit/palm-straight.glb"),
+            this._drh.loadSingleAsset("palm2", "piratekit/palm-bend.glb"),
+            this._drh.loadSingleAsset("palm3", "piratekit/palm-detailed-bend.glb"),
+            this._drh.loadSingleAsset("palm4", "piratekit/palm-detailed-straight.glb"),
+            this._drh.loadSingleAsset("tree1", "platformkit/tree-pine.glb"),
+
             this._drh.loadSingleAsset("pill", "pill.glb"),
+            this._drh.loadSingleAsset("debris1", "spacekit/debris1.glb"),
+            this._drh.loadSingleAsset("debris2", "spacekit/rocket_finsB.glb"),
+
             this._drh.loadSingleAsset("heart", "heart.01.glb"),
+            this._drh.loadSingleAsset("boat", "piratekit/boat-row-small.glb"),
+            this._drh.loadSingleAsset("boat2", "piratekit/boat-row-large.glb"),
+
             this._drh.loadSingleAsset("river", "water.glb"),
+
             this._drh.loadSingleAsset("pig", "cubepets/animal-pig.glb"),
         ]);
     }

@@ -200,7 +200,7 @@
                 {"speaker": "SCIENTIFIQUE", "text":"En ré-utilisant ton programme, tu devrais être capable de passer cette île."}
             ],
             "end_dialogs": [
-                "Super, tu as bien géré !"
+                {"speaker": "SCIENTIFIQUE", "text": "Super, tu as bien géré !"}
             ],
             "layouts":[
                 [

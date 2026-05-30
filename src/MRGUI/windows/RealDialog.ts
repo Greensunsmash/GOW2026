@@ -86,8 +86,8 @@ export class RealDialog extends Rectangle {
         this.panel.addControl(textBlockRect);
         this.panel.addControl(new BaseVSpacer());
 
-        this.onPointerClickObservable.add(() => this.end());
-        this.blocker.onPointerClickObservable.add(() => this.end());
+        this.onPointerClickObservable.add(() => this.end(true));
+        this.blocker.onPointerClickObservable.add(() => this.end(true));
         root.addControl(this.blocker);
     }
 
@@ -95,10 +95,10 @@ export class RealDialog extends Rectangle {
         return new Promise(res => setTimeout(res, ms));
     }
 
-    private end() {
+    private end(manuallyClicked = false) {
         if (this.ended) return;
         this.ended = true;
-        if (this.auto) {
+        if (this.auto && !manuallyClicked) {
             this.blocker.dispose();
             return;
         }

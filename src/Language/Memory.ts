@@ -13,6 +13,7 @@ export type GameMode = "NORMAL" | "PIGMODE";
 export type GameModeStackInfo = {
     gameMode: GameMode;
     ticksSinceLastModeChange: number;
+    totalTicks: number;
 };
 
 // Explication de l'execution d'un programme.
@@ -215,9 +216,9 @@ export class Memory {
     public getGameMode(): GameMode {return this.gameMode;}
     public setGameMode(gm: GameMode) {this.gameMode = gm;}
 
-    public onNextTick(ticksSinceLastModeChange: number) {
+    public onNextTick(ticksSinceLastModeChange: number, totalTicks: number) {
         console.log(this.gameModeStack);
-        this.gameModeStack.push({gameMode: this.gameMode, ticksSinceLastModeChange});
+        this.gameModeStack.push({gameMode: this.gameMode, ticksSinceLastModeChange, totalTicks});
     }
     public onPrevTick(): GameModeStackInfo | undefined {
         console.log(this.gameModeStack);

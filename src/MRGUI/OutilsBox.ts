@@ -192,7 +192,7 @@ export class OutilsBox extends Rectangle {
 
             // Booléens (vert fluo)
             case "booleans":
-                catLabel.text = "Booléens";
+                catLabel.text = "Conditions";
                 catLabelRect.background = Colors.PtitRoseDuSoir;
                 catLabelRect.cornerRadius = Colors.CornerRadiusVraimentArrondi;
                 break;
@@ -452,7 +452,7 @@ export class OutilsBox extends Rectangle {
         for (const factBlk of this.facticeBlocks) {
             if (factBlk.updateOnModeChange) {
                 if (mode === "PIGMODE")
-                    factBlk.setFirstText("Avancer d'une case");
+                    factBlk.setFirstText("▲   Avancer d'une case");
                 else
                     factBlk.resetFirstText();
             }

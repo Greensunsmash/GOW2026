@@ -141,7 +141,7 @@
                 {"speaker": "SCIENTIFIQUE", "text":"Ça va être très utile, hésites pas à t'en servir !"}
             ],
             "end_dialogs" : [
-                "Je vis que tu maitrises. A ce rythme, on devrait pas tarder à se retrouver !"
+                {"speaker": "SCIENTIFIQUE", "text":"Je vis que tu maitrises. A ce rythme, on devrait pas tarder à se retrouver !"}
             ],
             "layouts":[
                 [

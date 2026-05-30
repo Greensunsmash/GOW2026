@@ -40,7 +40,7 @@ export class SetVarContainer extends InstructionContainer {
 
     triggerModeUpdate() {
         if (Memory.get().getGameMode() === "PIGMODE") {
-            this.bloc.updateFirstLabel("Avancer d'une case");
+            this.bloc.updateFirstLabel("▲   Avancer d'une case");
             this.bloc.clearSlots();
         } else {
             this.bloc.updateFirstLabel(this.realName);

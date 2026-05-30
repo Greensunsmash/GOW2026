@@ -9,8 +9,8 @@ import type { MarcoBozo } from "./Robot";
 
 export abstract class Interactable extends GridEntity {
 
-    constructor(drh : AssetLibrary, assetName: string, level : Level, gridPos : GridPoint) {
-        super(drh, assetName, level, gridPos, false);
+    constructor(drh : AssetLibrary, assetName: string, level : Level, gridPos : GridPoint, scale = true, scaleF = 1.0) {
+        super(drh, assetName, level, gridPos, scale, scaleF);
     }
 
     setDisplay(display: boolean) {

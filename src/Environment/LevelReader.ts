@@ -50,7 +50,9 @@ export const State = { // Proposition, avoir différents symboles pour différet
     PigUp: "u",
     PigDown: "d",
     SirCEyeInteractor: "o",
-    CursedGround: "O"
+    CursedGround: "O",
+    Scientifique :"s",
+    LeGrandSirC: "C"
 } as const;
 
 export type ItemType = typeof State.Item;
@@ -237,22 +239,22 @@ export class LevelReader {
     public createFactories(ctx: ExecutionContext, scene: GameScene) {
         const instructions: CategoryFactories<InstructionBlock> = {
             forward: (root, content_root) =>
-            new BasicInstContainer("Avancer d'une case", "forward", new MoveForwardInstuction(ctx),  root, content_root, scene),
+            new BasicInstContainer("▲   Avancer d'une case", "forward", new MoveForwardInstuction(ctx),  root, content_root, scene),
 
             backward: (root, content_root) =>
-            new BasicInstContainer("Reculer d'une case", "backward", new MoveBackwardInstuction(ctx), root, content_root, scene, new MoveForwardInstuction(ctx)),
+            new BasicInstContainer("▼   Reculer d'une case", "backward", new MoveBackwardInstuction(ctx), root, content_root, scene, new MoveForwardInstuction(ctx)),
 
             left: (root, content_root) =>
-            new BasicInstContainer("Tourner à gauche", "left", new TurnLeftInstruction(ctx), root, content_root, scene, new MoveForwardInstuction(ctx)),
+            new BasicInstContainer("↺   Tourner à gauche", "left", new TurnLeftInstruction(ctx), root, content_root, scene, new MoveForwardInstuction(ctx)),
 
             right: (root, content_root) =>
-            new BasicInstContainer("Tourner à droite", "right", new TurnRightInstruction(ctx), root, content_root, scene, new MoveForwardInstuction(ctx)),
+            new BasicInstContainer("↻   Tourner à droite", "right", new TurnRightInstruction(ctx), root, content_root, scene, new MoveForwardInstuction(ctx)),
 
             pickup: (root, content_root) =>
-            new BasicInstContainer("Ramasser l'objet", "pickup", new PickupInstruction(ctx), root, content_root, scene, new MoveForwardInstuction(ctx)),
+            new BasicInstContainer("↓   Ramasser le débris", "pickup", new PickupInstruction(ctx), root, content_root, scene, new MoveForwardInstuction(ctx)),
 
             wait: (root, content_root) =>
-            new BasicInstContainer("Attendre", "wait", new WaitInstruction(ctx), root, content_root, scene, new MoveForwardInstuction(ctx)),
+            new BasicInstContainer("⧗   Attendre", "wait", new WaitInstruction(ctx), root, content_root, scene, new MoveForwardInstuction(ctx)),
 
             print: (root, content_root) =>
             new PrintContainer(root, content_root, scene),
