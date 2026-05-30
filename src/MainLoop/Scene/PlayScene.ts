@@ -421,6 +421,7 @@ export class PlayScene extends GameScene { // ;)
             this._drh.loadSingleAsset("robot", "character-male-e.glb"),
 
             this._drh.loadSingleAsset("ground", "grasscube.glb"),
+            this._drh.loadSingleAsset("sand", "blockbits/sand.glb"),
             this._drh.loadSingleAsset("grass", "platformkit/block-grass.glb"),
             this._drh.loadSingleAsset("cursed", "cube.glb"),
 

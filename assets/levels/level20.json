@@ -47,7 +47,6 @@
             ]
         },
         "goal": [
-            {"name": "arrival"}, 
             {
                 "name": "survive", 
                 "args": {"ticks": 6}

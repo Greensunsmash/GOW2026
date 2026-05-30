@@ -46,7 +46,7 @@ export class RealDialog extends Rectangle {
         this.panel.addControl(new BaseVSpacer());
 
         if (!hideName) {
-            const title = (speaker === "SCIENTIFIQUE") ? "La scientifique" : "Sir C";
+            const title = (speaker === "SCIENTIFIQUE") ? "La scientifique" : "Circé";
             const titleBlock = new TextBlock("dialogTitle", title);
             titleBlock.height = "50px";
             titleBlock.color = "white";

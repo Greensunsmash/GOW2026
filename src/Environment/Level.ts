@@ -102,7 +102,7 @@ export class Level {
 
     private createGround(pos: Vector3): TransformNode {
         const grounds = [
-            ["ground"],
+            ["sand"],
             ["grass"]
         ];
         console.log("world no in levle.createwall ", this.worldNo);

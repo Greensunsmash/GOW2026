@@ -13,7 +13,7 @@ export class CreateVarModal extends ModalWindow {
         onValidate: (varName: string) => void, // callback, censé créer deux blocs dans la toolbox
         prevName?: string // en cas d'edit
     ) {
-        super(root, "Créer une nouvelle variable plastique");
+        super(root, "Créer une nouvelle variable");
 
         // Input nom
         const input = new GUI.InputText("dialogInput");
