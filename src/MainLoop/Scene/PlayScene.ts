@@ -1,4 +1,4 @@
-import { AbstractMesh, ArcRotateCamera, BloomEffect, Color3, Color4, CreateBox, CubeTexture, DirectionalLight, Engine, FxaaPostProcess, GPUParticleSystem, KeyboardEventTypes, MeshBuilder, ParticleSystem, PBRMaterial, ShadowGenerator, Texture, Vector3, Viewport } from "@babylonjs/core";
+import { AbstractMesh, ArcRotateCamera, BloomEffect, ChromaticAberrationPostProcess, Color3, Color4, CreateBox, CubeTexture, DirectionalLight, Engine, FxaaPostProcess, GPUParticleSystem, GrainPostProcess, KeyboardEventTypes, MeshBuilder, NodeMaterial, ParticleSystem, PBRMaterial, ShadowGenerator, Texture, Vector3, Viewport } from "@babylonjs/core";
 import { BasicInstContainer } from "../../Containers/BasicInstContainer";
 import { BlocContainer } from "../../Containers/BlocContainer";
 import { DragBehavior } from "../../Containers/DragBehavior";
@@ -202,7 +202,7 @@ export class PlayScene extends GameScene { // ;)
             //window.mat = mat;
         });
 
-        let addPostEffects = ()=>{
+        /*let addPostEffects = ()=>{
             var pipeline = new DefaultRenderingPipeline(
                 "postEffectPipeline", // The name of the pipeline
                 false, // Do you want the pipeline to use HDR texture?
@@ -227,7 +227,7 @@ export class PlayScene extends GameScene { // ;)
             pipeline.sharpen.edgeAmount = 0.15;
         }
 
-        addPostEffects();
+        addPostEffects();*/
     }
 
     private setupSkybox() {
@@ -276,6 +276,22 @@ export class PlayScene extends GameScene { // ;)
             reusable: false
         }, this.mapCamera);
         this.mapCamera.attachPostProcess(fxaa);
+
+        const grain = new GrainPostProcess("grain", {
+            camera: this.mapCamera,
+            engine: this.scene.getEngine(),
+            
+        }, this.mapCamera);
+        grain.intensity = 2;
+        grain.animated = true;
+        this.mapCamera.attachPostProcess(grain);
+
+        /*const chrom = new ChromaticAberrationPostProcess("chrom", this.scene.getEngine().getRenderWidth() * 0.5, this.scene.getEngine().getRenderHeight(), {
+            camera: this.mapCamera,
+            engine: this.scene.getEngine()
+        }, this.mapCamera);
+        chrom.inte
+        this.mapCamera.attachPostProcess(chrom);*/
     }
 
     private setupCloud() {
@@ -700,7 +716,7 @@ export class PlayScene extends GameScene { // ;)
             console.log("dry attempt success");
             new TwoButtonModal(
                 this.advancedTexture,
-                "Bravo ! On essaie sur toutes les feuilles ?",
+                "Bravo ! On essaie sur toutes les étapes ?",
                 "Non",
                 "Essayer",
                 () => this.attemptAllLeafs()
