@@ -1,4 +1,5 @@
-import { ArcRotateCamera, Color3, CubeTexture, DefaultRenderingPipeline, DirectionalLight, Engine, IblShadowsRenderPipeline, KeyboardEventTypes, MeshBuilder, PBRMaterial, SetValueAction, ShadowGenerator, Sound, TimerState, Vector2, Vector3, Viewport } from "@babylonjs/core";
+import {Texture, DefaultRenderingPipeline, NodeMaterial, ArcRotateCamera, Color3, CubeTexture, DirectionalLight, Engine, IblShadowsRenderPipeline, KeyboardEventTypes, MeshBuilder, PBRMaterial, SetValueAction, ShadowGenerator, Sound, TimerState, Vector2, Vector3, Viewport } from "@babylonjs/core";
+import { WaterMaterial } from "@babylonjs/materials";
 import { ListContainer } from "../../Containers/ListContainer";
 import { FlagContainer } from "../../Containers/Prefabs/FlagContainer";
 import { Level } from "../../Environment/Level";
@@ -198,18 +199,37 @@ export class PlayScene extends GameScene { // ;)
     private fillBelow() {
         let ground = MeshBuilder.CreateGround("ground", { width: 512, height: 512, subdivisions: 32 }, this.scene);
 
-        const waterMat = new PBRMaterial("waterMat", this.scene);
-        waterMat.albedoColor = new Color3(0.01, 0.05, 0.08);
-        waterMat.alpha = 0.6;
-        waterMat.metallic = 0.0;
-        waterMat.roughness = 0.1;
-        //const waterMat = createAdvancedOceanMaterial(this.scene);
+        NodeMaterial.ParseFromSnippetAsync("#3FU5FG#1", this.scene).then((mat) => {
+            ground.material = mat;
+            //window.mat = mat;
+        });
 
+        let addPostEffects = ()=>{
+            var pipeline = new DefaultRenderingPipeline(
+                "postEffectPipeline", // The name of the pipeline
+                false, // Do you want the pipeline to use HDR texture?
+                this.scene, // The scene instance
+                [this.mapCamera] // The list of cameras to be attached to
+            );
 
-        ground.material = waterMat;
-        ground.layerMask = LayerMasks.SCENE_ONLY;
-        ground.receiveShadows = true;
-        ground.position.y = 0.5;
+            pipeline.bloomEnabled   = true;
+            pipeline.bloomThreshold = 0;
+            pipeline.bloomKernel    = 0.35;
+            pipeline.bloomScale     = 0.5;
+
+            pipeline.grainEnabled = true;
+            pipeline.grain.intensity = 8;
+            pipeline.grain.animated = true;
+
+            pipeline.chromaticAberrationEnabled             = true;
+            pipeline.chromaticAberration.aberrationAmount   = 65.1;
+            pipeline.chromaticAberration.radialIntensity    = 2;
+
+            pipeline.sharpenEnabled = true;
+            pipeline.sharpen.edgeAmount = 0.15;
+        }
+
+        addPostEffects();
     }
 
     private setupSkybox() {
