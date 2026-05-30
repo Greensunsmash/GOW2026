@@ -114,11 +114,11 @@
           "name": "arrival"
         }],
       "clues": [
-          "Utilse \"On met la valeur de x à ...\" pour modifier la valeur de x, et \"Variable x\" pour utiliser la valeur actuelle de x",
-          "Tu peux augmenter de 1 la valeur d'une variable x, en utilisant \" ... + 1\" avec \"Variable x\"",
-          "En augmentant la variable à chaque déplacement, je peux compter le nombre de déplacements",
-          "Grâce aux blocs \"Répeter ... fois\" et \"Variable x\", tu peux répeter une action autant de fois que la valeur stockée par x",
-          "Mets une variable x à 0, Répete 4 fois (Si tu n'est pas face à un obstacle (avance et augmente la variable x de 1)), Tourne à gauche, puis répete variable x fois avancer"
+          "Utilse \"On met la valeur de x à ...\" pour modifier la valeur de x, et \"Variable x\" pour utiliser la valeur actuelle de x.",
+          "Tu peux augmenter de 1 la valeur d'une variable x, en utilisant \" ... + 1\" avec \"Variable x\".",
+          "En augmentant la variable à chaque déplacement, je peux compter le nombre de déplacements.",
+          "Grâce aux blocs \"Répeter ... fois\" et \"Variable x\", tu peux répeter une action autant de fois que la valeur stockée par x.",
+          "Mets une variable x à 0, Répete 4 fois (Si tu n'est pas face à un obstacle (avance et augmente la variable x de 1)), Tourne à gauche, puis répete variable x fois avancer."
       ]
     },
     {
@@ -187,9 +187,9 @@
         }
       ],
       "clues": [
-          "Il faut reculer d'autant que l'on a avancé",
-          "Compte le nombre de mouvements aller, et recule d'autant",
-          "Mets une variable x à 1, Avance, Répete 4 fois (Si tu es sur un débris (ramasse, avance et augmente la variable x de 1)), Répete variable x fois eculer, tourne à droite et avance"
+          "Il faut reculer d'autant que l'on a avancé.",
+          "Compte le nombre de mouvements aller, et recule d'autant.",
+          "Mets une variable x à 1, Avance, Répete 4 fois (Si tu es sur un débris (ramasse, avance et augmente la variable x de 1)), Répete variable x fois eculer, tourne à droite et avance."
       ]
     },
     {
@@ -250,11 +250,11 @@
         }
       ],
       "clues" : [
-        "Cette île regroupe les 3 étapes précédentes",
-        "Tu dois tout d'abord avancer une fois, afin de te placer dans le motif, avant de commencer toute boucle",
-        "N'oublie pas de remettre ton compteur à 0 en changeant de ligne",
-        "Tu dois ici reculer une fois de moins que l'île précédente",
-        "Avance, Répète 3 fois (Mets une variable x à 0, Répète 4 fois (si tu es sur un débris (rammasse le, avance et augmente x de 1), Répète variable x fois (reculer), tourne à droite, avance, tourne à gauche"
+        "Cette île regroupe les 3 étapes précédentes.",
+        "Tu dois tout d'abord avancer une fois, afin de te placer dans le motif, avant de commencer toute boucle.",
+        "N'oublie pas de remettre ton compteur à 0 en changeant de ligne.",
+        "Tu dois ici reculer une fois de moins que l'île précédente.",
+        "Avance, Répète 3 fois (Mets une variable x à 0, Répète 4 fois (si tu es sur un débris (rammasse le, avance et augmente x de 1), Répète variable x fois (reculer), tourne à droite, avance, tourne à gauche."
       ]
     }
   ]

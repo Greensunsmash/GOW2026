@@ -56,8 +56,8 @@
         },
         "goal": [{"name": "arrival"}],
         "clues" : [
-            "Tu sais le faire, ne laisse pas le cochon te pertuber (ni te rattraper)",
-            "Avance tant qu'il n'y a pas d'obstacle en face"
+            "Tu sais le faire, ne laisse pas le cochon te pertuber (ni te rattraper).",
+            "Avance tant qu'il n'y a pas d'obstacle en face."
         ]
     },
     {
@@ -108,7 +108,7 @@
         },
         "goal": [{"name": "arrival"}],
         "clues": [
-            "Ne te laisse pas attraper et tout devrait bien se passer"
+            "Ne te laisse pas attraper et tout devrait bien se passer."
         ]
     },
     {
@@ -163,7 +163,7 @@
         },
         "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
         "clues": [
-            "A part bien compter, il n'y a pas de secret"
+            "A part bien compter, il n'y a pas de secret."
         ]
     }
     ]

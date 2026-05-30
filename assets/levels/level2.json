@@ -4,7 +4,7 @@
             "nb" : 1,
             "begin_dialogs" : [
                 {"speaker": "SCIENTIFIQUE", "text":"C'est étrange, je ne parviens pas à te localiser."},
-                {"speaker": "SCIENTIFIQUE", "text":"Il va falloir explorer encore un peu"}
+                {"speaker": "SCIENTIFIQUE", "text":"Il va falloir explorer encore un peu."}
             ],
             "layouts": [
                 [
@@ -25,14 +25,14 @@
             },
             "goal":[{"name": "arrival"}],
             "clues": [
-                "A part bien compter, il n'y a pas de secret"
+                "A part bien compter, il n'y a pas de secret."
             ]
         },
         {
             "nb" : 2,
             "begin_dialogs" : [
                 {"speaker": "SCIENTIFIQUE", "text":"Fais attention, il va falloir economiser des ressource si tu veux pouvoir le rejoindre."},
-                {"speaker": "SCIENTIFIQUE", "text":"Utilise le bloc \"Répeter ... fois\" ça te permettra d'économiser des précieux blocs"}
+                {"speaker": "SCIENTIFIQUE", "text":"Utilise le bloc \"Répeter ... fois\" ça te permettra d'économiser des précieux blocs."}
             ],
             "layouts": [
                 [
@@ -57,10 +57,10 @@
             "goal":[{"name": "arrival"}],
             "block_limitation": 9,
             "clues": [
-                "Le niveau est limité à 9 blocs, il va donc falloir les économiser en exploitant la structure \"Répéter ... fois\"",
-                "Vous pouvez insérer entre \"Répéter ... fois\" et \"Fin\" un bloc à répéter",
-                "Cliquer sur la partie blanche pour choisir le nombre de répétitions voulues",
-                "Il faut avancer 4 fois, tourner à droite, avancer 4 fois à nouveau, tourner à gauche et avancer 4 fois"
+                "Le niveau est limité à 9 blocs, il va donc falloir les économiser en exploitant la structure \"Répéter ... fois\".",
+                "Vous pouvez insérer entre \"Répéter ... fois\" et \"Fin\" un bloc à répéter.",
+                "Cliquer sur la partie blanche pour choisir le nombre de répétitions voulues.",
+                "Il faut avancer 4 fois, tourner à droite, avancer 4 fois à nouveau, tourner à gauche et avancer 4 fois."
             ]
         },
         {
@@ -92,10 +92,10 @@
             "goal":[{"name": "arrival"}],
             "block_limitation": 6,
             "clues":[
-                "Vous pouvez répéter une suite d'instruction",
-                "Pouvez vous trouver un pattern qui se répète ?",
-                "Comment faire pour gravir une marche ?",
-                "Vous devez répéter 5 fois le schéma"
+                "Vous pouvez répéter une suite d'instruction.",
+                "Pouvez vous trouver un pattern qui se répète ?.",
+                "Comment faire pour gravir une marche ?.",
+                "Vous devez répéter 5 fois le schéma."
             ]
         }
     ]

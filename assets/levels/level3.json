@@ -29,14 +29,14 @@
             "goal":[{"name": "arrival"}],
             "block_limitation": 6,
             "clues" : [
-                "Utiliser \"Répéter ... fois\" pour économiser des blocs"
+                "Utiliser \"Répéter ... fois\" pour économiser des blocs."
             ]
         },
         {
             "nb" : 2,
             "begin_dialogs": [
                 {"speaker": "SCIENTIFIQUE", "text": "Très souvent, le programme fait pour passer une île pourra te servir de base pour la suite."},
-                {"speaker": "SCIENTIFIQUE", "text": "Si jamais tu le supprimes par erreur, tu peux utiliser le bouton restaurer pour le récupérer"}
+                {"speaker": "SCIENTIFIQUE", "text": "Si jamais tu le supprimes par erreur, tu peux utiliser le bouton restaurer pour le récupérer."}
             ],
             "layouts": [
                 [
@@ -62,8 +62,8 @@
             "block_limitation": 8,
             "clues" : [
                 "Cette île ne serait-elle pas similaire à la précédente ?",
-                "Faites attention à bien repartir dans le bon sens",
-                "Ajouter tourner à gauche à la fin du programme précédent, puis répétez le tout 2 fois"
+                "Faites attention à bien repartir dans le bon sens.",
+                "Ajouter tourner à gauche à la fin du programme précédent, puis répétez le tout 2 fois."
             ]
         },
         {
@@ -96,8 +96,8 @@
             "block_limitation": 10,
             "clues" : [
                 "Cette île ne serait-elle pas similaire à la précédente ?",
-                "Faites attention à bien repartir dans le bon sens",
-                "Ajouter tourner à droite à la fin du programme précédent, puis répétez le tout 2 fois"
+                "Faites attention à bien repartir dans le bon sens.",
+                "Ajouter tourner à droite à la fin du programme précédent, puis répétez le tout 2 fois."
             ]
         }
     ]

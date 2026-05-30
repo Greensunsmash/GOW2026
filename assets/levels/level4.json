@@ -4,7 +4,7 @@
             "nb":1,
             "begin_dialogs": [
                 {"speaker": "SCIENTIFIQUE", "text":"J'ai découvert un certain nombres d'endroits où je ne pourrais pas te contacter."},
-                {"speaker": "SCIENTIFIQUE", "text":"Il faudra donc qu'un seu programme marche pour plusieurs étapes. Bon courage !"}
+                {"speaker": "SCIENTIFIQUE", "text":"Il faudra donc qu'un seul programme marche pour plusieurs étapes. Bon courage !"}
             ],
             "layouts":[
                 [
@@ -62,7 +62,7 @@
                 "name": "arrival"
             }],
             "clues" : [
-                "Analysez les 2 feuilles afin de trouver un chemin commun"
+                "Analysez les 2 feuilles afin de trouver un chemin commun."
             ]
         },
         {
@@ -100,7 +100,7 @@
                 "name": "arrival"
             }],
             "clues" : [
-                "Analysez les 2 feuilles afin de trouver un chemin commun"
+                "Analysez les 2 feuilles afin de trouver un chemin commun."
             ]
         }
     ]

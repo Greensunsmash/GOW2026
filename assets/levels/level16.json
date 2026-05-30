@@ -51,8 +51,8 @@
         },
         "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
         "clues": [
-            "Analyse le comportement durant la transformation, et sa durée",
-            "Le robot se transforme en cochon et suis son comportement. Il se déplace, et fait demi tour face à une obstacle. La transformation dure 3 tours"
+            "Analyse le comportement durant la transformation, et sa durée.",
+            "Le robot se transforme en cochon et suis son comportement. Il se déplace, et fait demi tour face à une obstacle. La transformation dure 3 tours."
         ]
         },
         {
@@ -103,10 +103,10 @@
         },
         "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
         "clues": [
-            "Analyse le comportement durant la transformation, et sa durée",
-            "Le robot se transforme en cochon et suis son comportement. Il se déplace, et fait demi tour face à une obstacle. La transformation dure 3 tours",
-            "Cette île semble répeter le motif de l'ile précédente",
-            "Répète 4 fois (le programme précédent, tourner à droite)"
+            "Analyse le comportement durant la transformation, et sa durée.",
+            "Le robot se transforme en cochon et suis son comportement. Il se déplace, et fait demi tour face à une obstacle. La transformation dure 3 tours.",
+            "Cette île semble répeter le motif de l'ile précédente.",
+            "Répète 4 fois (le programme précédent, tourner à droite)."
         ]
         }
     ]

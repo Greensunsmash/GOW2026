@@ -61,7 +61,7 @@
       "begin_dialogs":[
         {"speaker": "SCIENTIFIQUE", "text":"Quel plaisir de te revoir !"},
         {"speaker": "SCIENTIFIQUE", "text":"Je suis contente de te retrouver !"},
-        {"speaker": "SCIENTIFIQUE", "text":"Bon, maintenant trouvons un moyen de sortir de là"}
+        {"speaker": "SCIENTIFIQUE", "text":"Bon, maintenant trouvons un moyen de sortir de là."}
       ],
       "layouts": [
         [
@@ -134,7 +134,7 @@
       "end_dialogs":[
         {"speaker": "SCIENTIFIQUE", "text":"Merci pour ton aide !"},
         {"speaker": "SCIENTIFIQUE", "text":"Malheureusement, je vais encore avoir besoin de ton aide."},
-        {"speaker": "SCIENTIFIQUE", "text":"Lors du crash, on a perdu le démarreur cosmique. Sans lui, impossible de repartir"},
+        {"speaker": "SCIENTIFIQUE", "text":"Lors du crash, on a perdu le démarreur cosmique. Sans lui, impossible de repartir."},
         {"speaker": "SCIENTIFIQUE", "text":"Comme je suis blessée, je suis obligé de te confier cette tâche."},
         {"speaker": "SCIENTIFIQUE", "text":"Mais n'aie crainte, je serai là pour t'épauler !"}
       ],
@@ -197,9 +197,9 @@
             }
         ],
       "clues": [
-        "Comment analyser un coté ? Prends d'abord le temps d'y arriver, tu pourras ensuite réutiliser ça pour les autres",
-        "Il faut se déplacer contre le bord et se tourner à chaque case pour voir si il y a un rocher. Si il y en a un, on continue à chercher",
-        "Place toi d'abord correctement avant de commencer ta boucle"
+        "Comment analyser un coté ? Prends d'abord le temps d'y arriver, tu pourras ensuite réutiliser ça pour les autres.",
+        "Il faut se déplacer contre le bord et se tourner à chaque case pour voir si il y a un rocher. Si il y en a un, on continue à chercher.",
+        "Place toi d'abord correctement avant de commencer ta boucle."
       ]
     }
   ]

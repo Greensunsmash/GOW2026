@@ -3,7 +3,7 @@
     {
       "nb": 1,
       "begin_dialogs": [
-        {"speaker": "SCIENTIFIQUE", "text":"Tu peux aussi te servir des variables pour compter le nombre de boucles effectuées, ça devrait t’être très utile pour les prochaines îles"}
+        {"speaker": "SCIENTIFIQUE", "text":"Tu peux aussi te servir des variables pour compter le nombre de boucles effectuées, ça devrait t’être très utile pour les prochaines îles."}
       ],
       "layouts": [[
         [
@@ -64,9 +64,9 @@
             }
         ],
       "clues": [
-        "A chaque virage, il faut avancer d'une case de plus",
-        "Une variable peut t'aider à connaitre le nombre de déplacements à faire par ligne",
-        "Met une variable x à 1 et Répete 5 fois \" Répète Variable x fois \"Avancer\" puis augmente variable x de 1\""
+        "A chaque virage, il faut avancer d'une case de plus.",
+        "Une variable peut t'aider à connaitre le nombre de déplacements à faire par ligne.",
+        "Met une variable x à 1 et Répete 5 fois \" Répète Variable x fois \"Avancer\" puis augmente variable x de 1\"."
       ]
     },
     {
@@ -137,9 +137,9 @@
       ],
       "clues" : [
         "Comment décomposer le niveau en 4 étapes similaires ?",
-        "Il faut répéter le bon nombre de fois \"Avancer puis rammasser\" et reculer autant de fois juste après",
-        "Cela correspond au numéro de la ligne",
-        "Avancer, Mettre une variable x à 1, et repète 4 fois ( tourner à droite, \"Répeter x fois\" (avancer et ramasser), puis  \"Répeter x fois\" reculer, puis tourne à gauche et avancer)"
+        "Il faut répéter le bon nombre de fois \"Avancer puis rammasser\" et reculer autant de fois juste après.",
+        "Cela correspond au numéro de la ligne.",
+        "Avancer, Mettre une variable x à 1, et repète 4 fois ( tourner à droite, \"Répeter x fois\" (avancer et ramasser), puis  \"Répeter x fois\" reculer, puis tourne à gauche et avancer)."
       ]
     },
     {
@@ -204,7 +204,7 @@
       "clues":[
         "En quoi cette île est-elle similaire à la précédente ?",
         "Sur une même ligne, comment sont placé les débris ?",
-        "Tu dois répeter 2 fois ( \"Répeter x fois\" avancer, puis ramasser), puis reculer d'autant"
+        "Tu dois répeter 2 fois ( \"Répeter x fois\" avancer, puis ramasser), puis reculer d'autant."
       ]
     }
   ]

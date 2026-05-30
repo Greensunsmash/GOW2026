@@ -53,7 +53,7 @@
             }
         ],
         "clues": [
-            "Le mieux pour réussir, c'est de tester étape par étape"
+            "Le mieux pour réussir, c'est de tester étape par étape."
         ]
         },
         {
@@ -104,7 +104,7 @@
         },
         "goal": [{"name": "arrival"}],
         "clues": [
-            "Le mieux pour réussir, c'est de tester étape par étape"
+            "Le mieux pour réussir, c'est de tester étape par étape."
         ]
         },
         {
@@ -155,7 +155,7 @@
         },
         "goal": [{"name": "arrival"}],
         "clues": [
-            "Le mieux pour réussir, c'est de tester étape par étape"
+            "Le mieux pour réussir, c'est de tester étape par étape."
         ]
         },
         {
@@ -206,7 +206,7 @@
         },
         "goal": [{"name": "arrival"}],
         "clues": [
-            "Le mieux pour réussir, c'est de tester étape par étape"
+            "Le mieux pour réussir, c'est de tester étape par étape."
         ]
         },
         {
@@ -257,7 +257,7 @@
         },
         "goal": [{"name": "arrival"}],
         "clues": [
-            "C'est ton moment, fonce"
+            "C'est ton moment, fonce !"
         ]
         }
     ]

@@ -4,7 +4,7 @@
         "nb": 1,
         "begin_dialogs": [
             {"speaker": "SCIENTIFIQUE", "text":"Je détecte une présence dans les environs. Y aurait-il d'autres créatures vivantes ?"},
-            {"speaker": "SCIENTIFIQUE", "text":"Reste prudent"}
+            {"speaker": "SCIENTIFIQUE", "text":"Reste prudent."}
         ],
         "layouts": [
             [
@@ -52,7 +52,7 @@
         "goal": [{"name": "arrival"}],
         "clues" : [
             "Comment se comporte le cochon ?",
-            "A chacune de tes actions, le cochon se déplace"
+            "A chacune de tes actions, le cochon se déplace."
         ]
     },
     {
@@ -107,7 +107,7 @@
         },
         "goal": [{"name": "arrival"}],
         "clues" : [
-            "Le bloc \"Attendre\" peut te permettre d'éviter le cochon"
+            "Le bloc \"Attendre\" peut te permettre d'éviter le cochon."
         ]
     },
     {
@@ -158,7 +158,7 @@
         },
         "goal": [{"name": "arrival"}],
         "clues" : [
-            "Des fois, il faut savoir arréter de réfléchir et courir"
+            "Des fois, il faut savoir arréter de réfléchir et courir."
         ]
     },
     {
@@ -213,7 +213,7 @@
         },
         "goal": [{"name": "arrival"}],
         "clues": [
-            "A part bien compter, il n'y a pas de secret"
+            "A part bien compter, il n'y a pas de secret."
         ]
     }
     ]

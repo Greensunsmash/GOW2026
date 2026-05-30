@@ -48,7 +48,7 @@
         },
         "goal": [{"name": "arrival"}],
         "clues": [
-            "Faufile toi dès que possible derrière le cochon"
+            "Faufile toi dès que possible derrière le cochon."
         ]
     },
     {
@@ -107,20 +107,20 @@
         },
         "goal": [{"name": "arrival"}],
         "clues": [
-            "Trouve le bon moment pour passer derrière le cochon",
-            "Tu peux le détecter à l'aide du capteur face à un obstacle",
-            "Attends tant qu'il n'est pas passé devant toi",
-            "Tant qu'il n'y a pas d'obstacle en face attends, puis attends et effectue le chemin pour atteindre l'arrivée"
+            "Trouve le bon moment pour passer derrière le cochon.",
+            "Tu peux le détecter à l'aide du capteur face à un obstacle.",
+            "Attends tant qu'il n'est pas passé devant toi.",
+            "Tant qu'il n'y a pas d'obstacle en face attends, puis attends et effectue le chemin pour atteindre l'arrivée."
         ]
     },
     {
         "nb": 3,
         "begin_dialogs": [
             {"speaker": "SCIENTIFIQUE", "text":"Attention, je ressens une énergie particulière ici."},
-            {"speaker": "SCIENTIFIQUE", "text":"Je ne sais pas ce que c'est, mais reste sur tes gardes"}
+            {"speaker": "SCIENTIFIQUE", "text":"Je ne sais pas ce que c'est, mais reste sur tes gardes."}
         ],
         "end_dialogs": [
-            {"speaker": "SCIENTIFIQUE", "text":"Tout va bien ? J'ai perdu le contact pendant un petit moment"},
+            {"speaker": "SCIENTIFIQUE", "text":"Tout va bien ? J'ai perdu le contact pendant un petit moment."},
             {"speaker": "SCIENTIFIQUE", "text":"Tu t'es transformé en cochon ?"},
             {"speaker": "SCIENTIFIQUE", "text":"Comment cela est-il possible ?"}
         ],
@@ -170,8 +170,8 @@
         },
         "goal": [{"name": "arrival"}],
         "clues": [
-            "Analyse le comportement durant la transformation, et sa durée",
-            "Le robot se transforme en cochon et suis son comportement. Il se déplace, et fait demi tour face à une obstacle. La transformation dure 3 tours"
+            "Analyse le comportement durant la transformation, et sa durée.",
+            "Le robot se transforme en cochon et suis son comportement. Il se déplace, et fait demi tour face à une obstacle. La transformation dure 3 tours."
         ]
     }
 ]

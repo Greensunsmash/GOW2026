@@ -3,7 +3,7 @@
     {
         "nb": 1,
         "begin_dialogs": [
-            {"speaker": "SCIENTIFIQUE", "text":"Bon, continuons à chercher, en évitant tous ces cochons"}
+            {"speaker": "SCIENTIFIQUE", "text":"Bon, continuons à chercher, en évitant tous ces cochons."}
         ],
         "layouts": [
             [
@@ -61,14 +61,14 @@
         "block_limitation":6,
         "clues" : [
             "Comment être sur d'éviter un cochon ?",
-            "Il faut attendre qu'il soit passé",
-            "Avancer, Tant que pas d'obstacle en face attendre, puis attendre et avancer avancer"
+            "Il faut attendre qu'il soit passé.",
+            "Avancer, Tant que pas d'obstacle en face attendre, puis attendre et avancer avancer."
         ]
     },
     {
         "nb": 2,
         "end_dialogs": [
-            {"speaker": "SCIENTIFIQUE", "text":"Bien joué, tu débrouilles très bien!"}
+            {"speaker": "SCIENTIFIQUE", "text":"Bien joué, tu débrouilles très bien !"}
         ],
         "layouts": [
             [
@@ -116,10 +116,10 @@
         },
         "goal": [{"name": "arrival"}],
         "clues" : [
-            "Le programme d'avant permet d'éviter de foncer dans un cochon",
-            "Tu as juste à te placer correctement pour chaque débris",
-            "Attention, ramasser est une action et fais donc bouger les cochons",
-            "Tourne à gauche, répete 3 fois (Avancer, Attendre que le cochon passe, avancer 2 fois, ramasser, reculer 3 fois et tourner à droite) puis avance 3 fois"
+            "Le programme d'avant permet d'éviter de foncer dans un cochon.",
+            "Tu as juste à te placer correctement pour chaque débris.",
+            "Attention, ramasser est une action et fais donc bouger les cochons.",
+            "Tourne à gauche, répete 3 fois (Avancer, Attendre que le cochon passe, avancer 2 fois, ramasser, reculer 3 fois et tourner à droite) puis avance 3 fois."
         ]
     }
     ]

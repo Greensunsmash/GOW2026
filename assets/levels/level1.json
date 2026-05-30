@@ -23,8 +23,8 @@
             },
             "goal":[{"name": "arrival"}],
             "clues": [
-                "Tout programme doit commencer par le bloc \"Commencer par\"",
-                "Il suffit d'ajouter à la suite le bloc \"Avancer\""
+                "Tout programme doit commencer par le bloc \"Commencer par\".",
+                "Il suffit d'ajouter à la suite le bloc \"Avancer\"."
             ]
         },
         {
@@ -50,8 +50,8 @@
             },
             "goal":[{"name": "arrival"}],
             "clues": [
-                "Tout programme doit commencer par le bloc \"Commencer par\"",
-                "Il suffit d'ajouter à la suite 3 blocs \"Avancer\""
+                "Tout programme doit commencer par le bloc \"Commencer par\".",
+                "Il suffit d'ajouter à la suite 3 blocs \"Avancer\"."
             ]
         },
         {
@@ -76,8 +76,8 @@
             },
             "goal":[{"name": "arrival"}],
             "clues": [
-                "Tout programme doit commencer par le bloc \"Commencer par\"",
-                "Les blocs \"Tourner à ...\" vous font tourner sur place"
+                "Tout programme doit commencer par le bloc \"Commencer par\".",
+                "Les blocs \"Tourner à ...\" vous font tourner sur place."
             ]
         },
         {
@@ -102,7 +102,7 @@
             },
             "goal":[{"name": "arrival"}],
             "clues": [
-                "A part bien compter, il n'y a pas de secret"
+                "A part bien compter, il n'y a pas de secret."
             ]
         }
     ]

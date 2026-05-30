@@ -61,7 +61,7 @@
         "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
         "clues": [
             "Comment se déplacer en ligne droite jusqu'à un débris ?",
-            "Tant que pas sur un debris avance, puis tourne à gauche et avance 2 fois"
+            "Tant que pas sur un debris avance, puis tourne à gauche et avance 2 fois."
         ]
         },
         {
@@ -120,16 +120,16 @@
         },
         "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
         "clues": [
-            "Il faut compter de combien tu t'es avancé, afin de reculer d'autant",
-            "Mets x à 0, tant que pas sur un débris, avance et augmente x de 1, tourne à gauche, avance, avance, tourne à gauche et répète x fois avancer"
+            "Il faut compter de combien tu t'es avancé, afin de reculer d'autant.",
+            "Mets x à 0, tant que pas sur un débris, avance et augmente x de 1, tourne à gauche, avance, avance, tourne à gauche et répète x fois avancer."
         ]
         },
         {
         "nb": 3,
         "end_dialogs": [
             {"speaker": "SCIENTIFIQUE", "text":"Les transformations sont causées par une sorcière !"},
-            {"speaker": "SCIENTIFIQUE", "text":"Elle pourra peut-être nous indiquer ou se trouve le démarreur cosmique"},
-            {"speaker": "SCIENTIFIQUE", "text":"Mais fait attention en l'approchant, il se pourrait qu'elle nous attaque"}
+            {"speaker": "SCIENTIFIQUE", "text":"Elle pourra peut-être nous indiquer ou se trouve le démarreur cosmique."},
+            {"speaker": "SCIENTIFIQUE", "text":"Mais fait attention en l'approchant, il se pourrait qu'elle nous attaque."}
         ],
         "layouts": [
             [
@@ -178,8 +178,8 @@
         "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
         "block_limitation": 15,
         "clues": [
-            "Il faut compter de combien tu t'es avancé, afin de reculer d'autant",
-            "Mets x à 0, tant que pas sur un débris, avance et augmente x de 1, tourne à gauche, avance, avance, tourne à gauche et répète x fois avancer"
+            "Il faut compter de combien tu t'es avancé, afin de reculer d'autant.",
+            "Mets x à 0, tant que pas sur un débris, avance et augmente x de 1, tourne à gauche, avance, avance, tourne à gauche et répète x fois avancer."
         ]
         }
     ]

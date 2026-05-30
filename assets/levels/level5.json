@@ -39,8 +39,8 @@
             "goal":[{"name": "arrival"}],
             "clues" : [
                 "Quel est la seule différence entre les deux étapes ?",
-                "Utilise le bloc \"if\" pour détecter la présence du rocher",
-                "Tournes si tu es face au rocher, puis dans les deux cas avance de 3 cases"
+                "Utilise le bloc \"if\" pour détecter la présence du rocher.",
+                "Tournes si tu es face au rocher, puis dans les deux cas avance de 3 cases."
             ]
         },
         {
@@ -143,8 +143,8 @@
             "clues" : [
                 "A combien de case es-tu de l'arrivée ?",
                 "Comment détecter à chaque case si il faut tourner ?",
-                "Il faut alterner entre avancer et tester si l'on doit tourner",
-                "A l'aide du bloc \"Répéter ... fois\""
+                "Il faut alterner entre avancer et tester si l'on doit tourner.",
+                "A l'aide du bloc \"Répéter ... fois\"."
             ]
         }
     ]
