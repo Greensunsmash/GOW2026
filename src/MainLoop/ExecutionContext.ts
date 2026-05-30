@@ -7,6 +7,7 @@ import { Memory, type GameMode } from "../Language/Memory";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
 import type { PlayScene } from "./Scene/PlayScene";
 import { stringArraysEq } from "../Shared/utils";
+import { Circe } from "../Entity/Circe";
 
 
 export type ArrivalGoalArgs = { flagPos: GridPoint };
@@ -19,7 +20,8 @@ export type Goal =
     | { name: "pickupSpecifics"; args: pickupSpecific }
     | { name: "pickup", args: {}}
     | { name: "pickup_and_bring"; args: PickupBringGoalArgs }
-    | {name: "survive", args: SurviveGoalArgs};
+    | {name: "survive", args: SurviveGoalArgs}
+    | {name: "kill"};
 
 export type MobIntention = {
     nextPos: GridPoint;
@@ -42,6 +44,7 @@ export class ExecutionContext {
     private ticksSinceLastModeChange = 0;
     private totalTicks = 0;
     private ticksToSurvive: number | undefined = undefined;
+    private mustKillCirce = false;
 
     constructor(level: Level, scene: PlayScene) {
         this.robot = level.getRobot();
@@ -61,6 +64,7 @@ export class ExecutionContext {
         this.ticksSinceLastModeChange = 0;
         this.totalTicks = 0;
         this.ticksToSurvive = undefined;
+        this.mustKillCirce = true;
     }
 
     // BOUCLE S'EXECUTANT A CHAQUE TICK DE JEU
@@ -113,6 +117,10 @@ export class ExecutionContext {
         const mobs = this.level.getMobs();
         for (const mob of mobs) {
             if (GridUtils.equals(mob.getVisualGridPos(), this.robot.getVisualGridPos())) { 
+                if (this.mustKillCirce && mob instanceof Circe) {
+                    this.scene.onGoalReached();
+                    return;
+                }
                 console.warn("[TICKS] Deadly robot collision !");
                 robotDead = true;
             }
@@ -301,6 +309,10 @@ export class ExecutionContext {
             if (goal.name === "survive") {
                 this.ticksToSurvive = goal.args.ticks;
             }
+            if (goal.name === "kill") {
+                console.log("setting goal to kill");
+                this.mustKillCirce = true;
+            }
         }
         this.memory.setOnProgramEnd(() => {
             let unreached: boolean = false;
@@ -318,6 +330,7 @@ export class ExecutionContext {
                             unreached = true;
                         break;
                     default:
+                        unreached = true;
                         break;
                 }
             }
@@ -328,7 +341,7 @@ export class ExecutionContext {
         });
     }
 
-    public die() {
-        this.scene.onRobotDead();
+    public die(msg?: string) {
+        this.scene.onRobotDead(msg);
     }
 }

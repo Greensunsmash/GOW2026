@@ -9,7 +9,7 @@ import { MarcoBozo } from "./Robot";
 
 export class SirCEye extends Interactable {
     constructor(drh : AssetLibrary, level : Level, gridPos : GridPoint) {
-        super(drh, "pill", level, gridPos);
+        super(drh, "debris1", level, gridPos);
         this.mesh.setEnabled(false);
     }
 

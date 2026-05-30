@@ -223,7 +223,7 @@ export class PlayScene extends GameScene { // ;)
     }
 
     private setupShadows() {
-        this.shadowGenerator = new ShadowGenerator(4096, this.dirLight);
+        this.shadowGenerator = new ShadowGenerator(2048, this.dirLight);
     
         //this.shadowGenerator.useBlurExponentialShadowMap = true;
         //this.shadowGenerator.useKernelBlur = true;
@@ -443,23 +443,23 @@ export class PlayScene extends GameScene { // ;)
         await Promise.all([
             this._drh.loadSingleAsset("robot", "character-male-e.glb"),
 
-            this._drh.loadSingleAsset("ground", "grasscube.glb"),
+            //this._drh.loadSingleAsset("ground", "grasscube.glb"),
             this._drh.loadSingleAsset("sand", "blockbits/sand.glb"),
             this._drh.loadSingleAsset("grass", "platformkit/block-grass.glb"),
-            this._drh.loadSingleAsset("cursed", "cube.glb"),
+            this._drh.loadSingleAsset("cursed", "custom/cursedgrd.glb"),
 
-            this._drh.loadSingleAsset("wall", "stone.02.glb"),
+            //this._drh.loadSingleAsset("wall", "stone.02.glb"),
             this._drh.loadSingleAsset("palm1", "piratekit/palm-straight.glb"),
             this._drh.loadSingleAsset("palm2", "piratekit/palm-bend.glb"),
             this._drh.loadSingleAsset("palm3", "piratekit/palm-detailed-bend.glb"),
             this._drh.loadSingleAsset("palm4", "piratekit/palm-detailed-straight.glb"),
             this._drh.loadSingleAsset("tree1", "platformkit/tree-pine.glb"),
 
-            this._drh.loadSingleAsset("pill", "pill.glb"),
+            //this._drh.loadSingleAsset("pill", "pill.glb"),
             this._drh.loadSingleAsset("debris1", "spacekit/debris1.glb"),
             this._drh.loadSingleAsset("debris2", "spacekit/rocket_finsB.glb"),
 
-            this._drh.loadSingleAsset("heart", "heart.01.glb"),
+            //this._drh.loadSingleAsset("heart", "heart.01.glb"),
             this._drh.loadSingleAsset("boat", "piratekit/boat-row-small.glb"),
             this._drh.loadSingleAsset("boat2", "piratekit/boat-row-large.glb"),
 
@@ -469,6 +469,7 @@ export class PlayScene extends GameScene { // ;)
 
             //this._drh.loadSingleAsset("sci", "custom/scientifique.glb"),
             this._drh.loadSingleAsset("sci", "minichars/character-female-d.glb"),
+            this._drh.loadSingleAsset("circe", "custom/circe.glb")
         ]);
     }
 
@@ -652,7 +653,7 @@ export class PlayScene extends GameScene { // ;)
         );
     }
 
-    public onRobotDead() {
+    public onRobotDead(msg?: string) {
         if (!this.canRun) return;
         this.stopRun();
         this.memory.programEnd();
@@ -660,7 +661,7 @@ export class PlayScene extends GameScene { // ;)
         this.btmBar.triggerUpdate();
         new OneButtonModal(
             this.advancedTexture,
-            "Oh non, le robot est détruit !",
+            msg ?? "Oh non, le robot est détruit !",
             "Réessayer",
             () => { }
         );

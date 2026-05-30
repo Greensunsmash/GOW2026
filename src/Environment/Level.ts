@@ -11,6 +11,7 @@ import { Interactable, } from "../Entity/Interactable";
 import type { EntityState, GridEntity } from "../Entity/GridEntity";
 import { SirCEye } from "../Entity/SirCEye";
 import { Scientist } from "../Entity/Scientist";
+import { Circe } from "../Entity/Circe";
 
 export class Level {
     private map: Map3;
@@ -88,6 +89,7 @@ export class Level {
                             this.otherEntities.push(new Scientist(this.drh, this, gridPos, 2));
                             break;
                         case State.LeGrandSirC:
+                            this.otherEntities.push(new Circe(this.drh, this, gridPos, 2));
                             break;
                     default:
                             break;

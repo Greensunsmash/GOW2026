@@ -19,7 +19,7 @@ export class PickupInstruction extends Instruction {
         if (this.gameModeAtExecute === "NORMAL") {
             const itemPresence = await this.ctx.getRobot().pickupItem();
             if (!itemPresence)
-                this.ctx.die();
+                this.ctx.die("Il n'y avait aucun débris à ramasser !");
             await this.ctx.nextTick(undefined, memory.skip);
         }
         else 
