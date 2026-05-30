@@ -2,7 +2,10 @@
     "islands": [
         {
             "nb":1,
-            "begin_dialogs": [{"speaker": "SCIENTIFIQUE", "text":"Tu vas devoir appliquer ce qu’on a vu depuis le début, bon courage !"}],
+            "begin_dialogs": [
+                {"speaker": "SCIENTIFIQUE", "text":"Tu vas devoir appliquer ce qu’on a vu depuis le début, bon courage !"},
+                {"speaker": "SCIENTIFIQUE", "text":"N'oublie pas que tu peux reculer, ça te servira certainement."}
+            ],
             "layouts":[
                 [
                     [".",".","."],
@@ -188,8 +191,8 @@
             "block_limitation":9,
             "clues": [
                 "Comment s'arréter sur le débris ?",
-                "Tant que tu n'es pas sur un débris, va au prochain emplacement.",
-                "Place toi au premier emplacement, avant la boucle. Ne ramasse pas le débris dans la boucle, sinon elle continuera.",
+                "Tant que tu n'es pas sur un débris, va au prochain emplacement possible.",
+                "Place toi au premier emplacement possible, avant la boucle. Ne ramasse pas le débris dans la boucle, sinon elle continuera.",
                 "Il faut avancer, répéter tant qu'on n'est pas sur un débris reculer tourner à gauche et avancer, et enfin ramasser et avancer."
             ]
         },

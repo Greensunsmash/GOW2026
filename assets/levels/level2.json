@@ -31,8 +31,9 @@
         {
             "nb" : 2,
             "begin_dialogs" : [
-                {"speaker": "SCIENTIFIQUE", "text":"Fais attention, il va falloir economiser des ressource si tu veux pouvoir le rejoindre."},
-                {"speaker": "SCIENTIFIQUE", "text":"Utilise le bloc \"Répeter ... fois\" ça te permettra d'économiser des précieux blocs."}
+                {"speaker": "SCIENTIFIQUE", "text":"Fais attention, il va falloir economiser des ressource si tu veux pouvoir me rejoindre."},
+                {"speaker": "SCIENTIFIQUE", "text":"Utilise le bloc \"Répeter ... fois\" ça te permettra d'économiser des précieux blocs."},
+                {"speaker": "SCIENTIFIQUE", "text":"Les structures comme \"Répeter ... fois\" comptent seulement pour une instruction."}
             ],
             "layouts": [
                 [

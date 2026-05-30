@@ -123,17 +123,17 @@
         ],
       "clues" : [
         "Ce niveau est similaire à un niveau passé",
-        "Tourne sur toi-même, jusqu'à ce que tu sois pas en face d'un rocher"
+        "Répète 4 fois (Si pas face à un rocher (tourne à gauche)) puis avance"
       ]
     },
     {
       "nb": 3,
       "begin_dialogs":[
-        {"speaker": "SCIENTIFIQUE", "text":"Très bien, continue comme ça et nous sommes serons sortis d'affaire."}
+        {"speaker": "SCIENTIFIQUE", "text":"Très bien, continue comme ça et nous serons sortis d'affaire."}
       ],
       "end_dialogs":[
         {"speaker": "SCIENTIFIQUE", "text":"Merci pour ton aide !"},
-        {"speaker": "SCIENTIFIQUE", "text":"Malheureusement, je vais encore avoir besoin de ton aide."},
+        {"speaker": "SCIENTIFIQUE", "text":"Malheureusement, je vais encore en avoir besoin."},
         {"speaker": "SCIENTIFIQUE", "text":"Lors du crash, on a perdu le démarreur cosmique. Sans lui, impossible de repartir."},
         {"speaker": "SCIENTIFIQUE", "text":"Comme je suis blessée, je suis obligé de te confier cette tâche."},
         {"speaker": "SCIENTIFIQUE", "text":"Mais n'aie crainte, je serai là pour t'épauler !"}
@@ -199,7 +199,8 @@
       "clues": [
         "Comment analyser un coté ? Prends d'abord le temps d'y arriver, tu pourras ensuite réutiliser ça pour les autres.",
         "Il faut se déplacer contre le bord et se tourner à chaque case pour voir si il y a un rocher. Si il y en a un, on continue à chercher.",
-        "Place toi d'abord correctement avant de commencer ta boucle."
+        "Place toi d'abord correctement avant de commencer ta boucle.",
+        "Avance, Tourne à droite, Avance, Répète 4 fois (Répète 2 fois (Si face à un obstacle (tourne à droite, avance, tourne à gauche)), Si face à une obstacle (tourne à droie)), Avance."
       ]
     }
   ]

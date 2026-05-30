@@ -2,18 +2,21 @@
     "islands": [
     {
         "nb": 1,
+        "begin_dialogs": [
+            {"speaker": "SCIENTIFIQUE", "text":"Bon, continuons à chercher, en évitant tous ces cochons."}
+        ],
         "layouts": [
             [
-                [".",".",".",".",".","."],
-                ["u","@"," "," ","x","#"]
+                ["  .  ",".....",".....","  .  "],
+                ["     ","  @  ","#r  #","  x  "]
             ],
             [
-                [".",".",".",".",".",".","."],
-                ["u","@"," "," "," ","x","#"]
+                ["  .  ",".....",".....","  .  "],
+                ["     ","  @  ","# r #","  x  "]
             ],
             [
-                [".",".",".",".",".",".",".","."],
-                ["u","@"," "," "," "," ","x","#"]
+                ["  .  ",".....",".....","  .  "],
+                ["     ","  @  ","#  r#","  x  "]
             ]
         ],
         "blockset": {
@@ -55,17 +58,22 @@
             ]
         },
         "goal": [{"name": "arrival"}],
+        "block_limitation":6,
         "clues" : [
-            "Tu sais le faire, ne laisse pas le cochon te pertuber (ni te rattraper).",
-            "Avance tant qu'il n'y a pas d'obstacle en face."
+            "Comment être sur d'éviter un cochon ?",
+            "Il faut attendre qu'il soit passé.",
+            "Avancer, Tant que pas d'obstacle en face attendre, puis attendre et avancer avancer."
         ]
     },
     {
         "nb": 2,
+        "end_dialogs": [
+            {"speaker": "SCIENTIFIQUE", "text":"Bien joué, tu débrouilles très bien !"}
+        ],
         "layouts": [
             [
-                ["  .  ","  .  ","  .  ",".....",".....",".....","  .  "," ..  "],
-                ["  u  ","  @  ","     ","# l #","#  l#","#  r#","     "," x   "]
+                ["   .   "," ..... "," ..... ","......."," ..... "," ..... ","   .   "],
+                ["   x   "," #   # "," d     ","!  @ u!","       "," #r  # ","   !   "]
             ]
         ],
         "blockset": {
@@ -106,64 +114,12 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"}],
-        "clues": [
-            "Ne te laisse pas attraper et tout devrait bien se passer."
-        ]
-    },
-    {
-        "nb": 3,
-        "end_dialogs" : [
-            {"speaker": "SCIENTIFIQUE", "text":"Ils sont de plus en plus nombreux."},
-            {"speaker": "SCIENTIFIQUE", "text":"Je n'arrive pas à comprendre pourquoi..."}
-        ],
-        "layouts": [
-            [
-                [" .  "," .. "," .. "," .. ","...."," .. "," .. "," .. "," .  "],
-                [" #  "," u# ","  u "," @  "," ! x","    ","    "," d# "," #  "]
-            ]
-        ],
-        "blockset": {
-            "instructions": [
-                "forward",
-                "backward",
-                "left",
-                "right",
-                "pickup",
-                "wait"
-            ],
-            "structures": [
-                "for",
-                "if",
-                "while",
-                "elif"
-            ],
-            "booleans": [
-                "true",
-                "false",
-                "not",
-                "and",
-                "or",
-                "inf",
-                "sup",
-                "eq"
-            ],
-            "sensors": [
-                "obstacle",
-                "item"
-            ],
-            "variables": [
-                "var_create",
-                "plus",
-                "minus"
-            ],
-            "start": [
-                "start"
-            ]
-        },
-        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
-        "clues": [
-            "A part bien compter, il n'y a pas de secret."
+        "goal": [{"name": "arrival"}, {"name": "pickup","args": {"itemType": "!"}}],
+        "clues" : [
+            "Le programme d'avant permet d'éviter de foncer dans un cochon.",
+            "Tu as juste à te placer correctement pour chaque débris.",
+            "Attention, ramasser est une action et fais donc bouger les cochons.",
+            "Tourne à gauche, répete 3 fois (Avancer, Attendre que le cochon passe, avancer 2 fois, ramasser, reculer 3 fois et tourner à droite) puis avance 3 fois."
         ]
     }
     ]

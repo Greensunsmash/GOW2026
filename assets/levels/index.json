@@ -1,27 +1,27 @@
 {
   "levels": [
-    {"worldNo": 1, "file": "level1.json", "name": "Une intro bien assaisonnée", "x": 100 , "y": 200},
-    {"worldNo": 1, "file": "level2.json", "name": "C'est quoi des boucles ?", "x": 550, "y": 500},
-    {"worldNo": 1, "file": "level3.json", "name": "Ca se complique..."},
-    {"worldNo": 1, "file": "level4.json", "name": "Feuilles intro"},
-    {"worldNo": 1, "file": "level5.json", "name": "Feuilles avec if"},
-    {"worldNo": 1, "file": "level6.json", "name": "Ramassage"},
-    {"worldNo": 1, "file": "level7.json", "name": "Ca se complique... 2 (en travaux)"},
-    {"worldNo": 1, "file": "level8.json", "name": "Variables 1"},
-    {"worldNo": 1, "file": "level9.json", "name": "Variables 2"},
-    {"worldNo": 1, "file": "level10.json", "name": "Rejoindre le créateur"},
-    {"worldNo": 2, "file": "level11.json", "name": "Tant que / Sinon"},
-    {"worldNo": 2, "file": "level12.json", "name": "Cochons cochons cochons"},
-    {"worldNo": 2,"file": "level13.json", "name": "Ne maltraite pas mes bébés"},
-    {"worldNo": 2,"file": "level14.json", "name": "C'est eux qui te maltraitent"},
-    {"worldNo": 2,"file": "level15.json", "name": "A la queleuleu"},
-    {"worldNo": 2,"file": "level16.json", "name": "La fête aux cochons"},
-    {"worldNo": 2,"file": "level17.json", "name": "Ecolo, je recycle mes niveaux"},
-    {"worldNo": 2,"file": "level18.json", "name": "18 aka le diablounet"},
-    {"worldNo": 2,"file": "level19.json", "name": "Celui ça va en vrai"},
-    {"worldNo": 2,"file": "level20.json", "name": "Nik le comme si c'était mst"},
-    {"worldNo": 2,"file": "level21.json", "name": "LABYRINTHES"},
-    {"worldNo": 2, "file": "test_sirc.json", "name": "test sir c"}
+    {"worldNo": 1, "file": "level1.json",  "name": "Une intro bien assaisonnée",            "x": 300,  "y": 600},
+    {"worldNo": 1, "file": "level2.json",  "name": "La vie, c'est une boucle",              "x": 800,  "y": 1000},
+    {"worldNo": 1, "file": "level3.json",  "name": "Chemins alambiqués",                    "x": 1000, "y": 1500},
+    {"worldNo": 1, "file": "level4.json",  "name": "Plusieurs étapes",                      "x": 900,  "y": 2000},
+    {"worldNo": 1, "file": "level5.json",  "name": "A condition de ...",                    "x": 1200, "y": 2500},
+    {"worldNo": 1, "file": "level6.json",  "name": "Non à la pollution",                    "x": 1800, "y": 2900},
+    {"worldNo": 1, "file": "level7.json",  "name": "Débris en folie",                       "x": 2300, "y": 3200},
+    {"worldNo": 1, "file": "level8.json",  "name": "Mesurer son déplacement",               "x": 3000, "y": 3100},
+    {"worldNo": 1, "file": "level9.json",  "name": "L'incrémentation c'est ma passion",     "x": 3200, "y": 2500},
+    {"worldNo": 1, "file": "level10.json", "name": "Rejoindre le créateur",                 "x": 3300, "y": 1800},
 
-  ] 
+    {"worldNo": 2, "file": "level11.json", "name": "De nouveaux horizons",                  "x": 3500, "y": 1300},
+    {"worldNo": 2, "file": "level12.json", "name": "De nouveaux amis",                      "x": 4200, "y": 1000},
+    {"worldNo": 2, "file": "level13.json", "name": "Cochons grognons",                      "x": 4600, "y": 1200},
+    {"worldNo": 2, "file": "level14.json", "name": "Attention aux cochons !",               "x": 4900, "y": 1600},
+    {"worldNo": 2, "file": "level15.json", "name": "Tous en file",                          "x": 5400, "y": 1900},
+    {"worldNo": 2, "file": "level16.json", "name": "La fête aux cochons",                   "x": 4800, "y": 2300},
+    {"worldNo": 2, "file": "level17.json", "name": "Chemins très alambiqués",               "x": 5600, "y": 2600},
+    {"worldNo": 2, "file": "level18.json", "name": "P'tit pas de coté",                     "x": 5100, "y": 3000},
+    {"worldNo": 2, "file": "level19.json", "name": "Trouver sa voie",                       "x": 5700, "y": 3300},
+    {"worldNo": 2, "file": "level20.json", "name": "La rencontre",                          "x": 5300, "y": 3600},
+
+    {"worldNo": 2, "file": "level21.json", "name": "La fin",                                "x": 5900, "y": 3900}
+  ]
 }
