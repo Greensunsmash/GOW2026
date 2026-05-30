@@ -26,6 +26,7 @@ export class Pour extends Group implements Executable {
 
     public execute(): void {
         this.next_inst.push(0);
+        console.log(this.valeur);
         const val = this.valeur.eval();
         if (val.getType() === "INT") {
             this.max_loop_nb.push(val.getValue() as number);

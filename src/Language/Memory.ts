@@ -100,7 +100,7 @@ export class Memory {
             }
         }
     }
-    public getVariableValue(name: string): Value | null {
+    public getVariableValue(name: string): Value {
         for (let i = this.callStack.length - 1; i >= 0; i--) {
             const frame = this.callStack[i];
             const val = frame.variables.get(name);
@@ -108,7 +108,14 @@ export class Memory {
                 return val ?? new Value("Error");
             }
         }
-        return this.values.get(name) ?? null;
+        let v = this.values.get(name);
+        if (!v) {
+            this.setVariable(name, new Value(0));
+            v = new Value(0);
+            console.log("hopla ni vu ni connu");
+        }
+        return v;
+        
     }
 
     public getVariableBoolean(name: string): boolean | null {
