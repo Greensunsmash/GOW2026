@@ -10,6 +10,7 @@ import { Pig } from "../Entity/Pig";
 import { Interactable, } from "../Entity/Interactable";
 import type { EntityState, GridEntity } from "../Entity/GridEntity";
 import { SirCEye } from "../Entity/SirCEye";
+import { Scientist } from "../Entity/Scientist";
 
 export class Level {
     private map: Map3;
@@ -83,6 +84,8 @@ export class Level {
                             this.meshes.push(this.createCursedGround(pos));
                             break;
                         case State.Scientifique:
+                            console.log("FOUND A SCIENTIST ! ");
+                            this.otherEntities.push(new Scientist(this.drh, this, gridPos, 2));
                             break;
                         case State.LeGrandSirC:
                             break;

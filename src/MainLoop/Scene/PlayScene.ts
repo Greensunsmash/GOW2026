@@ -40,6 +40,7 @@ export class PlayScene extends GameScene { // ;)
     private ctx: ExecutionContext;
     private uiCamera: ArcRotateCamera;
     private mapCamera: ArcRotateCamera;
+    private dirLight: DirectionalLight;
     public shadowGenerator: ShadowGenerator;
 
     private onLevelGaveup?: () => void;
@@ -155,6 +156,14 @@ export class PlayScene extends GameScene { // ;)
         this.mapCamera.lowerRadiusLimit = 10;
         this.mapCamera.upperRadiusLimit = 25;
 
+        this.dirLight = new DirectionalLight("sun", new Vector3(0.5, -1, 0.5), this.scene);
+        this.dirLight.diffuse = new BABYLON.Color3(1.0, 0.98, 0.9);
+        this.dirLight.intensity = 2;
+        this.dirLight.shadowFrustumSize = 25;
+        //this.dirLight.autoUpdateExtends = true;
+        this.dirLight.shadowMaxZ = 100;
+        this.dirLight.shadowMinZ = -10;
+
         this.scene.activeCameras = [];
         this.scene.activeCameras.push(this.mapCamera);
         this.scene.activeCameras.push(this.uiCamera);
@@ -199,7 +208,8 @@ export class PlayScene extends GameScene { // ;)
 
         ground.material = waterMat;
         ground.layerMask = LayerMasks.SCENE_ONLY;
-        ground.position.y = 0.65;
+        ground.receiveShadows = true;
+        ground.position.y = 0.5;
     }
 
     private setupSkybox() {
@@ -207,13 +217,26 @@ export class PlayScene extends GameScene { // ;)
         texture.level = 1.0;
         this.scene.environmentTexture = texture;
         this.scene.imageProcessingConfiguration.exposure = 1.0;
-        this.scene.environmentIntensity = 1.4;
+        this.scene.environmentIntensity = 1.4;// 1.4;
         // Create a skybox mesh using this texture
         const skybox = this.scene.createDefaultSkybox(texture, true, 100000, 0);
     }
 
     private setupShadows() {
-        // ca marchait pas bien du cp j'ai enlevé
+        this.shadowGenerator = new ShadowGenerator(4096, this.dirLight);
+    
+        //this.shadowGenerator.useBlurExponentialShadowMap = true;
+        //this.shadowGenerator.useKernelBlur = true;
+        //this.shadowGenerator.blurKernel = 32;
+        //this.shadowGenerator.blurScale = 2;
+        this.shadowGenerator.bias = 0.001;
+	    this.shadowGenerator.normalBias = 0.02;
+        this.shadowGenerator.useContactHardeningShadow = true;
+        this.shadowGenerator.contactHardeningLightSizeUVRatio = 0.025;
+    }
+
+    public addShadowCaster(mesh: AbstractMesh) {
+        this.shadowGenerator.addShadowCaster(mesh);
     }
 
     private setupThePipeToTheline() {
@@ -443,6 +466,9 @@ export class PlayScene extends GameScene { // ;)
             this._drh.loadSingleAsset("river", "water.glb"),
 
             this._drh.loadSingleAsset("pig", "cubepets/animal-pig.glb"),
+
+            //this._drh.loadSingleAsset("sci", "custom/scientifique.glb"),
+            this._drh.loadSingleAsset("sci", "minichars/character-female-d.glb"),
         ]);
     }
 

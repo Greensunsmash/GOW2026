@@ -140,6 +140,11 @@ export class AssetLibrary {
 
         instance.rotation = Vector3.Zero();
 
+        childMeshes.forEach((mesh) => {
+            this.scene.addShadowCaster(mesh);
+            mesh.receiveShadows = true;
+        });
+
         //instance.receiveShadows = true;
 
         return instance;
