@@ -219,6 +219,17 @@ export class LevelReader {
     public getClues(nb: number): string[] {
         return this.clues[nb];
     }
+
+    public getAllDialogs(): DialogLine[] {
+        const dialogs: DialogLine[] = [];
+        for (let i = 0; i < this.nb_islands; i++) {
+            const beginDialogs: DialogLine[] | null = this.getBeginDialogs(i);
+            if (beginDialogs) dialogs.push(...beginDialogs);
+            const endDialogs: DialogLine[] | null = this.getEndDialog(i);
+            if (endDialogs) dialogs.push(...endDialogs);
+        }
+        return dialogs;
+    }
     
     /* Faudra que je bouge les trois du dessous,
     ca fait un peu trop de logique pour juste un LevelReader peut être... */

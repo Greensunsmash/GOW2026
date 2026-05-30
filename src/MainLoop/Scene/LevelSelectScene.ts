@@ -1,6 +1,6 @@
 import { ArcRotateCamera, Engine, KeyboardEventTypes, Vector3 } from "@babylonjs/core";
 import { INTRO_LEVELS, LayerMasks } from "../../Shared/Constants";
-import { LevelReader, type LevelIndexEntry } from "../../Environment/LevelReader";
+import { LevelReader, type DialogLine, type LevelIndexEntry } from "../../Environment/LevelReader";
 import { BaseScene } from "./BaseScene";
 import { Colors } from "../../Shared/Colors";
 import { LevelSelectMap } from "../../MRGUI/levelsel/LevelSelectMap";
@@ -93,7 +93,7 @@ export class LevelSelectScene extends BaseScene {
         this.scene.onKeyboardObservable.add((kbInfo) => {
             if (kbInfo.type == KeyboardEventTypes.KEYUP) {
                 if (kbInfo.event.key === "Escape") {
-                    new TwoButtonModal(this.advancedTexture, "Effacer votre progression ?", "Annuler", "Confirmer",
+                    new TwoButtonModal(this.advancedTexture, "Effacer votre progression ?", "Annuler", "Effacer",
                         () => {
                             Save.reset();
                             onReset();
@@ -181,8 +181,16 @@ export class LevelSelectScene extends BaseScene {
                 this.archipelBtns.filter(b => b !== btn).map(t => t.setUnselected());
                 this.levelPopup.switchLevelShown(lvl.file, lvl.name);
                 this.levelPopup.btn.setCallback(async () => await this.onLevelSelect(lvl.file));
-                this.levelPopup.skipBtn.setCallback(() => {
+                this.levelPopup.skipBtn.setCallback(async () => {
                     Save.completeLevel(lvl.file);
+                    this.levelPopup.toggle();
+                    const lr = new LevelReader();
+                    await lr.loadLevel(lvl.file);
+                    const dialogs: DialogLine[] = lr.getAllDialogs();
+                    for (let i = 0; i < dialogs.length; i++) {
+                        const dialog = dialogs[i];
+                        await RealDialog.show(this.advancedTexture, this, dialog.text, dialog.speaker, (i < dialogs.length - 1));
+                    }
                     this.fillMap();
                 });
             });
@@ -208,10 +216,10 @@ export class LevelSelectScene extends BaseScene {
     }
     
     async intro(onEnd: (levelFile: string) => Promise<void>) {
-        await RealDialog.show(this.advancedTexture, this, "Tout va bien ?", "SCIENTIFIQUE", true);
-        await RealDialog.show(this.advancedTexture, this, "Où es-tu passé ?", "SCIENTIFIQUE", true);
-        await RealDialog.show(this.advancedTexture, this, "J'espère que rien n'est cassé...", "SCIENTIFIQUE", true);
-        await RealDialog.show(this.advancedTexture, this, "Essayons de te déplacer pour vérifier.", "SCIENTIFIQUE", false);
+        await RealDialog.show(this.advancedTexture, this, "Tout va bien ?", "SCIENTIFIQUE", true, false, true);
+        await RealDialog.show(this.advancedTexture, this, "Où es-tu passé ?", "SCIENTIFIQUE", true, false, true);
+        await RealDialog.show(this.advancedTexture, this, "J'espère que rien n'est cassé...", "SCIENTIFIQUE", true, false, true);
+        await RealDialog.show(this.advancedTexture, this, "Essayons de te déplacer pour vérifier.", "SCIENTIFIQUE", false, false, true);
         await onEnd(INTRO_LEVELS[0]);
     }
 }

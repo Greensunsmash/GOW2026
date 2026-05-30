@@ -15,7 +15,7 @@ export class RealDialog extends Rectangle {
     private auto = false;
     private speaker: DialogSpeakername
 
-    constructor(root: AdvancedDynamicTexture, scene: BaseScene, speaker: DialogSpeakername, auto = false, hideName = false) {
+    constructor(root: AdvancedDynamicTexture, scene: BaseScene, speaker: DialogSpeakername, auto = false, hideName = false, fullBlack = false) {
         super("realdialog");
 
         this.speaker = speaker;
@@ -23,7 +23,7 @@ export class RealDialog extends Rectangle {
         this.auto = auto;
 
         this.blocker = new GreyBlocker();
-        this.blocker.background = "rgba(36, 36, 36, 1)";
+        this.blocker.background = fullBlack ? "#000000ff" : "rgba(0,0,0,0.6)";
         this.blocker.addControl(this);
 
         this.width = "500px";
@@ -114,7 +114,7 @@ export class RealDialog extends Rectangle {
         this.panel.addControl(new BaseVSpacer());
     }
 
-    private async typewriter(text: string, speed = 50) {
+    private async typewriter(text: string, speed = 70) {
         this.textBlock.text = "";
         for (let i = 0; i < text.length; i++) {
             if (this.ended) { this.textBlock.text = text; return; }
@@ -124,14 +124,14 @@ export class RealDialog extends Rectangle {
             else await this.sleep(speed);
         }
         if (!this.ended) {
-            await this.sleep(speed * 5);
+            await this.sleep(speed * 10);
             this.end();
         }
     }
 
-    public static async show(root: AdvancedDynamicTexture, scene: BaseScene, text: string, speaker: DialogSpeakername, auto = false, hideName = false): Promise<void> {
+    public static async show(root: AdvancedDynamicTexture, scene: BaseScene, text: string, speaker: DialogSpeakername, auto = false, hideName = false, fullBlack = false): Promise<void> {
         return new Promise((resolve) => {
-            const dialog = new RealDialog(root, scene, speaker, auto);
+            const dialog = new RealDialog(root, scene, speaker, auto, hideName, fullBlack);
             dialog.blocker.onDisposeObservable.add(() => resolve());
             scene.scene.onAfterRenderObservable.addOnce(() => {
                 dialog.typewriter(text);
