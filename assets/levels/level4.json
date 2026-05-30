@@ -62,7 +62,7 @@
                 "name": "arrival"
             }],
             "clues" : [
-                "Analysez les 2 feuilles afin de trouver un chemin commun."
+                "Analysez les 2 étapes afin de trouver un chemin commun."
             ]
         },
         {
@@ -100,7 +100,7 @@
                 "name": "arrival"
             }],
             "clues" : [
-                "Analysez les 2 feuilles afin de trouver un chemin commun."
+                "Analysez les 2 étapes afin de trouver un chemin commun."
             ]
         }
     ]

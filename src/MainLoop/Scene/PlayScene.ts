@@ -257,7 +257,7 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public async loadLeaf(index: number) {
-        this.btmBar.updateLeafIndicator(`Feuille ${index + 1} sur ${this.currentIslandMap.length}`)
+        this.btmBar.updateLeafIndicator(`Étape ${index + 1} sur ${this.currentIslandMap.length}`)
 
         this.currentLeaf = index;
         this.canRun = false; // hop on arrete d'exécuter
@@ -311,7 +311,7 @@ export class PlayScene extends GameScene { // ;)
         let next = this.currentLeaf + 1;
 
         if (next >= this.currentIslandMap.length) {
-            console.log("Dernière feuille atteinte. manual : " + manual);
+            console.log("Dernière étape atteinte. manual : " + manual);
             if (!manual) {
                 const endDialogs = this.levelReader.getEndDialog(this.currentIsland);
                 if (endDialogs) {
