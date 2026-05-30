@@ -66,8 +66,10 @@ export class LevelSelectScene extends BaseScene {
                     },
                     true /* fullBlack */
                 );
-            } else 
+            } else {
+                SoundManager.playAmbient("world1.mp3", true, 0.2);
                 this.intro(onLevelSelect);
+            }
             return;
         }
 
@@ -125,6 +127,8 @@ export class LevelSelectScene extends BaseScene {
                 },
                 true /* fullBlack */
             );
+        } else {
+            SoundManager.playAmbient("Interplanetary_Odyssey.ogg", true, 0.2);
         }
     }
 
