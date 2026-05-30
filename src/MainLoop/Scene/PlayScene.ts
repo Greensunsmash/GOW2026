@@ -231,8 +231,8 @@ export class PlayScene extends GameScene { // ;)
         //this.shadowGenerator.blurScale = 2;
         this.shadowGenerator.bias = 0.001;
 	    this.shadowGenerator.normalBias = 0.02;
-        this.shadowGenerator.useContactHardeningShadow = true;
-        this.shadowGenerator.contactHardeningLightSizeUVRatio = 0.025;
+        //this.shadowGenerator.useContactHardeningShadow = true;
+        //this.shadowGenerator.contactHardeningLightSizeUVRatio = 0.025;
     }
 
     public addShadowCaster(mesh: AbstractMesh) {
