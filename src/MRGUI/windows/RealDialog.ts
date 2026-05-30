@@ -98,10 +98,10 @@ export class RealDialog extends Rectangle {
     private end(manuallyClicked = false) {
         if (this.ended) return;
         this.ended = true;
-        if (this.auto && !manuallyClicked) {
+        /*if (this.auto && !manuallyClicked) {
             this.blocker.dispose();
             return;
-        }
+        }*/
         this.panel.addControl(new BaseButton(
             "continuer-btn", 
             "Continuer",
