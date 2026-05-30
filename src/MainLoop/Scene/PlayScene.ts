@@ -24,6 +24,7 @@ import { SoundManager } from "../../Shared/Sounds";
 import type { InstructionData, ProgramData } from "../../Shared/types";
 import { ExecutionContext } from "../ExecutionContext";
 import { GameScene } from "./GameScene";
+import { WaterFoamPlugin } from "../../Shared/WaterFoam";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene { // ;)
@@ -197,37 +198,42 @@ export class PlayScene extends GameScene { // ;)
     private fillBelow() {
         let ground = MeshBuilder.CreateGround("ground", { width: 512, height: 512, subdivisions: 32 }, this.scene);
 
-        NodeMaterial.ParseFromSnippetAsync("#3FU5FG#1", this.scene).then((mat) => {
-            ground.material = mat;
-            //window.mat = mat;
+        const waterMat = new PBRMaterial("waterMat", this.scene);
+        console.log("plugins on material:", (waterMat as any).pluginManager);
+
+
+        waterMat.albedoColor = new Color3(0.01, 0.05, 0.08);
+        waterMat.roughness = 0.02;
+        waterMat.metallic = 0.0;
+        waterMat.alpha = 0.75;
+        
+        const normalMap = new Texture("assets/textures/waterMap.png", this.scene);
+        normalMap.uScale = 8;
+        normalMap.vScale = 8;
+
+        waterMat.bumpTexture = normalMap;
+        waterMat.bumpTexture.level = 0.4;
+
+        const foamTex = new Texture("assets/textures/waterMap.png", this.scene);
+        foamTex.uScale = 10;
+        foamTex.vScale = 10;
+
+        waterMat.emissiveTexture = foamTex;
+        waterMat.emissiveColor = new Color3(0, 0, 0);
+        waterMat.emissiveIntensity = 0.8;
+
+        ground.material = waterMat;
+        ground.layerMask = LayerMasks.SCENE_ONLY;
+        ground.receiveShadows = true;
+        ground.position.y = 0.5;
+
+        const normalTex = waterMat.bumpTexture as Texture;
+        this.scene.onBeforeRenderObservable.add(() => {
+            const dt = this.scene.getEngine().getDeltaTime();
+
+            normalTex.uOffset += dt * 0.00001;
+            normalTex.vOffset += dt * 0.000005;
         });
-
-        /*let addPostEffects = ()=>{
-            var pipeline = new DefaultRenderingPipeline(
-                "postEffectPipeline", // The name of the pipeline
-                false, // Do you want the pipeline to use HDR texture?
-                this.scene, // The scene instance
-                [this.mapCamera] // The list of cameras to be attached to
-            );
-
-            pipeline.bloomEnabled   = true;
-            pipeline.bloomThreshold = 0;
-            pipeline.bloomKernel    = 0.35;
-            pipeline.bloomScale     = 0.5;
-
-            pipeline.grainEnabled = true;
-            pipeline.grain.intensity = 8;
-            pipeline.grain.animated = true;
-
-            pipeline.chromaticAberrationEnabled             = true;
-            pipeline.chromaticAberration.aberrationAmount   = 65.1;
-            pipeline.chromaticAberration.radialIntensity    = 2;
-
-            pipeline.sharpenEnabled = true;
-            pipeline.sharpen.edgeAmount = 0.15;
-        }
-
-        addPostEffects();*/
     }
 
     private setupSkybox() {

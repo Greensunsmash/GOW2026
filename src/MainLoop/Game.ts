@@ -1,4 +1,4 @@
-import { Engine, ArcRotateCamera, Vector3, Viewport, DefaultLoadingScreen } from "@babylonjs/core";
+import { Engine, ArcRotateCamera, Vector3, Viewport, DefaultLoadingScreen, ShaderStore } from "@babylonjs/core";
 import { GameScene } from "./Scene/GameScene";
 import { PlayScene } from "./Scene/PlayScene";
 import { INTRO_LEVELS, LayerMasks } from "../Shared/Constants";
@@ -38,6 +38,8 @@ export class Game {
         await LevelReader.init();
         await SoundManager.get();
         await game.switchToLevelSelect();
+
+        ShaderStore.ShadersRepository = "assets/shaders/";
 
         game.engine.runRenderLoop(() => {
             game.currentScene.update();
