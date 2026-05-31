@@ -12,8 +12,9 @@ export class LevelSelectMap extends GUI.Rectangle {
     private height_limit : number;
 
     private isPanning : boolean = false;
+    private onPan: (x: number, y: number, scale: number) => void;
 
-    constructor(root: GUI.AdvancedDynamicTexture, scene:BaseScene) {
+    constructor(root: GUI.AdvancedDynamicTexture, scene:BaseScene, onPan: (x: number, y: number, scale: number) => void) {
         super();
         this.scene = scene;
         this.root = root;
@@ -21,16 +22,15 @@ export class LevelSelectMap extends GUI.Rectangle {
         this.width = "100%";
         this.height = "100%";
         this.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
-        this.background = Colors.MapBackground;
+        this.background = "#00000000";
         this.clipChildren = true;
-        this.root.addControl(this);
 
         this.content = new GUI.Rectangle();
         this.content.width = "6000px"; // grand espace de base
         this.content.height = "4000px";
-        this.content.background = Colors.MapBackground;
-        this.content.color = Colors.SecondaryEnseignement;
-        this.content.thickness = 0;
+        this.content.background = "#ffffff00";//Colors.MapBackground;
+        this.content.color = Colors.MapBackground;
+        this.content.thickness = 8;
         this.content.cornerRadius = 22;
         this.content.shadowOffsetX = 1;
         this.content.shadowOffsetY = 1;
@@ -41,6 +41,8 @@ export class LevelSelectMap extends GUI.Rectangle {
         this.addControl(this.content);
         this.width_limit = this.content.widthInPixels / 2;
         this.height_limit = this.content.heightInPixels / 2;
+
+        this.onPan = onPan;
 
         this.onPointerDownObservable.add((event) => {
             this.isPanning = true;
@@ -71,6 +73,8 @@ export class LevelSelectMap extends GUI.Rectangle {
                 if (true_up <= this.height_limit && true_down >= this.height_limit) this.content.topInPixels = y_pos;
                 else if (true_up > this.height_limit) this.content.topInPixels = this.height_limit - (this.content.heightInPixels - this.content.heightInPixels*this.content.scaleY)/2;
                 else this.content.topInPixels = this.height_limit - (this.content.heightInPixels + this.content.heightInPixels*this.content.scaleY)/2;    
+
+                onPan(this.content.leftInPixels, this.content.topInPixels, this.content.scaleX);
             };
 
             this.scene.scene.onPointerUp = () => {
@@ -118,6 +122,8 @@ export class LevelSelectMap extends GUI.Rectangle {
         if (true_up > this.height_limit) this.content.topInPixels = this.height_limit - (this.content.heightInPixels - this.content.heightInPixels*this.content.scaleY)/2;
         else if (true_down < this.height_limit) this.content.topInPixels = this.height_limit - (this.content.heightInPixels + this.content.heightInPixels*this.content.scaleY)/2;
 
+        this.onPan(this.content.leftInPixels, this.content.topInPixels, this.content.scaleX);
+
     }
 
     addPopup(x: number, y: number, name: string, callback: () => void) {
@@ -125,6 +131,11 @@ export class LevelSelectMap extends GUI.Rectangle {
         popup.leftInPixels = x;
         popup.topInPixels = y;
         this.content.addControl(popup);
+    }
+
+
+    forceTriggerCallback() {
+        this.onPan(this.content.leftInPixels, this.content.topInPixels, this.content.scaleX);
     }
 
     // GETTERS

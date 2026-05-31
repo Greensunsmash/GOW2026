@@ -83,11 +83,13 @@ export class Game {
     }
 
     public async switchScene(scene: BaseScene) {
+        this.engine.displayLoadingUI();
         if (this.currentScene) {
             this.currentScene.scene.dispose();
             this.currentScene.dispose?.();
         }
         // La scene doit deja etre init ici
         this.currentScene = scene;
+        setTimeout(() => this.engine.hideLoadingUI(), 500);
     }
 }

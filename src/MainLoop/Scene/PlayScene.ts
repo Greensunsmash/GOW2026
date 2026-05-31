@@ -70,6 +70,7 @@ export class PlayScene extends GameScene { // ;)
     }
 
     async init(levelName: string | undefined = "level1.json", onLevelGaveup?: () => void, onLevelWon?: (succededLevel: string) => void) {
+        this.scene.getEngine().displayLoadingUI();
         this.isRestoring = false;
         
         this.topBar = new TopBar(this.advancedTexture, () => {
@@ -152,7 +153,6 @@ export class PlayScene extends GameScene { // ;)
 
     async initGameScene(levelName: string) {
         this.loadedFile = levelName;
-        this.scene.getEngine().displayLoadingUI();
 
         this.uiCamera = new ArcRotateCamera("uiCamera", Math.PI / 2, Math.PI / 3, 10, Vector3.Zero(), this.scene);
         this.uiCamera.layerMask = LayerMasks.UI_ONLY;
@@ -878,33 +878,44 @@ export class PlayScene extends GameScene { // ;)
         this.isRestoring = true;
         console.log("restoring program");
 
-        const factories = this.levelReader.createFactories(this.ctx, this) as any;
-        const allFactories = {
-            ...factories.instructions,
-            ...factories.structures,
-            ...factories.sensors,
-            ...factories.ops,
-            ...factories.booleans,
-            start: (root: any, content_root: any) => new FlagContainer(root, content_root, this)
-        };
+        try {
 
-        const children = [...this.workspace.getContentRoot().children];
-        for (const child of children) {
-            child.dispose();
+            const factories = this.levelReader.createFactories(this.ctx, this) as any;
+            const allFactories = {
+                ...factories.instructions,
+                ...factories.structures,
+                ...factories.sensors,
+                ...factories.ops,
+                ...factories.booleans,
+                start: (root: any, content_root: any) => new FlagContainer(root, content_root, this)
+            };
+
+            const children = [...this.workspace.getContentRoot().children];
+            for (const child of children) {
+                child.dispose();
+            }
+            this.workspace.getContentRoot().clearControls();
+
+            for (const listData of program) {
+                const list = this.buildList(listData.insts, allFactories);
+                list.moveMagnet(list.getList().length - 1);
+                list.leftInPixels = listData.x;
+                list.topInPixels = listData.y;
+                //list.reparent(list, this.workspace.getContentRoot(), new Vector2(listData.x, listData.y));
+            }
+            this.toolbox.rebuildVariables(this, this.ctx);
+
+            this.updateInstructionCount();
+        } catch(err) {
+            console.error("cant restore program (invalid save maybe?)", err);
+            const children = [...this.workspace.getContentRoot().children];
+            for (const child of children) {
+                child.dispose();
+            }
+            this.workspace.getContentRoot().clearControls();
+        } finally {
+            this.isRestoring = false;
         }
-        this.workspace.getContentRoot().clearControls();
-
-        for (const listData of program) {
-            const list = this.buildList(listData.insts, allFactories);
-            list.moveMagnet(list.getList().length - 1);
-            list.leftInPixels = listData.x;
-            list.topInPixels = listData.y;
-            //list.reparent(list, this.workspace.getContentRoot(), new Vector2(listData.x, listData.y));
-        }
-        this.toolbox.rebuildVariables(this, this.ctx);
-
-        this.updateInstructionCount();
-        this.isRestoring = false;
     }
 
     private buildBlock(blockData: any, allFactories: any): BlocContainer | null {

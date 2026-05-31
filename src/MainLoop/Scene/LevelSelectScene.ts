@@ -1,4 +1,4 @@
-import { ArcRotateCamera, Engine, KeyboardEventTypes, Vector3 } from "@babylonjs/core";
+import { ArcRotateCamera, Color3, DirectionalLight, Engine, KeyboardEventTypes, MeshBuilder, PBRMaterial, Texture, Vector3 } from "@babylonjs/core";
 import { INTRO_LEVELS, LayerMasks } from "../../Shared/Constants";
 import { LevelReader, type DialogLine, type LevelIndexEntry } from "../../Environment/LevelReader";
 import { BaseScene } from "./BaseScene";
@@ -19,6 +19,7 @@ export class LevelSelectScene extends BaseScene {
     private static firstOpen = true;
 
     public uiCamera: ArcRotateCamera;
+    public waterCamera: ArcRotateCamera;
     private levelMap: LevelSelectMap;
     private levelPopup: LevelPopup;
     private archipelBtns: ArchipelTrigger[] = [];
@@ -29,10 +30,11 @@ export class LevelSelectScene extends BaseScene {
 
     constructor(engine: Engine) {
         super(engine);
-        this.scene.clearColor = BABYLON.Color4.FromHexString(Colors.SecondaryEnseignement);
+        this.scene.clearColor = new BABYLON.Color4(0, 0, 0, 1);
     }
 
     async init(onLevelSelect: (levelName: string) => Promise<void>, onReset: () => void) {
+        this.scene.getEngine().displayLoadingUI();
         console.log("init levelselectscene");
         this.onLevelSelect = onLevelSelect;
 
@@ -40,12 +42,26 @@ export class LevelSelectScene extends BaseScene {
         this.uiCamera = new ArcRotateCamera("uiCamera", Math.PI/2, Math.PI/3, 10, Vector3.Zero(), this.scene);
         this.uiCamera.layerMask = LayerMasks.UI_ONLY;
 
+        this.waterCamera = new ArcRotateCamera("waterCamera", Math.PI/2, 20 * (Math.PI / 180) /*deg->rad*/, 50, Vector3.Zero(), this.scene);
+        this.waterCamera.layerMask = LayerMasks.SCENE_ONLY;
+
+        const sun = new DirectionalLight("sun", new Vector3(0.5, -1, 0.5), this.scene);
+        //sun.layerMask = LayerMasks.SCENE_ONLY;
+        sun.diffuse = new Color3(1.0, 0.98, 0.9); // Un joli blanc cassé un peu chaud
+        sun.intensity = 10;
+        sun.position = new Vector3(0, 10, 0);
+
         this.scene.activeCameras = [];
+        this.scene.activeCameras.push(this.waterCamera);
         this.scene.activeCameras.push(this.uiCamera);
+
+        await this.fillBelowMap();
 
 
         if(!Save.isCompleted(INTRO_LEVELS[0])) {
             if (LevelSelectScene.firstOpen) {
+                
+                this.scene.getEngine().hideLoadingUI();
                 LevelSelectScene.firstOpen = false;
                 new TwoButtonModal(
                     this.advancedTexture,
@@ -71,8 +87,23 @@ export class LevelSelectScene extends BaseScene {
             return;
         }
 
+        //this.scene.getEngine().displayLoadingUI();
         this.levelPopup = new LevelPopup(this.advancedTexture, "T", () => {console.log("callback not set")}, () => {});
-        this.levelMap = new LevelSelectMap(this.advancedTexture, this);
+        this.levelMap = new LevelSelectMap(this.advancedTexture, this,
+            /*onPan*/ (x: number, y: number, scale: number) => {
+                if (this.waterCamera) {
+                    // On ajuste la sensibilité avec un multiplicateur (ex: 0.05)
+                    // Axe X de l'écran (gauche/droite) => Axe X de la caméra
+                    // Axe Y de l'écran (haut/bas) => Axe Z de la caméra en 3D (avant/arrière)
+                    const sensitivity = 0.1; 
+                    
+                    this.waterCamera.target.x = x * sensitivity;
+                    this.waterCamera.target.z = -y * sensitivity;
+                    this.waterCamera.radius = 60 + (150 - 60) * ((0.6 - scale) / (0.6 - 0.2));
+                }
+            }
+        );
+        this.advancedTexture.addControl(this.levelMap);
         this.advancedTexture.addControl(this.levelPopup);
 
         this.levelIndex = await LevelReader.getLevelList();
@@ -105,6 +136,9 @@ export class LevelSelectScene extends BaseScene {
                 }
             }
         });
+
+        this.levelMap.forceTriggerCallback();
+        this.scene.getEngine().hideLoadingUI();
         if (LevelSelectScene.firstOpen) {
             LevelSelectScene.firstOpen = false;
             new TwoButtonModal(
@@ -133,31 +167,76 @@ export class LevelSelectScene extends BaseScene {
     private createTitle() {
         const title = new TextBlock();
         title.text = "Carte du Nouveau Monde";
-        title.widthInPixels = title.text.length*20;
-        title.color = Colors.SecondaryEnseignement;
+        title.widthInPixels = 300;
+        title.color = Colors.LevelSelectTextTitle;
         title.fontFamily = "Inter";
-        title.fontSize = 22;
+        title.fontSize = 20;
         title.fontWeight = "600";
         title.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
 
         const titleRect = new Rectangle();
-        titleRect.background = Colors.Workbench;
-        titleRect.color = Colors.BehindWorkbench;
+        titleRect.background = Colors.LevelSelectBgTitle;
+        titleRect.color = Colors.SecondaryEnseignement;
         titleRect.cornerRadius = Colors.CornerRadiusVraimentArrondi;
         titleRect.thickness = 2;
-        titleRect.shadowOffsetX = 1;
-        titleRect.shadowOffsetY = 1;
+        titleRect.shadowOffsetX = -2;
+        titleRect.shadowOffsetY = 2;
         titleRect.shadowBlur = 4;
-        titleRect.shadowColor = "#00000065";
+        titleRect.shadowColor = "#00000081";
         titleRect.addControl(title);
-        titleRect.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+        titleRect.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
+        titleRect.paddingLeft = "30px";
         titleRect.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-        titleRect.top = "8%";
+        titleRect.top = "30px";
+
+        titleRect.clipChildren = false;
+        titleRect.clipContent = false;
         
         titleRect.adaptWidthToChildren = true;
         titleRect.height = "60px";
 
         this.advancedTexture.addControl(titleRect);
+    }
+
+    fillBelowMap() {
+        let ground = MeshBuilder.CreateGround("ground", { width: 512, height: 512, subdivisions: 32 }, this.scene);
+        
+        const waterMat = new PBRMaterial("waterMat", this.scene);
+        console.log("plugins on material:", (waterMat as any).pluginManager);
+
+
+        waterMat.albedoColor = new Color3(0.01, 0.05, 0.08);
+        waterMat.roughness = 0.02;
+        waterMat.metallic = 0.0;
+        waterMat.alpha = 0.75;
+        
+        const normalMap = new Texture("assets/textures/waterMap.png", this.scene);
+        normalMap.uScale = 16;
+        normalMap.vScale = 16;
+
+        waterMat.bumpTexture = normalMap;
+        waterMat.bumpTexture.level = 0.4;
+
+        const foamTex = new Texture("assets/textures/waterMap.png", this.scene);
+        foamTex.uScale = 20;
+        foamTex.vScale = 20;
+
+        waterMat.emissiveTexture = foamTex;
+        waterMat.emissiveColor = new Color3(0, 0, 0);
+        waterMat.emissiveIntensity = 0.8;
+
+        ground.material = waterMat;
+        ground.layerMask = LayerMasks.SCENE_ONLY;
+        ground.receiveShadows = true;
+        ground.position.y = 0.5;
+
+        const normalTex = waterMat.bumpTexture as Texture;
+        this.scene.onBeforeRenderObservable.add(() => {
+            const dt = this.scene.getEngine().getDeltaTime();
+
+            normalTex.uOffset += dt * 0.0001;
+            normalTex.vOffset += dt * 0.00005;
+        });
     }
 
     async fillMap() {

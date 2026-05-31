@@ -4,10 +4,16 @@ export class Colors {
     static AccentDuSud = "#FB756B";
     static Highlight = "#fb9992ff";
     static HighlightStroke = "#fcaba5ff";
-    static SecondaryEnseignement = "#F0B67F";
-    static PtitRoseDuSoir = "#FF8676";
+    
     static Workbench = "#F7EEE2";
     static BehindWorkbench = "#FFFFFF";
+    
+    static SecondaryEnseignement = "#F0B67F";
+    static LevelSelectTextTitle = "#b98c61ff";
+    //static LevelSelectTextTitle = "#fff7efff";
+    static LevelSelectBgTitle = Colors.Workbench;//"#f7eee2ef";
+    //static LevelSelectBgTitle = "rgba(31, 98, 197, 0.8)";
+    static PtitRoseDuSoir = "#FF8676";
     static EmptySlot = "#FFFFFF";
     static EmptySlotHover = "#e4dbcfff";
     static EmptySlotOhShitImHavingAStroke = "#E2E2E2";

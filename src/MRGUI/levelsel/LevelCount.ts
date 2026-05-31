@@ -12,20 +12,22 @@ export class LevelCount extends Rectangle {
     ) {
         super("levelcount");
         this.height = "60px";
-        this.width = "350px";
+        this.width = "280px";
         this.color = "#ffffffb2";
         this.thickness = 1;
-        this.background = "#dfe9ffce";
+        this.background = Colors.Workbench;
         this.cornerRadius = Colors.CornerRadiusVraimentArrondi;
-        this.shadowOffsetX = 1;
-        this.shadowOffsetY = 1;
-        this.shadowColor = "#00000040";
+        this.shadowOffsetX = -2;
+        this.shadowOffsetY = 2;
+        this.shadowColor = "#00000081";
         this.shadowBlur = 12;
         this.verticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
-        this.top = "8%";
+        this.top = "30px";
+        this.clipChildren = false;
+        this.clipContent = false;
 
         this.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
-        this.paddingRight = "4%";
+        this.paddingRight = "30px";
 
         this.panel = new StackPanel("levelcount_sp");
         //this.panel.isVertical = false;
@@ -42,7 +44,7 @@ export class LevelCount extends Rectangle {
     }
 
     public setCount(count: number) {
-        this.countText.text = this.limit ? `Niveaux complétés : ${count} sur ${this.limit}`:  `Niveaux complétés : ${count}`;
+        this.countText.text = this.limit ? `Complétés : ${count} sur ${this.limit}`:  `Complétés : ${count}`;
     }
 
     public setTotal(limit: number | null) {
