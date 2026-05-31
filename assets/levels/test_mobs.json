@@ -2,7 +2,7 @@
     "islands": [
         {
             "nb":1,
-            "begin_dialog": "Ramassez vos poubelles.",
+            "begin_dialogs": "Ramassez vos poubelles.",
             "end_dialog" : "Bravo camion.",
             "layouts":[
                 [

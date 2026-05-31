@@ -2,7 +2,7 @@
     "islands": [
         {
             "nb" : 1,
-            "begin_dialog" : "C'est ton moment de shine",
+            "begin_dialogs" : "C'est ton moment de shine",
             "end_dialog" : "Bravo champion",
             "layouts": [
                 [

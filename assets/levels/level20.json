@@ -2,6 +2,12 @@
     "islands": [
         {
         "nb": 1,
+        "begin_dialogs": [
+            {"speaker":"SIRC", "text":"Qui est là ?"},
+            {"speaker":"SIRC", "text":"Toi ? Comment as-tu pu arriver jusqu'ici ?"},
+            {"speaker":"SIRC", "text":"Je t'avais pourtant transformé."},
+            {"speaker":"SIRC", "text":"Tant pis, je vais devoir utiliser d'autres méthodes..."}
+        ],
         "layouts": [
             [
                 [".......",".......",".......",".......","......."],
@@ -58,10 +64,14 @@
         },
         {
         "nb": 2,
+        "begin_dialogs": [
+            {"speaker":"SIRC", "text":"Tu crois que ça va se passer comme tu veux ?"},
+            {"speaker":"SIRC", "text":"Ici, c'est pas toi qui contrôle."}
+        ],
         "layouts": [
             [
                 [".O...O.",".O...O.",".O...O.",".O...O.",".O...O.",".O...O."],
-                ["#  @  #","#     #","# d d #","#     #","#  d  #","#  x  #"]
+                ["#  @  #","#     #","#     #","# d d #","#  d  #","#  x  #"]
             ]
         ],
         "blockset": {
@@ -102,13 +112,19 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"}],
+        "goal": [{
+                "name": "survive", 
+                "args": {"ticks": 6}
+            }],
         "clues": [
             "Le mieux pour réussir, c'est de tester étape par étape."
         ]
         },
         {
         "nb": 3,
+        "begin_dialogs": [
+            {"speaker":"SIRC", "text":"Bien tenté, mais tu ne pourras jamais m'atteindre !"}
+        ],
         "layouts": [
             [
                 ["   . ","   . ","   . ","   O ",".....",".....",".....","   . ","   . "],
@@ -160,6 +176,9 @@
         },
         {
         "nb": 4,
+        "begin_dialogs": [
+            {"speaker":"SIRC", "text":"Tsss, quand vas-tu abandonner ?"}
+        ],
         "layouts": [
             [
                 [".     ",".O... ","O...  ","..O.  ","..OO..","     ."],
@@ -211,6 +230,11 @@
         },
         {
         "nb": 5,
+        "end_dialogs": [
+            {"speaker":"SIRC", "text":"Urg..."},
+            {"speaker":"SIRC", "text":"D'accord, tu as gagné."},
+            {"speaker":"SIRC", "text":"Je vais te dire ou se trouve le démarreur cosmique"}
+        ],
         "layouts": [
             [
                 [".   ",".   ",".O.."],

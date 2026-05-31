@@ -260,11 +260,7 @@ export class ListContainer extends GUI.Rectangle {
                             );
                             
                             structToMove = this.structureList.filter((x) => {
-                                const mid = x.getMid?.();
-                                const midID = mid !== undefined && mid !== null ? x.getMidID() : null;
-                                const upperBound = midID !== null && nb < midID ? midID : x.getQueueID();
-                                
-                                return x.getHeaderID() >= nb && x.getHeaderID() < upperBound;
+                                return x.getHeaderID() >= nb && x.getHeaderID() < end;
                             });
                         }
                         else if (s.length > 1) { // Si le bloc appartient à plusieurs structure, on choisit la bonne
@@ -272,17 +268,14 @@ export class ListContainer extends GUI.Rectangle {
                             
                             const end = resolveSliceEnd(s[0], nb);
                             
+                            structToMove = this.structureList.filter((x) => {
+                                return x.getHeaderID() >= nb && x.getHeaderID() < end;
+                            });
+
                             toMove = this.list.slice(nb, end).filter(
                                 (x) => x instanceof InstructionContainer
                             );
                             
-                            structToMove = this.structureList.filter((x) => {
-                                const mid = x.getMid?.();
-                                const midID = mid !== undefined && mid !== null ? x.getMidID() : null;
-                                const upperBound = midID !== null && nb < midID ? midID : x.getQueueID();
-                                
-                                return x.getHeaderID() >= nb && x.getHeaderID() < upperBound;
-                            });
                         }
                         else { // Si ça n'appartient pas à une structure
                             toMove = this.list.slice(nb).filter(
@@ -727,7 +720,11 @@ export class ListContainer extends GUI.Rectangle {
     getMagnetID(): number { return this.list.indexOf(this.magnet); }
     getDetector(): GUI.Rectangle { return this.detector; }
 
-    toString(): string { return "ListContainer : " + this.id.toString(); }
+    toString(): string { return "ListContainer : " + this.id.toString();}
+    printOrganization(): void {
+        for (const s of this.structureList) {console.log("Structure : ", s.getHeaderID(), s.getQueueID());}
+        for (const l of this.list) {console.log("- Bloc", l);}
+    }
 
     public serializeList(): ListData {
         const serializeInstruction = (inst: InstructionContainer) => {

@@ -2,7 +2,7 @@
     "islands": [
         {
             "nb":1,
-            "begin_dialog": "Démerde toi.",
+            "begin_dialogs": "Démerde toi.",
             "end_dialog" : "Bien joué Ulysse tout lisse !",
             "layouts":[
                 [

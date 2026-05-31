@@ -59,7 +59,8 @@
         "nb": 2,
         "begin_dialogs":[
             {"speaker": "SCIENTIFIQUE", "text":"Un cochon ? Mais qu'est ce qu'il fait là ?"},
-            {"speaker": "SCIENTIFIQUE", "text":"Bon fais attention, si tu te cognes contre lui ou s'il te fonce dessus, on sera dans de beaux draps."}
+            {"speaker": "SCIENTIFIQUE", "text":"Bon fais attention, si tu te cognes contre lui ou s'il te fonce dessus, on sera dans de beaux draps."},
+            {"speaker": "SCIENTIFIQUE", "text":"Utilises le bloc \"Attendre\" pour ne rien faire pendant un tour."}
         ],
         "layouts": [
             [

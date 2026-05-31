@@ -3,7 +3,8 @@
         {
         "nb": 1,
         "begin_dialogs":[
-            {"speaker": "SCIENTIFIQUE", "text":"Bon allez courage, on est sur la dernière ligne droite."}, 
+            {"speaker": "SCIENTIFIQUE", "text":"Grâce à toi, on va enfin retrouver le démarreur cosmique !"}, 
+            {"speaker": "SCIENTIFIQUE", "text":"Courage, on est sur la dernière ligne droite !"}, 
             {"speaker": "SCIENTIFIQUE", "text":"Encore un petit peu et on y est !"}
         ],
         "layouts": [
