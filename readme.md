@@ -31,7 +31,7 @@ Le jeu peut donc être utilisé pour s'initier à la programmation, mais c'est s
 
 ## Un jeu adapté au thème IAEdition ##
 
-Nous vous proposons dans ce jeu de créer vos programmes, et donc de programmer votre propre IA qui doit résoudre divers défis. De plus, le principal point positif de l'émergence de l'IA selon le nous est la facilité d'apprentissage qu'elle apporte. Nous voulions donc fiare un jeu dans ce sens, qui puisse aider à comprendre comment peut fonctionner la programmation et aide à l'apprentissage de celle-ci.
+Nous vous proposons dans ce jeu de créer vos programmes, et donc de programmer votre propre IA qui doit résoudre divers défis. De plus, le principal point positif de l'émergence de l'IA selon le nous est la facilité d'apprentissage qu'elle apporte. Nous voulions donc faire un jeu dans ce sens, qui puisse aider à comprendre comment peut fonctionner la programmation et aide à l'apprentissage de celle-ci.
 
 
 **Bon jeu ! [marcorobo.space](https://marcorobo.space)**
