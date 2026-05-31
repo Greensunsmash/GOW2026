@@ -76,7 +76,7 @@ type InstructionData = {
   children1?: InstructionData[];
   children2?: InstructionData[] | null;
   variable?: string;
-  data?: BlocData | null;
+  data?: BlocData | RawValueData | null;
 };
 
 type ListData = {

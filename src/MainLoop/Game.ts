@@ -85,6 +85,7 @@ export class Game {
     public async switchScene(scene: BaseScene) {
         if (this.currentScene) {
             this.currentScene.scene.dispose();
+            this.currentScene.dispose?.();
         }
         // La scene doit deja etre init ici
         this.currentScene = scene;

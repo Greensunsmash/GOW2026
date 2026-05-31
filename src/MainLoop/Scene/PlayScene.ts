@@ -53,6 +53,10 @@ export class PlayScene extends GameScene { // ;)
 
     private memory: Memory = Memory.get();
 
+    private isRestoring = false;
+    private saveInterval;
+    
+
     constructor(engine: Engine) {
         super(engine);
         this.currentLeaf = this.currentLeaf * 2 - (this.currentLeaf + this.currentLeaf);
@@ -180,6 +184,9 @@ export class PlayScene extends GameScene { // ;)
         await this.loadIsland(0);
 
         this.restoreProgram(false);
+        this.saveInterval = window.setInterval(() => {
+            if (!this.isRestoring) this.saveProgram();
+        }, 5000);
 
         /* let light = new HemisphericLight("light", new Vector3(0, 1, 0), this.scene);
         light.includeOnlyWithLayerMask = LayerMasks.SCENE_ONLY;
@@ -401,6 +408,7 @@ export class PlayScene extends GameScene { // ;)
         }
         this.memory.setOnProgramEnd(undefined);
         this.memory.clear();
+        this.modeUpdate();
         this.ctx.setGoals(new_goals);
 
         this.ctx.getRobot().setOnItemsChange((items: ItemType[]) => {
@@ -439,12 +447,6 @@ export class PlayScene extends GameScene { // ;)
                 }
                 return false;
             } else {
-                /*new OneButtonModal(
-                    this.advancedTexture,
-                    "Dernière feuille",
-                    "Fermer",
-                    () => { }
-                );*/
                 next = 0;
             }
         }
@@ -821,6 +823,7 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public saveProgram() {
+        if (this.isRestoring) return;
         const lists = [...this.workspace.getContentRoot().children];
         const data: ProgramData = [];
         for (const  child of lists) {
@@ -859,6 +862,8 @@ export class PlayScene extends GameScene { // ;)
                 return console.info("island data found but no program ( looked for ", this.loadedFile, " at island ", this.currentIsland, " found ", saved);
             }
         }
+        this.isRestoring = true;
+
         const factories = this.levelReader.createFactories(this.ctx, this) as any;
         const allFactories = {
             ...factories.instructions,
@@ -869,7 +874,12 @@ export class PlayScene extends GameScene { // ;)
             start: (root: any, content_root: any) => new FlagContainer(root, content_root, this)
         };
 
+        const children = [...this.workspace.getContentRoot().children];
+        for (const child of children) {
+            child.dispose();
+        }
         this.workspace.getContentRoot().clearControls();
+
         for (const listData of program) {
             const list = this.buildList(listData.insts, allFactories);
             list.moveMagnet(list.getList().length - 1);
@@ -879,6 +889,7 @@ export class PlayScene extends GameScene { // ;)
         }
 
         this.updateInstructionCount();
+        this.isRestoring = false;
     }
 
     private buildBlock(blockData: any, allFactories: any): BlocContainer | null {
@@ -937,8 +948,10 @@ export class PlayScene extends GameScene { // ;)
                 if (!slotWrapper) continue;
 
                 if (childData.type === "raw_value" && childData.value !== undefined) {
+                    console.log("found a raw value noded !");
                     const inputSlot = slotWrapper.children[0];
                     if (inputSlot && inputSlot instanceof InputSlot) {
+                        console.log("restoring input slot value to ", childData.value);
                         (inputSlot as any).setValue(childData.value);
                     }
                 } 
@@ -976,6 +989,14 @@ export class PlayScene extends GameScene { // ;)
                     if (instContainer) {
                         const slots = instContainer.getSlots();
                         if (slots && slots.length > 0) {
+                            if (instrData.condition.type === "raw_value" && instrData.condition.value !== undefined) {
+                                console.log("found a raw value noded !");
+                                const inputSlot = slots[0]?.children[0];
+                                if (inputSlot && inputSlot instanceof InputSlot) {
+                                    console.log("restoring input slot value to ", instrData.condition.value);
+                                    (inputSlot as any).setValue(instrData.condition.value);
+                                }
+                            }
                             const childBlock = this.buildBlock(instrData.condition, allFactories);
                             if (childBlock) {
                                 instContainer.bloc.insertControlAt(childBlock, slots[0]);
@@ -1002,12 +1023,28 @@ export class PlayScene extends GameScene { // ;)
                 if (instrData.condition) { 
                     const slots = built.getSlots();
                     if (slots && slots.length > 0) {
+                        if (instrData.condition.type === "raw_value" && instrData.condition.value !== undefined) {
+                                console.log("found a raw value noded !");
+                                const inputSlot = slots[0]?.children[0];
+                                if (inputSlot && inputSlot instanceof InputSlot) {
+                                    console.log("restoring input slot value to ", instrData.condition.value);
+                                    (inputSlot as any).setValue(instrData.condition.value);
+                                }
+                        }   
                         const childBlock = this.buildBlock(instrData.condition, allFactories);
                         if (childBlock) built.bloc.insertControlAt(childBlock, slots[0]);
                     }
                 } else if (instrData.data) {
                     const slots = built.getSlots();
                     if (slots && slots.length > 0) {
+                        if (instrData.data.type === "raw_value" && instrData.data.value !== undefined) {
+                                console.log("found a raw value noded !");
+                                const inputSlot = slots[0]?.children[0];
+                                if (inputSlot && inputSlot instanceof InputSlot) {
+                                    console.log("restoring input slot value to ", instrData.data.value);
+                                    (inputSlot as any).setValue(instrData.data.value);
+                                }
+                        }
                         const childBlock = this.buildBlock(instrData.data, allFactories);
                         if (childBlock) built.bloc.insertControlAt(childBlock, slots[0]);
                     }
@@ -1021,4 +1058,9 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public getCtx() { return this.ctx; }
+
+    public dispose() {
+        window.clearInterval(this.saveInterval);
+        this.saveProgram();
+    }
 }

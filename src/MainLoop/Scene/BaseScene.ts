@@ -23,4 +23,6 @@ export abstract class BaseScene {
     }
 
     update(): void {}
+
+    dispose() {}
 }

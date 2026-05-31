@@ -233,12 +233,12 @@
         "end_dialogs": [
             {"speaker":"SIRC", "text":"Urg..."},
             {"speaker":"SIRC", "text":"D'accord, tu as gagné."},
-            {"speaker":"SIRC", "text":"Je vais te dire ou se trouve le démarreur cosmique"}
+            {"speaker":"SIRC", "text":"Je vais te dire ou se trouve le démarreur cosmique."}
         ],
         "layouts": [
             [
                 [".   ",".   ",".O.."],
-                ["@   ","    ","   x"]
+                ["@   ","    ","   C"]
             ]
         ],
         "blockset": {
@@ -279,7 +279,7 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"}],
+        "goal": [{"name": "kill"}],
         "clues": [
             "C'est ton moment, fonce !"
         ]

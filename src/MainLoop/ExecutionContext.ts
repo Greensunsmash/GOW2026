@@ -8,6 +8,7 @@ import { GridUtils, type GridPoint } from "../Shared/GridUtils";
 import type { PlayScene } from "./Scene/PlayScene";
 import { stringArraysEq } from "../Shared/utils";
 import { Circe } from "../Entity/Circe";
+import { Pig } from "../Entity/Pig";
 
 
 export type ArrivalGoalArgs = { flagPos: GridPoint };
@@ -99,6 +100,16 @@ export class ExecutionContext {
                 robotDead = true; 
             }
         }
+        const mobs = this.level.getMobs();
+        if (this.memory.getGameMode() === "PIGMODE") {
+            for (const mob of mobs) {
+                if (mob instanceof Pig && GridUtils.equals(mob.getVisualGridPos(), robotIntention)) { 
+                    console.log("[TICKS] robot bouncing because of predicted collision with pig");
+                    robotIntention = this.robot.getVisualGridPos();
+                    robotBounce = true;
+                }
+            }
+        }
 
         if (this.level.isVoidBelow(robotIntention)) {
             // plus tard, gérer séparément les visuels de la mort par obstacle et la mort par chute
@@ -114,9 +125,8 @@ export class ExecutionContext {
                 await this.robot.doVisualMove(robotIntention, robotBounce);
         }
 
-        // 1.5 : premier check collisions robot/mob
-        
-        const mobs = this.level.getMobs();
+        // 1.5 : 2eme check collisions robot/mob
+
         for (const mob of mobs) {
             if (GridUtils.equals(mob.getVisualGridPos(), this.robot.getVisualGridPos())) { 
                 if (this.mustKillCirce && mob instanceof Circe) {

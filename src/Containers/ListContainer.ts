@@ -334,7 +334,7 @@ export class ListContainer extends GUI.Rectangle {
                             l.dispose();
                             // on compte le nb de blocs dans la liste 
                             this.scene.updateInstructionCount?.();
-                            this.scene.saveProgram?.();
+                            //this.scene.saveProgram?.();
                             this.scene.setDragging(false);
                             this.scene.setDecal(new Vector2(0,0));
                         };
@@ -344,7 +344,7 @@ export class ListContainer extends GUI.Rectangle {
                             this.reparent(l, this.content_root, new Vector2(x + decalX, y + decalY));
                             l.detector.isHitTestVisible = true;
                             this.scene.setDecal(new Vector2(0, 0));
-                            this.scene.saveProgram?.();
+                            //this.scene.saveProgram?.();
                         };
                         if (l.getList().length > 2) { // tjr un magnet donc 2
                             new TwoButtonModal(
@@ -373,12 +373,12 @@ export class ListContainer extends GUI.Rectangle {
                             this.reparent(l, this.content_root, new Vector2(_evt.x+decalX, _evt.y+decalY));
                             l.detector.isHitTestVisible = true;
                         }
-                        this.scene.saveProgram?.();
+                        //this.scene.saveProgram?.();
                     } else {
                         this.scene.setDragging(false);
                         this.reparent(l, this.content_root, new Vector2(_evt.x+decalX, _evt.y+decalY));
                         l.detector.isHitTestVisible = true;
-                        this.scene.saveProgram?.();
+                        //this.scene.saveProgram?.();
                     }
                     this.scene.setDecal(new Vector2(0,0));
                     SoundManager.playSound("clip.ogg", 1);
@@ -559,7 +559,7 @@ export class ListContainer extends GUI.Rectangle {
         this.root.removeControl(list);
 
         this.scene.updateInstructionCount?.();
-        this.scene.saveProgram?.();
+        //this.scene.saveProgram?.();
     }
 
     // Renvoie la liste d'instructions, si elle est valide (possède un Depart)
@@ -651,7 +651,7 @@ export class ListContainer extends GUI.Rectangle {
         control.topInPixels  = (new_pos.y - centerY) / newParent.scaleY + centerY;
 
         this.scene.updateInstructionCount?.();
-        this.scene.saveProgram?.();
+        //this.scene.saveProgram?.();
     }
 
     private applyDosC(composant: GUI.Container, indent: number, height: number = 10) {
