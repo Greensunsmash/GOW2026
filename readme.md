@@ -30,5 +30,5 @@ Le jeu peut donc être utilisé pour s'initier à la programmation, mais c'est s
 
 **Bon jeu !**
 
-*Pour démarrer, nous vous invitons à lire l'[introduction](/introduction.md)*
+*Pour démarrer, nous vous invitons à lire l'[introduction](/introduction.md).\n*
 *Pour plus d'informations sur tout le contenu proposé, [content](/content.md) est à votre disposition (attention spoilers)*
