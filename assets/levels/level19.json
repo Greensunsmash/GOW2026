@@ -36,11 +36,7 @@
                 "elif"
             ],
             "booleans": [
-                "true",
-                "false",
                 "not",
-                "and",
-                "or",
                 "inf",
                 "sup",
                 "eq"
@@ -96,11 +92,7 @@
                 "elif"
             ],
             "booleans": [
-                "true",
-                "false",
                 "not",
-                "and",
-                "or",
                 "inf",
                 "sup",
                 "eq"
@@ -153,11 +145,7 @@
                 "elif"
             ],
             "booleans": [
-                "true",
-                "false",
                 "not",
-                "and",
-                "or",
                 "inf",
                 "sup",
                 "eq"

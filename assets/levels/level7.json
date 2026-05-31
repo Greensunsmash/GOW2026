@@ -65,6 +65,10 @@
         },
         {
             "nb":2,
+            "begin_dialogs": [
+                {"speaker": "SCIENTIFIQUE", "text":"Tiens, tu auras besoin du bloc \"Pas ... \", cela permet d'inverser des conditions."},
+                {"speaker": "SCIENTIFIQUE", "text":"Par exemple, l'utiliser avec le capteur \"Se trouve sur un débris\" permet de déterminer si on se trouve pas sur un débris."}
+            ],
             "layouts":[
                 [
                     [".",".","."],
@@ -97,11 +101,7 @@
                     "item"
                 ],
                 "booleans": [
-                    "true",
-                    "false",
-                    "not",
-                    "and",
-                    "or"
+                    "not"
                 ],
                 "structures": [
                     "if",
@@ -167,11 +167,7 @@
                     "for"
                 ],
                 "booleans": [
-                    "true",
-                    "false",
-                    "not",
-                    "and",
-                    "or"
+                    "not"
                 ],
                 "start": [
                     "start"
@@ -236,11 +232,7 @@
                     "for"
                 ],
                 "booleans": [
-                    "true",
-                    "false",
-                    "not",
-                    "and",
-                    "or"
+                    "not"
                 ],
                 "start": [
                     "start"

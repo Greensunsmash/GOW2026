@@ -36,11 +36,7 @@
           "if"
         ],
         "booleans": [
-            "true",
-            "false",
             "not",
-            "and",
-            "or",
             "inf",
             "sup",
             "eq"
@@ -102,11 +98,7 @@
           "if"
         ],
         "booleans": [
-            "true",
-            "false",
             "not",
-            "and",
-            "or",
             "inf",
             "sup",
             "eq"
@@ -178,11 +170,7 @@
           "if"
         ],
         "booleans": [
-            "true",
-            "false",
             "not",
-            "and",
-            "or",
             "inf",
             "sup",
             "eq"

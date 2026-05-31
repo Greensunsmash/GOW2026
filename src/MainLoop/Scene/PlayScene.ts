@@ -531,7 +531,7 @@ export class PlayScene extends GameScene { // ;)
             const jinglePromise = SoundManager.playAmbient("success.mp3", false, 1);
             const m = new OneButtonModal(
                 this.advancedTexture,
-                "Félicitations, tu as vaincu cet archipel !",
+                "Félicitations, tu as complété cet archipel !",
                 "Retour à la carte",
                 async () => { 
                     await jinglePromise; 
