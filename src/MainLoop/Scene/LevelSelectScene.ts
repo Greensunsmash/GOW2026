@@ -265,13 +265,13 @@ export class LevelSelectScene extends BaseScene {
                 this.levelPopup.skipBtn.setCallback(async () => {
                     Save.completeLevel(lvl.file);
                     this.levelPopup.toggle();
-                    const lr = new LevelReader();
+                    /*const lr = new LevelReader();
                     await lr.loadLevel(lvl.file);
                     const dialogs: DialogLine[] = lr.getAllDialogs();
                     for (let i = 0; i < dialogs.length; i++) {
                         const dialog = dialogs[i];
                         await RealDialog.show(this.advancedTexture, this, dialog.text, dialog.speaker, (i < dialogs.length - 1));
-                    }
+                    }*/
                     this.fillMap();
                 });
             });
