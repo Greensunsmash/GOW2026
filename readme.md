@@ -2,6 +2,8 @@
 
 ***Contribution de Eloi Rathgeber-Kivits et Gaïa Durand au concours Games on Web 2026 de l'EUR DS4H de l'Université Côte d'Azur*** 
 
+![Cover réalisée par Monjara12](/assets/cover.jpg)
+
 Seule survivante du crash de votre fusée sur une planète inconnue, vous ne vous en êtes pour autant pas sortie indemne.
 Blessée et alitée, vous êtes incapable d'aller réparer la fusée vous-même pour repartir.
 Votre seule chance de vous en sortir : confier la mission à votre robot.
@@ -28,5 +30,5 @@ Le jeu peut donc être utilisé pour s'initier à la programmation, mais c'est s
 
 **Bon jeu !**
 
-*Pour démarrer, nous vous invitons à lire l'[introduction](/introduction.md)*
+*Pour démarrer, nous vous invitons à lire l'[content](/content.md)*
 *Pour plus d'informations sur tout le contenu proposé, [content](/content.md) est à votre disposition (attention spoilers)*
