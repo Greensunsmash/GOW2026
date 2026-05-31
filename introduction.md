@@ -2,6 +2,8 @@
 
 Bienvenue dans cette introduction. Ce fichier a pour but de détailler comment aborder **Marco Robo** selon votre profiL
 
+**Le jeu est disponible à ce lien : [marcorobo.space](https://marcorobo.space)**
+
 ## Comment jouer ##
 
 Nous vous invitons grandement à découvrir le jeu sans spoilers. Toutes les informations nécessaires sont expliquées en temps voulu dedans. Néanmoins, le jeu est plutôt long (2h30 estimées), donc nous avons mis en place une série de mesure afin de pouvoir profiter de tout ce que le jeu a à proposer. Des indices sont à votre disposition dans le jeu si besoin.
