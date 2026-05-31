@@ -4,7 +4,7 @@ Bienvenue dans cette introduction. Ce fichier a pour but de détailler comment a
 
 ## Comment jouer ##
 
-Nous vous invitons grandement à découvrir le jeu sans spoilers. Toutes les informations nécessaires sont expliquées en temps voulu dedans. Néanmoins, le jeu est plutôt long (2h30 estimées), donc nous avons mis en place une série de mesure afin de pouvoir profiter de tout ce que le jeu a à proposer.
+Nous vous invitons grandement à découvrir le jeu sans spoilers. Toutes les informations nécessaires sont expliquées en temps voulu dedans. Néanmoins, le jeu est plutôt long (2h30 estimées), donc nous avons mis en place une série de mesure afin de pouvoir profiter de tout ce que le jeu a à proposer. Des indices sont à votre disposition dans le jeu si besoin.
 
 Nous avons implémenté un bouton permettant de passer les niveaux pour que vous puissiez évoluer plus vite.
 Voici donc les différentes parties qui composent le jeu.
