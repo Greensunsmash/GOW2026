@@ -144,10 +144,7 @@ export class LevelSelectScene extends BaseScene {
                             onReset();
                         }
                     );
-                } else if (kbInfo.event.key === "d") {
-                    this.debugMode = !this.debugMode;
-                    this.fillMap();
-                }
+                } 
             }
         });
 

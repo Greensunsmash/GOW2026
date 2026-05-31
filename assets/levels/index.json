@@ -22,6 +22,6 @@
     {"worldNo": 2, "file": "level19.json", "name": "Trouver sa voie",                       "x": 5700, "y": 3300},
     {"worldNo": 2, "file": "level20.json", "name": "La rencontre",                          "x": 5300, "y": 3600},
 
-    {"worldNo": 3, "file": "level21.json", "name": "La fin",                                "x": 5900, "y": 3900}
+    {"worldNo": 3, "file": "level21.json", "name": "La fin",                                "x": 4800, "y": 3800}
   ]
 }
