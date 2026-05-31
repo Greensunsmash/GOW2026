@@ -78,7 +78,7 @@ export class CDPlaybar extends Container {
     public switchMode(multipleLeaf: boolean) {
         this.multipleLeafMode = multipleLeaf;
     }
-
+    
     public triggerUpdate() {
         const playing = Memory.get().isPlaying();
         const moving = Memory.get().isCurrentlyMoving();

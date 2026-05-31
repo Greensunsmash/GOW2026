@@ -1,5 +1,5 @@
 import * as GUI from "@babylonjs/gui";
-import { Vector2, type IPointerEvent } from "@babylonjs/core";
+import { Vector2 } from "@babylonjs/core";
 import { Colors } from "../../Shared/Colors";
 import type { BaseScene } from "../../MainLoop/Scene/BaseScene";
 import { LevelPopup } from "./LevelPopup";
@@ -8,122 +8,153 @@ export class LevelSelectMap extends GUI.Rectangle {
     private readonly scene: BaseScene;
     private readonly root: GUI.AdvancedDynamicTexture;
     private readonly content: GUI.Rectangle;
-    private width_limit : number;
-    private height_limit : number;
 
-    private isPanning : boolean = false;
+    private readonly mapWidth = 6000;
+    private readonly mapHeight = 4000;
+
+    private isPanning: boolean = false;
+    private startPanX: number = 0;
+    private startPanY: number = 0;
+    private startLeft: number = 0;
+    private startTop: number = 0;
+
     private onPan: (x: number, y: number, scale: number) => void;
 
-    constructor(root: GUI.AdvancedDynamicTexture, scene:BaseScene, onPan: (x: number, y: number, scale: number) => void) {
+    constructor(root: GUI.AdvancedDynamicTexture, scene: BaseScene, onPan: (x: number, y: number, scale: number) => void) {
         super();
         this.scene = scene;
         this.root = root;
-        
+        this.onPan = onPan;
+
+        // Propriétés du conteneur parent (la fenêtre de vue)
         this.width = "100%";
         this.height = "100%";
         this.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
         this.background = "#00000000";
         this.clipChildren = true;
+        this.isPointerBlocker = true; // IMPORTANT : Bloque le clic pour la GUI
 
+        // Le contenu (la carte qui bouge)
         this.content = new GUI.Rectangle();
-        this.content.width = "6000px"; // grand espace de base
-        this.content.height = "4000px";
-        this.content.background = "#ffffff00";//Colors.MapBackground;
-        this.content.color = Colors.MapBackground;
-        this.content.thickness = 8;
+        this.content.width = `${this.mapWidth}px`;
+        this.content.height = `${this.mapHeight}px`;
+        this.content.background = "#ffffff00";
+        this.content.color = Colors.MapBackground || "white";
+        this.content.thickness = 0;
         this.content.cornerRadius = 22;
         this.content.shadowOffsetX = 1;
         this.content.shadowOffsetY = 1;
         this.content.shadowBlur = 7;
         this.content.shadowColor = "#00000040";
-        this.content.scaleX = 0.25;
-        this.content.scaleY = 0.25;
+        
+        // Alignement OBLIGATOIRE au centre pour que le calcul des limites soit parfaitement symétrique
+        this.content.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+        this.content.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+
+        this.content.scaleX = 0.6;
+        this.content.scaleY = 0.6;
+        this.content.leftInPixels = 1070;
+        this.content.topInPixels = -700;
+        
         this.addControl(this.content);
-        this.width_limit = this.content.widthInPixels / 2;
-        this.height_limit = this.content.heightInPixels / 2;
 
-        this.onPan = onPan;
-
-        this.onPointerDownObservable.add((event) => {
+        // -- GESTION DU DRAG (PANNING) VIA LES OBSERVABLES GUI --
+        this.onPointerDownObservable.add((pi) => {
             this.isPanning = true;
-
-            const decal = this.getLocalCoordinates(new Vector2(event.x, event.y)).subtract(new Vector2(this.content.leftInPixels, this.content.topInPixels));
-            const offset = this.getLocalCoordinates(new Vector2(0,0));
-
-            //console.log(this.content.leftInPixels, this.content.topInPixels, decal, offset);
-            this.scene.scene.onPointerMove = (evt: IPointerEvent) => {
-                if (!this.isPanning) return;
-
-                // En gros BabylonJs a eu un très bonne idée. Si tu resize un container, topInPixels et leftInpixels ne changent pas pour autant
-                // Donc il faut se fier a mes variables true_... qui contiennent les vraies coordonées re-calculées
-                // Bien sur tout ça c'est à l'intérieur du Canvas, et c'est pas des pixels réels
-
-                const x_pos = evt.x - decal.x + offset.x;
-                const true_left = x_pos + (this.content.widthInPixels - this.content.widthInPixels*this.content.scaleX)/2;
-                const true_right = x_pos + (this.content.widthInPixels + this.content.widthInPixels*this.content.scaleX)/2;
-
-                // Pour vérifier de pas trop déplacer sur les cotés
-                if (true_left <= this.width_limit && true_right >= this.width_limit) this.content.leftInPixels = x_pos;
-                else if (true_left > this.width_limit) this.content.leftInPixels = this.width_limit - (this.content.widthInPixels - this.content.widthInPixels*this.content.scaleX)/2;
-                else this.content.leftInPixels = this.width_limit - (this.content.widthInPixels + this.content.widthInPixels*this.content.scaleX)/2;
-
-                const y_pos = evt.y - decal.y + offset.y; // Pour vérifier de pas trop déplacer en hauteur
-                const true_up = y_pos + (this.content.heightInPixels - this.content.heightInPixels*this.content.scaleY)/2;
-                const true_down = y_pos + (this.content.heightInPixels + this.content.heightInPixels*this.content.scaleY)/2;
-                if (true_up <= this.height_limit && true_down >= this.height_limit) this.content.topInPixels = y_pos;
-                else if (true_up > this.height_limit) this.content.topInPixels = this.height_limit - (this.content.heightInPixels - this.content.heightInPixels*this.content.scaleY)/2;
-                else this.content.topInPixels = this.height_limit - (this.content.heightInPixels + this.content.heightInPixels*this.content.scaleY)/2;    
-
-                onPan(this.content.leftInPixels, this.content.topInPixels, this.content.scaleX);
-            };
-
-            this.scene.scene.onPointerUp = () => {
-                if (this.isPanning) this.isPanning = false;
-            }
-        }
-
-        )
-
-        const canvas = this.scene.scene.getEngine().getRenderingCanvas();
-        canvas?.addEventListener("wheel", (evt) => {
-            const x = evt.clientX;
-            const y = evt.clientY;
-            const measure = this._currentMeasure;
-            if (x < measure.left || x > measure.left + measure.width) return;
-            if (y < measure.top || y > measure.top + measure.height) return;
-            evt.preventDefault();
-            const delta = evt.deltaY > 0 ? -0.05 : 0.05;
-            this.zoom(delta);
+            this.startPanX = pi.x;
+            this.startPanY = pi.y;
+            this.startLeft = this.content.leftInPixels;
+            this.startTop = this.content.topInPixels;
         });
 
-        //this.addPopup(300,300);
-    }
+        this.onPointerMoveObservable.add((pi) => {
+            if (!this.isPanning) return;
+            
+            // Calcul basique du delta de la souris
+            const dx = pi.x - this.startPanX;
+            const dy = pi.y - this.startPanY;
+            
+            this.content.leftInPixels = this.startLeft + dx;
+            this.content.topInPixels = this.startTop + dy;
+            
+            // On vérifie immédiatement les limites avant d'afficher
+            this.clampContentPosition();
+            this.triggerPanCallback();
+        });
 
-    public zoom(x:number) {
-        if (x > 0) {
-            this.content.scaleX = Math.min(x + this.content.scaleX, 0.6);
-            this.content.scaleY = Math.min(x + this.content.scaleY, 0.6);
-        } else {
-            this.content.scaleX = Math.max(x+this.content.scaleX, 0.2); 
-            this.content.scaleY = Math.max(x+this.content.scaleY, 0.2); 
+        const stopPanning = () => { this.isPanning = false; };
+        this.onPointerUpObservable.add(stopPanning);
+        this.onPointerOutObservable.add(stopPanning);
+
+        // -- GESTION DU ZOOM (WHEEL) --
+        const canvas = this.scene.scene.getEngine().getRenderingCanvas();
+        if (canvas) {
+            canvas.addEventListener("wheel", (evt) => {
+                const measure = this._currentMeasure;
+                if (!measure) return;
+                // Vérifier que la souris est bien dans le rectangle parent
+                if (evt.clientX < measure.left || evt.clientX > measure.left + measure.width) return;
+                if (evt.clientY < measure.top || evt.clientY > measure.top + measure.height) return;
+                
+                evt.preventDefault();
+                const delta = evt.deltaY > 0 ? -0.05 : 0.05;
+                this.zoom(delta);
+            }, { passive: false });
         }
 
-        // On ajuste la position au cas où
+        // On force un alignement dès que la GUI a calculé sa taille d'écran réelle
+        this.scene.scene.onBeforeRenderObservable.addOnce(() => {
+            this.clampContentPosition();
+            this.triggerPanCallback();
+        });
+    }
 
-        const true_left = this.content.leftInPixels + (this.content.widthInPixels - this.content.widthInPixels*this.content.scaleX)/2;
-        const true_right = this.content.leftInPixels + (this.content.widthInPixels + this.content.widthInPixels*this.content.scaleX)/2;
-        const true_up = this.topInPixels + (this.content.heightInPixels - this.content.heightInPixels*this.content.scaleY)/2;
-        const true_down = this.topInPixels + (this.content.heightInPixels + this.content.heightInPixels*this.content.scaleY)/2;
+    private clampContentPosition(): void {
+        if (!this._currentMeasure) return; // Sécurité si la GUI n'est pas encore rendue
 
-        // Pour vérifier de pas trop déplacer sur les cotés
-        if (true_left > this.width_limit) this.content.leftInPixels = this.width_limit - (this.content.widthInPixels - this.content.widthInPixels*this.content.scaleX)/2;
-        else if (true_right < this.width_limit) this.content.leftInPixels = this.width_limit - (this.content.widthInPixels + this.content.widthInPixels*this.content.scaleX)/2;
+        const viewportWidth = this._currentMeasure.width;
+        const viewportHeight = this._currentMeasure.height;
+
+        const currentScale = this.content.scaleX;
+        const scaledWidth = this.mapWidth * currentScale;
+        const scaledHeight = this.mapHeight * currentScale;
+
+        // La formule magique : maxLimit est la distance max qu'on peut s'éloigner du centre
+        let maxLeft = (scaledWidth - viewportWidth) / 2;
+        let maxTop = (scaledHeight - viewportHeight) / 2;
+
+        // Si le contenu est plus petit que l'écran (ne devrait pas arriver avec la protection de zoom)
+        // on bloque la valeur à 0 pour le forcer à rester centré.
+        if (maxLeft < 0) maxLeft = 0;
+        if (maxTop < 0) maxTop = 0;
+
+        // Application stricte des limites
+        this.content.leftInPixels = Math.max(-maxLeft, Math.min(maxLeft, this.content.leftInPixels));
+        this.content.topInPixels = Math.max(-maxTop, Math.min(maxTop, this.content.topInPixels));
+    }
+
+    public zoom(delta: number) {
+        if (!this._currentMeasure) return;
+
+        const viewportWidth = this._currentMeasure.width;
+        const viewportHeight = this._currentMeasure.height;
+
+        // On calcule le zoom minimum absolu pour ne jamais voir les bords noirs
+        const minScaleX = viewportWidth / this.mapWidth;
+        const minScaleY = viewportHeight / this.mapHeight;
+        const absoluteMinScale = Math.max(minScaleX, minScaleY, 0.4); 
         
-        if (true_up > this.height_limit) this.content.topInPixels = this.height_limit - (this.content.heightInPixels - this.content.heightInPixels*this.content.scaleY)/2;
-        else if (true_down < this.height_limit) this.content.topInPixels = this.height_limit - (this.content.heightInPixels + this.content.heightInPixels*this.content.scaleY)/2;
+        const maxScale = 1.0; // Zoom max (100% de la texture)
 
-        this.onPan(this.content.leftInPixels, this.content.topInPixels, this.content.scaleX);
+        let newScale = this.content.scaleX + delta;
+        newScale = Math.max(absoluteMinScale, Math.min(maxScale, newScale));
 
+        this.content.scaleX = newScale;
+        this.content.scaleY = newScale;
+
+        // Après chaque changement de zoom, la taille change, donc on doit revérifier les bords
+        this.clampContentPosition();
+        this.triggerPanCallback();
     }
 
     addPopup(x: number, y: number, name: string, callback: () => void) {
@@ -133,11 +164,15 @@ export class LevelSelectMap extends GUI.Rectangle {
         this.content.addControl(popup);
     }
 
-
-    forceTriggerCallback() {
-        this.onPan(this.content.leftInPixels, this.content.topInPixels, this.content.scaleX);
+    private triggerPanCallback() {
+        if (this.onPan) {
+            this.onPan(this.content.leftInPixels, this.content.topInPixels, this.content.scaleX);
+        }
     }
 
-    // GETTERS
-    public getContentRoot() : GUI.Rectangle {return this.content;}
+    public forceTriggerCallback() {
+        this.triggerPanCallback();
+    }
+
+    public getContentRoot(): GUI.Rectangle { return this.content; }
 }

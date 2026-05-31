@@ -69,6 +69,7 @@ export class Memory {
         this.current_instruction = undefined;
         this.ran = false;
         this.ended = false;
+        this.currentlyMoving = false;
 
         this.gameMode = "NORMAL";
         this.gameModeStack = [];

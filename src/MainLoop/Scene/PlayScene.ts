@@ -487,6 +487,7 @@ export class PlayScene extends GameScene { // ;)
         await this.loadLeaf(0);
 
         this.toolbox.clear();
+        this.memory.clear();
         this.blockCount = 0;
         //this.ctx = new ExecutionContext(this.level.(), this);
         this.levelReader.setupToolbox(index, this.toolbox, this.ctx, this);
@@ -567,7 +568,7 @@ export class PlayScene extends GameScene { // ;)
         await Promise.all([
             this._drh.loadSingleAsset("robot", "custom/robo.glb"),
 
-            //this._drh.loadSingleAsset("ground", "grasscube.glb"),
+            //this._drh.loadSingleAssetf("ground", "grasscube.glb"),
             this._drh.loadSingleAsset("sand", "blockbits/sand.glb"),
             this._drh.loadSingleAsset("grass", "platformkit/block-grass.glb"),
             this._drh.loadSingleAsset("cursed", "custom/cursedgrd.glb"),
@@ -1089,5 +1090,6 @@ export class PlayScene extends GameScene { // ;)
         console.log("playscene dispose called");
         window.clearInterval(this.saveInterval);
         this.saveProgram();
+        this.memory.clear();
     }
 }

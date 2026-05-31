@@ -1,5 +1,5 @@
-import { ArcRotateCamera, Color3, DirectionalLight, Engine, KeyboardEventTypes, MeshBuilder, PBRMaterial, Texture, Vector3 } from "@babylonjs/core";
-import { INTRO_LEVELS, LayerMasks } from "../../Shared/Constants";
+import { AbstractMesh, ArcRotateCamera, Color3, DirectionalLight, DynamicTexture, Engine, KeyboardEventTypes, MeshBuilder, PBRMaterial, ShadowGenerator, Texture, TransformNode, Vector3 } from "@babylonjs/core";
+import { ASSETS_ROOT, INTRO_LEVELS, LayerMasks } from "../../Shared/Constants";
 import { LevelReader, type DialogLine, type LevelIndexEntry } from "../../Environment/LevelReader";
 import { BaseScene } from "./BaseScene";
 import { Colors } from "../../Shared/Colors";
@@ -7,7 +7,7 @@ import { LevelSelectMap } from "../../MRGUI/levelsel/LevelSelectMap";
 import { BaseButton } from "../../MRGUI/buttons/BaseButton";
 import { LevelPopup } from "../../MRGUI/levelsel/LevelPopup";
 import { ArchipelTrigger } from "../../MRGUI/buttons/ArchipelTrigger";
-import { Control, Rectangle, TextBlock } from "@babylonjs/gui";
+import { Control, Rectangle, TextBlock, Image } from "@babylonjs/gui";
 import { Save } from "../../Shared/Save";
 import { LevelCount } from "../../MRGUI/levelsel/LevelCount";
 import { RealDialog } from "../../MRGUI/windows/RealDialog";
@@ -15,6 +15,7 @@ import { TwoButtonModal } from "../../MRGUI/windows/TwoButtonsModal";
 import { SoundManager } from "../../Shared/Sounds";
 import { GreyBlocker } from "../../MRGUI/misc/GreyBlocker";
 import { OneButtonModal } from "../../MRGUI/windows/OneButtonModal";
+import { AssetLibrary } from "../../Shared/AssetLibrary";
 
 export class LevelSelectScene extends BaseScene {
     private static firstOpen = true;
@@ -29,9 +30,14 @@ export class LevelSelectScene extends BaseScene {
     private onLevelSelect: (levelName:string) => void;
     private levelIndex: LevelIndexEntry[];
 
+    private drh: AssetLibrary;
+    private sun: DirectionalLight;
+    private shadowGenerator: ShadowGenerator;
+
     constructor(engine: Engine) {
         super(engine);
         this.scene.clearColor = new BABYLON.Color4(0, 0, 0, 1);
+        this.drh = new AssetLibrary(this);
     }
 
     async init(onLevelSelect: (levelName: string) => Promise<void>, onReset: () => void) {
@@ -43,19 +49,22 @@ export class LevelSelectScene extends BaseScene {
         this.uiCamera = new ArcRotateCamera("uiCamera", Math.PI/2, Math.PI/3, 10, Vector3.Zero(), this.scene);
         this.uiCamera.layerMask = LayerMasks.UI_ONLY;
 
-        this.waterCamera = new ArcRotateCamera("waterCamera", Math.PI/2, 20 * (Math.PI / 180) /*deg->rad*/, 50, Vector3.Zero(), this.scene);
+        this.waterCamera = new ArcRotateCamera("waterCamera", Math.PI/2, 10 * (Math.PI / 180) /*deg->rad*/, 50, Vector3.Zero(), this.scene);
         this.waterCamera.layerMask = LayerMasks.SCENE_ONLY;
 
-        const sun = new DirectionalLight("sun", new Vector3(0.5, -1, 0.5), this.scene);
+        const sun = new DirectionalLight("sun", new Vector3(-0.5, -1, -0.5), this.scene);
         //sun.layerMask = LayerMasks.SCENE_ONLY;
         sun.diffuse = new Color3(1.0, 0.98, 0.9); // Un joli blanc cassé un peu chaud
         sun.intensity = 10;
         sun.position = new Vector3(0, 10, 0);
+        sun.shadowFrustumSize = 100;
+        this.sun = sun;
 
         this.scene.activeCameras = [];
         this.scene.activeCameras.push(this.waterCamera);
         this.scene.activeCameras.push(this.uiCamera);
 
+        this.setupShadows();
         await this.fillBelowMap();
 
 
@@ -104,6 +113,9 @@ export class LevelSelectScene extends BaseScene {
                 }
             }
         );
+        
+
+        //this.setupFogBackground();
         this.advancedTexture.addControl(this.levelMap);
         this.advancedTexture.addControl(this.levelPopup);
 
@@ -112,8 +124,9 @@ export class LevelSelectScene extends BaseScene {
         if (this.levelIndex.length <= 0) {
             throw new Error("cannot fill level list: level index (index.json) is empty");
         }
-
         await this.fillMap();
+        
+        this.setupFogOfWar();
 
         this.createTitle();
         
@@ -218,20 +231,20 @@ export class LevelSelectScene extends BaseScene {
 
 
         waterMat.albedoColor = new Color3(0.01, 0.05, 0.08);
-        waterMat.roughness = 0.02;
+        waterMat.roughness = 0.05;
         waterMat.metallic = 0.0;
         waterMat.alpha = 0.75;
         
         const normalMap = new Texture("assets/textures/waterMap.png", this.scene);
-        normalMap.uScale = 16;
-        normalMap.vScale = 16;
+        normalMap.uScale = 24;
+        normalMap.vScale = 24;
 
         waterMat.bumpTexture = normalMap;
         waterMat.bumpTexture.level = 0.4;
 
         const foamTex = new Texture("assets/textures/waterMap.png", this.scene);
-        foamTex.uScale = 20;
-        foamTex.vScale = 20;
+        foamTex.uScale = 40;
+        foamTex.vScale = 40;
 
         waterMat.emissiveTexture = foamTex;
         waterMat.emissiveColor = new Color3(0, 0, 0);
@@ -240,7 +253,7 @@ export class LevelSelectScene extends BaseScene {
         ground.material = waterMat;
         ground.layerMask = LayerMasks.SCENE_ONLY;
         ground.receiveShadows = true;
-        ground.position.y = 0.5;
+        ground.position.y = 0;
 
         const normalTex = waterMat.bumpTexture as Texture;
         this.scene.onBeforeRenderObservable.add(() => {
@@ -251,7 +264,97 @@ export class LevelSelectScene extends BaseScene {
         });
     }
 
+
+    private setupFogOfWar(): void {
+        const width = 6000;
+        const height = 4000;
+
+        const fogTexture = new DynamicTexture(
+            "fogOfWar",
+            { width, height },
+            this.scene,
+            true
+        );
+
+        fogTexture.hasAlpha = true;
+
+        const ctx = fogTexture.getContext();
+
+        // Brouillard noir semi-transparent
+        ctx.clearRect(0, 0, width, height);
+
+        ctx.fillStyle = "rgba(0,0,0,0.85)";
+        ctx.fillRect(0, 0, width, height);
+
+        // Découpe des zones révélées
+        ctx.globalCompositeOperation = "destination-out";
+
+        for (const lvl of this.levelIndex) {
+
+            if (!Save.isCompleted(lvl.file)) {
+                continue;
+            }
+
+            const x = lvl.x ?? width * 0.5;
+            const y = height - (lvl.y ?? 0);
+
+            const radius = 1000;
+
+            const gradient = ctx.createRadialGradient(
+                x, y, 0,
+                x, y, radius
+            );
+
+            gradient.addColorStop(0.0, "rgba(0,0,0,1)");
+            gradient.addColorStop(1.0, "rgba(0,0,0,0)");
+
+            ctx.fillStyle = gradient;
+
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        ctx.globalCompositeOperation = "source-over";
+
+        fogTexture.update();
+
+        // Conversion en image GUI
+        const dataUrl = ctx.canvas.toDataURL();
+
+        const fogImage = new Image("fog", dataUrl);
+
+        fogImage.width = "100%";
+        fogImage.height = "100%";
+        fogImage.stretch = Image.STRETCH_FILL;
+        fogImage.isHitTestVisible = false;
+
+        this.levelMap.getContentRoot().addControl(fogImage);
+
+        // Debug (optionnel)
+        // document.body.appendChild(ctx.canvas);
+}
+    private setupShadows() {
+        this.shadowGenerator = new ShadowGenerator(2048, this.sun);
+    
+        //this.shadowGenerator.useBlurExponentialShadowMap = true;
+        this.shadowGenerator.useKernelBlur = true;
+        this.shadowGenerator.blurKernel = 32;
+        this.shadowGenerator.usePoissonSampling = true;
+        //this.shadowGenerator.blurScale = 2;
+        this.shadowGenerator.bias = 0.001;
+        this.shadowGenerator.normalBias = 0.02;
+        this.shadowGenerator.depthScale = 25.0;
+        //this.shadowGenerator.useContactHardeningShadow = true;
+        //this.shadowGenerator.contactHardeningLightSizeUVRatio = 0.025;
+    }
+
+    public addShadowCaster(mesh: AbstractMesh) {
+        this.shadowGenerator.addShadowCaster(mesh);
+    }
+
     async fillMap() {
+
         this.archipelBtns = [];
         this.levelMap.getContentRoot().clearControls();
         let x = -2000;
@@ -269,13 +372,15 @@ export class LevelSelectScene extends BaseScene {
             if (lvl.name === "")
                 lvl.name = lvl.file;
 
-            const btn = new ArchipelTrigger(lvl.name.replace(" ", "") + "-popupbtn");
+
+            const btn = new ArchipelTrigger(lvl.file);
             btn.setCallback(() => {
                 this.archipelBtns.filter(b => b !== btn).map(t => t.setUnselected());
                 this.levelPopup.switchLevelShown(lvl.file, lvl.name);
                 this.levelPopup.btn.setCallback(async () => await this.onLevelSelect(lvl.file));
                 this.levelPopup.skipBtn.setCallback(async () => {
                     Save.completeLevel(lvl.file);
+                    this.scene.getEngine().displayLoadingUI();
                     this.levelPopup.toggle();
                     /*const lr = new LevelReader();
                     await lr.loadLevel(lvl.file);
@@ -284,7 +389,9 @@ export class LevelSelectScene extends BaseScene {
                         const dialog = dialogs[i];
                         await RealDialog.show(this.advancedTexture, this, dialog.text, dialog.speaker, (i < dialogs.length - 1));
                     }*/
-                    this.fillMap();
+                    await this.fillMap();
+                    this.setupFogOfWar();
+                    setTimeout(() => this.scene.getEngine().hideLoadingUI(), 2000);
                 });
             });
             if (Save.isCompleted(lvl.file))
