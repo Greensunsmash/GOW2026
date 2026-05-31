@@ -542,7 +542,6 @@ export class ListContainer extends GUI.Rectangle {
     // Permet de rassembler 2 listes
     mergeList(list: ListContainer) {
         if (this === list) {
-            console.log("bah wtf");
             return;
         }
         let new_list = list.getList().filter((x) => x instanceof InstructionContainer);
@@ -655,7 +654,6 @@ export class ListContainer extends GUI.Rectangle {
     }
 
     private applyDosC(composant: GUI.Container, indent: number, height: number = 10) {
-        console.log("apply dos C called on " + composant.name);
 
         const ancien = composant.children.find(c => c.name === "morceau_dos_C");
         if (ancien) {

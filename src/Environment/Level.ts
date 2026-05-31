@@ -85,7 +85,6 @@ export class Level {
                             this.meshes.push(this.createCursedGround(pos));
                             break;
                         case State.Scientifique:
-                            console.log("FOUND A SCIENTIST ! ");
                             this.otherEntities.push(new Scientist(this.drh, this, gridPos, 2));
                             break;
                         case State.LeGrandSirC:

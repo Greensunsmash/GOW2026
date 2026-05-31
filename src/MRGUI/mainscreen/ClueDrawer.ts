@@ -80,7 +80,7 @@ export class ClueDrawer extends Rectangle {
     }
 
     toggle() {
-        console.log("clue drawer toggled!");
+        //console.log("clue drawer toggled!");
         this.isVisible = !this.isVisible;
     }
 
@@ -129,7 +129,6 @@ export class ClueDrawer extends Rectangle {
         this.cluesPanel.removeControl(this.btn);
 
         if (this.lastClueIndex + 1 >= this.clues.length) {
-            console.warn("le bouton devrait disparaitre !");
             return;
         }
 

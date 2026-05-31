@@ -70,7 +70,7 @@ export class ExecutionContext {
 
     // BOUCLE S'EXECUTANT A CHAQUE TICK DE JEU
     public async nextTick(robotIntention?: GridPoint, instant?: boolean) {
-        console.log("[TICKS] ENTERING NEXT TICK.");
+        //console.log("[TICKS] ENTERING NEXT TICK.");
 
         let robotDead: boolean = false;
         let deadFromVoid : boolean = false;
@@ -92,11 +92,11 @@ export class ExecutionContext {
         if (this.level.isObstacle(robotIntention)) {
             if (this.memory.getGameMode() === "PIGMODE") {
                 // il rebondit
-                console.log("[TICKS] robot bouncing");
+                //("[TICKS] robot bouncing");
                 robotIntention = this.robot.getVisualGridPos();
                 robotBounce = true;
             } else {
-                console.log("[TICKS] robot getting into an obstacle => dead.");
+                //console.log("[TICKS] robot getting into an obstacle => dead.");
                 robotDead = true; 
             }
         }
@@ -104,7 +104,7 @@ export class ExecutionContext {
         if (this.memory.getGameMode() === "PIGMODE") {
             for (const mob of mobs) {
                 if (mob instanceof Pig && GridUtils.equals(mob.getVisualGridPos(), robotIntention)) { 
-                    console.log("[TICKS] robot bouncing because of predicted collision with pig");
+                    //console.log("[TICKS] robot bouncing because of predicted collision with pig");
                     robotIntention = this.robot.getVisualGridPos();
                     robotBounce = true;
                 }
@@ -133,7 +133,6 @@ export class ExecutionContext {
                     this.scene.onGoalReached();
                     return;
                 }
-                console.warn("[TICKS] Deadly robot collision !");
                 robotDead = true;
             }
         }
@@ -141,7 +140,6 @@ export class ExecutionContext {
         
         // Si le robot est déjç mort, inutile d'aller plus loin n'est-il pas?
         if (robotDead) {
-            console.warn("[TICKS] ROBOT DEAD!!!");
             if (deadFromVoid) this.scene.onRobotDead("Le robot est tombée dans le vide");
             else this.scene.onRobotDead();
             return;
@@ -160,7 +158,7 @@ export class ExecutionContext {
                 return {type: "WALL"};
 
             if (this.level.isVoidBelow(intention.nextPos)) {
-                console.log("[TICKS] in checkcoll : void collision");
+                //console.log("[TICKS] in checkcoll : void collision");
                 return {type: "VOID"};
             }
 
@@ -211,7 +209,7 @@ export class ExecutionContext {
                         // Tu ne bouges pas.
                         mobInt.nextPos = mob.getVisualGridPos();
                     } else if (collision.type === "VOID") {
-                        console.log("[TICKS] mob dead : ", mob);
+                        //console.log("[TICKS] mob dead : ", mob);
                         mobInt.deadDuringTick = true;
                     } else if (collision.type === "OTHERMOB_SAMEDEST") {
                         /*const otherMobInt = intentions.get(collision);
@@ -258,7 +256,6 @@ export class ExecutionContext {
         // 4 : 2eme check collision robot/cochons
         for (const mob of mobs) {
             if (GridUtils.equals(mob.getVisualGridPos(), this.robot.getVisualGridPos())) { 
-                console.warn("[TICKS] Deadly robot collision !");
                 this.scene.onRobotDead();
                 return;
             }
@@ -291,7 +288,7 @@ export class ExecutionContext {
         }
 
         this.totalTicks++;
-        console.log("total ticks passed are now ", this.totalTicks);
+        //console.log("total ticks passed are now ", this.totalTicks);
 
         if (this.ticksToSurvive && this.totalTicks >= this.ticksToSurvive) {
             this.scene.onGoalReached();
@@ -300,7 +297,7 @@ export class ExecutionContext {
         
         this.scene.modeUpdate();
 
-        console.log("[TICKS] TICK ENDED.");
+        //console.log("[TICKS] TICK ENDED.");
     }
 
     public async prevTick(instant?: boolean) {
@@ -322,7 +319,7 @@ export class ExecutionContext {
                 this.ticksToSurvive = goal.args.ticks;
             }
             if (goal.name === "kill") {
-                console.log("setting goal to kill");
+                //console.log("setting goal to kill");
                 this.mustKillCirce = true;
             }
         }

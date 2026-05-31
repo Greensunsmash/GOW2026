@@ -110,43 +110,6 @@ export class PlayScene extends GameScene { // ;)
 
         await this.initGameScene(levelName);
 
-        this.scene.onKeyboardObservable.add((kbInfo) => {
-            if (kbInfo.type == KeyboardEventTypes.KEYUP) {
-                console.log("key event", kbInfo.event.key);
-                if (kbInfo.event.key === "l") {
-                    console.log("nextleaf");
-                    this.nextLeaf();
-                } else if (kbInfo.event.key === "p") {
-                    console.log("prevleaf");
-                    this.previousLeaf();
-                } else if (kbInfo.event.key == "ArrowRight") {
-                    console.log("right");
-                    this.nextIsland();
-                } else if (kbInfo.event.key == "ArrowLeft") {
-                    console.log("left");
-                    this.previousIsland();
-                } else if (kbInfo.event.key == "b") {
-                    console.log("stepback");
-                    this.stepBack();
-                } else if (kbInfo.event.key == "f") {
-                    console.log("nextstep");
-                    this.nextStep();
-                } else if (kbInfo.event.key == "z") {
-                    console.log("zoom in");
-                    this.workspace.zoom(0.1);
-                } else if (kbInfo.event.key == "a") {
-                    console.log("zoom out");
-                    this.workspace.zoom(-0.1);
-                } else if (kbInfo.event.key == "o") {
-                    console.log("pause");
-                    this.pause();
-                } else if (kbInfo.event.key == "r") {
-                    console.log("reset");
-                    this.reset();
-                }
-            }
-        });
-
         this.onLevelGaveup = onLevelGaveup;
         this.onLevelWon = onLevelWon;
     }
@@ -212,7 +175,7 @@ export class PlayScene extends GameScene { // ;)
         let ground = MeshBuilder.CreateGround("ground", { width: 512, height: 512, subdivisions: 32 }, this.scene);
 
         const waterMat = new PBRMaterial("waterMat", this.scene);
-        console.log("plugins on material:", (waterMat as any).pluginManager);
+        //console.log("plugins on material:", (waterMat as any).pluginManager);
 
 
         waterMat.albedoColor = new Color3(0.01, 0.05, 0.08);
@@ -437,7 +400,7 @@ export class PlayScene extends GameScene { // ;)
         let next = this.currentLeaf + 1;
 
         if (next >= this.currentIslandMap.length) {
-            console.log("Dernière étape atteinte. manual : " + manual);
+            //console.log("Dernière étape atteinte. manual : " + manual);
             if (!manual) {
                 const endDialogs = this.levelReader.getEndDialog(this.currentIsland);
                 if (endDialogs) {
@@ -538,7 +501,7 @@ export class PlayScene extends GameScene { // ;)
         const next = this.currentIsland + 1;
 
         if (next >= (this.levelReader as any).structure.length) {
-            console.log("Dernière île atteinte");
+            //console.log("Dernière île atteinte");
             const jinglePromise = SoundManager.playAmbient("success.mp3", false, 1);
             const m = new OneButtonModal(
                 this.advancedTexture,
@@ -610,14 +573,14 @@ export class PlayScene extends GameScene { // ;)
 
     public run(onlyOneStep: boolean = false, skip : boolean = false, automaticRun: boolean = false) { // Si skip est vrai, pas d'animation
         if (!automaticRun && this.memory.isCurrentlyMoving()) {
-            console.log("not running.");
+            //console.log("not running.");
             return;
         }
 
         this.memory.clear();
         
         //console.log("Avant le run");
-        Memory.print()
+        //Memory.print()
         this.clearHighlights();
         this.level.reinitLevel();
         this.canRun = true;
@@ -640,7 +603,7 @@ export class PlayScene extends GameScene { // ;)
 
         if (start_block) {
             const grp = start_block.getInstructionGroup();
-            console.log(grp);
+            //console.log(grp);
             if (grp && grp.onLaunch()) {
                 grp.execute([]);
                 this.memory.setRan();
@@ -684,7 +647,6 @@ export class PlayScene extends GameScene { // ;)
 
     public nextStep(skip : boolean = false){
         if (this.ctx && this.ctx.getRobot().isDead()) { 
-            console.warn("cant forwar dead !");
             return;
         }
         this.memory.skip = skip;
@@ -714,7 +676,7 @@ export class PlayScene extends GameScene { // ;)
     public async dryAttempt() {
         //console.log("scene.dryAttempt");
         this.dryAttemptMode = true;
-        console.log("dryAttempt : " + this.dryAttemptMode);
+        //console.log("dryAttempt : " + this.dryAttemptMode);
         await this.run();
     }
 
@@ -723,7 +685,7 @@ export class PlayScene extends GameScene { // ;)
     }
  
     public async onGoalReached() {
-        console.log("dry attempt mode " + this.dryAttemptMode);
+        //console.log("dry attempt mode " + this.dryAttemptMode);
         const continuousMode = this.memory.isPlaying();
         this.stopRun();
         this.btmBar.triggerUpdate();
@@ -739,7 +701,7 @@ export class PlayScene extends GameScene { // ;)
             return;
         }
         if (this.isDryAttempt() && this.currentIslandMap.length >= 2) {
-            console.log("dry attempt success");
+            //console.log("dry attempt success");
             new TwoButtonModal(
                 this.advancedTexture,
                 "Bravo ! On essaie sur toutes les étapes ?",
@@ -835,8 +797,8 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public saveProgram() {
-        if (this.isRestoring) {console.log("skipping save"); return;}
-        console.log("saving program");
+        if (this.isRestoring) {return;}
+        //console.log("saving program");
         const lists = [...this.workspace.getContentRoot().children];
         const data: ProgramData = [];
         for (const  child of lists) {
@@ -849,7 +811,7 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public restoreProgram(manual: boolean = false) {
-        if (this.isRestoring) {console.log("skipping restore"); return;}
+        if (this.isRestoring) {return;}
         let saved: IslandSaveData | undefined = undefined;
         if (manual) {
             if (this.currentIsland - 1 >= 0 ){
@@ -864,7 +826,7 @@ export class PlayScene extends GameScene { // ;)
                 new OneButtonModal(this.advancedTexture, "Aucun programme à récupérer", "OK", () => {});
                 return;
             } else {
-                return console.info("no no program ( looked for ", this.loadedFile, " at island ", this.currentIsland, " found ", saved);
+                return;
             }
         }
         const program = saved.program;
@@ -873,11 +835,11 @@ export class PlayScene extends GameScene { // ;)
                 new OneButtonModal(this.advancedTexture, "Aucun programme à récupérer", "OK", () => {});
                 return;
             } else {
-                return console.info("island data found but no program ( looked for ", this.loadedFile, " at island ", this.currentIsland, " found ", saved);
+                return ;
             }
         }
         this.isRestoring = true;
-        console.log("restoring program");
+        //console.log("restoring program");
 
         try {
 
@@ -931,7 +893,7 @@ export class PlayScene extends GameScene { // ;)
             this.toolbox.addVariable(blockData.variable ?? "PB", this, this.ctx, true /*callFromRestore*/);
             blockInstance = new VarValueContainer(blockData.variable ?? "PB", this.leftPanel, this.workspace.getContentRoot(), this);
         } else {
-            console.log("using factory to build ", blockData.type);
+            //console.log("using factory to build ", blockData.type);
             const factory = allFactories[blockData.type];
             if (!factory) {
                 console.error(`zerou factory pour le type de bloc: ${blockData.type}`);
@@ -1087,7 +1049,7 @@ export class PlayScene extends GameScene { // ;)
     public getCtx() { return this.ctx; }
 
     public dispose() {
-        console.log("playscene dispose called");
+        //console.log("playscene dispose called");
         window.clearInterval(this.saveInterval);
         this.saveProgram();
         this.memory.clear();

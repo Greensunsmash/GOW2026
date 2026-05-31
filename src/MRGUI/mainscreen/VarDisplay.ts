@@ -69,12 +69,12 @@ export class VarDisplay extends Rectangle {
     }
 
     updateFromMemory() {
-        console.log("vardisp update triggered");
+        //console.log("vardisp update triggered");
         const mem = Memory.get();
         const allValues = mem.getAllValues();
-        console.log("received all these values : ", allValues);
+        //console.log("received all these values : ", allValues);
         const varNames = [...allValues.keys()];
-        console.log("var names ", varNames);
+        //console.log("var names ", varNames);
         const same = varNames.length === this.lastVars.length &&
                 varNames.every(v => this.lastVars.includes(v));
         let willPunch = false;

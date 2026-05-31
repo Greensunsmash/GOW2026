@@ -19,7 +19,6 @@ export class WaterFoamPlugin extends MaterialPluginBase {
 
     constructor(material: PBRMaterial) {
         super(material, "WaterFoam", 100, {});
-        console.log("WaterFoamPlugin loaded");
     }
 
     set foamTexture(tex: Texture) {
@@ -47,7 +46,6 @@ export class WaterFoamPlugin extends MaterialPluginBase {
     }
 
     prepareDefines(defines: any): void {
-        console.log("prepares defined call");
         defines.WATERFOAM = !!this._foamTexture;
     }
 
@@ -90,7 +88,6 @@ export class WaterFoamPlugin extends MaterialPluginBase {
     }
 
     isEnabled(): boolean {
-        console.log("FOAM isEnabled CHECK");
         return true;
     }
 }

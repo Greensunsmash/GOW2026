@@ -33,7 +33,6 @@ export class Pour extends Group implements Executable {
             if (this.max_loop_nb[this.max_loop_nb.length-1] == 0) this.jump_next();
             else this.next();
         }
-        else console.log("oups");
     }
 
     public next(): void {

@@ -32,7 +32,7 @@ export class QuitButton extends Button {
         this.zIndex = 100;
 
         this.onPointerUpObservable.add(() => {
-            console.log("abandon :(..");
+            //console.log("abandon :(..");
             callback();
         });
 

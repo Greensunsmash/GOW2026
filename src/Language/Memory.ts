@@ -102,7 +102,7 @@ export class Memory {
                 else this.booleans.set(name, val);
             }
         }
-        console.log("setVriable, Memory");
+        //console.log("setVriable, Memory");
         this.onVarUpdate?.();
     }
     public getVariableValue(name: string): Value {

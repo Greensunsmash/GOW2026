@@ -9,7 +9,7 @@ export class Scientist extends Mob {
 
     constructor(drh : AssetLibrary, level : Level, gridPos : GridPoint, facingIndex: number) {
         super(drh, "sci", level, gridPos);
-        console.log("creating a scientist !");
+        //console.log("creating a scientist !");
         //(this.mesh as any).animations.find(a => a.name.includes("dance"))?.play(true);
         this.facingIndex = facingIndex;
         this.initRotation = facingIndex;

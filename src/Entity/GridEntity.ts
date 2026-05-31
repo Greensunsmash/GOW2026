@@ -152,9 +152,7 @@ export abstract class GridEntity {
     }
 
     async visualTurnLeft() {
-        console.warn("visualturnleft");
         if (this._isMoving) return;
-        console.warn("visualturnleft passed _isMoving test");
         this.facingIndex = (this.facingIndex - 1 + 4) % 4;
         await this.animateRotation(-Math.PI / 2);
     }

@@ -87,7 +87,6 @@ export abstract class Group extends Bloc {
     }
     getBaseInstruction():Executable{
         const i = this.next_inst.length - 1;
-        console.log(this.list, i, this.next_inst);
         if (this.list[this.next_inst[i]-1].back_listeners.length === 0 && this.list[this.next_inst[i]-1].next_listeners.length === 0) {
             this.list[this.next_inst[i]-1].next_listeners.push(this.next);
             this.list[this.next_inst[i]-1].back_listeners.push(this.back);

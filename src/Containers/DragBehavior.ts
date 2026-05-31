@@ -64,7 +64,7 @@ export class DragBehavior {
         };
 
         // UP
-        this.scene.scene.onPointerUp = () => {console.log("release"); this.stopDrag();};
+        this.scene.scene.onPointerUp = () => {this.stopDrag();};
     }
 
     // Arrêt du drag

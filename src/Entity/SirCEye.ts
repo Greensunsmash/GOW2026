@@ -14,7 +14,7 @@ export class SirCEye extends Interactable {
     }
 
     override async onInteract(entity: GridEntity) {
-        console.log("entering sirceye oninteract");
+        //console.log("entering sirceye oninteract");
         // une entité est sur un oeil de sir c, est ce le robot ?
         if (!(entity instanceof MarcoBozo))
             return;

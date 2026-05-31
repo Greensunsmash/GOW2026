@@ -327,7 +327,7 @@ export class OutilsBox extends Rectangle {
         // qui nous servira à construire le factice
         const realBlock = buildBlock(newRoot, newRoot);
         if (!realBlock) {
-            console.log("block not build");
+            //console.log("block not build");
             return;
         }
 
@@ -443,7 +443,7 @@ export class OutilsBox extends Rectangle {
     }
 
     public setBlockLimit(limit: number | null) {
-        console.log("tb block limit set to " + limit);
+        //console.log("tb block limit set to " + limit);
         this.blockLimit = limit;
     }
 

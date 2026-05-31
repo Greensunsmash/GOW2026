@@ -15,7 +15,6 @@ export class TurnLeftInstruction extends Instruction {
         const memory = Memory.get();
 
         memory.setCurrentlyMoving(true);
-        console.warn("TLI execute");
         this.gameModeAtExecute = memory.getGameMode();
         if (this.gameModeAtExecute === "PIGMODE") {
             await this.ctx.nextTick(this.ctx.getRobot().getNextPosIntention("forward"), memory.skip);

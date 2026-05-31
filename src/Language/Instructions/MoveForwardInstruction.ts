@@ -23,9 +23,8 @@ export class MoveForwardInstuction extends Instruction {
 
         memory.setCurrentlyMoving(false);
 
-        console.log("isPlaying:", Memory.get().isPlaying(), "currentlyMoving:", memory.isCurrentlyMoving());
+        //console.log("isPlaying:", Memory.get().isPlaying(), "currentlyMoving:", memory.isCurrentlyMoving());
         if (Memory.get().isPlaying()) this.next();
-        else console.log("STOPPED HERE");
     }
 
     async back() {

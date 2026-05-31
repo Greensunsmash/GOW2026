@@ -8,7 +8,7 @@ try {
         observer1.load(null, 3000),
         observer2.load('\ue88a\ue037\ue020\ue01f\ue045', 3000) 
     ]);
-    console.log("fonts loaded");
+    //console.log("fonts loaded");
 } catch (e) {
     console.warn("fonts unable to load", e);
 }

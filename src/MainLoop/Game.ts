@@ -71,7 +71,7 @@ export class Game {
                         this.switchToLevelSelect();
                     },
                     (suceededLevelFile: string) => {
-                        console.log(`level ${suceededLevelFile} won !`);
+                        //console.log(`level ${suceededLevelFile} won !`);
                         Save.completeLevel(suceededLevelFile);
                         this.switchToLevelSelect();
                     }

@@ -9,7 +9,7 @@ export class Circe extends Mob {
 
     constructor(drh : AssetLibrary, level : Level, gridPos : GridPoint, facingIndex: number) {
         super(drh, "circe", level, gridPos);
-        console.log("creating a circé !");
+        //console.log("creating a circé !");
         //(this.mesh as any).animations.find(a => a.name.includes("dance"))?.play(true);
         this.facingIndex = facingIndex;
         this.initRotation = facingIndex;

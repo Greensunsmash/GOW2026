@@ -32,7 +32,7 @@ export class StartButton extends Button {
         this.zIndex = 100;
 
         this.onPointerUpObservable.add(() => {
-            console.log("Lancement du démarreur cosmique...");
+            //console.log("Lancement du démarreur cosmique...");
             callback();
         });
     }

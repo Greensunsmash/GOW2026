@@ -17,8 +17,8 @@ export class Print extends Instruction {
     }
 
     async execute(): Promise<void> {
-        if (this.valeur) console.log(this.valeur.eval().getValue());
-        if (this.bool) console.log(this.bool.eval());
+        //if (this.valeur) console.log(this.valeur.eval().getValue());
+        //if (this.bool) console.log(this.bool.eval());
         Memory.get().setCurrentInstruction(this);
         
         if (Memory.get().isPlaying()) this.next();

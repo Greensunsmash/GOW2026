@@ -39,7 +39,6 @@ export class MarcoBozo extends GridEntity {
 
     async pickupItem(): boolean {
         if (this.dead) {
-            console.warn("cant pickup, cant Suv, dead.");
             return false;
         }
         await new Promise(resolve => setTimeout(resolve, 500));
@@ -55,7 +54,7 @@ export class MarcoBozo extends GridEntity {
             return true;
         } 
         else return false;
-        console.log("robot now carries : ", this.carriedItems);
+        //console.log("robot now carries : ", this.carriedItems);
     }
 
     getCarriedItems(): ItemType[] {
@@ -99,7 +98,7 @@ export class MarcoBozo extends GridEntity {
     }
 
     public turnToAPig() {
-        console.log("entering turntoapig");
+        //console.log("entering turntoapig");
         SoundManager.playSound("transform.ogg", 0.2);
         this.affectedByADivineCurse = true;
         this.origMesh.setEnabled(false);
@@ -111,7 +110,7 @@ export class MarcoBozo extends GridEntity {
     }
 
     public backToACuteLittleRobot() {
-        console.log("entering backtocutelittlerobotohsocuteawww");
+        //console.log("entering backtocutelittlerobotohsocuteawww");
         this.affectedByADivineCurse = false;
         this.pigMesh.setEnabled(false);
         this.origMesh.position = this.pigMesh.position;

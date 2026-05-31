@@ -42,7 +42,7 @@ export class LevelSelectScene extends BaseScene {
 
     async init(onLevelSelect: (levelName: string) => Promise<void>, onReset: () => void) {
         this.scene.getEngine().displayLoadingUI();
-        console.log("init levelselectscene");
+        //console.log("init levelselectscene");
         this.onLevelSelect = onLevelSelect;
 
         
@@ -98,7 +98,7 @@ export class LevelSelectScene extends BaseScene {
         }
 
         //this.scene.getEngine().displayLoadingUI();
-        this.levelPopup = new LevelPopup(this.advancedTexture, "T", () => {console.log("callback not set")}, () => {});
+        this.levelPopup = new LevelPopup(this.advancedTexture, "T", () => {}, () => {});
         this.levelMap = new LevelSelectMap(this.advancedTexture, this,
             /*onPan*/ (x: number, y: number, scale: number) => {
                 if (this.waterCamera) {
@@ -120,7 +120,7 @@ export class LevelSelectScene extends BaseScene {
         this.advancedTexture.addControl(this.levelPopup);
 
         this.levelIndex = await LevelReader.getLevelList();
-        console.log(this.levelIndex);
+        //console.log(this.levelIndex);
         if (this.levelIndex.length <= 0) {
             throw new Error("cannot fill level list: level index (index.json) is empty");
         }
@@ -144,7 +144,10 @@ export class LevelSelectScene extends BaseScene {
                             onReset();
                         }
                     );
-                } 
+                } else if (kbInfo.event.key === "d") {
+                    this.debugMode = !this.debugMode;
+                    this.fillMap();
+                }
             }
         });
 
@@ -224,7 +227,7 @@ export class LevelSelectScene extends BaseScene {
         let ground = MeshBuilder.CreateGround("ground", { width: 512, height: 512, subdivisions: 32 }, this.scene);
         
         const waterMat = new PBRMaterial("waterMat", this.scene);
-        console.log("plugins on material:", (waterMat as any).pluginManager);
+        //console.log("plugins on material:", (waterMat as any).pluginManager);
 
 
         waterMat.albedoColor = new Color3(0.01, 0.05, 0.08);

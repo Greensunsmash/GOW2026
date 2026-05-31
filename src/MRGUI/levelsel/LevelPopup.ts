@@ -124,7 +124,7 @@ export class LevelPopup extends Rectangle {
     }  
 
     toggle() {
-        console.log("clue drawer toggled!");
+        //console.log("clue drawer toggled!");
         this.isVisible = !this.isVisible;
     }
 

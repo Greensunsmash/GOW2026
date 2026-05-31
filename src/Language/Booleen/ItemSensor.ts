@@ -13,7 +13,7 @@ export class ItemSensor extends Booleen {
     }
 
     eval(): boolean {
-        console.log("item sensor :" + this.ctx.getRobot().itemHere());
+        //console.log("item sensor :" + this.ctx.getRobot().itemHere());
         return this.ctx.getRobot().itemHere();
     }
 

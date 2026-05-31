@@ -45,7 +45,6 @@ export class Flag extends Group implements Launchable {
         const j = this.next_inst.length - 1;
         if (j < 0 || this.next_inst[j] <= 0) {
             this.memory.resetCurrentInstruction();
-            console.log("On est de retour au début");
         }
     }
 
