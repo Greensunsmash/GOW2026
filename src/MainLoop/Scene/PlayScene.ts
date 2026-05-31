@@ -306,8 +306,14 @@ export class PlayScene extends GameScene { // ;)
         const minEmitOffset = new Vector3(-100,0,-100);
         const maxEmitOffset = new Vector3(100, 8, 100);
 
-        const minColor =new Color4(1, 1, 1, 0.05);
-        const maxColor = new Color4(1,1,1, 0.15);
+        let minColor, maxColor;
+        if (this.loadedFile === "level21.json") {
+            minColor = new Color4(0.76, 0, 1, 0.05);
+            maxColor = new Color4(0.79,0.02,1, 0.15);
+        } else {
+            minColor = new Color4(1, 1, 1, 0.05);
+            maxColor = new Color4(1,1,1, 0.15);
+        }
 
         let volCloudParticles;
         let volCloudFountain;

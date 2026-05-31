@@ -15,9 +15,9 @@ export class Game {
     public static STORAGE_KEY = "succeededLevels";
 
     constructor(canvas: HTMLCanvasElement) {
-        DefaultLoadingScreen.DefaultLogoUrl = "/fulltransparent.png";
+        DefaultLoadingScreen.DefaultLogoUrl = "/loading.png";
         DefaultLoadingScreen.DefaultSpinnerUrl = "/fulltransparent.png";
-        const loading = new DefaultLoadingScreen(canvas, 'chargement');
+        const loading = new DefaultLoadingScreen(canvas, '');
         this.engine = new Engine(canvas, true, {
             /* horrible */
             //adaptToDeviceRatio: true 

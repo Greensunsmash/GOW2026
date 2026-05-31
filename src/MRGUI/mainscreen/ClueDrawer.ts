@@ -69,7 +69,7 @@ export class ClueDrawer extends Rectangle {
         this.cluesPanel.paddingRight = "2.5%";
         this.cluesPanel.spacing = 10;
 
-        this.btn = new BaseButton("clue-drw-show-btn", "J'en veux bien un", () => this.nextClue(), 0);
+        this.btn = new BaseButton("clue-drw-show-btn", "J'en veux bien un", () => this.nextClue(), 0, 40, Colors.AccentDuSud);
         //this.cluesPanel.addControl(this.btn);
 
         this.panel.addControl(this.cluesPanel);
@@ -77,8 +77,6 @@ export class ClueDrawer extends Rectangle {
         this.panel.addControl(new BaseVSpacer());
         
         root.addControl(this);
-
-        this.loadClues(["blablablabla bip boup, allez vous faire boup ! lorem ipsum dolor sit helmet gifjigjdkgjfkgjfdl", "kgfjgkfdjgklfjklgdjfklgjfdjgkfjkkkkkkkkkkkkkkkkkkkkkkAHHHHHHHHHHHHHHHHHHHHHHH", "bifurquez bien par la droite CONNAAAAAAAAAAAAAAAAARD", "ENCULEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"]);
     }
 
     toggle() {
@@ -90,6 +88,7 @@ export class ClueDrawer extends Rectangle {
         this.clues = clues;
         this.lastClueIndex = -1;
         this.cluesPanel.clearControls();
+        this.btn.setText("J'en veux bien un");
 
         if (this.clues.length >= 1) {
             this.cluesPanel.addControl(this.btn);
@@ -137,8 +136,9 @@ export class ClueDrawer extends Rectangle {
         this.lastClueIndex++;
         this.addClue(this.clues[this.lastClueIndex]);
 
-        if (this.lastClueIndex === this.clues.length -1) {
+        if (this.lastClueIndex === this.clues.length - 2) {
             this.btn.setText("Un dernier ?");
+            this.btn.background = Colors.Accent;
         } else if (this.lastClueIndex === 1)
             this.btn.setText("Un deuxième ?");
         else if (this.lastClueIndex === 2)
