@@ -1,6 +1,6 @@
 # Contenu de Marco Robo : À la recherche du démarreur cosmique perdu
 
-Ce fichier a pour but de présenter presque exhaustivement le jeu. Nous vous invitons d'abord a découvrir le jeu, le document [content](/content.md) est à votre disposition pour cela
+Ce fichier a pour but de présenter presque exhaustivement le jeu. Nous vous invitons d'abord a découvrir le jeu, le document [introduction](/introduction.md) est à votre disposition pour cela
 Cette présentation détaillera les concepts de gameplay du jeu, l'aspect visuel ainsi que quelques aspects techniques
 
 
