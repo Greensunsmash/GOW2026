@@ -13,6 +13,7 @@ import { LevelCount } from "../../MRGUI/levelsel/LevelCount";
 import { RealDialog } from "../../MRGUI/windows/RealDialog";
 import { TwoButtonModal } from "../../MRGUI/windows/TwoButtonsModal";
 import { SoundManager } from "../../Shared/Sounds";
+import { GreyBlocker } from "../../MRGUI/misc/GreyBlocker";
 
 export class LevelSelectScene extends BaseScene {
     private static firstOpen = true;
@@ -54,20 +55,17 @@ export class LevelSelectScene extends BaseScene {
                     async () =>  {
                         const manager = await SoundManager.get();
                         await manager.init();
-                        SoundManager.playAmbient("world1.mp3", true, 0.2);
                         this.intro(onLevelSelect);
                     },
                     async () => {
                         const manager = await SoundManager.get();
                         await manager.init();
-                        SoundManager.playAmbient("world1.mp3", true, 0.2);
                         SoundManager.toggleMute();
                         this.intro(onLevelSelect);
                     },
                     true /* fullBlack */
                 );
             } else {
-                SoundManager.playAmbient("world1.mp3", true, 0.2);
                 this.intro(onLevelSelect);
             }
             return;
@@ -220,6 +218,11 @@ export class LevelSelectScene extends BaseScene {
     }
     
     async intro(onEnd: (levelFile: string) => Promise<void>) {
+        const grey = new GreyBlocker();
+        grey.background = "#000000ff";
+        this.advancedTexture.addControl(grey);
+        await SoundManager.playAmbient("spaceship_crash.mp3", false, 0.6);
+        this.advancedTexture.removeControl(grey);
         await RealDialog.show(this.advancedTexture, this, "Tout va bien ?", "SCIENTIFIQUE", true, false, true);
         await RealDialog.show(this.advancedTexture, this, "Où es-tu passé ?", "SCIENTIFIQUE", true, false, true);
         await RealDialog.show(this.advancedTexture, this, "J'espère que rien n'est cassé...", "SCIENTIFIQUE", true, false, true);
