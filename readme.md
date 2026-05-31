@@ -13,6 +13,10 @@ Parviendrez-vous alors à guider Marco Robo dans son exploration jusqu'à lui fa
 
 **Le jeu est disponible à ce lien : [marcorobo.space](https://marcorobo.space)**
 
+Vidéos :
+- [Trailer principal](https://marcorobo.space/trailer)
+- [Présentation Gameplay](https://marcorobo.space/gameplay)
+
 ## Guider Marco Robo
 
 La planète sur laquelle vous avez mis les pieds est principalement composée d'eau. Ainsi, vous devrez voyagez d'île en île à la recheche du démarreur cosmique.
@@ -39,5 +43,7 @@ Nous vous proposons dans ce jeu de créer vos programmes, et donc de programmer 
 *Pour démarrer, nous vous invitons à lire l'[introduction](/introduction.md).*
 
 *Pour plus d'informations sur tout le contenu proposé, [content](/content.md) est à votre disposition (attention spoilers)*
+
+*Voici le lien vers le [repository original](https://github.com/Greensunsmash/GOW2026)*
 
 ![Capture d'écran du jeu](/assets/images/new.png)
