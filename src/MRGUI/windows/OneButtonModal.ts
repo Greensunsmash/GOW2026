@@ -1,4 +1,4 @@
-import { TextBlock, type AdvancedDynamicTexture } from "@babylonjs/gui";
+import { Rectangle, TextBlock, type AdvancedDynamicTexture } from "@babylonjs/gui";
 import { ModalWindow } from "./ModalWindow";
 import { BaseVSpacer } from "../misc/BaseSpacers";
 import { BaseButton } from "../buttons/BaseButton";
@@ -20,8 +20,23 @@ export class OneButtonModal extends ModalWindow {
             onClose();
         }, 0 /* auto */);
         if (text) {
-            const t = new TextBlock("t", text);
-            this.panel.addControl(t);
+            const textBlockRect = new Rectangle("dialogTextRect");
+            textBlockRect.adaptHeightToChildren = true;
+            textBlockRect.width = "100%";
+            textBlockRect.thickness = 0;
+            textBlockRect.background = "#00000000";
+    
+            const textBlock = new TextBlock("dialogText");
+            textBlock.resizeToFit = true;
+            textBlock.textWrapping = true;
+            textBlock.color = "black";
+            textBlock.fontSize = 20;
+            textBlock.fontWeight = "300";
+            textBlock.fontFamily = "Inter";
+            textBlock.text = text;
+            textBlockRect.addControl(textBlock);
+            this.panel.addControl(textBlockRect);
+            textBlockRect.paddingBottomInPixels = 5;
         }
         this.panel.addControl(btn);
         this.panel.addControl(new BaseVSpacer());
