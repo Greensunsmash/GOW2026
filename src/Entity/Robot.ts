@@ -42,6 +42,7 @@ export class MarcoBozo extends GridEntity {
             console.warn("cant pickup, cant Suv, dead.");
             return false;
         }
+        await new Promise(resolve => setTimeout(resolve, 500));
         const itemAtPos = this.level.getItemAt(this.gridPos);
         if (!itemAtPos) {
             return false;

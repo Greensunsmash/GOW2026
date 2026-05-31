@@ -72,6 +72,7 @@ export class ExecutionContext {
         console.log("[TICKS] ENTERING NEXT TICK.");
 
         let robotDead: boolean = false;
+        let deadFromVoid : boolean = false;
         let robotBounce: boolean = false;
 
         // sauvegarder les états des entités
@@ -102,6 +103,7 @@ export class ExecutionContext {
         if (this.level.isVoidBelow(robotIntention)) {
             // plus tard, gérer séparément les visuels de la mort par obstacle et la mort par chute
             robotDead = true;
+            deadFromVoid = true;
         }
         if (!GridUtils.equals(robotIntention, this.robot.getVisualGridPos()) || robotBounce) {
             if (instant)
@@ -130,8 +132,8 @@ export class ExecutionContext {
         // Si le robot est déjç mort, inutile d'aller plus loin n'est-il pas?
         if (robotDead) {
             console.warn("[TICKS] ROBOT DEAD!!!");
-            // faire quelque chose !
-            this.scene.onRobotDead();
+            if (deadFromVoid) this.scene.onRobotDead("Le robot est tombée dans le vide");
+            else this.scene.onRobotDead();
             return;
         }
 

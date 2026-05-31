@@ -15,10 +15,12 @@ export class WaitInstruction extends Instruction {
         const memory = Memory.get();
         memory.setCurrentlyMoving(true);
 
+
         this.gameModeAtExecute = memory.getGameMode();
-        if (this.gameModeAtExecute === "NORMAL")
+        if (this.gameModeAtExecute === "NORMAL") {
+            await new Promise(resolve => setTimeout(resolve, 500));
             await this.ctx.nextTick(undefined, memory.skip);
-        else
+        } else
             await this.ctx.nextTick(this.ctx.getRobot().getNextPosIntention("forward"), memory.skip);
 
         Memory.get().setCurrentInstruction(this);
