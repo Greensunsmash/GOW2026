@@ -10,19 +10,23 @@ Celui-ci va cependant vite découvrir qu'il manque une pièce cruciale au démar
 Parviendrez-vous alors à guider Marco Robo dans son exploration jusqu'à lui faire retrouver le démarreur cosmique ?
 
 ## Guider Marco Robo
-La planète sur laquelle vous avez mis les pieds est un peu spéciale.
-Sa surface est divisée en îles réparties sur un immense océan.
 
-Vous ne contrôlez Marco Robo que lorsqu'il navigue sur l'océan.
-A chaque escale sur une nouvelle île, vous allez devoir programmer le comportement qu'il devra adopter au cours de son exploration sur l'île.
+La planète sur laquelle vous avez mis les pieds est principalement composée d'eau. Ainsi, vous devrez voyagez d'île en île à la recheche du démarreur cosmique.
+A chaque escale sur une nouvelle île, vous allez devoir programmer Marco Robo pour résoudre les défis proposés.
 
-Il faudra redoubler d'ingéniosité et de ruse pour le rendre capable de se frayer un chemin, de vaincre les ennemis et peut-être qui sait, sur une certaine île, de retrouver la pièce perdue...
+Il faudra redoubler d'ingéniosité et de ruse pour le rendre capable de se frayer un chemin a travers tous les obstacles et peut-être qui sait, sur une certaine île, de retrouver la pièce perdue...
 
-## Un jeu de programmation, a visée pédagogique
+## Un jeu de programmation, a visée pédagogique mais pas que
+
 A l'arrivée sur chaque île, vous aurez à disposition des blocs représentant des instructions (avancer d'une case, tourner à droite), des conditions (y a-t-il un obstacle ?, y a-t-il un ennemi ?...) et des structures (répéter x fois, répéter à l'infini...).
 En assemblant ces blocs, vous devrez rendre Marco Robo capable d'affronter toutes les péripéties qui l'attendent sur l'île.
 
-Développez votre robot, et vos compétences de programmation à travers un langage de programmation visuel créé sur mesure. 2 niveaux de difficultés vous attendent, afin que le jeu puisse être accessible à n'importe qui tout en proposant un challenge intéressant pour ceux qui ont déjà des bases en programmation.
+Développez votre robot, et vos compétences de programmation à travers un langage de programmation visuel créé sur mesure.
+
+Le jeu peut donc être utilisé pour s'initier à la programmation, mais c'est surtout un jeu, accessible à tous, proposant une aventure unique et mignonne.
 
 
-***Ce jeu est actuellement en cours de développement, et n'est malheureusement pas encore testable***
+**Bon jeu !**
+
+*Pour démarrer, nous vous invitons à lire l'[introduction](/introduction.md)*
+*Pour plus d'informations sur tout le contenu proposé, [content](/content.md) est à votre disposition (attention spoilers)*
