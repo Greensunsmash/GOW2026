@@ -51,6 +51,7 @@ Nous avons developpé exprès pour ce jeu un langage de programmation, d'abord p
 - Il faut pouvoir revenir en arrière à tout moment ou bien mettre en pause
 
 Nous sommes donc fiers de dire que nous avons réussi à faire tout cela. C'était une grande étape, dont dépendait tout le jeu.
+Une partie du langage n'a d'ailleurs pas été utilisé dans le jeu. En particulier, le jeu gère parfaitement les fonctions mais finalement, nous avons chois de ne pas les inclure afin de pouvoir se concentrer sur d'autres mécaniques et de ne pas noyer le joueur.
 
 ### Repousser les limites de BabylonGUI ###
 
