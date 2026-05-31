@@ -155,7 +155,7 @@ export class ExecutionContext {
 
         // 2 : vérifier les collisions mobs/mobs ou mobs/obstacles ou les chutes de mobs
         const checkCollisions = (mob: Mob, intention: MobIntention): CollisionType => {
-            console.log("mob " , mob, " intention is on ", intention);
+            //console.log("mob " , mob, " intention is on ", intention);
             if (this.level.isObstacle(intention.nextPos))
                 return {type: "WALL"};
 
@@ -316,7 +316,7 @@ export class ExecutionContext {
     }
 
     public setGoals(goals: Goal[]) {
-        console.log(goals);
+        //console.log(goals);
         for (const goal of goals) {
             if (goal.name === "survive") {
                 this.ticksToSurvive = goal.args.ticks;
@@ -337,7 +337,7 @@ export class ExecutionContext {
                         }
                         break;
                     case "pickup":
-                        console.log(goal);
+                        //console.log(goal);
                         if (!stringArraysEq(this.robot.getCarriedItems(), this.level.getAllItemTypes()))
                             unreached = true;
                         break;

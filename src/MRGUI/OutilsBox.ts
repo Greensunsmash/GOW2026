@@ -277,7 +277,7 @@ export class OutilsBox extends Rectangle {
             }
         }
         
-        const btn = Button.CreateSimpleButton(label.trim(), label);
+        const btn = Button.CreateSimpleButton(category, label);
         //btn.width = "50px";
         btn.adaptHeightToChildren = true;
         
@@ -408,7 +408,7 @@ export class OutilsBox extends Rectangle {
     }
 
     // Ajtr une variable dans le panel "Variable"
-    addVariable(name: string, scene: GameScene, ctx: ExecutionContext) {
+    addVariable(name: string, scene: GameScene, ctx: ExecutionContext, callFromRestore = false) {
         if (this.vars.includes(name)) {
             //console.error("variable already exists.");
             return;
@@ -417,7 +417,7 @@ export class OutilsBox extends Rectangle {
         // on doit tenir un registre des variables dans la toolbox
         this.vars.push(name);
         
-        this.rebuildVariables(scene, ctx);
+        if (!callFromRestore) this.rebuildVariables(scene, ctx);
     }
 
     rebuildVariables(scene: GameScene, ctx: ExecutionContext) {

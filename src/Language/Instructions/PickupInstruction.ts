@@ -20,6 +20,8 @@ export class PickupInstruction extends Instruction {
             const itemPresence = await this.ctx.getRobot().pickupItem();
             if (!itemPresence)
                 this.ctx.die("Il n'y avait aucun débris à ramasser !");
+            else
+                await new Promise(resolve => setTimeout(resolve, 500));
             await this.ctx.nextTick(undefined, memory.skip);
         }
         else 

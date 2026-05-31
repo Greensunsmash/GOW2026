@@ -50,11 +50,14 @@ export class ItemsHUD extends Rectangle {
         this.isVisible = true;
         if (itemCount >= goalItemCount) {
             this.background = Colors.Accent;
-            this.punchScale();
             this.itemsText.fontWeight = "400";
+
+            this.punchScale(true);
         } else {
             this.background = Colors.AccentDuSud;
-            this.itemsText.fontWeight = "200";
+            this.itemsText.fontWeight = "300";
+            
+            this.punchScale(false);
         }
     }
 

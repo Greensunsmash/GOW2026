@@ -52,16 +52,16 @@ export class InputSlot extends EmptySlot implements Valuable {
 
     getValue(): Valeur[] {
         const raw = this.textInput.text.replace(" ", "");
-        console.log("read raw from input slot ", raw);
+        //console.log("read raw from input slot ", raw);
         const num = Number(raw);
         const val = isNaN(num) || raw === "" ? raw : num;
-        console.log("number turned to ", val);
+        //console.log("number turned to ", val);
         return [new ValeurBrute(val)];
     }
 
     serialize(): RawValueData | null {
         const raw = this.textInput.text.replace(" ", "");
-        console.log("read raw from input slot ", raw);
+        //console.log("read raw from input slot ", raw);
         const num = Number(raw);
         if (isNaN(num))
             return null;

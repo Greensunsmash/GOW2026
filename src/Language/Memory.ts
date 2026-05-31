@@ -28,7 +28,7 @@ export type GameModeStackInfo = {
 export class Memory {
     private static instance: Memory;
 
-    private values: Map<String, Value>;
+    private values: Map<string, Value>;
     private booleans: Map<String, boolean>;
     private fonctions: Map<String, Fonction>;
 
@@ -45,6 +45,7 @@ export class Memory {
 
     private onProgramEnd: (() => void) | undefined = undefined;
     private onUpdate: (() => void) | undefined = undefined;
+    private onVarUpdate: (() => void) | undefined = undefined;
     
     private gameMode: GameMode = "NORMAL";
     private gameModeStack: GameModeStackInfo[] = [];
@@ -61,6 +62,7 @@ export class Memory {
 
     clear() {
         this.values = new Map();
+        this.onVarUpdate?.();
         this.booleans = new Map();
         this.fonctions = new Map();
         this.callStack = [];
@@ -99,6 +101,8 @@ export class Memory {
                 else this.booleans.set(name, val);
             }
         }
+        console.log("setVriable, Memory");
+        this.onVarUpdate?.();
     }
     public getVariableValue(name: string): Value {
         for (let i = this.callStack.length - 1; i >= 0; i--) {
@@ -144,7 +148,7 @@ export class Memory {
     }
 
     public stepBack(): void {
-        console.log("stepBack called, current:", this.current_instruction, "moving:", this.currentlyMoving, "playing:", this.playing);
+        //console.log("stepBack called, current:", this.current_instruction, "moving:", this.currentlyMoving, "playing:", this.playing);
         if (this.currentlyMoving || this.isPlaying()) return;
         if (this.current_instruction) this.ended = false;
         this.current_instruction?.back();
@@ -212,6 +216,7 @@ export class Memory {
     public triggerUpdate() {this.onUpdate?.();}
     public setOnStateUpdate(onUpdate: (() => void) | undefined) {this.onUpdate = onUpdate;}
     public setOnProgramEnd(onProgramEnd: (() => void) | undefined) {this.onProgramEnd = onProgramEnd;}
+    public setOnVarUpdate(onVarUpdate: (() => void) | undefined) {this.onVarUpdate = onVarUpdate;}
 
     public isCurrentlyMoving():boolean {return this.currentlyMoving;}
     public setCurrentlyMoving(isMoving:boolean) {
@@ -223,11 +228,11 @@ export class Memory {
     public setGameMode(gm: GameMode) {this.gameMode = gm;}
 
     public onNextTick(ticksSinceLastModeChange: number, totalTicks: number) {
-        console.log(this.gameModeStack);
+        //console.log(this.gameModeStack);
         this.gameModeStack.push({gameMode: this.gameMode, ticksSinceLastModeChange, totalTicks});
     }
     public onPrevTick(): GameModeStackInfo | undefined {
-        console.log(this.gameModeStack);
+        //console.log(this.gameModeStack);
         if (this.gameModeStack.length === 0) {
             console.warn("Cannot load a game mode state when game mode state stack is empty");
             return;
@@ -236,6 +241,10 @@ export class Memory {
             this.gameMode = gmStackInfo.gameMode;
             return gmStackInfo;
         }
+    }
+
+    public getAllValues() {
+        return this.values;
     }
 
     // PRINT

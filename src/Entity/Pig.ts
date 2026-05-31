@@ -9,7 +9,7 @@ export class Pig extends Mob {
 
     constructor(drh : AssetLibrary, level : Level, gridPos : GridPoint, facingIndex: number) {
         super(drh, "pig", level, gridPos);
-        console.log("PIG ANIMS", this.anims);
+        //console.log("PIG ANIMS", this.anims);
         //(this.mesh as any).animations.find(a => a.name.includes("dance"))?.play(true);
         this.facingIndex = facingIndex;
         this.initRotation = facingIndex;

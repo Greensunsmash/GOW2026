@@ -47,9 +47,9 @@ export class Level {
 
                     switch (tile) {
                         case State.RobotStart:
-                            console.log("creating a new robot, at " + GridUtils.toString(gridPos));
+                            //console.log("creating a new robot, at " + GridUtils.toString(gridPos));
                             this.robot = this.createRobot(gridPos);
-                            console.log("robot pos is really " + GridUtils.toString(this.robot.getVisualGridPos()));
+                            //console.log("robot pos is really " + GridUtils.toString(this.robot.getVisualGridPos()));
                             break;
                         case State.Wall:
                             this.meshes.push(this.createWall(pos));
@@ -111,7 +111,7 @@ export class Level {
             ["grass"],
             ["grass"]
         ];
-        console.log("world no in levle.createwall ", this.worldNo);
+        //console.log("world no in levle.createwall ", this.worldNo);
         return this.drh.createSingleInstance(grounds[this.worldNo - 1][0], pos, true);
     }
 
@@ -125,7 +125,7 @@ export class Level {
             ["tree1", 0.5, 0.1],
             ["tree1", 0.5, 0.1],
         ];
-        console.log("world no in levle.createwall ", this.worldNo);
+        //console.log("world no in levle.createwall ", this.worldNo);
         const worldObstacles = obstacles[this.worldNo - 1];
         //const randomIndex = Math.floor(Math.random() * worldObstacles.length);
         const tree = this.drh.createSingleInstance(obstacles[this.worldNo - 1][0], pos, false, obstacles[this.worldNo - 1][1]);
@@ -135,7 +135,7 @@ export class Level {
 
     private createFlag(pos: Vector3): TransformNode {
         const flags = [["boat2", 0.35], ["boat", 0.35], ["boat", 0.35]];
-        console.log("world no in levle.createwall ", this.worldNo);
+        //console.log("world no in levle.createwall ", this.worldNo);
         return this.drh.createSingleInstance(flags[this.worldNo - 1][0], pos, false, flags[this.worldNo - 1][1]);
     }
 
@@ -211,7 +211,7 @@ export class Level {
             const nextStateBelow = this.map[gridPos.y - 1][gridPos.z][gridPos.x];
             if ((nextStateBelow != State.Ground)
                 && (nextStateBelow != State.CursedGround)) {
-                console.log("grid pos ", GridUtils.add(gridPos, {x:0,y:-1,z:0}), "is deadly. : it's " + nextStateBelow);
+                //console.log("grid pos ", GridUtils.add(gridPos, {x:0,y:-1,z:0}), "is deadly. : it's " + nextStateBelow);
                 return true;
             } else
                 return false;
@@ -226,7 +226,7 @@ export class Level {
 
         const nextState = this.map[gridPos.y][gridPos.z][gridPos.x];
         if (nextState == State.Wall) {
-            console.log(GridUtils.toString(gridPos) + " is an obstacle");
+            //console.log(GridUtils.toString(gridPos) + " is an obstacle");
             return true;
         }
         return false;
@@ -267,7 +267,7 @@ export class Level {
         }
         currState.set(this.robot!, this.robot!.getState());
         this.entityStates.push(currState);
-        console.log(this.entityStates);
+        //console.log(this.entityStates);
     }
 
     public async popEntityState(instant?: boolean) {
@@ -281,8 +281,8 @@ export class Level {
         } else {
             currState = this.entityStates.pop();
         }
-        console.log(this.entityStates);
-        console.log(currState);
+        //console.log(this.entityStates);
+        //console.log(currState);
 
         if (!currState) {
             console.warn("hmm alors la je vois pas");
@@ -302,7 +302,7 @@ export class Level {
     }
 
     public reinitLevel() {
-        console.log("in reinit level");
+        //console.log("in reinit level");
         /*const initEntState = this.entityStates[0];
         if (!initEntState) {
             console.warn("reinit level called when no mob state has ever been stored ?? WHAT THE FUCK ??");

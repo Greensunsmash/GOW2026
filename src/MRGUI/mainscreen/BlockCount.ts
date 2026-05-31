@@ -42,14 +42,17 @@ export class BlockCount extends Rectangle {
         this.countText.text = this.limit ? `Blocs: ${count} / ${this.limit}`:  `Blocs : ${count}`;
         if (this.limit && count >= this.limit) {
             this.background = Colors.Accent;
-            this.punchScale();
+            this.punchScale(true);
             this.countText.fontWeight = "400";
         } else if (this.limit && count >= 0.8 * this.limit) {
             this.background = Colors.AccentDuSud;
             this.punchScale(false);
             this.countText.fontWeight = "300";
+        } else if (this.limit) {
+            this.background = Colors.HighlightStroke;
+            this.countText.fontWeight = "300";
         } else {
-            this.background = Colors.HighlightStroke;;
+            this.background = Colors.HighlightStroke;
             this.countText.fontWeight = "200";
         }
     }

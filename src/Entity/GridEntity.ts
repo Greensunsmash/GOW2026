@@ -95,7 +95,7 @@ export abstract class GridEntity {
     }
 
     public turnLeft() {
-        console.log("in turnLeft");
+        //console.log("in turnLeft");
         if (this._isMoving) return;
         this.facingIndex = (this.facingIndex - 1 + 4) % 4;
         this.rotation(-Math.PI / 2);
@@ -209,7 +209,7 @@ export abstract class GridEntity {
                 anim?.stop();
                 //this.mesh.position = GridUtils.toWorld(targetGridPos);
                 (this.mesh as any).animations?.find(anim => anim.name.includes("idle"))?.play(true);
-                console.log("ending dovisualmove");
+                //console.log("ending dovisualmove");
                 resolve();
             }
         ));

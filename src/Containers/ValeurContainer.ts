@@ -27,14 +27,14 @@ export class ValeurContainer extends BlocContainer implements Valuable {
 
     override serialize(): BlocData {
         return {type: this.getShortName(), children: this.getSlots().map((slotWrapper: GUI.Rectangle) => {
-            console.log("processing slot wrp", slotWrapper);
+            //console.log("processing slot wrp", slotWrapper);
             const slot = slotWrapper.children[0];
             let ret;
             if (slot instanceof BlocContainer) ret =  slot.serialize();
             else if (slot instanceof InputSlot) ret =  slot.serialize();
             else ret =  null;
 
-            console.log("processed, slot is ", ret);
+            //console.log("processed, slot is ", ret);
             return ret;
         })};
     }

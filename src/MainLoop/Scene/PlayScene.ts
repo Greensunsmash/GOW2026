@@ -25,6 +25,7 @@ import type { InstructionData, ProgramData } from "../../Shared/types";
 import { ExecutionContext } from "../ExecutionContext";
 import { GameScene } from "./GameScene";
 import { WaterFoamPlugin } from "../../Shared/WaterFoam";
+import { VarDisplay } from "../../MRGUI/mainscreen/VarDisplay";
 //import { Player } from "../entities/Player";
 
 export class PlayScene extends GameScene { // ;)
@@ -50,6 +51,7 @@ export class PlayScene extends GameScene { // ;)
 
     private blockCountDisp: BlockCount;
     private itemsHud: ItemsHUD;
+    private varDisp: VarDisplay;
 
     private memory: Memory = Memory.get();
 
@@ -68,6 +70,7 @@ export class PlayScene extends GameScene { // ;)
     }
 
     async init(levelName: string | undefined = "level1.json", onLevelGaveup?: () => void, onLevelWon?: (succededLevel: string) => void) {
+        this.isRestoring = false;
         
         this.topBar = new TopBar(this.advancedTexture, () => {
             new TwoButtonModal(
@@ -100,6 +103,9 @@ export class PlayScene extends GameScene { // ;)
             () => this.pause()
         );
         this.advancedTexture.addControl(this.btmBar);
+
+        this.varDisp = new VarDisplay(this.advancedTexture);
+        this.advancedTexture.addControl(this.varDisp);
 
         await this.initGameScene(levelName);
 
@@ -412,12 +418,12 @@ export class PlayScene extends GameScene { // ;)
         this.ctx.setGoals(new_goals);
 
         this.ctx.getRobot().setOnItemsChange((items: ItemType[]) => {
-            console.log("top bar " + this.topBar);
-            console.log("top bar  idsip" + this.topBar);
+            //console.log("top bar " + this.topBar);
+            //console.log("top bar  idsip" + this.topBar);
             this.topBar.itemDisp.setItems(items.length, this.level.getAllItemTypes().length);
         });
-        console.log("top bar " + this.topBar);
-        console.log("top bar  idsip" + this.topBar);
+        //console.log("top bar " + this.topBar);
+        //console.log("top bar  idsip" + this.topBar);
         this.topBar.itemDisp.setItems(0, this.level.getAllItemTypes().length);
 
         this.updateInstructionCount();
@@ -495,6 +501,10 @@ export class PlayScene extends GameScene { // ;)
 
         this.memory.setOnStateUpdate(() => {
             this.btmBar.triggerUpdate();
+        });
+
+        this.memory.setOnVarUpdate(() => {
+            this.varDisp.updateFromMemory();
         });
 
         
@@ -604,7 +614,8 @@ export class PlayScene extends GameScene { // ;)
         }
 
         this.memory.clear();
-        console.log("Avant le run");
+        
+        //console.log("Avant le run");
         Memory.print()
         this.clearHighlights();
         this.level.reinitLevel();
@@ -676,10 +687,10 @@ export class PlayScene extends GameScene { // ;)
             return;
         }
         this.memory.skip = skip;
-        console.log("TRYING to run next step");
-        console.log(this.memory.getCurrentInstruction());
+        //console.log("TRYING to run next step");
+        //console.log(this.memory.getCurrentInstruction());
         if (!(this.memory.hasRan()) || !(this.memory.getCurrentInstruction())) {
-            console.log("running scene.run");
+            //console.log("running scene.run");
             this.run(true);
         } else
             this.memory.nextStep();
@@ -700,7 +711,7 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public async dryAttempt() {
-        console.log("scene.dryAttempt");
+        //console.log("scene.dryAttempt");
         this.dryAttemptMode = true;
         console.log("dryAttempt : " + this.dryAttemptMode);
         await this.run();
@@ -743,7 +754,7 @@ export class PlayScene extends GameScene { // ;)
             // en fait jai trouvé mieux
             if (isAnotherLeafLeft) {
                 if (true /*continuousMode*/) {
-                    console.log("running on next leaf");
+                    //console.log("running on next leaf");
                     //await new Promise((rs, rj) => setTimeout(rs, 500));
                     this.scene.onAfterRenderObservable.addOnce(async () => await this.run(false, false, true));
                 } else {
@@ -823,7 +834,8 @@ export class PlayScene extends GameScene { // ;)
     }
 
     public saveProgram() {
-        if (this.isRestoring) return;
+        if (this.isRestoring) {console.log("skipping save"); return;}
+        console.log("saving program");
         const lists = [...this.workspace.getContentRoot().children];
         const data: ProgramData = [];
         for (const  child of lists) {
@@ -832,10 +844,11 @@ export class PlayScene extends GameScene { // ;)
             }
         }
         Save.setIslandData(this.loadedFile, this.currentIsland, data);
-        console.log("save data ", data, " at file ", this.loadedFile, " and island ", this.currentIsland);
+        //console.log("save data ", data, " at file ", this.loadedFile, " and island ", this.currentIsland);
     }
 
     public restoreProgram(manual: boolean = false) {
+        if (this.isRestoring) {console.log("skipping restore"); return;}
         let saved: IslandSaveData | undefined = undefined;
         if (manual) {
             if (this.currentIsland - 1 >= 0 ){
@@ -863,6 +876,7 @@ export class PlayScene extends GameScene { // ;)
             }
         }
         this.isRestoring = true;
+        console.log("restoring program");
 
         const factories = this.levelReader.createFactories(this.ctx, this) as any;
         const allFactories = {
@@ -887,6 +901,7 @@ export class PlayScene extends GameScene { // ;)
             list.topInPixels = listData.y;
             //list.reparent(list, this.workspace.getContentRoot(), new Vector2(listData.x, listData.y));
         }
+        this.toolbox.rebuildVariables(this, this.ctx);
 
         this.updateInstructionCount();
         this.isRestoring = false;
@@ -901,7 +916,7 @@ export class PlayScene extends GameScene { // ;)
 
         let blockInstance;
         if (blockData.type === "var_value") {
-            this.toolbox.addVariable(blockData.variable ?? "PB", this, this.ctx);
+            this.toolbox.addVariable(blockData.variable ?? "PB", this, this.ctx, true /*callFromRestore*/);
             blockInstance = new VarValueContainer(blockData.variable ?? "PB", this.leftPanel, this.workspace.getContentRoot(), this);
         } else {
             console.log("using factory to build ", blockData.type);
@@ -948,10 +963,10 @@ export class PlayScene extends GameScene { // ;)
                 if (!slotWrapper) continue;
 
                 if (childData.type === "raw_value" && childData.value !== undefined) {
-                    console.log("found a raw value noded !");
+                    //console.log("found a raw value noded !");
                     const inputSlot = slotWrapper.children[0];
                     if (inputSlot && inputSlot instanceof InputSlot) {
-                        console.log("restoring input slot value to ", childData.value);
+                        //console.log("restoring input slot value to ", childData.value);
                         (inputSlot as any).setValue(childData.value);
                     }
                 } 
@@ -975,7 +990,7 @@ export class PlayScene extends GameScene { // ;)
 
             let built;
             if (instrData.type === "set_var") {
-                this.toolbox.addVariable(instrData.variable ?? "PB", this, this.ctx);
+                this.toolbox.addVariable(instrData.variable ?? "PB", this, this.ctx, true/*callFromRestore*/);
                 built = new SetVarContainer(instrData.variable ?? "PB", this.leftPanel, this.workspace.getContentRoot(), this, this.ctx)
             } else {
                 const factory = allFactories[instrData.type];
@@ -990,10 +1005,10 @@ export class PlayScene extends GameScene { // ;)
                         const slots = instContainer.getSlots();
                         if (slots && slots.length > 0) {
                             if (instrData.condition.type === "raw_value" && instrData.condition.value !== undefined) {
-                                console.log("found a raw value noded !");
+                                //console.log("found a raw value noded !");
                                 const inputSlot = slots[0]?.children[0];
                                 if (inputSlot && inputSlot instanceof InputSlot) {
-                                    console.log("restoring input slot value to ", instrData.condition.value);
+                                    //console.log("restoring input slot value to ", instrData.condition.value);
                                     (inputSlot as any).setValue(instrData.condition.value);
                                 }
                             }
@@ -1007,14 +1022,14 @@ export class PlayScene extends GameScene { // ;)
                 if (instrData.children1) {
                     const inner = this.buildList(instrData.children1, allFactories);
                     built.moveMagnet(1);
-                    console.log(built.getList().map(e => e.constructor.name));
+                    //console.log(built.getList().map(e => e.constructor.name));
                     built.mergeList(inner);
                     built.recomputeInstructions();
                 }
                 if (instrData.children2) {
                     const inner = this.buildList(instrData.children2, allFactories);
                     built.moveMagnet(built.getList().length - 2);
-                    console.log(built.getList().map(e => e.constructor.name));
+                    //console.log(built.getList().map(e => e.constructor.name));
                     built.mergeList(inner);
                     built.recomputeInstructions();
                 }
@@ -1024,10 +1039,10 @@ export class PlayScene extends GameScene { // ;)
                     const slots = built.getSlots();
                     if (slots && slots.length > 0) {
                         if (instrData.condition.type === "raw_value" && instrData.condition.value !== undefined) {
-                                console.log("found a raw value noded !");
+                                //console.log("found a raw value noded !");
                                 const inputSlot = slots[0]?.children[0];
                                 if (inputSlot && inputSlot instanceof InputSlot) {
-                                    console.log("restoring input slot value to ", instrData.condition.value);
+                                    //console.log("restoring input slot value to ", instrData.condition.value);
                                     (inputSlot as any).setValue(instrData.condition.value);
                                 }
                         }   
@@ -1038,10 +1053,10 @@ export class PlayScene extends GameScene { // ;)
                     const slots = built.getSlots();
                     if (slots && slots.length > 0) {
                         if (instrData.data.type === "raw_value" && instrData.data.value !== undefined) {
-                                console.log("found a raw value noded !");
+                                //console.log("found a raw value noded !");
                                 const inputSlot = slots[0]?.children[0];
                                 if (inputSlot && inputSlot instanceof InputSlot) {
-                                    console.log("restoring input slot value to ", instrData.data.value);
+                                    //console.log("restoring input slot value to ", instrData.data.value);
                                     (inputSlot as any).setValue(instrData.data.value);
                                 }
                         }
@@ -1060,6 +1075,7 @@ export class PlayScene extends GameScene { // ;)
     public getCtx() { return this.ctx; }
 
     public dispose() {
+        console.log("playscene dispose called");
         window.clearInterval(this.saveInterval);
         this.saveProgram();
     }

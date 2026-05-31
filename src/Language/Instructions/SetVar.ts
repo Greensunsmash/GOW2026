@@ -34,6 +34,8 @@ export class SetVar extends Instruction {
         else {
             if (this.valeur) {this.previous_value = Memory.get().getVariableValue(this.name); Memory.get().setVariable(this.name, this.valeur.eval());}
             if (this.bool) {this.previous_bool = Memory.get().getVariableBoolean(this.name); Memory.get().setVariable(this.name, this.bool.eval());}
+            
+            await new Promise(resolve => setTimeout(resolve, 500));
         }
         Memory.get().setCurrentInstruction(this);
 

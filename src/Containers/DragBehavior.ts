@@ -31,7 +31,7 @@ export class DragBehavior {
         this.lastX = x;
         this.lastY = y;
 
-        console.log('xsh');
+        //console.log('xsh');
         
         const measure = this.target._currentMeasure;
         const startX = measure.left;

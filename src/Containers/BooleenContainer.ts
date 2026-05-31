@@ -28,13 +28,13 @@ export abstract class BooleenContainer extends BlocContainer {
     override serialize(): BlocData {
         return {type: this.getShortName(), children: this.getSlots().map((slotWrapper: GUI.Rectangle) => {
             const slot = slotWrapper.children[0];
-            console.log("processing slot ", slot);
+            //console.log("processing slot ", slot);
             let ret;
             if (slot instanceof BlocContainer) ret =  slot.serialize();
             else if (slot instanceof InputSlot) ret =  slot.serialize();
             else ret =  null;
 
-            console.log("processed, slot is ", ret);
+            //console.log("processed, slot is ", ret);
             return ret;
         })};
     }

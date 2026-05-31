@@ -355,6 +355,7 @@ export class LevelReader {
                     tb.addVariable(name, scene, ctx);
                 });
             });
+            tb.rebuildVariables(scene, ctx);
         }
 
         // Bouton fonction (cas spécial)
@@ -373,7 +374,6 @@ export class LevelReader {
 
 
         tb.setBlockLimit(this.blockLimit[nb]);
-        tb.rebuildVariables(scene, ctx);
 
         tb.finish();
     }

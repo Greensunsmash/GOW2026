@@ -19,7 +19,7 @@ export class Save {
         const all =  JSON.parse(
             localStorage.getItem(Save.STORAGE_KEY) ?? "{}"
         );
-        console.log("all save data : ", all);
+        //console.log("all save data : ", all);
         return all;
     }
 
