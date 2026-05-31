@@ -32,7 +32,8 @@ Le jeu peut donc être utilisé pour s'initier à la programmation, mais c'est s
 
 **Bon jeu ! [marcorobo.space](https://marcorobo.space)**
 
-*Pour démarrer, nous vous invitons à lire l'[introduction](/introduction.md).\n*
+*Pour démarrer, nous vous invitons à lire l'[introduction](/introduction.md).*
+
 *Pour plus d'informations sur tout le contenu proposé, [content](/content.md) est à votre disposition (attention spoilers)*
 
 ![Capture d'écran du jeu](/assets/images/new.png)
