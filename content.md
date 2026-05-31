@@ -40,6 +40,8 @@ Il y a 2 mondes, avec des idnetités visuelles (et sonores) bien distinctes.
 Quelques assets libres de droits complètent le tout. Mais cela n'était pas suffisant à nos yeux. Ainsi, nous avons voulu rajouter une eau un peu plus réalistes, une skybox plus détaillé afin d'avoir un ensemble agréable à l'oeil tout en restant compréhensibles. Nous avons aussi un système d'ombres pour donner plus de profondeur au tout.
 
 La cover quant à elle a été faite par Monjara12, nous le remercions fortement pour cette belle illustration.
+Pour montrer les progrès, voici une capture du jeu pas si vieille que ça
+![Capture d'écran](/assets/images/old.png)
 
 ## Technique ##
 

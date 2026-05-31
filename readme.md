@@ -11,6 +11,8 @@ Votre seule chance de vous en sortir : confier la mission à votre robot.
 Celui-ci va cependant vite découvrir qu'il manque une pièce cruciale au démarrage de la fusée...
 Parviendrez-vous alors à guider Marco Robo dans son exploration jusqu'à lui faire retrouver le démarreur cosmique ?
 
+**Le jeu est disponible à ce lien : [marcorobo.space](https://marcorobo.space)**
+
 ## Guider Marco Robo
 
 La planète sur laquelle vous avez mis les pieds est principalement composée d'eau. Ainsi, vous devrez voyagez d'île en île à la recheche du démarreur cosmique.
@@ -28,7 +30,9 @@ Développez votre robot, et vos compétences de programmation à travers un lang
 Le jeu peut donc être utilisé pour s'initier à la programmation, mais c'est surtout un jeu, accessible à tous, proposant une aventure unique et mignonne.
 
 
-**Bon jeu !**
+**Bon jeu ! [marcorobo.space](https://marcorobo.space)**
 
 *Pour démarrer, nous vous invitons à lire l'[introduction](/introduction.md).\n*
 *Pour plus d'informations sur tout le contenu proposé, [content](/content.md) est à votre disposition (attention spoilers)*
+
+![Capture d'écran du jeu](/assets/images/new.png)
