@@ -14,6 +14,7 @@ import { RealDialog } from "../../MRGUI/windows/RealDialog";
 import { TwoButtonModal } from "../../MRGUI/windows/TwoButtonsModal";
 import { SoundManager } from "../../Shared/Sounds";
 import { GreyBlocker } from "../../MRGUI/misc/GreyBlocker";
+import { OneButtonModal } from "../../MRGUI/windows/OneButtonModal";
 
 export class LevelSelectScene extends BaseScene {
     private static firstOpen = true;
@@ -161,6 +162,17 @@ export class LevelSelectScene extends BaseScene {
             );
         } else {
             SoundManager.playAmbient("Interplanetary_Odyssey.ogg", true, 0.2);
+        }
+
+        if (this.levelIndex.length == Save.getCompletedLevels().length) {
+            new OneButtonModal(
+                this.advancedTexture,
+                "Fin du jeu",
+                "Continuer",
+                () => {},
+                "Vous avez terminé le jeu ! Félicitations !\n \nMerci d'avoir complété le jeu. Nous espérons que cela vous a plu ! N'hésitez pas à nous faire des retours.\nMerci !",
+                true
+            )
         }
     }
 

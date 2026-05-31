@@ -1,4 +1,4 @@
-import type { AdvancedDynamicTexture } from "@babylonjs/gui";
+import { TextBlock, type AdvancedDynamicTexture } from "@babylonjs/gui";
 import { ModalWindow } from "./ModalWindow";
 import { BaseVSpacer } from "../misc/BaseSpacers";
 import { BaseButton } from "../buttons/BaseButton";
@@ -19,6 +19,10 @@ export class OneButtonModal extends ModalWindow {
             if (!disposeOnValidate) btn.isEnabled = false;
             onClose();
         }, 0 /* auto */);
+        if (text) {
+            const t = new TextBlock("t", text);
+            this.panel.addControl(t);
+        }
         this.panel.addControl(btn);
         this.panel.addControl(new BaseVSpacer());
     }
