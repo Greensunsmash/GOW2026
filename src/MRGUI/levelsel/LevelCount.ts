@@ -40,7 +40,7 @@ export class LevelCount extends Rectangle {
         this.countText.color = "black";
         this.countText.fontSize = 18;
         this.panel.addControl(this.countText);
-        root.addControl(this);
+        //root.addControl(this);
     }
 
     public setCount(count: number) {
