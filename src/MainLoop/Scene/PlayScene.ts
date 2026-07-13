@@ -146,7 +146,7 @@ export class PlayScene extends GameScene { // ;)
                 }
             }
         });
-        
+
         this.onLevelGaveup = onLevelGaveup;
         this.onLevelWon = onLevelWon;
     }
@@ -202,7 +202,7 @@ export class PlayScene extends GameScene { // ;)
         let vol = 1;
         if (worldNo == 2) vol = 0.4;
         else if (worldNo == 3) vol = 0.7;
-        SoundManager.playAmbient(`world${worldNo}.mp3`, true, vol);
+        SoundManager.playAmbient(`World${worldNo}Music`, true, vol);
 
         this._isLoaded = true;
         this.scene.getEngine().hideLoadingUI();
@@ -539,7 +539,7 @@ export class PlayScene extends GameScene { // ;)
 
         if (next >= (this.levelReader as any).structure.length) {
             //console.log("Dernière île atteinte");
-            const jinglePromise = SoundManager.playAmbient("success.mp3", false, 1);
+            const jinglePromise = SoundManager.playAmbient("ArchipelWin", false, 1);
             const m = new OneButtonModal(
                 this.advancedTexture,
                 "Félicitations, tu as complété cet archipel !",

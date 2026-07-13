@@ -94,7 +94,7 @@ export class DragBehavior {
         this.target.getScene().dragging_bloc = false;
         //this.scene.saveProgram?.();
         this.isDragging = false;
-        SoundManager.playSound("clip.ogg", 1);
+        SoundManager.playSound("releaseBloc", 1);
     }
 
     // Pour changer le parent d'un bloc

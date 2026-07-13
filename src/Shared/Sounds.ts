@@ -1,9 +1,15 @@
 import * as BABYLON from "babylonjs";
+import { ASSETS_ROOT } from "../Shared/Constants";
+
+type MusicDictionary = Record<string, string>;
 
 export class SoundManager {
 
     private static instance: SoundManager | null = null;
     private static instancePromise: Promise<SoundManager> | null = null;
+
+    private music_list : MusicDictionary;
+    private sound_list : MusicDictionary;
 
     private muted: boolean = false;
     private previousVolume: number = 1;
@@ -15,8 +21,12 @@ export class SoundManager {
     private constructor() {}
 
     public async init() {
+        this.music_list = await this.loadMusicDictionary("music/music.json");
+        this.sound_list = await this.loadMusicDictionary("sounds/sound.json");
+
         this.engine = await BABYLON.CreateAudioEngineAsync();
         await this.engine.unlockAsync();
+
     }
 
     public static async get(): Promise<SoundManager> {
@@ -37,6 +47,19 @@ export class SoundManager {
         return this.instancePromise;
     }
 
+    // Load les musiques associées
+    public async loadMusicDictionary(name:string): Promise<MusicDictionary> {
+        const response = await fetch(ASSETS_ROOT + name);
+
+        if (!response.ok) {
+            throw new Error(`Impossible de charger le fichier : ${name}`);
+        }
+
+        const data = await response.json();
+
+        return data as MusicDictionary;
+    }
+
     public static async playAmbient(name: string, loop = true, volume=1): Promise<void> {
 
         const manager = await SoundManager.get();
@@ -50,7 +73,7 @@ export class SoundManager {
             manager.currentAmbient = null;
         }
 
-        const sound = await BABYLON.CreateStreamingSoundAsync("ambient",`assets/music/${name}`);
+        const sound = await BABYLON.CreateStreamingSoundAsync("ambient",`assets/music/${manager.music_list[name]}`);
         sound.loop = loop;
         sound.setVolume(volume);
 
@@ -82,7 +105,7 @@ export class SoundManager {
 
         const manager = await SoundManager.get();
         if (!manager.engine) return;
-        const sound = await BABYLON.CreateSoundAsync(name,`assets/sounds/${name}`);
+        const sound = await BABYLON.CreateSoundAsync(name,`assets/sounds/${manager.sound_list[name]}`);
         sound.volume = volume;
         sound.play();
 
