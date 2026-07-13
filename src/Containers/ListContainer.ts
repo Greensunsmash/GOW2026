@@ -381,7 +381,7 @@ export class ListContainer extends GUI.Rectangle {
                         //this.scene.saveProgram?.();
                     }
                     this.scene.setDecal(new Vector2(0,0));
-                    SoundManager.playSound("clip.ogg", 1);
+                    SoundManager.playSound("releaseBloc", 1);
                 }
                 break;
 
