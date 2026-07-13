@@ -174,7 +174,7 @@
     {
         "nb": 4,
         "begin_dialogs": [
-            {"speaker": "SCIENTIFIQUE", "text":"Bien joué ! Maitrîse ces blocs et il te rendront de grands services."}
+            {"speaker": "SCIENTIFIQUE", "text":"Bien joué ! Maîtrise ces blocs et ils te rendront de grands services."}
         ],
         "layouts": [
             [
