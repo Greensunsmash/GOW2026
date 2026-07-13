@@ -110,6 +110,43 @@ export class PlayScene extends GameScene { // ;)
 
         await this.initGameScene(levelName);
 
+        this.scene.onKeyboardObservable.add((kbInfo) => {
+            if (kbInfo.type == KeyboardEventTypes.KEYUP) {
+                console.log("key event", kbInfo.event.key);
+                if (kbInfo.event.key === "l") {
+                    console.log("nextleaf");
+                    this.nextLeaf();
+                } else if (kbInfo.event.key === "p") {
+                    console.log("prevleaf");
+                    this.previousLeaf();
+                } else if (kbInfo.event.key == "ArrowRight") {
+                    console.log("right");
+                    this.nextIsland();
+                } else if (kbInfo.event.key == "ArrowLeft") {
+                    console.log("left");
+                    this.previousIsland();
+                } else if (kbInfo.event.key == "b") {
+                    console.log("stepback");
+                    this.stepBack();
+                } else if (kbInfo.event.key == "f") {
+                    console.log("nextstep");
+                    this.nextStep();
+                } else if (kbInfo.event.key == "z") {
+                    console.log("zoom in");
+                    this.workspace.zoom(0.1);
+                } else if (kbInfo.event.key == "a") {
+                    console.log("zoom out");
+                    this.workspace.zoom(-0.1);
+                } else if (kbInfo.event.key == "o") {
+                    console.log("pause");
+                    this.pause();
+                } else if (kbInfo.event.key == "r") {
+                    console.log("reset");
+                    this.reset();
+                }
+            }
+        });
+        
         this.onLevelGaveup = onLevelGaveup;
         this.onLevelWon = onLevelWon;
     }

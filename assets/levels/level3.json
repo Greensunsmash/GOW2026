@@ -70,7 +70,7 @@
             "nb" : 3,
             "end_dialogs" : [
                 {"speaker": "SCIENTIFIQUE", "text":"Bravo, tu te débrouilles bien !"},
-                {"speaker": "SCIENTIFIQUE", "text":"J'ai réussie à te localiser, mais j'ai une mauvaise nouvelle..."}
+                {"speaker": "SCIENTIFIQUE", "text":"J'ai réussi à te localiser, mais j'ai une mauvaise nouvelle..."}
             ],
             "layouts": [
                 [
