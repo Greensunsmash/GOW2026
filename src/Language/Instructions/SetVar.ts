@@ -30,12 +30,13 @@ export class SetVar extends Instruction {
     async execute(): Promise<void> {
         this.gameModeAtExecute = Memory.get().getGameMode();
         if (this.gameModeAtExecute === "PIGMODE")
-            await this.ctx.nextTick(this.ctx.getRobot().getNextPosIntention("forward"), Memory.get().skip);
+            await this.ctx.nextTick("forward", Memory.get().skip);
         else {
             if (this.valeur) {this.previous_value = Memory.get().getVariableValue(this.name); Memory.get().setVariable(this.name, this.valeur.eval());}
             if (this.bool) {this.previous_bool = Memory.get().getVariableBoolean(this.name); Memory.get().setVariable(this.name, this.bool.eval());}
             
             await new Promise(resolve => setTimeout(resolve, 500));
+            await this.ctx.nextTick(undefined, Memory.get().skip);
         }
         Memory.get().setCurrentInstruction(this);
 

@@ -4,6 +4,7 @@ import { GridUtils, type GridPoint } from "../Shared/GridUtils";
 import type { Level } from "../Environment/Level";
 import type { ItemType } from "../Environment/LevelReader";
 import type { MarcoBozo } from "./Robot";
+import { SoundManager } from "../Shared/Sounds";
 
 export type EntityState = {
     pos?: GridPoint;
@@ -148,13 +149,13 @@ export abstract class GridEntity {
         if (this._isMoving) return;
         // 0 -> 1 -> 2 -> 3 -> 0
         this.facingIndex = (this.facingIndex + 1) % 4;
-        await this.animateRotation(Math.PI / 2);
+        await this.animateRotation(Math.PI / 2, "rotationRobot");
     }
 
     async visualTurnLeft() {
         if (this._isMoving) return;
         this.facingIndex = (this.facingIndex - 1 + 4) % 4;
-        await this.animateRotation(-Math.PI / 2);
+        await this.animateRotation(-Math.PI / 2, "rotationRobot");
     }
 
     protected async tryVisualMove(dx: number, dz: number) {
@@ -172,7 +173,7 @@ export abstract class GridEntity {
         // (remplacer par quelque chose de moins explosif mdr)
     }
 
-    public async doVisualMove(targetGridPos : GridPoint, bounce?: boolean): Promise<void> {
+    public async doVisualMove(targetGridPos : GridPoint, bounce?: boolean, sound?:string): Promise<void> {
         //console.trace("dovisualmove: ");
 
         if (bounce) {
@@ -189,6 +190,8 @@ export abstract class GridEntity {
         const anim = (this.mesh as any).animations?.find(anim => anim.name.includes("walk"));
         anim?.play(true);
 
+
+        if (sound) SoundManager.playSound(sound, 0.2);
         return new Promise ((resolve) => Animation.CreateAndStartAnimation(
             "slide_" + Date.now(),
             this.mesh,
@@ -198,7 +201,7 @@ export abstract class GridEntity {
             this.mesh.position, 
             GridUtils.toWorld(targetGridPos), 
             Animation.ANIMATIONLOOPMODE_CONSTANT,
-            this.createEasing(), 
+            this.createEasing(),
             async () => {
                 this._isMoving = false; 
                 for (let i = 0; i < this.posListeners.length; i++) {
@@ -213,10 +216,11 @@ export abstract class GridEntity {
         ));
     }
 
-    protected async animateRotation(relativeAngle: number): Promise<void> {
+    protected async animateRotation(relativeAngle: number, sound = "null"): Promise<void> {
         this._isMoving = true;
         const targetAngle = this.mesh.rotation.y + relativeAngle;
 
+        if (sound) SoundManager.playSound(sound, 0.2);
         return new Promise((resolve) => Animation.CreateAndStartAnimation(
             "rotate_" + Date.now(), // pour pas avoir plusieurs fois le même nom
             this.mesh,

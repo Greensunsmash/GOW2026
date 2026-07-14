@@ -18,9 +18,7 @@ export class MoveBackwardInstuction extends Instruction {
         memory.setCurrentlyMoving(true);
 
         this.gameModeAtExecute = memory.getGameMode();
-        await this.ctx.nextTick(this.ctx.getRobot().getNextPosIntention(
-            Memory.get().getGameMode() === "PIGMODE" ? "forward": "backward"
-        ), memory.skip);
+        await this.ctx.nextTick(Memory.get().getGameMode() === "PIGMODE" ? "forward": "backward", memory.skip);
         /*if (memory.skip) this.ctx.getRobot().moveBackward();
         else await this.ctx.getRobot().visualMoveBackward();*/
         memory.setCurrentInstruction(this);

@@ -17,7 +17,7 @@ export class TurnLeftInstruction extends Instruction {
         memory.setCurrentlyMoving(true);
         this.gameModeAtExecute = memory.getGameMode();
         if (this.gameModeAtExecute === "PIGMODE") {
-            await this.ctx.nextTick(this.ctx.getRobot().getNextPosIntention("forward"), memory.skip);
+            await this.ctx.nextTick("forward", memory.skip);
         } else {
             if (memory.skip) this.ctx.getRobot().turnLeft();
             else await this.ctx.getRobot().visualTurnLeft();

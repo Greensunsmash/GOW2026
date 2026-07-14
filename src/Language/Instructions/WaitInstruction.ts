@@ -1,4 +1,5 @@
 import type { ExecutionContext } from "../../MainLoop/ExecutionContext";
+import { SoundManager } from "../../Shared/Sounds";
 import type { Launchable } from "../Launchable";
 import { Memory } from "../Memory";
 import { Instruction } from "./Instruction";
@@ -18,10 +19,11 @@ export class WaitInstruction extends Instruction {
 
         this.gameModeAtExecute = memory.getGameMode();
         if (this.gameModeAtExecute === "NORMAL") {
+            SoundManager.playSound("wait");
             await new Promise(resolve => setTimeout(resolve, 500));
             await this.ctx.nextTick(undefined, memory.skip);
         } else
-            await this.ctx.nextTick(this.ctx.getRobot().getNextPosIntention("forward"), memory.skip);
+            await this.ctx.nextTick("forward", memory.skip);
 
         Memory.get().setCurrentInstruction(this);
 

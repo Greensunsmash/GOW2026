@@ -1,6 +1,12 @@
 {
     "releaseBloc" : "clip.ogg",
     "pigTransformation" : "transform.ogg",
+    "backToNormal" : "null",
     "hurt" : "hurt.ogg",
-    "actionPlayed" : "tick.ogg"
+    "actionPlayed" : "null",
+    "wait" : "null",
+    "pickup" : "null",
+    "forwardRobot" : "null",
+    "backwardRobot" : "null",
+    "rotationRobot" : "null"
 }
