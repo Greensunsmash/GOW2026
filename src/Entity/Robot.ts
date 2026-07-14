@@ -111,6 +111,7 @@ export class MarcoBozo extends GridEntity {
 
     public backToACuteLittleRobot() {
         //console.log("entering backtocutelittlerobotohsocuteawww");
+        SoundManager.playSound("backToNormal", 0.2);
         this.affectedByADivineCurse = false;
         this.pigMesh.setEnabled(false);
         this.origMesh.position = this.pigMesh.position;
@@ -120,7 +121,7 @@ export class MarcoBozo extends GridEntity {
         (this.mesh as any).animations?.find(anim => anim.name.includes("idle"))?.play(true);
     }
 
-    protected override async  tryVisualMove(dx: number, dz: number) {
+    protected override async tryVisualMove(dx: number, dz: number) {
         const targetGridPos = GridUtils.add(
             this.gridPos,  
             {               // je me battrais jusqu'à la mort

@@ -105,6 +105,8 @@ export class SoundManager {
 
         const manager = await SoundManager.get();
         if (!manager.engine) return;
+        console.log(manager.sound_list[name]);
+        if (manager.sound_list[name] == "null") return;
         const sound = await BABYLON.CreateSoundAsync(name,`assets/sounds/${manager.sound_list[name]}`);
         sound.volume = volume;
         sound.play();

@@ -15,7 +15,7 @@ export class MoveForwardInstuction extends Instruction {
         const memory = Memory.get();
         memory.setCurrentlyMoving(true);
 
-        await this.ctx.nextTick(this.ctx.getRobot().getNextPosIntention("forward"), memory.skip);
+        await this.ctx.nextTick("forward", memory.skip);
         
         /*if (memory.skip) this.ctx.getRobot().moveForward();
         else await this.ctx.getRobot().visualMoveForward();*/

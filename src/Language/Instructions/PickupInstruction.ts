@@ -1,4 +1,5 @@
 import type { ExecutionContext } from "../../MainLoop/ExecutionContext";
+import { SoundManager } from "../../Shared/Sounds";
 import type { Launchable } from "../Launchable";
 import { Memory } from "../Memory";
 import { Instruction } from "./Instruction";
@@ -17,6 +18,7 @@ export class PickupInstruction extends Instruction {
 
         this.gameModeAtExecute = memory.getGameMode();
         if (this.gameModeAtExecute === "NORMAL") {
+            SoundManager.playSound("pickup");
             const itemPresence = await this.ctx.getRobot().pickupItem();
             if (!itemPresence)
                 this.ctx.die("Il n'y avait aucun débris à ramasser !");
@@ -25,7 +27,7 @@ export class PickupInstruction extends Instruction {
             await this.ctx.nextTick(undefined, memory.skip);
         }
         else 
-            await this.ctx.nextTick(this.ctx.getRobot().getNextPosIntention("forward"), memory.skip);
+            await this.ctx.nextTick("forward", memory.skip);
 
 
         Memory.get().setCurrentInstruction(this);

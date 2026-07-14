@@ -69,9 +69,10 @@ export class ExecutionContext {
     }
 
     // BOUCLE S'EXECUTANT A CHAQUE TICK DE JEU
-    public async nextTick(robotIntention?: GridPoint, instant?: boolean) {
+    public async nextTick(intentName:string | undefined, instant?: boolean) {
         //console.log("[TICKS] ENTERING NEXT TICK.");
 
+        let robotIntention = this.getRobot().getNextPosIntention(intentName as "forward" | "backward"| undefined);
         let robotDead: boolean = false;
         let deadFromVoid : boolean = false;
         let robotBounce: boolean = false;
@@ -121,8 +122,7 @@ export class ExecutionContext {
                 
                 this.robot.doMove(robotIntention, robotBounce);
             else
-                
-                await this.robot.doVisualMove(robotIntention, robotBounce);
+                await this.robot.doVisualMove(robotIntention, robotBounce, intentName + "Robot");
         }
 
         // 1.5 : 2eme check collisions robot/mob
