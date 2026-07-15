@@ -50,11 +50,11 @@ export class EmptySlot extends GUI.Rectangle {
     }
 
     // Remplace si c'est du bon type
-    public replaceIfMatch(c:BlocContainer): void {
-        if (this.getType() === c.getType() || (this.getType() === "ALL" && c.getType() !== "NONE")) 
-            this.replaceSlot(c);
-    } // spece de fou y'avait tout ca sur une seule ligne 
-    // /!\ fou
+    public replaceIfMatch(c:BlocContainer): boolean {
+        if (this.getType() === c.getType() || (this.getType() === "ALL" && c.getType() !== "NONE")) {this.replaceSlot(c); return true;}
+        return false;
+    }
+
     private replaceSlot(c:BlocContainer): void {
         if (this.parent instanceof GUI.Rectangle) {
             if (this.scene.getHoverSlot() === this) this.scene.setHoverSlot(null); 

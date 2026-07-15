@@ -201,6 +201,9 @@ export class ListContainer extends GUI.Rectangle {
             // Sélectionne sur quel bloc on appuie
             if (this.list[nb].contains(x, y) || forceStart) {
                 //console.log("past 2/double wesh");
+
+                SoundManager.playSound("pickBloc");
+                
                 let c = this.list[nb] as InstructionContainer;
 
                 // Si jamais on a appuyé sur un Valeur/BooleenContainer, on lui transmet le drag
@@ -367,21 +370,23 @@ export class ListContainer extends GUI.Rectangle {
                                 this.recomputeInstructions();
                             }
                             this.scene.setDragging(false);
+                            SoundManager.playSound("releaseBloc");
                             l.dispose();
                         } else {
                             this.scene.setDragging(false);
                             this.reparent(l, this.content_root, new Vector2(_evt.x+decalX, _evt.y+decalY));
                             l.detector.isHitTestVisible = true;
+                            SoundManager.playSound("emptyReleaseBloc");
                         }
                         //this.scene.saveProgram?.();
                     } else {
                         this.scene.setDragging(false);
                         this.reparent(l, this.content_root, new Vector2(_evt.x+decalX, _evt.y+decalY));
                         l.detector.isHitTestVisible = true;
+                        SoundManager.playSound("emptyReleaseBloc");
                         //this.scene.saveProgram?.();
                     }
                     this.scene.setDecal(new Vector2(0,0));
-                    SoundManager.playSound("releaseBloc", 1);
                 }
                 break;
 

@@ -99,7 +99,7 @@ export class MarcoBozo extends GridEntity {
 
     public turnToAPig() {
         //console.log("entering turntoapig");
-        SoundManager.playSound("pigTransformation", 0.2);
+        SoundManager.playSound("pigTransformation");
         this.affectedByADivineCurse = true;
         this.origMesh.setEnabled(false);
         this.pigMesh.position = this.origMesh.position;
@@ -111,7 +111,7 @@ export class MarcoBozo extends GridEntity {
 
     public backToACuteLittleRobot() {
         //console.log("entering backtocutelittlerobotohsocuteawww");
-        SoundManager.playSound("backToNormal", 0.2);
+        SoundManager.playSound("backToNormal");
         this.affectedByADivineCurse = false;
         this.pigMesh.setEnabled(false);
         this.origMesh.position = this.pigMesh.position;
@@ -157,9 +157,9 @@ export class MarcoBozo extends GridEntity {
         }
     }
 
-    public die() {
+    public die(sound:string) {
         this.dead = true;
-        SoundManager.playSound("hurt", 0.2);
+        SoundManager.playSound(sound);
         /* faire une anim */
     }
 

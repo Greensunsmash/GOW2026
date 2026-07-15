@@ -191,7 +191,7 @@ export abstract class GridEntity {
         anim?.play(true);
 
 
-        if (sound) SoundManager.playSound(sound, 0.2);
+        if (sound) SoundManager.playSound(sound);
         return new Promise ((resolve) => Animation.CreateAndStartAnimation(
             "slide_" + Date.now(),
             this.mesh,
@@ -220,7 +220,7 @@ export abstract class GridEntity {
         this._isMoving = true;
         const targetAngle = this.mesh.rotation.y + relativeAngle;
 
-        if (sound) SoundManager.playSound(sound, 0.2);
+        if (sound) SoundManager.playSound(sound);
         return new Promise((resolve) => Animation.CreateAndStartAnimation(
             "rotate_" + Date.now(), // pour pas avoir plusieurs fois le même nom
             this.mesh,

@@ -74,6 +74,7 @@ export class ExecutionContext {
 
         let robotIntention = this.getRobot().getNextPosIntention(intentName as "forward" | "backward"| undefined);
         let robotDead: boolean = false;
+        let deathFromTree : boolean = false;
         let deadFromVoid : boolean = false;
         let robotBounce: boolean = false;
 
@@ -99,6 +100,7 @@ export class ExecutionContext {
             } else {
                 //console.log("[TICKS] robot getting into an obstacle => dead.");
                 robotDead = true; 
+                deathFromTree = true;
             }
         }
         const mobs = this.level.getMobs();
@@ -140,8 +142,9 @@ export class ExecutionContext {
         
         // Si le robot est déjç mort, inutile d'aller plus loin n'est-il pas?
         if (robotDead) {
-            if (deadFromVoid) this.scene.onRobotDead("Le robot est tombée dans le vide");
-            else this.scene.onRobotDead();
+            if (deadFromVoid) this.scene.onRobotDead("Marco Robo est tombée dans le vide", "fall");
+            else if (deathFromTree) this.scene.onRobotDead("Marco Robo a percuté un abre", "collisionTree");
+            else this.scene.onRobotDead("Marco Robo a percuté un cochon", "collisionPig")
             return;
         }
 
@@ -256,7 +259,7 @@ export class ExecutionContext {
         // 4 : 2eme check collision robot/cochons
         for (const mob of mobs) {
             if (GridUtils.equals(mob.getVisualGridPos(), this.robot.getVisualGridPos())) { 
-                this.scene.onRobotDead();
+                this.scene.onRobotDead("Marco Robo été percuté par un cochon", "collisionPig");
                 return;
             }
         }

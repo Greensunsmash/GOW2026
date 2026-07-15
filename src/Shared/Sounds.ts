@@ -1,7 +1,8 @@
 import * as BABYLON from "babylonjs";
 import { ASSETS_ROOT } from "../Shared/Constants";
 
-type MusicDictionary = Record<string, string>;
+type sound = [string, number];
+type MusicDictionary = Record<string, sound[]>;
 
 export class SoundManager {
 
@@ -60,12 +61,24 @@ export class SoundManager {
         return data as MusicDictionary;
     }
 
-    public static async playAmbient(name: string, loop = true, volume=1): Promise<void> {
+    public static async playAmbient(name: string, loop = true): Promise<void> {
 
         const manager = await SoundManager.get();
 
         if (!manager.engine) {return;}
 
+        const variants = manager.music_list[name];
+
+        if (!variants || variants.length == 0) {
+            console.log(variants);
+            console.warn(`Son inconnu : ${name}`);
+            return;
+        }
+
+        const sound_info = variants[Math.floor(Math.random() * variants.length)];
+
+        if (sound_info[0] == "null") return;
+        
         // stop ancienne musique
         if (manager.currentAmbient) {
             manager.currentAmbient.stop();
@@ -73,9 +86,9 @@ export class SoundManager {
             manager.currentAmbient = null;
         }
 
-        const sound = await BABYLON.CreateStreamingSoundAsync("ambient",`assets/music/${manager.music_list[name]}`);
+        const sound = await BABYLON.CreateStreamingSoundAsync("ambient",`assets/music/${sound_info[0]}`);
         sound.loop = loop;
-        sound.setVolume(volume);
+        sound.setVolume(sound_info[1]);
 
         return new Promise<void>((resolve) => {
             if (!loop) {
@@ -101,14 +114,25 @@ export class SoundManager {
         });
     }
 
-    public static async playSound(name: string, volume: number = 1): Promise<void> {
+    public static async playSound(name: string): Promise<void> {
 
         const manager = await SoundManager.get();
         if (!manager.engine) return;
         console.log(manager.sound_list[name]);
-        if (manager.sound_list[name] == "null") return;
-        const sound = await BABYLON.CreateSoundAsync(name,`assets/sounds/${manager.sound_list[name]}`);
-        sound.volume = volume;
+
+        const variants = manager.sound_list[name];
+
+        if (!variants || variants.length == 0) {
+            console.warn(`Son inconnu : ${name}`);
+            return;
+        }
+
+        const sound_info = variants[Math.floor(Math.random() * variants.length)];
+
+        if (sound_info[0] == "null") return;
+        else console.log(sound_info[0], sound_info[1]);
+        const sound = await BABYLON.CreateSoundAsync(name,`assets/sounds/${sound_info[0]}`);
+        sound.volume = sound_info[1];
         sound.play();
 
         // nettoyage automatique une fois terminé
