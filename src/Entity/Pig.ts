@@ -4,6 +4,7 @@ import type { MobIntention } from "../MainLoop/ExecutionContext";
 import type { AssetLibrary } from "../Shared/AssetLibrary";
 import { GridUtils, type GridPoint } from "../Shared/GridUtils";
 import { Mob } from "./Mob";
+import { SoundManager } from "../Shared/Sounds";
 
 export class Pig extends Mob {
 
@@ -41,9 +42,12 @@ export class Pig extends Mob {
             return;
         if (processedIntention.status === "BOUCING") {
             this.facingIndex = (this.facingIndex + 2) % 4;
+            SoundManager.playSound("turnPig");
             await this.animateRotation(Math.PI);
             return;
         }
+
+        SoundManager.playSound("movePig");
         await this.doVisualMove(processedIntention.nextPos);
 
         if (processedIntention.deadDuringTick) {
@@ -55,5 +59,6 @@ export class Pig extends Mob {
     public die() {
         /* anim */
         this.dead = true;
+        SoundManager.playSound("deathPig");
     }
 }

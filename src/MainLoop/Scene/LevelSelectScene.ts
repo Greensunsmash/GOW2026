@@ -163,18 +163,18 @@ export class LevelSelectScene extends BaseScene {
                 async () =>  {
                     const manager = await SoundManager.get();
                     await manager.init();
-                    SoundManager.playAmbient("LevelMusic", true, 0.2);
+                    SoundManager.playAmbient("LevelMusic", true);
                 },
                 async () => {
                     const manager = await SoundManager.get();
                     await manager.init();
-                    SoundManager.playAmbient("LevelMusic", true, 0.2);
+                    SoundManager.playAmbient("LevelMusic", true);
                     SoundManager.toggleMute();
                 },
                 true /* fullBlack */
             );
         } else {
-            SoundManager.playAmbient("LevelMusic", true, 0.2);
+            SoundManager.playAmbient("LevelMusic", true);
         }
 
         if (this.levelIndex.length == Save.getCompletedLevels().length) {
@@ -419,7 +419,7 @@ export class LevelSelectScene extends BaseScene {
         const grey = new GreyBlocker();
         grey.background = "#000000ff";
         this.advancedTexture.addControl(grey);
-        await SoundManager.playAmbient("Intro", false, 0.6);
+        await SoundManager.playAmbient("Intro", false);
         this.advancedTexture.removeControl(grey);
         await RealDialog.show(this.advancedTexture, this, "Tout va bien ?", "SCIENTIFIQUE", true, false, true);
         await RealDialog.show(this.advancedTexture, this, "Où es-tu passé ?", "SCIENTIFIQUE", true, false, true);

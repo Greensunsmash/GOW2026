@@ -1,8 +1,8 @@
 {
-    "LevelMusic" : "Interplanetary_Odyssey.ogg",
-    "World1Music" : "world1.mp3",
-    "World2Music" : "world2.mp3",
-    "World3Music" : "world3.mp3",
-    "ArchipelWin" : "success.mp3",
-    "Intro" : "spaceship_crash.mp3"
+    "LevelMusic" : [["null", 0.2]],
+    "World1Music" : [["world1.mp3", 1]],
+    "World2Music" : [["world2.mp3",0.4]],
+    "World3Music" : [["world3.mp3", 0.7]],
+    "ArchipelWin" : [["success.mp3",1]],
+    "Intro" : [["spaceship_crash.mp3", 0.6]]
 }

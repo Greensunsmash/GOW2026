@@ -4,6 +4,7 @@ import { BaseVSpacer } from "../misc/BaseSpacers";
 import { Colors } from "../../Shared/Colors";
 import { BaseButton } from "../buttons/BaseButton";
 import type { BaseScene } from "../../MainLoop/Scene/BaseScene";
+import { SoundManager } from "../../Shared/Sounds";
 
 export type  DialogSpeakername = "SCIENTIFIQUE" | "SIRC";
 
@@ -119,6 +120,7 @@ export class RealDialog extends Rectangle {
         for (let i = 0; i < text.length; i++) {
             if (this.ended) { this.textBlock.text = text; return; }
             this.textBlock.text += text[i];
+            SoundManager.playSound("dialogTick");
             if (text[i] === ",") await this.sleep(speed * 2.5);
             else if ("?.!".includes(text[i])) await this.sleep(speed * 5);
             else await this.sleep(speed);

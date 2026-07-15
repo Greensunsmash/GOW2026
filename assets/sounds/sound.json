@@ -1,12 +1,22 @@
 {
-    "releaseBloc" : "clip.ogg",
-    "pigTransformation" : "transform.ogg",
-    "backToNormal" : "null",
-    "hurt" : "hurt.ogg",
-    "actionPlayed" : "null",
-    "wait" : "null",
-    "pickup" : "null",
-    "forwardRobot" : "null",
-    "backwardRobot" : "null",
-    "rotationRobot" : "null"
-}
+    "pickBloc" : [["null",1]],
+    "emptyReleaseBloc" : [["null",1]],
+    "releaseBloc" : [["clip.ogg",1]],
+    "pigTransformation" : [["transform.ogg",0.2]],
+    "backToNormal" : [["null",1]],
+    "hurt" : [["hurt.ogg",0.2]],
+    "actionPlayed" : [["null",1]],
+    "wait" : [["null",1]],
+    "pickup" : [["null",1]],
+    "forwardRobot" : [["null",1]],
+    "backwardRobot" : [["null",1]],
+    "rotationRobot" : [["null",1]],
+    "collisionTree" : [["null",1]],
+    "collisionPig" : [["null",1]],
+    "fall" : [["null",1]],
+    "islandWin" : [["null",1]],
+    "movePig" : [["null",1]],
+    "turnPig" : [["null",1]],
+    "deathPig" : [["null",1]],
+    "dialogTick" : [["tick.ogg",1], ["tick.ogg", 0.2]]
+} 

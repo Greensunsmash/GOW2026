@@ -28,6 +28,7 @@ export class DragBehavior {
 
     // Comportement de drag
     public startDrag(x: number, y: number, coordsAbsolute?: boolean) {
+        SoundManager.playSound("pickBloc");
         this.lastX = x;
         this.lastY = y;
 
@@ -81,6 +82,7 @@ export class DragBehavior {
             this.target.getScene().dragging_bloc = false;
             this.isDragging = false;
             this.target.dispose();
+            SoundManager.playSound("releaseBloc");
             return;
         }
         
@@ -89,12 +91,14 @@ export class DragBehavior {
         this.target.getContentRoot().addControl(this.target);
         //this.scene.setDragging(false);
         let slot = this.scene.getHoverSlot();
-        if (slot instanceof EmptySlot) {slot.replaceIfMatch(this.target);}
+        let empty = false;
+        if (slot instanceof EmptySlot) {empty = slot.replaceIfMatch(this.target);}
         this.target.getScene().setDecal(new Vector2(0,0));
         this.target.getScene().dragging_bloc = false;
         //this.scene.saveProgram?.();
         this.isDragging = false;
-        SoundManager.playSound("releaseBloc", 1);
+        if (!empty) SoundManager.playSound("emptyReleaseBloc"); // oui c'est totalement con mais he je m'en fous
+        else SoundManager.playSound("releaseBloc");
     }
 
     // Pour changer le parent d'un bloc

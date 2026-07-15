@@ -199,10 +199,7 @@ export class PlayScene extends GameScene { // ;)
         light.intensity = 1.0; */
 
         const worldNo = LevelReader.getWorldNo(levelName);
-        let vol = 1;
-        if (worldNo == 2) vol = 0.4;
-        else if (worldNo == 3) vol = 0.7;
-        SoundManager.playAmbient(`World${worldNo}Music`, true, vol);
+        SoundManager.playAmbient(`World${worldNo}Music`, true);
 
         this._isLoaded = true;
         this.scene.getEngine().hideLoadingUI();
@@ -539,7 +536,7 @@ export class PlayScene extends GameScene { // ;)
 
         if (next >= (this.levelReader as any).structure.length) {
             //console.log("Dernière île atteinte");
-            const jinglePromise = SoundManager.playAmbient("ArchipelWin", false, 1);
+            const jinglePromise = SoundManager.playAmbient("ArchipelWin", false);
             const m = new OneButtonModal(
                 this.advancedTexture,
                 "Félicitations, tu as complété cet archipel !",
@@ -778,11 +775,11 @@ export class PlayScene extends GameScene { // ;)
         );
     }
 
-    public onRobotDead(msg?: string) {
+    public onRobotDead(msg?: string, sound?:string) {
         if (!this.canRun) return;
         this.stopRun();
         this.memory.programEnd();
-        this.level.getRobot().die();
+        this.level.getRobot().die(sound);
         this.btmBar.triggerUpdate();
         new OneButtonModal(
             this.advancedTexture,
