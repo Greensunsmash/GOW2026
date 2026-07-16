@@ -118,7 +118,6 @@ export class SoundManager {
 
         const manager = await SoundManager.get();
         if (!manager.engine) return;
-        console.log(manager.sound_list[name]);
 
         const variants = manager.sound_list[name];
 
@@ -130,7 +129,6 @@ export class SoundManager {
         const sound_info = variants[Math.floor(Math.random() * variants.length)];
 
         if (sound_info[0] == "null") return;
-        else console.log(sound_info[0], sound_info[1]);
         const sound = await BABYLON.CreateSoundAsync(name,`assets/sounds/${sound_info[0]}`);
         sound.volume = sound_info[1];
         sound.play();
