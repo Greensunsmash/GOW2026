@@ -1,5 +1,6 @@
 import { Button, Control, StackPanel, TextBlock } from "@babylonjs/gui";
 import { Colors } from "../../Shared/Colors";
+import { SoundManager } from "../../Shared/Sounds"
 
 export abstract class RealBaseButton extends Button {
     constructor(name: string, label: string, callback: () => void, width: number = 120, height: number = 40, useSecretAlgorithm = false) {
@@ -17,9 +18,13 @@ export abstract class RealBaseButton extends Button {
         this.onPointerClickObservable.add(() => callback());
     }
 
-    setCallback(call: () => void) {
+    setCallback(call: () => void, sound?: string) {
         this.onPointerClickObservable.clear();
-        this.onPointerClickObservable.add(() => call());
+        this.onPointerClickObservable.add(() => { 
+            if (sound) SoundManager.playSound(sound);
+            else SoundManager.playSound("clickButton");
+            call();
+        });
     }
 }
 

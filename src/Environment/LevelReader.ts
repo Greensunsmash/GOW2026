@@ -64,7 +64,7 @@ export type Map3 = Map2[];
 export type IslandMap = Map3[]; // La map d'une ile, c'est la liste des maps de ses feuilles
 export type IslandBlockset = string[]; // Chaque ile à son propre blockset, qui est la liste des ses blocs
 
-export type LevelIndexEntry = {name: string, file: string, x?: number, y?: number, worldNo?: number};
+export type LevelIndexEntry = {name: string, file: string, x?: number, y?: number, worldNo?: number, mainNext?:string[], bonus?:[]};
 
 export type DialogLine = {speaker: DialogSpeakername, text: string};
 type LevelData = {
@@ -131,7 +131,6 @@ export class LevelReader {
     }
 
     constructor() {}
-
 
     private readLayers(layout: string[]): Map3 {
         return layout.map((layer) => {

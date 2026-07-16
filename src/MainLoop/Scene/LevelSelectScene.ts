@@ -359,19 +359,21 @@ export class LevelSelectScene extends BaseScene {
         this.levelMap.getContentRoot().clearControls();
         let x = -2000;
         let y = 20;
-        for (let i = 0; i < this.levelIndex.length; i++) {
-            if (!this.debugMode
-                && i > 0
-                && !Save.isCompleted(this.levelIndex[i-1].file)
-            ) {
-                break;
+        let map_levels : Map<string,ArchipelTrigger> = new Map();
+
+        // Récupère le lvel index à partir du nom de fichier
+        const getLevel = (lvlName:string) => {
+            for (const lvl of this.levelIndex) {
+                if (lvl.file == lvlName) {return lvl;}
             }
-
-            const lvl = this.levelIndex[i];
-
+            throw new Error("Level " + lvlName + " not Found wtf");
+        }
+        // Affiche le bouton d'un niveau (fonction récursive)
+        const show = (lvlToShow:string) => {
+            const lvl = getLevel(lvlToShow);
+            if (!lvl) return ;
             if (lvl.name === "")
                 lvl.name = lvl.file;
-
 
             const btn = new ArchipelTrigger(lvl.file);
             btn.setCallback(() => {
@@ -412,7 +414,89 @@ export class LevelSelectScene extends BaseScene {
                 y += 400;
                 x = 20;
             }
+
+            map_levels.set(lvlToShow, btn);
+            if (Save.isCompleted(lvl.file)) {
+                if (lvl.mainNext && lvl.mainNext.length > 0) {
+                    for (const n of lvl.mainNext) {
+                        show(n);
+                    }
+                }
+                if (lvl.bonus && lvl.bonus.length > 0) {
+                    for (const n of lvl.bonus) {
+                        show(n);
+                    }
+                }
+            }
         }
+        console.log(Save.getCompletedLevels());
+        console.log(this.levelIndex);
+
+        for (const lvlToShow of Save.getCompletedLevels()) {
+            if (map_levels.has(lvlToShow)) return;
+            // En gros on affiche le niveau qui lui même affiche ses suivants etc etc, ici on vérifie juste qu'on en loupe pas
+            show(lvlToShow);
+            
+            // if completed show link in green
+            // else show link in red
+            
+        }
+        /*
+        for (let i = 0; i < this.levelIndex.length; i++) {
+            if (!this.debugMode
+                && i > 0
+                && !Save.isCompleted(this.levelIndex[i-1].file)
+            ) {
+                break;
+            }
+
+            const lvl = this.levelIndex[i];
+
+            if (lvl.name === "")
+                lvl.name = lvl.file;
+
+
+            const btn = new ArchipelTrigger(lvl.file);
+            btn.setCallback(() => {
+                this.archipelBtns.filter(b => b !== btn).map(t => t.setUnselected());
+                this.levelPopup.switchLevelShown(lvl.file, lvl.name);
+                this.levelPopup.btn.setCallback(async () => await this.onLevelSelect(lvl.file));
+                this.levelPopup.skipBtn.setCallback(async () => {
+                    Save.completeLevel(lvl.file);
+                    this.scene.getEngine().displayLoadingUI();
+                    this.levelPopup.toggle(); */
+                    /*const lr = new LevelReader();
+                    await lr.loadLevel(lvl.file);
+                    const dialogs: DialogLine[] = lr.getAllDialogs();
+                    for (let i = 0; i < dialogs.length; i++) {
+                        const dialog = dialogs[i];
+                        await RealDialog.show(this.advancedTexture, this, dialog.text, dialog.speaker, (i < dialogs.length - 1));
+                    }*//*
+                    await this.fillMap();
+                    this.setupFogOfWar();
+                    setTimeout(() => this.scene.getEngine().hideLoadingUI(), 2000);
+                });
+            });
+            if (Save.isCompleted(lvl.file))
+                btn.setDone();
+
+            const width = this.levelMap.getContentRoot().widthInPixels;
+            const height = this.levelMap.getContentRoot().heightInPixels;
+
+            // Coordonnées "images" => coordonnéees "map"
+            btn.leftInPixels = lvl.x ? (lvl.x - width / 2) : x;
+            btn.topInPixels = lvl.y ? (height / 2 - lvl.y) : y;
+
+            this.archipelBtns.push(btn);
+            this.levelMap.getContentRoot().addControl(btn);
+
+            x += 600;
+            if (x >= 2000) {
+                y += 400;
+                x = 20;
+            }
+        }
+        */
     }
     
     async intro(onEnd: (levelFile: string) => Promise<void>) {

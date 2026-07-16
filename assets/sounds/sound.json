@@ -18,5 +18,6 @@
     "movePig" : [["null",1]],
     "turnPig" : [["null",1]],
     "deathPig" : [["null",1]],
-    "dialogTick" : [["tick.ogg",1], ["tick.ogg", 0.2]]
+    "dialogTick" : [["tick.ogg",1], ["tick.ogg", 0.2]],
+    "clickButton" : [["tick.ogg", 1]]
 } 
