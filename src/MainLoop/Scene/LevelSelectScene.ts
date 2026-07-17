@@ -1,4 +1,4 @@
-import { AbstractMesh, ArcRotateCamera, Color3, DirectionalLight, DynamicTexture, Engine, KeyboardEventTypes, MeshBuilder, PBRMaterial, ShadowGenerator, Texture, TransformNode, Vector3 } from "@babylonjs/core";
+import { AbstractMesh, ArcRotateCamera, Color3, DirectionalLight, DynamicTexture, Engine, KeyboardEventTypes, MeshBuilder, ParticleNumberMathBlockOperations, PBRMaterial, ShadowGenerator, Texture, TransformNode, Vector3, Animation } from "@babylonjs/core";
 import { ASSETS_ROOT, INTRO_LEVELS, LayerMasks } from "../../Shared/Constants";
 import { LevelReader, type DialogLine, type LevelIndexEntry } from "../../Environment/LevelReader";
 import { BaseScene } from "./BaseScene";
@@ -40,7 +40,7 @@ export class LevelSelectScene extends BaseScene {
         this.drh = new AssetLibrary(this);
     }
 
-    async init(onLevelSelect: (levelName: string) => Promise<void>, onReset: () => void) {
+    async init(onLevelSelect: (levelName: string) => Promise<void>, onReset: () => void, levelCompleted? : string) {
         this.scene.getEngine().displayLoadingUI();
         //console.log("init levelselectscene");
         this.onLevelSelect = onLevelSelect;
@@ -124,7 +124,7 @@ export class LevelSelectScene extends BaseScene {
         if (this.levelIndex.length <= 0) {
             throw new Error("cannot fill level list: level index (index.json) is empty");
         }
-        await this.fillMap();
+        await this.fillMap(levelCompleted);
         
         this.setupFogOfWar();
 
@@ -352,7 +352,7 @@ export class LevelSelectScene extends BaseScene {
         this.shadowGenerator.addShadowCaster(mesh);
     }
 
-    async fillMap() {
+    async fillMap(levelCompleted?:string) {
 
         this.archipelBtns = [];
         this.levelMap.getContentRoot().clearControls();
@@ -370,7 +370,7 @@ export class LevelSelectScene extends BaseScene {
         // Affiche le bouton d'un niveau (fonction récursive)
         const show = (lvlToShow:string) => {
             const lvl = getLevel(lvlToShow);
-            if (!lvl) return [0, 0];
+            if (!lvl) return [0, 0, undefined];
             if (lvl.name === "")
                 lvl.name = lvl.file;
 
@@ -383,7 +383,7 @@ export class LevelSelectScene extends BaseScene {
                     Save.completeLevel(lvl.file);
                     this.scene.getEngine().displayLoadingUI();
                     this.levelPopup.toggle();
-                    await this.fillMap();
+                    await this.fillMap(lvl.file);
                     this.setupFogOfWar();
                     setTimeout(() => this.scene.getEngine().hideLoadingUI(), 2000);
                 });
@@ -411,17 +411,20 @@ export class LevelSelectScene extends BaseScene {
             if (Save.isCompleted(lvl.file)) {
                 if (lvl.mainNext && lvl.mainNext.length > 0) {
                     for (const n of lvl.mainNext) {
-
                         const coords = show(n);
                         if (!coords) continue;
                         const line = new Line(lvlToShow + "to" + n);
-                        line.x1 = lvl.x;
-                        line.y1 = (height - lvl.y);
-                        line.x2 = coords[0];
-                        line.y2 = height - coords[1];
                         line.lineWidth = 20;
                         line.zIndex = 1000;
                         line.dash = [20, 20];
+                        if (lvl.file == levelCompleted) {
+                            this.animateLine(lvl.x, height - lvl.y, line, coords[0], height-coords[1], coords[2]);
+                        } else {
+                            line.x1 = lvl.x;
+                            line.y1 = (height - lvl.y);
+                            line.x2 = coords[0];
+                            line.y2 = height - coords[1];
+                        }
                         if (Save.isCompleted(n)) line.color = "green";
                         else line.color = "red";
                         this.levelMap.getContentRoot().addControl(line);
@@ -432,20 +435,24 @@ export class LevelSelectScene extends BaseScene {
                         const coords = show(n);
                         if (!coords) continue;
                         const line = new Line(lvlToShow + "to" + n);
-                        line.x1 = lvl.x;
-                        line.y1 = (height - lvl.y);
-                        line.x2 = coords[0];
-                        line.y2 = height - coords[1];
                         line.lineWidth = 20;
                         line.zIndex = 1000;
                         line.dash = [20, 20];
+                        if (lvl.file == levelCompleted) {
+                            this.animateLine(lvl.x, (height - lvl.y), line, coords[0], height-coords[1], coords[2]);
+                        } else {
+                            line.x1 = lvl.x;
+                            line.y1 = (height - lvl.y);
+                            line.x2 = coords[0];
+                            line.y2 = height - coords[1];
+                        }
                         if (Save.isCompleted(n)) line.color = "green";
                         else line.color = "blue";
                         this.levelMap.getContentRoot().addControl(line);
                     }
                 }
             }
-            return [lvl.x,lvl.y];
+            return [lvl.x,lvl.y,btn];
 
         }
         console.log(Save.getCompletedLevels());
@@ -458,64 +465,58 @@ export class LevelSelectScene extends BaseScene {
         }
 
         console.log(this.levelMap.getContentRoot().children);
-        /*
-        for (let i = 0; i < this.levelIndex.length; i++) {
-            if (!this.debugMode
-                && i > 0
-                && !Save.isCompleted(this.levelIndex[i-1].file)
-            ) {
-                break;
-            }
-
-            const lvl = this.levelIndex[i];
-
-            if (lvl.name === "")
-                lvl.name = lvl.file;
-
-
-            const btn = new ArchipelTrigger(lvl.file);
-            btn.setCallback(() => {
-                this.archipelBtns.filter(b => b !== btn).map(t => t.setUnselected());
-                this.levelPopup.switchLevelShown(lvl.file, lvl.name);
-                this.levelPopup.btn.setCallback(async () => await this.onLevelSelect(lvl.file));
-                this.levelPopup.skipBtn.setCallback(async () => {
-                    Save.completeLevel(lvl.file);
-                    this.scene.getEngine().displayLoadingUI();
-                    this.levelPopup.toggle(); */
-                    /*const lr = new LevelReader();
-                    await lr.loadLevel(lvl.file);
-                    const dialogs: DialogLine[] = lr.getAllDialogs();
-                    for (let i = 0; i < dialogs.length; i++) {
-                        const dialog = dialogs[i];
-                        await RealDialog.show(this.advancedTexture, this, dialog.text, dialog.speaker, (i < dialogs.length - 1));
-                    }*//*
-                    await this.fillMap();
-                    this.setupFogOfWar();
-                    setTimeout(() => this.scene.getEngine().hideLoadingUI(), 2000);
-                });
-            });
-            if (Save.isCompleted(lvl.file))
-                btn.setDone();
-
-            const width = this.levelMap.getContentRoot().widthInPixels;
-            const height = this.levelMap.getContentRoot().heightInPixels;
-
-            // Coordonnées "images" => coordonnéees "map"
-            btn.leftInPixels = lvl.x ? (lvl.x - width / 2) : x;
-            btn.topInPixels = lvl.y ? (height / 2 - lvl.y) : y;
-
-            this.archipelBtns.push(btn);
-            this.levelMap.getContentRoot().addControl(btn);
-
-            x += 600;
-            if (x >= 2000) {
-                y += 400;
-                x = 20;
-            }
-        }
-        */
     }
     
+    // Il faut trouver le moyen de lancer après le chargement
+    private animateLine(x1:number, y1:number, line:Line, x2:number, y2:number, btn:ArchipelTrigger) {
+
+        const duration = 2000;
+        line.x1 = x1;
+        line.y1 = y1;
+        btn.isVisible = false;
+
+        const animationX = new Animation(
+            "lineX",
+            "x2",
+            60,
+            BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+            BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
+        );
+
+        animationX.setKeys([
+            { frame: 0, value: x1 },
+            { frame: duration * 60 / 1000, value: x2 }
+        ]);
+
+        const animationY = new Animation(
+            "lineY",
+            "y2",
+            60,
+            BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+            BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
+        );
+
+        animationY.setKeys([
+            { frame: 0, value: y1 },
+            { frame: duration * 60 / 1000, value: y2 }
+        ]);
+
+        line.animations = [
+            animationX,
+            animationY
+        ];
+
+        this.scene.beginDirectAnimation(
+            line,
+            [animationX, animationY],
+            0,
+            duration * 60 / 1000,
+            false,
+            1,
+            () => {btn.isVisible = true}
+        );
+    }
+
     async intro(onEnd: (levelFile: string) => Promise<void>) {
         const grey = new GreyBlocker();
         grey.background = "#000000ff";
