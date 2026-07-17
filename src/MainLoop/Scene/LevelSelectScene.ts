@@ -7,7 +7,7 @@ import { LevelSelectMap } from "../../MRGUI/levelsel/LevelSelectMap";
 import { BaseButton } from "../../MRGUI/buttons/BaseButton";
 import { LevelPopup } from "../../MRGUI/levelsel/LevelPopup";
 import { ArchipelTrigger } from "../../MRGUI/buttons/ArchipelTrigger";
-import { Control, Rectangle, TextBlock, Image } from "@babylonjs/gui";
+import { Control, Rectangle, TextBlock, Image, Line } from "@babylonjs/gui";
 import { Save } from "../../Shared/Save";
 import { LevelCount } from "../../MRGUI/levelsel/LevelCount";
 import { RealDialog } from "../../MRGUI/windows/RealDialog";
@@ -264,7 +264,6 @@ export class LevelSelectScene extends BaseScene {
         });
     }
 
-
     private setupFogOfWar(): void {
         const width = 6000;
         const height = 4000;
@@ -333,7 +332,7 @@ export class LevelSelectScene extends BaseScene {
 
         // Debug (optionnel)
         // document.body.appendChild(ctx.canvas);
-}
+    }
     private setupShadows() {
         this.shadowGenerator = new ShadowGenerator(2048, this.sun);
     
@@ -361,7 +360,7 @@ export class LevelSelectScene extends BaseScene {
         let y = 20;
         let map_levels : Map<string,ArchipelTrigger> = new Map();
 
-        // Récupère le lvel index à partir du nom de fichier
+        // Récupère le level index à partir du nom de fichier
         const getLevel = (lvlName:string) => {
             for (const lvl of this.levelIndex) {
                 if (lvl.file == lvlName) {return lvl;}
@@ -371,7 +370,7 @@ export class LevelSelectScene extends BaseScene {
         // Affiche le bouton d'un niveau (fonction récursive)
         const show = (lvlToShow:string) => {
             const lvl = getLevel(lvlToShow);
-            if (!lvl) return ;
+            if (!lvl) return [0, 0];
             if (lvl.name === "")
                 lvl.name = lvl.file;
 
@@ -384,13 +383,6 @@ export class LevelSelectScene extends BaseScene {
                     Save.completeLevel(lvl.file);
                     this.scene.getEngine().displayLoadingUI();
                     this.levelPopup.toggle();
-                    /*const lr = new LevelReader();
-                    await lr.loadLevel(lvl.file);
-                    const dialogs: DialogLine[] = lr.getAllDialogs();
-                    for (let i = 0; i < dialogs.length; i++) {
-                        const dialog = dialogs[i];
-                        await RealDialog.show(this.advancedTexture, this, dialog.text, dialog.speaker, (i < dialogs.length - 1));
-                    }*/
                     await this.fillMap();
                     this.setupFogOfWar();
                     setTimeout(() => this.scene.getEngine().hideLoadingUI(), 2000);
@@ -419,28 +411,53 @@ export class LevelSelectScene extends BaseScene {
             if (Save.isCompleted(lvl.file)) {
                 if (lvl.mainNext && lvl.mainNext.length > 0) {
                     for (const n of lvl.mainNext) {
-                        show(n);
+
+                        const coords = show(n);
+                        if (!coords) continue;
+                        const line = new Line(lvlToShow + "to" + n);
+                        line.x1 = lvl.x;
+                        line.y1 = (height - lvl.y);
+                        line.x2 = coords[0];
+                        line.y2 = height - coords[1];
+                        line.lineWidth = 20;
+                        line.zIndex = 1000;
+                        line.dash = [20, 20];
+                        if (Save.isCompleted(n)) line.color = "green";
+                        else line.color = "red";
+                        this.levelMap.getContentRoot().addControl(line);
                     }
                 }
                 if (lvl.bonus && lvl.bonus.length > 0) {
                     for (const n of lvl.bonus) {
-                        show(n);
+                        const coords = show(n);
+                        if (!coords) continue;
+                        const line = new Line(lvlToShow + "to" + n);
+                        line.x1 = lvl.x;
+                        line.y1 = (height - lvl.y);
+                        line.x2 = coords[0];
+                        line.y2 = height - coords[1];
+                        line.lineWidth = 20;
+                        line.zIndex = 1000;
+                        line.dash = [20, 20];
+                        if (Save.isCompleted(n)) line.color = "green";
+                        else line.color = "blue";
+                        this.levelMap.getContentRoot().addControl(line);
                     }
                 }
             }
+            return [lvl.x,lvl.y];
+
         }
         console.log(Save.getCompletedLevels());
         console.log(this.levelIndex);
 
         for (const lvlToShow of Save.getCompletedLevels()) {
-            if (map_levels.has(lvlToShow)) return;
+            if (map_levels.has(lvlToShow)) continue;
             // En gros on affiche le niveau qui lui même affiche ses suivants etc etc, ici on vérifie juste qu'on en loupe pas
             show(lvlToShow);
-            
-            // if completed show link in green
-            // else show link in red
-            
         }
+
+        console.log(this.levelMap.getContentRoot().children);
         /*
         for (let i = 0; i < this.levelIndex.length; i++) {
             if (!this.debugMode
