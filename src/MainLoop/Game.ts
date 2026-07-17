@@ -58,7 +58,7 @@ export class Game {
         return game;
     }
 
-    public async switchToLevelSelect() {
+    public async switchToLevelSelect(levelCompleted?:string) {
         const scene = new LevelSelectScene(this.engine);
         await this.switchScene(scene);
         //await scene.init();
@@ -73,12 +73,13 @@ export class Game {
                     (suceededLevelFile: string) => {
                         //console.log(`level ${suceededLevelFile} won !`);
                         Save.completeLevel(suceededLevelFile);
-                        this.switchToLevelSelect();
+                        this.switchToLevelSelect(levelName);
                     }
                 );
                 await this.switchScene(newScene);
             },
-            () => this.switchToLevelSelect() 
+            () => this.switchToLevelSelect(),
+            levelCompleted
         );
     }
 
