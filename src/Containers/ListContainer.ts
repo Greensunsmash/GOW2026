@@ -30,7 +30,8 @@ export class ListContainer extends GUI.Rectangle {
     private readonly stack: GUI.StackPanel;
     private readonly magnet: Magnet;
     private pointerObserver: BABYLON.Observer<BABYLON.PointerInfo>;
-    private readonly detector: GUI.Rectangle;
+    private readonly pickDetector: GUI.Rectangle;
+    private readonly hoverDetector: GUI.Rectangle;
     private readonly list: (InstructionContainer | Magnet)[];
     private readonly structureList: StructureContainer[];
     private hover: boolean = false;
@@ -67,61 +68,38 @@ export class ListContainer extends GUI.Rectangle {
         this.stack.clipChildren = false;
         this.stack.clipContent = false;
 
-        this.detector = new GUI.Rectangle();
-        this.detector.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-        this.detector.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
-        this.detector.height = "100%"
-        this.detector.width = "100%";
-        this.detector.alpha = 0.1;
-        //this.detector.thickness = 0;
-        this.detector.isHitTestVisible = true;
+        this.pickDetector = new GUI.Rectangle();
+        this.pickDetector.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+        this.pickDetector.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
+        this.pickDetector.height = "100%"
+        this.pickDetector.width = "100%";
+        this.pickDetector.alpha = 0.1;
+        this.pickDetector.isHitTestVisible = true;
+
+        this.hoverDetector = new GUI.Rectangle();
+        this.hoverDetector.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+        this.hoverDetector.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_TOP;
+        this.hoverDetector.height = "100%"
+        this.hoverDetector.width = "110%";
+        this.hoverDetector.thickness = 0;
+        this.hoverDetector.color = "red";
+        this.hoverDetector.isHitTestVisible = false;
 
         this.scene = scene;
 
         root.addControl(this);
         this.addControl(this.stack);
-        this.addControl(this.detector);
+        this.addControl(this.pickDetector);
+        this.addControl(this.hoverDetector);
 
         this.magnet = new Magnet(this.scene, this);
         this.list.push(this.magnet);
         this.stack.addControl(this.magnet);
 
-        // Même moi j'y comprends rien
-        /*this.pointerObserver = this.scene.scene.onPointerObservable.add((pointerInfo) => {
-            const decal = this.scene.getDecal();
-
-            if (this.detector.isHitTestVisible && pointerInfo.type === PointerEventTypes.POINTERMOVE) {
-                const evt = pointerInfo.event;
-                if (this.getHover()) {
-                    if (!this.detector.contains(evt.x + decal.x, evt.y + decal.y) && this.scene.getHoverList() === this) {
-                        this.scene.setHoverList(null);
-                    } else if (scene.isDragging()) {
-                        let x = evt.x + decal.x - this.stack.leftInPixels;
-                        let y = evt.y + decal.y - this.stack.topInPixels;
-                        //let x = evt.x + decal.x - this.leftInPixels;
-                        //let y = evt.y + decal.y - this.topInPixels;
-                        //y = this.moveTowards(y, this.magnet.centerY, 5);
-                        y = this.moveTowards(y, this.magnet.centerY, 60);
-                        if (!this.magnet.contains(x, y)) {
-                            //console.log("Recalcul");
-                            let found = false;
-                            for (let i = 0; i < this.list.length; i++) {
-                                if (this.list[i].contains(x, y)) { this.moveMagnet(this.list.indexOf(this.list[i])); found = true; break; }
-                            }
-                            if (!found && this.list.indexOf(this.magnet) != this.list.length - 1) this.moveMagnet(this.list.length - 1);
-                        }
-                    }
-                } else {
-                    if (this.detector.contains(evt.x+decal.x, evt.y+decal.y)) {
-                        this.scene.setHoverList(this);
-                    }
-                }
-            }
-        });*/
         this.pointerObserver = this.scene.scene.onPointerObservable.add((pointerInfo) => {
             const decal = this.scene.getDecal();
 
-            if (this.detector.isHitTestVisible && pointerInfo.type === PointerEventTypes.POINTERMOVE) {
+            if (this.pickDetector.isHitTestVisible && pointerInfo.type === PointerEventTypes.POINTERMOVE) {
                 
                 // ─── LE FIX ANTI-BUG D'ÉCRAN EST ICI ───
                 // On utilise les coordonnées internes corrigées par le moteur 3D,
@@ -131,7 +109,7 @@ export class ListContainer extends GUI.Rectangle {
 
                 if (this.getHover()) {
                     // On utilise pointerX et pointerY pour les vérifications de survol
-                    if (!this.detector.contains(pointerX + decal.x, pointerY + decal.y) && this.scene.getHoverList() === this) {
+                    if (!this.hoverDetector.contains(pointerX + decal.x, pointerY + decal.y) && this.scene.getHoverList() === this) {
                         this.scene.setHoverList(null);
                     } else if (this.scene.isDragging()) {
                         
@@ -177,14 +155,14 @@ export class ListContainer extends GUI.Rectangle {
                         
                     }
                 } else {
-                    if (this.detector.contains(pointerX + decal.x, pointerY + decal.y)) {
+                    if (this.hoverDetector.contains(pointerX + decal.x, pointerY + decal.y)) {
                         this.scene.setHoverList(this);
                     }
                 }
             }
         });
 
-        this.detector.onPointerDownObservable.add((pointerInfo) => this.click(pointerInfo.x, pointerInfo.y));
+        this.pickDetector.onPointerDownObservable.add((pointerInfo) => this.click(pointerInfo.x, pointerInfo.y));
 
 
         this.scene.dragListeners.push(() => { this.stack.paddingBottom = "15px"; });
@@ -307,7 +285,7 @@ export class ListContainer extends GUI.Rectangle {
 
                 //console.error("bip boup");
                 // On setup le drag
-                l.detector.isHitTestVisible = false;
+                l.pickDetector.isHitTestVisible = false;
                 this.scene.setDragging(true);
 
                 l.isDragging = true;
@@ -345,7 +323,7 @@ export class ListContainer extends GUI.Rectangle {
                             l.isDragging = false;
                             this.scene.setDragging(false);
                             this.reparent(l, this.content_root, new Vector2(x + decalX, y + decalY));
-                            l.detector.isHitTestVisible = true;
+                            l.pickDetector.isHitTestVisible = true;
                             this.scene.setDecal(new Vector2(0, 0));
                             //this.scene.saveProgram?.();
                         };
@@ -375,14 +353,14 @@ export class ListContainer extends GUI.Rectangle {
                         } else {
                             this.scene.setDragging(false);
                             this.reparent(l, this.content_root, new Vector2(_evt.x+decalX, _evt.y+decalY));
-                            l.detector.isHitTestVisible = true;
+                            l.pickDetector.isHitTestVisible = true;
                             SoundManager.playSound("emptyReleaseBloc");
                         }
                         //this.scene.saveProgram?.();
                     } else {
                         this.scene.setDragging(false);
                         this.reparent(l, this.content_root, new Vector2(_evt.x+decalX, _evt.y+decalY));
-                        l.detector.isHitTestVisible = true;
+                        l.pickDetector.isHitTestVisible = true;
                         SoundManager.playSound("emptyReleaseBloc");
                         //this.scene.saveProgram?.();
                     }
@@ -692,12 +670,12 @@ export class ListContainer extends GUI.Rectangle {
     getHover(): boolean { return this.hover; }
     setHover(bool: boolean) {
         if (bool) {
-            this.detector.background = Colors.Workbench;
+            this.pickDetector.background = Colors.Workbench;
             if (this.scene.isDragging()) this.toggleMagnet(true);
             this.hover = bool;
             //console.log("hover");
         } else {
-            this.detector.background = "#00000000";
+            this.pickDetector.background = "#00000000";
             this.toggleMagnet(false);
             this.hover = bool;
             //console.log("unhover");
@@ -721,7 +699,7 @@ export class ListContainer extends GUI.Rectangle {
         return null;
     }
     getMagnetID(): number { return this.list.indexOf(this.magnet); }
-    getDetector(): GUI.Rectangle { return this.detector; }
+    getDetector(): GUI.Rectangle { return this.pickDetector; }
 
     toString(): string { return "ListContainer : " + this.id.toString();}
     printOrganization(): void {
@@ -772,7 +750,7 @@ export class ListContainer extends GUI.Rectangle {
 
     dispose(): void {
         this.scene.scene.onPointerObservable.remove(this.pointerObserver);
-        this.detector.dispose();
+        this.pickDetector.dispose();
         this.stack.dispose();
         this.magnet.dispose();
         super.dispose();
