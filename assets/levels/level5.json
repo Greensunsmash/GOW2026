@@ -3,19 +3,14 @@
         {
             "nb": 1,
             "begin_dialogs": [
-                {"speaker": "SCIENTIFIQUE", "text":"Pour continuer, on va avoir besoin du bloc \"Si ... faire\"."},
-                {"speaker": "SCIENTIFIQUE", "text":"Il sert à réaliser des actions uniquement si la condition est remplie."},
-                {"speaker": "SCIENTIFIQUE", "text":"Avec le capteur que tu as là, tu peux par exemple détecter si il y a un mur juste en face de toi."},
-                {"speaker": "SCIENTIFIQUE", "text":"Les capteurs ne comptent pas dans le nombre d'instructions, utilise-les autant que tu veux !"}
+                {"speaker": "SCIENTIFIQUE", "text":"Tu devrais bientôt arriver jusqu'à moi. Si jamais tu croises des débris de fusée sur le chemin, récupère-les."},
+                {"speaker": "SCIENTIFIQUE", "text":"Ça nous sera utile. Il te suffit de te placer dessus et d'utiliser le bloc \"Ramasser\"."},
+                {"speaker": "SCIENTIFIQUE", "text":"Attention, si tu tentes de ramasser un débris alors qu'il n'y en a pas, le programme échouera."}
             ],
-            "layouts": [
+            "layouts":[
                 [
-                    [ ".   ", ".   ", ".   ", ".   "],
-                    [ "@   ", "    ", "    ", "x   "]
-                ],
-                [
-                    [ "....", ".   ", "    ", "    "],
-                    [ "@  x", "#   ", "    ", "    "]
+                    [".",".",".",".",".",".","."],
+                    ["@"," "," ","!"," "," ","x"]
                 ]
             ],
             "blockset": {
@@ -23,7 +18,8 @@
                     "forward",
                     "backward",
                     "left",
-                    "right"
+                    "right",
+                    "pickup"
                 ],
                 "sensors": [
                     "obstacle"
@@ -36,88 +32,29 @@
                     "start"
                 ]
             },
-            "goal":[{"name": "arrival"}],
-            "clues" : [
-                "Quel est la seule différence entre les deux étapes ?",
-                "Utilise le bloc \"if\" pour détecter la présence du rocher.",
-                "Tournes si tu es face au rocher, puis dans les deux cas avance de 3 cases."
+            "goal": [
+                {
+                    "name": "arrival"
+                },
+                {
+                    "name": "pickup",
+                    "args": {
+                        "itemType": "!"
+                    }
+                }
+            ],
+            "clues": [
+                "Pour valider, il faut atteindre l'arrivée en ayant ramassé tous les débris.",
+                "Répéter 3 fois (Avancer), Ramasser le débris, Répéter 3 fois (Avancer)"
             ]
         },
         {
             "nb": 2,
-            "begin_dialogs": [ {"speaker": "SCIENTIFIQUE", "text":"Très bien, tu as compris comment ça fonctionne. Continue comme ça !"}],
-            "layouts": [
+            "begin_dialogs": [ {"speaker": "SCIENTIFIQUE", "text":"C'est ça, continue comme ça. Si on récolte assez de débris, on devrait pouvoir créer des blocs utiles."}],
+            "layouts":[
                 [
-                    [
-                        ".    ",
-                        ".    ",
-                        ".    ",
-                        ".    ",
-                        ".    ",
-                        ".    ",
-                        ".    ",
-                        "..   ",
-                        ".    "
-                    ],
-                    [
-                        "@    ",
-                        "     ",
-                        "     ",
-                        "     ",
-                        "     ",
-                        "     ",
-                        "     ",
-                        " x   ",
-                        "#    "
-                    ]
-                ],
-                [
-                    [
-                        ".    ",
-                        ".    ",
-                        ".    ",
-                        ".    ",
-                        ".    ",
-                        ".... ",
-                        ".    ",
-                        "     ",
-                        "     "
-                    ],
-                    [
-                        "@    ",
-                        "     ",
-                        "     ",
-                        "     ",
-                        "     ",
-                        "   x ",
-                        "#    ",
-                        "     ",
-                        "     "
-                    ]
-                ],
-                [
-                    [
-                        ".    ",
-                        ".  . ",
-                        ".  . ",
-                        ".....",
-                        ".    ",
-                        "     ",
-                        "     ",
-                        "     ",
-                        "     "
-                    ],
-                    [
-                        "@    ",
-                        "   x ",
-                        "     ",
-                        "    #",
-                        "#    ",
-                        "     ",
-                        "     ",
-                        "     ",
-                        "     "
-                    ]
+                    [".  ","...","...","...","  ."],
+                    ["@  ","   ","! !","   ","  x"]
                 ]
             ],
             "blockset": {
@@ -125,7 +62,8 @@
                     "forward",
                     "backward",
                     "left",
-                    "right"
+                    "right",
+                    "pickup"
                 ],
                 "sensors": [
                     "obstacle"
@@ -138,13 +76,20 @@
                     "start"
                 ]
             },
-            "goal":[{"name": "arrival"}],
-            "block_limitation": 5,
-            "clues" : [
-                "A combien de case es-tu de l'arrivée ?",
-                "Comment détecter à chaque case si il faut tourner ?",
-                "Il faut alterner entre avancer et tester si l'on doit tourner.",
-                "A l'aide du bloc \"Répéter ... fois\"."
+            "goal": [
+                {
+                    "name": "arrival"
+                },
+                {
+                    "name": "pickup",
+                    "args": {
+                        "itemType": "!"
+                    }
+                }
+            ],
+            "clues": [
+                "Pour valider, il faut atteindre l'arrivée en ayant ramassé tous les débris.",
+                "Avancer, Avancer, Ramasser, Tourner à droite, Avancer, Avancer, Ramasser, Tourner à gauche, Avancer, Avancer, "
             ]
         }
     ]

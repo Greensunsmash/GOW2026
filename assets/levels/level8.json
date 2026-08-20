@@ -2,6 +2,10 @@
   "islands": [
     {
       "nb": 1,
+      "begin_dialogs": [
+                {"speaker": "SCIENTIFIQUE", "text":"Tu vas également avoir besoin du bloc Pas. Il te permet d'inverser une condition."},
+                {"speaker": "SCIENTIFIQUE", "text":"Par exemple, \"Pas \"Face à un obstacle est vrai\"\" lorsque tu n'as pas d'obstacle devant toi et que tu peux avancer."}
+            ],
       "layouts": [
         [
           [". ", ". ", ". ", ". ", "..", ". "],
@@ -45,201 +49,60 @@
             }
         ],
       "clues": [
-          "Comment se déplacer tant qu'il n'y a rien en face ?"
+          "Comment se déplacer tant qu'il n'y a rien en face ?",
+          "Tant que (Pas (Face à un obstacle)) (Avancer), Tourner à droite, Avancer"
       ]
     },
     {
-      "nb": 2,
-      "begin_dialogs": [
-        {"speaker": "SCIENTIFIQUE", "text":"Si tu veux pouvoir plus progresser, il va te falloir apprendre les variables."},
-        {"speaker": "SCIENTIFIQUE", "text":"Une variable représente une valeur, que tu peux modifier à tout moment."},
-        {"speaker": "SCIENTIFIQUE", "text":"Par exemple, en l'augmentant à chaque fois que tu te déplaces, tu peux compter le nombre de déplacements."},
-        {"speaker": "SCIENTIFIQUE", "text":"Bon courage !"}
-      ],
-      "layouts": [
-        [
-          [".    ", ".    ", ".    ", ".    ", ".....", ".    "],
-          ["@    ", "     ", "     ", "     ", "    x", "#    "]
+        "nb": 2,
+        "begin_dialogs": [
+                {"speaker": "SCIENTIFIQUE", "text":"Je vois que tu maîtrises. A ce rythme, on devrait pas tarder à se retrouver !"}
+            ],
+        "layouts": [
+            [
+                ["   .  "," . .  "," .....","....  ","   .  "],
+                ["   @  "," #    ","    x#","#     ","   #  "]
+            ],
+            [
+                [" .    "," ....."," ...  "," ...  ","....  ","   .  "],
+                [" #    ","    x#","   @  ","      ","#     ","   #  "]
+            ],
+            [
+                ["  .   "," ..   "," .....","...   ","  .   "],
+                ["  @   "," #    ","    x#","#     ","  #   "]
+            ]
         ],
-        [
-          [". ", "..", ". "],
-          ["@ ", " x", "# "]
-        ],
-        [
-          [".   ", ".   ", ".   ", "....", ".   "],
-          ["@   ", "    ", "    ", "   x", "#   "]
-        ]
-      ],
-      "blockset": {
-        "instructions": [
-          "forward",
-          "backward",
-          "left",
-          "right",
-          "pickup"
-        ],
-        "structures": [
-          "for",
-          "if"
-        ],
-        "booleans": [
-            "not",
-            "inf",
-            "sup",
-            "eq"
-        ],
-        "sensors": [
-          "obstacle",
-          "item"
-        ],
-        "variables": [
-          "var_create",
-          "plus",
-          "minus"
-        ],
-        "start": [
-          "start"
-        ]
-      },
-      "goal": [
-        {
-          "name": "arrival"
-        }],
-      "clues": [
-          "Utilse \"On met la valeur de x à ...\" pour modifier la valeur de x, et \"Variable x\" pour utiliser la valeur actuelle de x.",
-          "Tu peux augmenter de 1 la valeur d'une variable x, en utilisant \" ... + 1\" avec \"Variable x\".",
-          "En augmentant la variable à chaque déplacement, je peux compter le nombre de déplacements.",
-          "Grâce aux blocs \"Répeter ... fois\" et \"Variable x\", tu peux répeter une action autant de fois que la valeur stockée par x.",
-          "Mets une variable x à 0, Répete 4 fois (Si tu n'est pas face à un obstacle (avance et augmente la variable x de 1)), Tourne à gauche, puis répete variable x fois avancer."
-      ]
-    },
-    {
-      "nb": 3,
-      "begin_dialogs": [
-        {"speaker": "SCIENTIFIQUE", "text":"Bravo ! Essaye maintenant sur une autre île pour voir si tu as bien compris."}
-      ],
-      "layouts": [
-        [
-          ["..", ". ", ". ", ". "],
-          ["@x", "! ", "! ", " "]
-        ],
-        [
-          ["..", ". ", ". ", ". ", ". "],
-          ["@x", "! ", "! ", "! ", " "]
-        ],
-        [
-          ["..", ". ", ". "],
-          ["@x", "! ", " "]
-        ]
-      ],
-      "blockset": {
-        "instructions": [
-          "forward",
-          "backward",
-          "left",
-          "right",
-          "pickup"
-        ],
-        "structures": [
-          "for",
-          "if"
-        ],
-        "booleans": [
-            "not",
-            "inf",
-            "sup",
-            "eq"
-        ],
-        "sensors": [
-          "obstacle",
-          "item"
-        ],
-        "variables": [
-          "var_create",
-          "plus",
-          "minus"
-        ],
-        "start": [
-          "start"
-        ]
-      },
-      "goal": [
-        {
-        "name": "arrival"
+        "blockset": {
+            "instructions": [
+                "forward",
+                "backward",
+                "left",
+                "right",
+                "pickup"
+            ],
+            "structures": [
+                "for",
+                "if",
+                "while"
+            ],
+            "booleans": [
+                "not"
+            ],
+            "sensors": [
+                "obstacle",
+                "item"
+            ],
+            "start": [
+                "start"
+            ]
         },
-        {
-            "name": "pickup",
-            "args": {
-                "itemType": "!"
-            }
-        }
-      ],
-      "clues": [
-          "Il faut reculer d'autant que l'on a avancé.",
-          "Compte le nombre de mouvements aller, et recule d'autant.",
-          "Mets une variable x à 1, Avance, Répete 4 fois (Si tu es sur un débris (ramasse, avance et augmente la variable x de 1)), Répete variable x fois eculer, tourne à droite et avance."
-      ]
-    },
-    {
-      "nb": 4,
-      "begin_dialogs": [
-        {"speaker": "SCIENTIFIQUE", "text":"Cette île me rappelle les précédentes..."}
-      ],
-      "layouts": [
-        [
-          [".   ", "....", "... ", "..  ", " .  ", " .  "],
-          ["@   ", "!!!x", "!!  ", " !  ", " !  ", "    "]
+        "goal": [{"name": "arrival"}],
+        "clues" :[
+            "Quelle logique suivent les rochers ?",
+            "Comment rejoindre celui en face ?",
+            "Cette méthode peut-elle te permettre d'en atteindre un autre ?",
+            "Répéter 4 fois (Tant que (Pas (Face à un obstacle)) (Avancer), Tourner à gauche)."
         ]
-      ],
-      "blockset": {
-        "instructions": [
-          "forward",
-          "backward",
-          "left",
-          "right",
-          "pickup"
-        ],
-        "structures": [
-          "for",
-          "if"
-        ],
-        "booleans": [
-            "not",
-            "inf",
-            "sup",
-            "eq"
-        ],
-        "sensors": [
-          "obstacle",
-          "item"
-        ],
-        "variables": [
-          "var_create",
-          "plus",
-          "minus"
-        ],
-        "start": [
-          "start"
-        ]
-      },
-      "goal": [
-        {
-        "name": "arrival"
-        },
-        {
-            "name": "pickup",
-            "args": {
-                "itemType": "!"
-            }
-        }
-      ],
-      "clues" : [
-        "Cette île regroupe les 3 étapes précédentes.",
-        "Tu dois tout d'abord avancer une fois, afin de te placer dans le motif, avant de commencer toute boucle.",
-        "N'oublie pas de remettre ton compteur à 0 en changeant de ligne.",
-        "Tu dois ici reculer une fois de moins que l'île précédente.",
-        "Avance, Répète 3 fois (Mets une variable x à 0, Répète 4 fois (si tu es sur un débris (rammasse le, avance et augmente x de 1), Répète variable x fois (reculer), tourne à droite, avance, tourne à gauche."
-      ]
-    }
+      }
   ]
 }

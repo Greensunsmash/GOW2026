@@ -1,0 +1,132 @@
+{
+    "islands": [
+        {
+            "nb":1,
+            "layouts":[
+                [
+                    [" . ","..."," . "," . "],
+                    ["   "," @ "," ! "," x "]
+                ],
+                [
+                    [" . "," . ","..."," . "],
+                    [" x "," ! "," @ ","   "]
+                ],
+                [
+                    ["  . ","....","  . "],
+                    ["    ","x!@ ","    "]
+                ],
+                [
+                    [" .  ","...."," .  "],
+                    ["    "," @!x","    "]
+                ]
+                
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right",
+                    "pickup"
+                ],
+                "sensors": [
+                    "obstacle",
+                    "item"
+                ],
+                "structures": [
+                    "if",
+                    "for"
+                ],
+                "booleans": [
+                    "not"
+                ],
+                "start": [
+                    "start"
+                ]
+            },
+            "goal": [
+                {
+                    "name": "arrival"
+                },
+                {
+                    "name": "pickup",
+                    "args": {
+                        "itemType": "!"
+                    }
+                }
+            ],
+            "block_limitation":9,
+            "clues": [
+                "Comment s'arrêter sur le débris ?",
+                "Tant que tu n'es pas sur un débris, va au prochain emplacement possible.",
+                "Place toi au premier emplacement possible, avant la boucle. Ne ramasse pas le débris dans la boucle, sinon elle continuera.",
+                "Avancer, Tant que (Pas (Se trouve sur un débris)) (Reculer, Tourner à droite, Avancer), Ramasser, Avancer "
+            ]
+        },
+        {
+            "nb":1,
+            "begin_dialogs": [
+                {"speaker": "SCIENTIFIQUE", "text":"Bravo, tu as fait le plus dur !"},
+                {"speaker": "SCIENTIFIQUE", "text":"En ré-utilisant ton programme, tu devrais être capable de passer cette île."}
+            ],
+            "end_dialogs": [
+                {"speaker": "SCIENTIFIQUE", "text": "Super, tu as bien géré !"}
+            ],
+            "layouts":[
+                [
+                    ["    . "," .....","......","..... "," .    "],
+                    ["    @ ","    ! "," !!!! "," !    "," x    "]
+                ],
+                [
+                    [" .   ","...  ",".... "," ... "," ....","  .. "],
+                    [" @   "," !   "," !!  ","  !  ","  !!x","     "]
+                ],
+                [
+                    ["  .. "," ...."," ....","....."," ... "],
+                    ["  @  ","  !! ","   ! ","x!!! ","     "]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right",
+                    "pickup"
+                ],
+                "sensors": [
+                    "obstacle",
+                    "item"
+                ],
+                "structures": [
+                    "if",
+                    "for"
+                ],
+                "booleans": [
+                    "not"
+                ],
+                "start": [
+                    "start"
+                ]
+            },
+            "goal": [
+                {
+                    "name": "arrival"
+                },
+                {
+                    "name": "pickup",
+                    "args": {
+                        "itemType": "!"
+                    }
+                }
+            ],
+            "block_limitation":10,
+            "clues": [
+                "Sur la précédente ile, tu t'es déplacé dans la direction du débris a coté de toi.",
+                "Comment suivre un chemin formé par des debris ?",
+                "Les chemins sont de longueur fixe",
+                "Avancer, Répéter 6 fois (Tant que (Pas (Se trouve sur un débris)) (Reculer, Tourner à droite, Avancer), Ramasser, Avancer)"
+            ]
+        }
+    ]
+}

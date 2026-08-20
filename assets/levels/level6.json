@@ -1,99 +1,10 @@
 {
-    "islands": [
+    "islands": [ 
         {
-            "nb":1,
+            "nb": 1,
             "begin_dialogs": [
-                {"speaker": "SCIENTIFIQUE", "text":"Tu devrais bientôt arriver jusqu'à moi. Si jamais tu croises des débris sur le chemin, récupère les."}, 
-                {"speaker": "SCIENTIFIQUE", "text":"Ça peut nous être utile. Il te suffit de te placer dessus et d'utiliser le bloc \"Ramasser\"."},
-                {"speaker": "SCIENTIFIQUE", "text":"Attention, si tu tentes de ramasser un débris alors qu'il n'y en a pas, le programme échouera."}
+                {"speaker": "SCIENTIFIQUE", "text":"Récupère bien tous les débris et on aura pile ce qu'il faut pour faire un nouveau capteur !"}
             ],
-            "layouts":[
-                [
-                    [".",".",".",".",".",".","."],
-                    ["@"," "," ","!"," "," ","x"]
-                ]
-            ],
-            "blockset": {
-                "instructions": [
-                    "forward",
-                    "backward",
-                    "left",
-                    "right",
-                    "pickup"
-                ],
-                "sensors": [
-                    "obstacle"
-                ],
-                "structures": [
-                    "if",
-                    "for"
-                ],
-                "start": [
-                    "start"
-                ]
-            },
-            "goal": [
-                {
-                    "name": "arrival"
-                },
-                {
-                    "name": "pickup",
-                    "args": {
-                        "itemType": "!"
-                    }
-                }
-            ],
-            "clues": [
-                "Pour valider, il faut atteindre l'arrivée en ayant ramassé tous les débris.",
-                "A part bien compter, il n'y a pas de secret."
-            ]
-        },
-        {
-            "nb":2,
-            "begin_dialogs": [{"speaker": "SCIENTIFIQUE", "text":"C'est ça, continue comme ça."}],
-            "layouts":[
-                [
-                    [".  ","...","...","...","  ."],
-                    ["@  ","   ","! !","   ","  x"]
-                ]
-            ],
-            "blockset": {
-                "instructions": [
-                    "forward",
-                    "backward",
-                    "left",
-                    "right",
-                    "pickup"
-                ],
-                "sensors": [
-                    "obstacle"
-                ],
-                "structures": [
-                    "if",
-                    "for"
-                ],
-                "start": [
-                    "start"
-                ]
-            },
-            "goal": [
-                {
-                    "name": "arrival"
-                },
-                {
-                    "name": "pickup",
-                    "args": {
-                        "itemType": "!"
-                    }
-                }
-            ],
-            "clues": [
-                "Pour valider, il faut atteindre l'arrivée en ayant ramassé tous les débris.",
-                "A part bien compter, il n'y a pas de secret."
-            ]
-        },
-        {
-            "nb":3,
             "layouts":[
                 [
                     [".",".",".",".",".",".","."],
@@ -130,20 +41,20 @@
                     }
                 }
             ],
+            "block_limitation":6,
             "clues": [
-                "Pour valider, il faut atteindre l'arrivée en ayant ramassé tous les débris.",
-                "A part bien compter, il n'y a pas de secret."
+                "Quel est le pattern qui se répete 3 fois ?",
+                "Répéter 3 fois (Avancer, Ramasser, Avancer)"
             ]
         },
         {
-            "nb":4,
+            "nb": 2,
             "begin_dialogs": [
-                {"speaker": "SCIENTIFIQUE", "text":"Les débris ne sont pas détectables avec ton capteur actuel ?"},
-                {"speaker": "SCIENTIFIQUE", "text":"Avec tous les débris ramassés, tu peux maintenant créer un nouveau capteur pour savoir si tu te trouves sur un débris."},
-                {"speaker": "SCIENTIFIQUE", "text":"Ça va être très utile, hésites pas à t'en servir !"}
-            ],
-            "end_dialogs" : [
-                {"speaker": "SCIENTIFIQUE", "text":"Je vois que tu maitrises. A ce rythme, on devrait pas tarder à se retrouver !"}
+                {"speaker": "SCIENTIFIQUE", "text":"Parfait, j'ai tout ce qu'il nous faut !"},
+                {"speaker": "SCIENTIFIQUE", "text":"Je vais pouvoir te faire un capteur qui détecte lorsque tu te trouves sur un débris."},
+                {"speaker": "SCIENTIFIQUE", "text":"Tu n'auras plus qu'à les ramasser !"},
+                {"speaker": "SCIENTIFIQUE", "text":"Ça va être très utile, n'hésites pas à les utiliser."}
+
             ],
             "layouts":[
                 [
@@ -155,12 +66,10 @@
                     ["@","!"," "," ","!","!"," ","x"]
                 ],
                 [
-                    
                     [".",".",".",".",".",".",".","."],
                     ["@","!","!"," "," ","!"," ","x"]
                 ],
                 [
-                    
                     [".",".",".",".",".",".",".","."],
                     ["@"," "," "," "," ","!"," ","x"]
                 ]
@@ -196,10 +105,11 @@
                     }
                 }
             ],
+            "block_limitation":6,
             "clues": [
-                "Comment faire pour vérifier à chaque case s'il y a un débris ?",
-                "Inspire toi du niveau précédent.",
-                "Répète le bon nombre de fois \"si se trouve sur un obstacle ramasser, puis avancer\"." 
+                "Utilise le capteur \"Se trouve sur un débris\" afin de savoir si il y un débris à ramasser",
+                "Répète cette opération sur toute la ligne",
+                "Répéter 7 fois (Avancer, Si (Se trouve sur un débris) (Ramasser))"
             ]
         }
     ]

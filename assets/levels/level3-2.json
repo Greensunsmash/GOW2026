@@ -1,0 +1,42 @@
+{
+    "islands" : [
+        {
+            "nb": 1,
+            "begin_dialogs": [
+                {"speaker": "SCIENTIFIQUE", "text":"Il semble y avoir pas mal d'interférences ici."},
+                {"speaker": "SCIENTIFIQUE", "text":" N'aie crainte, je suis certaine que tu vas réussir !"}
+            ],
+            "layouts": [
+                [
+                    ["......", "......","......","......","......","......","     ."],
+                    [" @    ", "#  #  ","      ","      "," #    ","      ","     x"]
+                ],
+                [
+                    ["......", "......","......","......","......","......","     ."],
+                    [" @    ", "    # ","      ","  #  #","      ","   #  ","     x"]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right"
+                ],
+                "structures": [
+                    "for"
+                ],
+                "start": [
+                    "start"
+                ]
+            },
+            "goal": [{
+                "name": "arrival"
+            }],
+            "clues" : [
+                "Analysez les 2 étapes afin de trouver un chemin commun.",
+                "Répéter 4 fois (Avancer, Tourner à droite, Avancer d'une case, Tourner à gauche), Avancer, Avancer"
+            ]
+        }
+    ]
+}
