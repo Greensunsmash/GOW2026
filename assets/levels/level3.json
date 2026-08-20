@@ -1,47 +1,53 @@
 {
     "islands": [
         {
-            "nb" : 1,
-            "begin_dialogs" : [
-                {"speaker": "SCIENTIFIQUE", "text":"Je pense que tu as ce qu'il faut pour te débrouiller, je vais prendre un peu de temps pour te localiser."},
-                {"speaker": "SCIENTIFIQUE", "text":"En attendant, continue à avancer !"}
-            ],
-            "layouts": [
-                [
-                    [".    ", ".   ", ".   ", "...."],
-                    ["@    ", "    ", "    ", "   x"]
-                ]
-            ],
-            "blockset": {
-                "instructions": [
-                    "forward",
-                    "backward",
-                    "left",
-                    "right"
-                ],
-                "structures": [
-                    "for"
-                ],
-                "start" : [
-                    "start"
-                ]
-            },
-            "goal":[{"name": "arrival"}],
-            "block_limitation": 6,
-            "clues" : [
-                "Utiliser \"Répéter ... fois\" pour économiser des blocs."
-            ]
-        },
-        {
-            "nb" : 2,
+            "nb":1,
             "begin_dialogs": [
-                {"speaker": "SCIENTIFIQUE", "text": "Très souvent, le programme fait pour passer une île pourra te servir de base pour la suite."},
-                {"speaker": "SCIENTIFIQUE", "text": "Si jamais tu le supprimes par erreur, tu peux utiliser le bouton restaurer pour le récupérer."}
+                {"speaker": "SCIENTIFIQUE", "text":"J'ai découvert un certain nombres d'endroits où je ne pourrais pas te contacter."},
+                {"speaker": "SCIENTIFIQUE", "text":"Il te faudra faire un seul programme, à utiliser pour chacune des îles."},
+                {"speaker": "SCIENTIFIQUE", "text":"Bon courage !"}
             ],
-            "layouts": [
+            "end_dialogs": [
+                {"speaker": "SCIENTIFIQUE", "text":"Bravo ! Tiens, qu'as tu récupéré ?"}, 
+                {"speaker": "SCIENTIFIQUE", "text":"Un capteur ?"}, 
+                {"speaker": "SCIENTIFIQUE", "text":"Parfait, ça va nous être très utile pour la suite"}
+            ],
+            "layouts":[
                 [
-                    [".       ", ".      ", ".      ", "....   ", "   .   ", "   .   ", "   ...."],
-                    ["@       ", "       ", "       ", "       ", "       ", "       ", "      x"]
+                    [
+                        "  .  ",
+                        ".....",
+                        ".....",
+                        ".....",
+                        ".....",
+                        "  .  "
+                    ],
+                    [
+                        "  @  ",
+                        "     ",
+                        " # # ",
+                        "     ",
+                        "#   #",
+                        "  x  "
+                    ]
+                ],
+                [
+                    [
+                        "  .  ",
+                        ".....",
+                        ".....",
+                        ".....",
+                        ".....",
+                        "  .  "
+                    ],
+                    [
+                        "  @  ",
+                        "     ",
+                        "  #  ",
+                        "  # #",
+                        "     ",
+                        "  x  "
+                    ]
                 ]
             ],
             "blockset": {
@@ -54,51 +60,16 @@
                 "structures": [
                     "for"
                 ],
-                "start" : [
+                "start": [
                     "start"
                 ]
             },
-            "goal":[{"name": "arrival"}],
-            "block_limitation": 8,
+            "goal": [{
+                "name": "arrival"
+            }],
             "clues" : [
-                "Cette île ne serait-elle pas similaire à la précédente ?",
-                "Faites attention à bien repartir dans le bon sens.",
-                "Ajouter tourner à gauche à la fin du programme précédent, puis répétez le tout 2 fois."
-            ]
-        },
-        {
-            "nb" : 3,
-            "end_dialogs" : [
-                {"speaker": "SCIENTIFIQUE", "text":"Bravo, tu te débrouilles bien !"},
-                {"speaker": "SCIENTIFIQUE", "text":"J'ai réussi à te localiser, mais j'ai une mauvaise nouvelle..."}
-            ],
-            "layouts": [
-                [
-                    [".           .", ".           .", ".           .", "....     ....", "   .     .   ", "   .     .   ", "   .......   "],
-                    ["@           x", "             ", "             ", "             ", "             ", "             ", "             "]
-                ]
-            ],
-            "blockset": {
-                "instructions": [
-                    "forward",
-                    "backward",
-                    "left",
-                    "right"
-                ],
-                "structures": [
-                    "for"
-                ],
-                "start" : [
-                    "start"
-                ]
-            },
-            "goal":[{"name": "arrival"}],
-            "block_limitation": 10,
-            "clues" : [
-                "Cette île ne serait-elle pas similaire à la précédente ?",
-                "Tu peux réutiliser la même technique que pour l'île précédente.",
-                "Faites attention à bien repartir dans le bon sens.",
-                "Ajouter tourner à droite à la fin du programme précédent, puis répétez le tout 2 fois."
+                "Analysez les 2 étapes afin de trouver un chemin commun.",
+                "Avancer, Tourner à gauche, Avancer, Avancer, Tourner à droite, Avancer, Avancer, Tourner à droite, Avancer, Tourner à gauche, Avancer, Tourner à droite, Avancer, Tourner à gauche, Avancer"
             ]
         }
     ]

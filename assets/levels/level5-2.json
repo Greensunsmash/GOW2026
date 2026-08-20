@@ -1,0 +1,140 @@
+{
+    "islands": [
+        {
+            "nb": 1,
+            "layouts":[
+                [
+                    [" .   ",".... "," ... "," ....","   . "],
+                    [" @   ","x! ! ","     "," ! !#","   # "]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right",
+                    "pickup"
+                ],
+                "sensors": [
+                    "obstacle"
+                ],
+                "structures": [
+                    "if",
+                    "for"
+                ],
+                "start": [
+                    "start"
+                ]
+            },
+            "goal": [
+                {
+                    "name": "arrival"
+                },
+                {
+                    "name": "pickup",
+                    "args": {
+                        "itemType": "!"
+                    }
+                }
+            ],
+            "block_limitation": 9,
+            "clues": [
+                "Trouver un pattern à répéter 4 fois",
+                "Avancer, Tourner à gauche, Répéter 4 fois (Tourner à droite, Avancer, Avancer, Ramasser), Avancer"
+            ]
+        },
+        {
+            "nb": 2,
+            "begin_dialogs" : [{"speaker": "SCIENTIFIQUE", "text":"Je vois que tu t'impliques dans le nettoyage de la planète"}, {"speaker": "SCIENTIFIQUE", "text":"Bravo, continue comme ça !"}],
+            "layouts":[
+                [
+                    [".....",".....",".....",".....",".....",".    "],
+                    [" !!! ","!   !","!   !","!   !","@!!! ","x    "]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right",
+                    "pickup"
+                ],
+                "sensors": [
+                    "obstacle"
+                ],
+                "structures": [
+                    "if",
+                    "for"
+                ],
+                "start": [
+                    "start"
+                ]
+            },
+            "goal": [
+                {
+                    "name": "arrival"
+                },
+                {
+                    "name": "pickup",
+                    "args": {
+                        "itemType": "!"
+                    }
+                }
+            ],
+            "block_limitation": 8,
+            "clues": [
+                "Il faut trouver un pattern à répéter 4 fois",
+                "Il faut également optimiser le pattern à répéter",
+                "Répéter 4 fois (Tourner à droite, Répéter 3 fois (Avancer, Ramasser), Avancer), Avancer"
+            ]
+        },
+        {
+            "nb": 3,
+            "end_dialogs" : [{"speaker": "SCIENTIFIQUE", "text":"Bravo, c'est un sacré programme que tu viens de faire là !"}],
+            "layouts":[
+                [
+                    [" ....."," ....."," .....","......"," ....."],
+                    [" ! # !","  ! ! "," # @ #","x ! ! "," ! # !"]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right",
+                    "pickup"
+                ],
+                "sensors": [
+                    "obstacle"
+                ],
+                "structures": [
+                    "if",
+                    "for"
+                ],
+                "start": [
+                    "start"
+                ]
+            },
+            "goal": [
+                {
+                    "name": "arrival"
+                },
+                {
+                    "name": "pickup",
+                    "args": {
+                        "itemType": "!"
+                    }
+                }
+            ],
+            "block_limitation": 21,
+            "clues": [
+                "Il faut trouver un pattern à répéter 4 fois",
+                "Il faut déterminer où se termine le parcours, et où et comment il peut donc commencer",
+                "Avancer, Tourner à gauche, Répéter 4 fois (Avancer, Ramasser, Répeter 2 fois (Avancer, Tourner à droite), Ramasser, Avancer, Tourner à droite, Avancer, Avancer), Repéter 3 fois (Avancer)"
+            ]
+        }
+    ]
+}

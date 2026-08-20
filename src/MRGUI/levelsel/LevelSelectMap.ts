@@ -1,8 +1,9 @@
 import * as GUI from "@babylonjs/gui";
-import { Vector2 } from "@babylonjs/core";
+import { KeyboardEventTypes, Vector2 } from "@babylonjs/core";
 import { Colors } from "../../Shared/Colors";
 import type { BaseScene } from "../../MainLoop/Scene/BaseScene";
 import { LevelPopup } from "./LevelPopup";
+import { ArchipelTrigger } from "../buttons/ArchipelTrigger";
 
 export class LevelSelectMap extends GUI.Rectangle {
     private readonly scene: BaseScene;
@@ -58,6 +59,14 @@ export class LevelSelectMap extends GUI.Rectangle {
         
         this.addControl(this.content);
 
+        this.scene.scene.onKeyboardObservable.add((kbInfo) => {
+                    if (kbInfo.type == KeyboardEventTypes.KEYUP) {
+                        console.log("key event", kbInfo.event.key);
+                        if (kbInfo.event.key === "g") {
+                            console.log(this.content.leftInPixels, this.content.topInPixels);
+                        }
+                    }});
+                
         // -- GESTION DU DRAG (PANNING) VIA LES OBSERVABLES GUI --
         this.onPointerDownObservable.add((pi) => {
             this.isPanning = true;
@@ -131,6 +140,12 @@ export class LevelSelectMap extends GUI.Rectangle {
         // Application stricte des limites
         this.content.leftInPixels = Math.max(-maxLeft, Math.min(maxLeft, this.content.leftInPixels));
         this.content.topInPixels = Math.max(-maxTop, Math.min(maxTop, this.content.topInPixels));
+    }
+
+    public target(x:number, y:number) {
+        console.log(x, y, this.startLeft, this.startTop)
+        this.content.leftInPixels = this.startLeft + x;
+        this.content.topInPixels = this.startTop + y;
     }
 
     public zoom(delta: number) {

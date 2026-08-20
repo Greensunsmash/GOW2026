@@ -409,6 +409,9 @@ export class LevelSelectScene extends BaseScene {
 
             map_levels.set(lvlToShow, btn);
             if (Save.isCompleted(lvl.file)) {
+                if (lvl.file == levelCompleted) {
+                    this.levelMap.target(lvl.x,lvl.y);
+                }
                 if (lvl.mainNext && lvl.mainNext.length > 0) {
                     for (const n of lvl.mainNext) {
                         const coords = show(n);

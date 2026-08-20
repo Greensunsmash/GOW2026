@@ -3,25 +3,25 @@
         {
             "nb":1,
             "begin_dialogs": [
-                {"speaker": "SCIENTIFIQUE", "text":"Tu vas devoir appliquer ce qu’on a vu depuis le début, bon courage !"},
-                {"speaker": "SCIENTIFIQUE", "text":"N'oublie pas que tu peux reculer, ça te servira certainement."}
+                {"speaker": "SCIENTIFIQUE", "text":"Voici un autre bloc qui va t'être utile : le bloc \"TantQue\" !"},
+                {"speaker": "SCIENTIFIQUE", "text":"Il te permet de répéter des instructions tant que la condition est vraie."}
             ],
             "layouts":[
                 [
-                    [".",".","."],
-                    ["@"," ","x"]
+                    ["...","...","..."],
+                    ["###","#@#","# #"]
                 ],
                 [
-                    [".",".",".","."],
-                    ["@","!"," ","x"]
+                    ["...","...","..."],
+                    ["###"," @#","###"]
                 ],
                 [
-                    [".",".",".",".","."],
-                    ["@","!","!"," ","x"]
+                    ["...","...","..."],
+                    ["# #","#@#","###"]
                 ],
                 [
-                    [".",".",".",".",".","."],
-                    ["@","!","!","!"," ","x"]
+                    ["...","...","..."],
+                    ["###","#@ ","###"]
                 ]
             ],
             "blockset": {
@@ -38,7 +38,8 @@
                 ],
                 "structures": [
                     "if",
-                    "for"
+                    "for",
+                    "while"
                 ],
                 "start": [
                     "start"
@@ -57,17 +58,15 @@
             ],
             "block_limitation":7,
             "clues": [
-                "Comment mesurer la distance jusqu'au drapeau ?",
-                "Comment se déplacer tant qu'on est sur un débris ?",
-                "Répéter un bloc \"Si ... faire\" permet de s'en rapprocher.",
-                "Il faut avancer (afin de se placer correctement pour la suite), répéter 3 fois avancer si sur un débris, et avancer une dernière fois."
+                "Utilise le bloc \"Tant que\" afin de tourner autant qu'il faut",
+                "Le capteur \"Face à un obstacle\" est nécessaire pour savoir quand s'arrêter.",
+                "Tant que (Face à un obstacle) (Tourner à gaucher), Avancer"
             ]
         },
         {
             "nb":2,
             "begin_dialogs": [
-                {"speaker": "SCIENTIFIQUE", "text":"Tiens, tu auras besoin du bloc \"Pas ... \", cela permet d'inverser des conditions."},
-                {"speaker": "SCIENTIFIQUE", "text":"Par exemple, l'utiliser avec le capteur \"Se trouve sur un débris\" permet de déterminer si on se trouve pas sur un débris."}
+                {"speaker": "SCIENTIFIQUE", "text":"Bravo, continue comme ça !"}
             ],
             "layouts":[
                 [
@@ -76,15 +75,15 @@
                 ],
                 [
                     [".",".",".","."],
-                    ["@"," ","!","x"]
+                    ["@","!","!","x"]
                 ],
                 [
                     [".",".",".",".","."],
-                    ["@"," "," ","!","x"]
+                    ["@","!","!","!","x"]
                 ],
                 [
-                    [".",".",".",".",".","."],
-                    ["@"," "," "," ","!","x"]
+                    [".",".",".",".",".",".",".",".","."],
+                    ["@","!","!","!","!","!","!","!","x"]
                 ]
 
             ],
@@ -100,12 +99,10 @@
                     "obstacle",
                     "item"
                 ],
-                "booleans": [
-                    "not"
-                ],
                 "structures": [
                     "if",
-                    "for"
+                    "for",
+                    "while"
                 ],
                 "start": [
                     "start"
@@ -122,138 +119,12 @@
                     }
                 }
             ],
-            "block_limitation":7,
+            "block_limitation":5,
             "clues": [
-                "Comment mesurer la distance jusqu'au drapeau ?",
-                "Mettre le capteur \"Se trouve sur un débris\" dans le bloc \"Pas\" permet de déterminer si on se trouve pas sur un débris.",
-                "En t'inspirant de l'île précédente, déplace toi tant que tu n'es pas sur un débris."
-            ]
-        },
-        {
-            "nb":3,
-            "layouts":[
-                [
-                    [" . ","..."," . "," . "],
-                    ["   "," @ "," ! "," x "]
-                ],
-                [
-                    [" . "," . ","..."," . "],
-                    [" x "," ! "," @ ","   "]
-                ],
-                [
-                    ["  . ","....","  . "],
-                    ["    ","x!@ ","    "]
-                ],
-                [
-                    [" .  ","...."," .  "],
-                    ["    "," @!x","    "]
-                ]
-                
-            ],
-            "blockset": {
-                "instructions": [
-                    "forward",
-                    "backward",
-                    "left",
-                    "right",
-                    "pickup"
-                ],
-                "sensors": [
-                    "obstacle",
-                    "item"
-                ],
-                "structures": [
-                    "if",
-                    "for"
-                ],
-                "booleans": [
-                    "not"
-                ],
-                "start": [
-                    "start"
-                ]
-            },
-            "goal": [
-                {
-                    "name": "arrival"
-                },
-                {
-                    "name": "pickup",
-                    "args": {
-                        "itemType": "!"
-                    }
-                }
-            ],
-            "block_limitation":9,
-            "clues": [
-                "Comment s'arréter sur le débris ?",
-                "Tant que tu n'es pas sur un débris, va au prochain emplacement possible.",
-                "Place toi au premier emplacement possible, avant la boucle. Ne ramasse pas le débris dans la boucle, sinon elle continuera.",
-                "Il faut avancer, répéter tant qu'on n'est pas sur un débris reculer tourner à gauche et avancer, et enfin ramasser et avancer."
-            ]
-        },
-        {
-            "nb":4,
-            "begin_dialogs": [
-                {"speaker": "SCIENTIFIQUE", "text":"Bravo, tu as fait le plus dur !"},
-                {"speaker": "SCIENTIFIQUE", "text":"En ré-utilisant ton programme, tu devrais être capable de passer cette île."}
-            ],
-            "end_dialogs": [
-                {"speaker": "SCIENTIFIQUE", "text": "Super, tu as bien géré !"}
-            ],
-            "layouts":[
-                [
-                    ["    . "," .....","......","..... "," .    "],
-                    ["    @ ","    ! "," !!!! "," !    "," x    "]
-                ],
-                [
-                    [" .   ","...  ",".... "," ... "," ....","  .. "],
-                    [" @   "," !   "," !!  ","  !  ","  !!x","     "]
-                ],
-                [
-                    ["  .. "," ...."," ....","....."," ... "],
-                    ["  @  ","  !! ","   ! ","x!!! ","     "]
-                ]
-            ],
-            "blockset": {
-                "instructions": [
-                    "forward",
-                    "backward",
-                    "left",
-                    "right",
-                    "pickup"
-                ],
-                "sensors": [
-                    "obstacle",
-                    "item"
-                ],
-                "structures": [
-                    "if",
-                    "for"
-                ],
-                "booleans": [
-                    "not"
-                ],
-                "start": [
-                    "start"
-                ]
-            },
-            "goal": [
-                {
-                    "name": "arrival"
-                },
-                {
-                    "name": "pickup",
-                    "args": {
-                        "itemType": "!"
-                    }
-                }
-            ],
-            "block_limitation":10,
-            "clues": [
-                "Sur la précédente ile, tu t'es déplacé dans la direction du débris a coté de toi.",
-                "Comment suivre un chemin formé par des debris.",
-                "Répète 6 fois la précédent programme, puis avance une fois."
+                "Comment savoir quand est-ce qu'on atteint le drapeau ?",
+                "Cette fois, il faudra utiliser le capteur \"Se trouve sur un débris\".",
+                "Attention, au départ Marco Robo ne se trouve pas sur un débris",
+                "Avancer, Tant que (Se trouve sur un débris) (Ramasser, Avancer)"
             ]
         }
     ]

@@ -59,8 +59,8 @@
             "end_dialogs": [{"speaker": "SCIENTIFIQUE", "text":"On dirait que tout marche encore bien."}, {"speaker": "SCIENTIFIQUE", "text":"Bon, sors de cette île et viens me retrouver !"}],
             "layouts": [
                 [
-                    [" .  ", " .  ", " .  ", " ..."],
-                    [" @  ", "    ", "    ", "   x"]
+                    [".   ", ".   ", ".   ", "...."],
+                    ["@   ", "    ", "    ", "   x"]
                 ]
             ],
             "blockset": {
@@ -85,8 +85,8 @@
             "end_dialogs" : [{"speaker": "SCIENTIFIQUE", "text":"Bravo !"}],
             "layouts": [
                 [
-                    ["  .  ", "...  ", ".    ", ".....", "    .", "  ...", "  .  "],
-                    ["  @  ", "     ", "     ", "     ", "     ", "     ", "  x  "]
+                    [". ","..","..",".."," ."],
+                    ["@ "," #","  ","# "," x"]
                 ]
             ],
             "blockset": {

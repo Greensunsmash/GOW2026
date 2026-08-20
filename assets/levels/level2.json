@@ -8,8 +8,8 @@
             ],
             "layouts": [
                 [
-                    [".    ", ".    ", ".    ", ".    ", ".....", "    .", "    .", "    .", "    ."],
-                    ["@    ", "     ", "     ", "     ", "     ", "     ", "     ", "     ", "    x"]
+                    [".   ", ".   ", ".   ", "....", "   .", "   .", "   .", "   ."],
+                    ["@   ", "    ", "    ", "    ", "    ", "    ", "    ", "   x"]
                 ]
             ],
             "blockset": {
@@ -32,13 +32,13 @@
             "nb" : 2,
             "begin_dialogs" : [
                 {"speaker": "SCIENTIFIQUE", "text":"Fais attention, il va falloir économiser des ressources si tu veux pouvoir me rejoindre."},
-                {"speaker": "SCIENTIFIQUE", "text":"Utilise le bloc \"Répéter ... fois\" ça te permettra d'économiser des précieux blocs."},
+                {"speaker": "SCIENTIFIQUE", "text":"Utilise le bloc \"Répéter ... fois\", ça te permettra d'économiser des précieux blocs."},
                 {"speaker": "SCIENTIFIQUE", "text":"Les structures comme \"Répéter ... fois\" comptent seulement pour une instruction."}
             ],
             "layouts": [
                 [
-                    [".    ", ".    ", ".    ", ".    ", ".....", "    .", "    .", "    .", "    ."],
-                    ["@    ", "     ", "     ", "     ", "     ", "     ", "     ", "     ", "    x"]
+                    [".   ", ".   ", ".   ", "....", "   .", "   .", "   .", "   ."],
+                    ["@   ", "    ", "    ", "    ", "    ", "    ", "    ", "   x"]
                 ]
             ],
             "blockset": {
@@ -67,7 +67,7 @@
         {
             "nb" : 3,
             "begin_dialogs" : [
-                {"speaker": "SCIENTIFIQUE", "text":"Bravo, tu te débrouille bien."},
+                {"speaker": "SCIENTIFIQUE", "text":"Bravo, tu te débrouilles bien."},
                 {"speaker": "SCIENTIFIQUE", "text":"Et tu peux également répéter plusieurs instructions, essaye un peu !"}
             ],
             "layouts": [
@@ -96,7 +96,8 @@
                 "Vous pouvez répéter une suite d'instruction.",
                 "Pouvez vous trouver un pattern qui se répète ?.",
                 "Comment faire pour gravir une marche ?.",
-                "Vous devez répéter 5 fois le schéma."
+                "Vous devez répéter 5 fois le schéma.",
+                "Il faut répeter 5 fois (Avancer, Tourner à droite, Avancer, Tourner à gauche)"
             ]
         }
     ]

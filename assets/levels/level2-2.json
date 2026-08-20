@@ -1,0 +1,101 @@
+{
+    "islands": [
+        {
+            "nb" : 1,
+            "layouts": [
+                [
+                    [".    ", ".   ", ".   ", "...."],
+                    ["@    ", "    ", "    ", "   x"]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right"
+                ],
+                "structures": [
+                    "for"
+                ],
+                "start" : [
+                    "start"
+                ]
+            },
+            "goal":[{"name": "arrival"}],
+            "block_limitation": 6,
+            "clues" : [
+                "Utiliser \"Répéter ... fois\" pour économiser des blocs.",
+                "Répeter 3 fois (Avancer), Tourner à droite, Répeter 3 fois (Avancer)"
+            ]
+        },
+        {
+            "nb" : 2,
+            "begin_dialogs": [
+                {"speaker": "SCIENTIFIQUE", "text": "Très souvent, le programme fait pour passer une île pourra te servir de base pour la suite."},
+                {"speaker": "SCIENTIFIQUE", "text": "Si jamais tu le supprimes par erreur, tu peux utiliser le bouton restaurer pour le récupérer."}
+            ],
+            "layouts": [
+                [
+                    [".       ", ".      ", ".      ", "....   ", "   .   ", "   .   ", "   ...."],
+                    ["@       ", "       ", "       ", "       ", "       ", "       ", "      x"]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right"
+                ],
+                "structures": [
+                    "for"
+                ],
+                "start" : [
+                    "start"
+                ]
+            },
+            "goal":[{"name": "arrival"}],
+            "block_limitation": 8,
+            "clues" : [
+                "Cette île ne serait-elle pas similaire à la précédente ?",
+                "Faites attention à bien repartir dans le bon sens.",
+                "Répéter 2 fois (Répeter 3 fois (Avancer), Tourner à droite, Répeter 3 fois (Avancer), Tourner à gauche)"
+            ]
+        },
+        {
+            "nb" : 3,
+            "begin_dialogs" : [
+                {"speaker": "SCIENTIFIQUE", "text":"Courage, tu y es presque !"}
+            ],
+            "layouts": [
+                [
+                    [".           .", ".           .", ".           .", "....     ....", "   .     .   ", "   .     .   ", "   .......   "],
+                    ["@           x", "             ", "             ", "             ", "             ", "             ", "             "]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right"
+                ],
+                "structures": [
+                    "for"
+                ],
+                "start" : [
+                    "start"
+                ]
+            },
+            "goal":[{"name": "arrival"}],
+            "block_limitation": 10,
+            "clues" : [
+                "Cette île ne serait-elle pas similaire à la précédente ?",
+                "Tu peux réutiliser la même technique que pour l'île précédente.",
+                "Faites attention à bien repartir dans le bon sens.",
+                "Répéter 2 fois (Répéter 2 fois (Répeter 3 fois (Avancer), Tourner à droite, Répeter 3 fois (Avancer), Tourner à gauche), Tourner à droite)"
+            ]
+        }
+    ]
+}

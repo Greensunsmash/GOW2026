@@ -1,0 +1,54 @@
+{
+    "islands": [
+        {
+            "nb": 1,
+            "layouts": [
+                [
+                    [".",".","."],
+                    ["@","!","x"]
+                ],
+                [
+                    [".",".",".","."],
+                    ["@"," ","!","x"]
+                ],
+                [
+                    [".",".",".",".","."],
+                    ["@"," "," ","!","x"]
+                ],
+                [
+                    [".",".",".",".",".",".",".",".","."],
+                    ["@"," "," "," "," "," "," ","!","x"]
+                ]
+            ],
+            "blockset": {
+                "instructions": [
+                    "forward",
+                    "backward",
+                    "left",
+                    "right",
+                    "pickup"
+                ],
+                "structures": [
+                    "for",
+                    "if"
+                ],
+                "booleans": [
+                    "not"
+                ],
+                "sensors": [
+                    "obstacle",
+                    "item"
+                ],
+                "start": [
+                    "start"
+                ]
+            },
+            "goal": [{"name": "arrival"}],
+            "clues": [
+                "Comment savoir où se trouve le drapeau ?",
+                "Comment faire pour avancer jusqu'au débris ?",
+                "Tant que (Pas (Se trouve sur un débris)) (Avancer), Ramasser, Avancer"
+            ]
+        }
+    ]
+}

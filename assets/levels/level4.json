@@ -1,47 +1,21 @@
 {
     "islands": [
         {
-            "nb":1,
+            "nb": 1,
             "begin_dialogs": [
-                {"speaker": "SCIENTIFIQUE", "text":"J'ai découvert un certain nombres d'endroits où je ne pourrais pas te contacter."},
-                {"speaker": "SCIENTIFIQUE", "text":"Il faudra donc qu'un seul programme marche pour plusieurs étapes. Bon courage !"}
+                {"speaker": "SCIENTIFIQUE", "text":"Pour continuer, on va avoir besoin du bloc \"Si ... faire\"."},
+                {"speaker": "SCIENTIFIQUE", "text":"Il sert à réaliser des actions uniquement si la condition est remplie."},
+                {"speaker": "SCIENTIFIQUE", "text":"Avec le capteur que tu as là, tu peux par exemple détecter si il y a un mur juste en face de toi."},
+                {"speaker": "SCIENTIFIQUE", "text":"Les capteurs ne comptent pas dans le nombre d'instructions, utilise-les autant que tu veux !"}
             ],
-            "layouts":[
+            "layouts": [
                 [
-                    [
-                        "  .  ",
-                        ".....",
-                        ".....",
-                        ".....",
-                        ".....",
-                        "  .  "
-                    ],
-                    [
-                        "  @  ",
-                        "     ",
-                        " # # ",
-                        "     ",
-                        "#   #",
-                        "  x  "
-                    ]
+                    [ ".   ", ".   ", ".   ", ".   "],
+                    [ "@   ", "    ", "    ", "x   "]
                 ],
                 [
-                    [
-                        "  .  ",
-                        ".....",
-                        ".....",
-                        ".....",
-                        ".....",
-                        "  .  "
-                    ],
-                    [
-                        "  @  ",
-                        "     ",
-                        "  #  ",
-                        "  # #",
-                        "     ",
-                        "  x  "
-                    ]
+                    [ "....", ".   ", "    ", "    "],
+                    [ "@  x", "#   ", "    ", "    "]
                 ]
             ],
             "blockset": {
@@ -51,35 +25,99 @@
                     "left",
                     "right"
                 ],
+                "sensors": [
+                    "obstacle"
+                ],
                 "structures": [
+                    "if",
                     "for"
                 ],
                 "start": [
                     "start"
                 ]
             },
-            "goal": [{
-                "name": "arrival"
-            }],
+            "goal":[{"name": "arrival"}],
             "clues" : [
-                "Analysez les 2 étapes afin de trouver un chemin commun."
+                "Quel est la seule différence entre les deux étapes ?",
+                "Utilise le bloc \"Si ... faire\" pour détecter la présence du rocher.",
+                "Si (Face à un obstacle) (Tourner à droite), Répéter 3 fois (Avancer d'une case)"
             ]
         },
         {
             "nb": 2,
-            "end_dialogs": [
-                {"speaker": "SCIENTIFIQUE", "text":"Bravo ! Tiens, qu'as tu récupéré ?"}, 
-                {"speaker": "SCIENTIFIQUE", "text":"Un capteur ?"}, 
-                {"speaker": "SCIENTIFIQUE", "text":"Parfait, ça va nous être très utile."}
-            ],
+            "begin_dialogs": [ {"speaker": "SCIENTIFIQUE", "text":"Très bien, tu as compris comment ça fonctionne. Continue comme ça !"}],
             "layouts": [
                 [
-                    ["......", "......","......","......","......","......","     ."],
-                    [" @    ", "#  #  ","      ","      "," #    ","      ","     x"]
+                    [
+                        ".    ",
+                        ".    ",
+                        ".    ",
+                        ".    ",
+                        ".    ",
+                        ".    ",
+                        ".    ",
+                        "..   ",
+                        ".    "
+                    ],
+                    [
+                        "@    ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        " x   ",
+                        "#    "
+                    ]
                 ],
                 [
-                    ["......", "......","......","......","......","......","     ."],
-                    [" @    ", "    # ","      ","  #  #","      ","   #  ","     x"]
+                    [
+                        ".    ",
+                        ".    ",
+                        ".    ",
+                        ".    ",
+                        ".    ",
+                        ".... ",
+                        ".    ",
+                        "     ",
+                        "     "
+                    ],
+                    [
+                        "@    ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "   x ",
+                        "#    ",
+                        "     ",
+                        "     "
+                    ]
+                ],
+                [
+                    [
+                        ".    ",
+                        ".  . ",
+                        ".  . ",
+                        ".....",
+                        ".    ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "     "
+                    ],
+                    [
+                        "@    ",
+                        "   x ",
+                        "     ",
+                        "    #",
+                        "#    ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "     "
+                    ]
                 ]
             ],
             "blockset": {
@@ -89,18 +127,24 @@
                     "left",
                     "right"
                 ],
+                "sensors": [
+                    "obstacle"
+                ],
                 "structures": [
+                    "if",
                     "for"
                 ],
                 "start": [
                     "start"
                 ]
             },
-            "goal": [{
-                "name": "arrival"
-            }],
+            "goal":[{"name": "arrival"}],
+            "block_limitation": 5,
             "clues" : [
-                "Analysez les 2 étapes afin de trouver un chemin commun."
+                "A combien de case es-tu de l'arrivée ?",
+                "Comment détecter à chaque case si il faut tourner ?",
+                "Il faut alterner entre avancer et tester si l'on doit tourner.",
+                "Répéter 8 fois (Si (Face à un obstacle) (Tourner à droite), Avancer)"
             ]
         }
     ]
