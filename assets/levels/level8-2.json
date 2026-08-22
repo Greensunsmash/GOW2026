@@ -43,7 +43,7 @@
                     "start"
                 ]
             },
-            "goal": [{"name": "arrival"}],
+            "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
             "clues": [
                 "Comment savoir où se trouve le drapeau ?",
                 "Comment faire pour avancer jusqu'au débris ?",

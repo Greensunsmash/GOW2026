@@ -1,0 +1,51 @@
+{
+    "islands" : [
+        {
+        "nb": 1,
+        "begin_dialogs": [
+            {"speaker": "SCIENTIFIQUE", "text":"Cette île est plus dure que les précédentes, bon courage !"}
+        ],
+        "layouts": [
+            [
+                [".     .",".O...O.",".O.O...","...O.O."],
+                ["x     @","    !  ","      !","  !    "]
+            ]
+        ],
+        "blockset": {
+            "instructions": [
+                "forward",
+                "backward",
+                "left",
+                "right",
+                "pickup",
+                "wait"
+            ],
+            "structures": [
+                "for",
+                "if",
+                "while"
+            ],
+            "booleans": [
+                "not"
+            ],
+            "sensors": [
+                "obstacle",
+                "item"
+            ],
+            "variables": [
+                "var_create",
+                "plus",
+                "minus"
+            ],
+            "start": [
+                "start"
+            ]
+        },
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
+        "clues": [
+            "Il faut répéter 3 fois le pattern d'avant, en faisant attention à moins reculer.",
+            "Avancer, Répéter 3 fois (On met x à 0, Tant que (Pas (Se trouve sur un débris)) (Avancer, On met x à (Variable x + 1)), Ramasser, Tourner à gauche, Avancer, Avancer, Tourner à droite, Répéter (Variable x) fois (Reculer)), Reculer"
+        ]
+        }
+    ]
+}

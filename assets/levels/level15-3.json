@@ -1,0 +1,58 @@
+{
+    "islands" : [
+    {
+        "nb": 1,
+        "layouts": [
+            [
+                ["     . ", "........", "   .    ", "   .    "],
+                ["     @ ", "#   r  #", "        ", "   x    "]   
+            ],
+            [
+                ["     . ", "........", "   .    ", "   .    "],
+                ["     @ ", "#  r   #", "        ", "   x    "]   
+            ],
+            [
+                ["     . ", "........", "   .    ", "   .    "],
+                ["     @ ", "#     l#", "        ", "   x    "]   
+            ]
+        ],
+        "blockset": {
+            "instructions": [
+                "forward",
+                "backward",
+                "left",
+                "right",
+                "pickup",
+                "wait"
+            ],
+            "structures": [
+                "for",
+                "if",
+                "while"
+            ],
+            "booleans": [
+                "not"
+            ],
+            "sensors": [
+                "obstacle",
+                "item"
+            ],
+            "variables": [
+                "var_create",
+                "plus",
+                "minus"
+            ],
+            "start": [
+                "start"
+            ]
+        },
+        "goal": [{"name": "arrival"}],
+        "clues": [
+            "Il faut différencier dans quel direction le cochon va.",
+            "Il est possible de détecter lorsque le cochon fait un aller-retour devant Marco Robo.",
+            "Attends que le cochon passe devant Marco Robo, puis vérifie si il repasse bien dans l'autre sens.",
+            "Tant que (Pas (Face à un obstacle)) (Tant que (Pas (Face à un obstacle)) (Attendre), Répéter 3 fois (Attendre)), Attendre, Avancer, Tourner à gauche, Avancer, Avancer, Tourner à droite, Avancer, Avancer"
+        ]
+    }
+    ]
+}

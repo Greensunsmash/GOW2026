@@ -2,21 +2,18 @@
     "islands": [
     {
         "nb": 1,
-        "begin_dialogs": [
-            {"speaker": "SCIENTIFIQUE", "text":"Bon, continuons à chercher, en évitant tous ces cochons."}
-        ],
         "layouts": [
             [
-                ["  .  ",".....",".....","  .  "],
-                ["     ","  @  ","#r  #","  x  "]
+                [".    ", ".    ", ".    ", ".    ", ".....", ".    "],
+                ["@    ", "     ", "     ", "     ", "    x", "#    "]
             ],
             [
-                ["  .  ",".....",".....","  .  "],
-                ["     ","  @  ","# r #","  x  "]
+                [". ", "..", ". "],
+                ["@ ", " x", "# "]
             ],
             [
-                ["  .  ",".....",".....","  .  "],
-                ["     ","  @  ","#  r#","  x  "]
+                [".   ", ".   ", ".   ", "....", ".   "],
+                ["@   ", "    ", "    ", "   x", "#   "]
             ]
         ],
         "blockset": {
@@ -31,14 +28,10 @@
             "structures": [
                 "for",
                 "if",
-                "while",
-                "elif"
+                "while"
             ],
             "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
+                "not"
             ],
             "sensors": [
                 "obstacle",
@@ -54,11 +47,8 @@
             ]
         },
         "goal": [{"name": "arrival"}],
-        "block_limitation":6,
         "clues" : [
-            "Comment être sur d'éviter un cochon ?",
-            "Il faut attendre qu'il soit passé.",
-            "Avancer, Tant que pas d'obstacle en face attendre, puis attendre et avancer avancer."
+            "On met la valeur de x à 0, Tant que (Pas (Face à un obstacle)) (On met la valeur de x à (1 + Variable x), Avancer), Tourner à droite, Répeter (Variable x) fois (Avancer)"
         ]
     },
     {
@@ -68,8 +58,22 @@
         ],
         "layouts": [
             [
-                ["   .   "," ..... "," ..... ","......."," ..... "," ..... ","   .   "],
-                ["   x   "," #   # "," d     ","!  @ u!","       "," #r  # ","   !   "]
+                [
+                    ".....",
+                    ".   .",
+                    ". . .",
+                    ". ...",
+                    ".    ",
+                    ".    "
+                ],
+                [
+                    "     ",
+                    "     ",
+                    "  @  ",
+                    "     ",
+                    "     ",
+                    "x    "
+                ]
             ]
         ],
         "blockset": {
@@ -84,14 +88,10 @@
             "structures": [
                 "for",
                 "if",
-                "while",
-                "elif"
+                "while"
             ],
             "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
+                "not"
             ],
             "sensors": [
                 "obstacle",
@@ -107,11 +107,10 @@
             ]
         },
         "goal": [{"name": "arrival"}, {"name": "pickup","args": {"itemType": "!"}}],
-        "clues" : [
-            "Le programme d'avant permet d'éviter de foncer dans un cochon.",
-            "Tu as juste à te placer correctement pour chaque débris.",
-            "Attention, ramasser est une action et fais donc bouger les cochons.",
-            "Tourne à gauche, répete 3 fois (Avancer, Attendre que le cochon passe, avancer 2 fois, ramasser, reculer 3 fois et tourner à droite) puis avance 3 fois."
+        "clues": [
+            "A chaque virage, il faut avancer d'une case de plus.",
+            "Une variable peut t'aider à connaitre le nombre de déplacements à faire par ligne.",
+            "On met la variable x à 0, Répéter 5 fois (On met la valeur de x à (Variable x + 1), Répéter (Variable x) fois (Avancer), Tourner à droite"
         ]
     }
     ]

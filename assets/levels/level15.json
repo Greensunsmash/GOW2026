@@ -2,124 +2,24 @@
     "islands": [
     {
         "nb": 1,
-        "layouts": [
-            [
-                ["     . ", "........", "   .    ", "   .    "],
-                ["     @ ", "#    r #", "        ", "   x    "]   
-            ]
-        ],
-        "blockset": {
-            "instructions": [
-                "forward",
-                "backward",
-                "left",
-                "right",
-                "pickup",
-                "wait"
-            ],
-            "structures": [
-                "for",
-                "if",
-                "while",
-                "elif"
-            ],
-            "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
-            ],
-            "sensors": [
-                "obstacle",
-                "item"
-            ],
-            "variables": [
-                "var_create",
-                "plus",
-                "minus"
-            ],
-            "start": [
-                "start"
-            ]
-        },
-        "goal": [{"name": "arrival"}],
-        "clues": [
-            "Faufile toi dès que possible derrière le cochon."
-        ]
-    },
-    {
-        "nb": 2,
-        "layouts": [
-            [
-                ["     . ", "....... ", "   .    ", "   .    "],
-                ["     @ ", "#   r # ", "        ", "   x    "]   
-            ],
-            [
-                ["     . ", "....... ", "   .    ", "   .    "],
-                ["     @ ", "#  r  # ", "        ", "   x    "]   
-            ],
-            [
-                ["     . ", "....... ", "   .    ", "   .    "],
-                ["     @ ", "#r    # ", "        ", "   x    "]   
-            ]
-        ],
-        "blockset": {
-            "instructions": [
-                "forward",
-                "backward",
-                "left",
-                "right",
-                "pickup",
-                "wait"
-            ],
-            "structures": [
-                "for",
-                "if",
-                "while",
-                "elif"
-            ],
-            "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
-            ],
-            "sensors": [
-                "obstacle",
-                "item"
-            ],
-            "variables": [
-                "var_create",
-                "plus",
-                "minus"
-            ],
-            "start": [
-                "start"
-            ]
-        },
-        "goal": [{"name": "arrival"}],
-        "clues": [
-            "Trouve le bon moment pour passer derrière le cochon.",
-            "Tu peux le détecter à l'aide du capteur face à un obstacle.",
-            "Attends tant qu'il n'est pas passé devant toi.",
-            "Tant qu'il n'y a pas d'obstacle en face attends, puis attends et effectue le chemin pour atteindre l'arrivée."
-        ]
-    },
-    {
-        "nb": 3,
         "begin_dialogs": [
-            {"speaker": "SCIENTIFIQUE", "text":"Attention, je ressens une énergie particulière ici."},
-            {"speaker": "SCIENTIFIQUE", "text":"Je ne sais pas ce que c'est, mais reste sur tes gardes."}
+            {"speaker": "SCIENTIFIQUE", "text":"On s'approche du signal, continuons comme ça !"}
         ],
         "end_dialogs": [
-            {"speaker": "SCIENTIFIQUE", "text":"Tout va bien ? J'ai perdu le contact pendant un petit moment."},
-            {"speaker": "SCIENTIFIQUE", "text":"Tu t'es transformé en cochon ?"},
-            {"speaker": "SCIENTIFIQUE", "text":"Comment cela est-il possible ?"}
+            {"speaker": "SCIENTIFIQUE", "text":"Bien joué, tu te débrouilles très bien !"}
         ],
         "layouts": [
             [
-                ["  .","  .","  O","...","  .","  ."],
-                ["  @","   ","   ","x  ","   ","  #"]   
+                ["  .  ",".....",".....","  .  "],
+                ["     ","  @  ","#r  #","  x  "]
+            ],
+            [
+                ["  .  ",".....",".....","  .  "],
+                ["     ","  @  ","# r #","  x  "]
+            ],
+            [
+                ["  .  ",".....",".....","  .  "],
+                ["     ","  @  ","#  r#","  x  "]
             ]
         ],
         "blockset": {
@@ -134,14 +34,10 @@
             "structures": [
                 "for",
                 "if",
-                "while",
-                "elif"
+                "while"
             ],
             "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
+                "not"
             ],
             "sensors": [
                 "obstacle",
@@ -157,10 +53,12 @@
             ]
         },
         "goal": [{"name": "arrival"}],
-        "clues": [
-            "Analyse le comportement durant la transformation, et sa durée.",
-            "Le robot se transforme en cochon et suis son comportement. Il se déplace, et fait demi tour face à une obstacle. La transformation dure 3 tours."
+        "block_limitation":6,
+        "clues" : [
+            "Comment être sur d'éviter un cochon ?",
+            "Il faut attendre qu'il soit passé.",
+            "Tant que (Pas (Face à un obstacle)) (Attendre), Attendre, Avancer, Avancer"
         ]
     }
-]
+    ]
 }
