@@ -24,16 +24,10 @@
                 "wait"
             ],
             "structures": [
-                "for",
-                "if",
-                "while",
-                "elif"
+                "for"
             ],
             "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
+                "not"
             ],
             "sensors": [
                 "obstacle",
@@ -80,16 +74,10 @@
                 "wait"
             ],
             "structures": [
-                "for",
-                "if",
-                "while",
-                "elif"
+                "for"
             ],
             "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
+                "not"
             ],
             "sensors": [
                 "obstacle",
@@ -115,12 +103,12 @@
         {
         "nb": 3,
         "begin_dialogs": [
-            {"speaker":"SIRC", "text":"Bien tenté, mais tu ne pourras jamais m'atteindre !"}
+            {"speaker":"SIRC", "text":"Tsss, quand vas-tu abandonner ?"}
         ],
         "layouts": [
             [
-                ["   . ","   . ","   . ","   O ",".....",".....",".....","   . ","   . "],
-                ["   @ ","     ","     ","     ","#  r#","#l  #","#  r#","     ","   x "]
+                [".     ",".O... ","O...  ","..O.  ","..OO..","     ."],
+                ["@     ","    # ","      ","      ","      ","     x"]
             ]
         ],
         "blockset": {
@@ -135,14 +123,10 @@
             "structures": [
                 "for",
                 "if",
-                "while",
-                "elif"
+                "while"
             ],
             "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
+                "not"
             ],
             "sensors": [
                 "obstacle",
@@ -164,56 +148,6 @@
         },
         {
         "nb": 4,
-        "begin_dialogs": [
-            {"speaker":"SIRC", "text":"Tsss, quand vas-tu abandonner ?"}
-        ],
-        "layouts": [
-            [
-                [".     ",".O... ","O...  ","..O.  ","..OO..","     ."],
-                ["@     ","    # ","      ","      ","      ","     x"]
-            ]
-        ],
-        "blockset": {
-            "instructions": [
-                "forward",
-                "backward",
-                "left",
-                "right",
-                "pickup",
-                "wait"
-            ],
-            "structures": [
-                "for",
-                "if",
-                "while",
-                "elif"
-            ],
-            "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
-            ],
-            "sensors": [
-                "obstacle",
-                "item"
-            ],
-            "variables": [
-                "var_create",
-                "plus",
-                "minus"
-            ],
-            "start": [
-                "start"
-            ]
-        },
-        "goal": [{"name": "arrival"}],
-        "clues": [
-            "Le mieux pour réussir, c'est de tester étape par étape."
-        ]
-        },
-        {
-        "nb": 5,
         "end_dialogs": [
             {"speaker":"SIRC", "text":"Urg..."},
             {"speaker":"SIRC", "text":"D'accord, tu as gagné."},
@@ -237,14 +171,10 @@
             "structures": [
                 "for",
                 "if",
-                "while",
-                "elif"
+                "while"
             ],
             "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
+                "not"
             ],
             "sensors": [
                 "obstacle",

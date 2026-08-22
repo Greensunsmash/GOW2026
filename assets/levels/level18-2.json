@@ -1,0 +1,68 @@
+{
+    "islands" : [
+        {
+        "nb": 1,
+        "begin_dialogs": [
+            {"speaker": "SCIENTIFIQUE", "text":"Cette île me semble bien difficile."},
+            {"speaker": "SCIENTIFIQUE", "text":"Voici, voici le bloc \"Egal\", qui te permet de tester si 2 valeurs sont égales."},
+            {"speaker": "SCIENTIFIQUE", "text":"Bon courage !"}
+        ],
+        "end_dialogs": [
+            {"speaker": "SCIENTIFIQUE", "text":"Félicitations, je vois que tu maitrises vraiment !"}
+        ],
+        "layouts": [
+            [
+                ["..","O.",".O",".O",".O",".O","O.",".."],
+                [" @"," !"," !","! ","! "," !"," !"," x"]
+            ],
+            [
+                ["..","..","..","O.","O.","O.","..",".."],
+                [" @","! "," !"," !"," !"," !","! ","x "]
+            ],
+            [
+                ["..","O.","..","..","O.","..",".O",".."],
+                [" @"," !","! "," !"," !","! ","! ","x "]
+            ]
+        ],
+        "blockset": {
+            "instructions": [
+                "forward",
+                "backward",
+                "left",
+                "right",
+                "pickup",
+                "wait"
+            ],
+            "structures": [
+                "for",
+                "if",
+                "while",
+                "elif"
+            ],
+            "booleans": [
+                "not",
+                "eq"
+            ],
+            "sensors": [
+                "obstacle",
+                "item"
+            ],
+            "variables": [
+                "var_create",
+                "plus",
+                "minus"
+            ],
+            "start": [
+                "start"
+            ]
+        },
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
+        "clues": [
+            "Il faut changer de colonne lorsque tu ne trouves pas de débris.",
+            "Tu peux utiliser une variable pour enregistre la colonne sur laquelle tu te situes, et tester sa valeur avec le bloc booléen \"... = ...\" et ainsi savoir sur quelle colonne tu es.",
+            "Lorsque que tu changes de colonne, sépare le cas ou tu dois aller à droite, et celui ou tu dois aller à gauche.",
+            "Avancer, On met x à 0, Répéter 6 fois (Si (Pas (Se trouve sur un débris)) (Si (Variable x = 0) (On met x à 1, Tourner à gauche, Avancer, Tourner à droite) Sinon (On met x à 0, Tourner à droite, Avancer, Tourner à gauche)), Ramasser, Avancer)"
+        ]
+        }
+    ]
+}

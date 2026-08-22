@@ -1,0 +1,48 @@
+{
+    "islands": [
+    {
+        "nb": 1,
+        "begin_dialogs": [
+            {"speaker": "SCIENTIFIQUE", "text":"Je détecte une présence dans les environs. Y aurait-il d'autres créatures vivantes ?"},
+            {"speaker": "SCIENTIFIQUE", "text":"Reste prudent."}
+        ],
+        "layouts": [
+            [
+                [" ... ",".....",".....","....."," ... "],
+                [" #!# ","# r #","xd@u!","# l #"," #!# "]
+            ]
+        ],
+        "blockset": {
+            "instructions": [
+                "forward",
+                "backward",
+                "left",
+                "right",
+                "pickup",
+                "wait"
+            ],
+            "structures": [
+                "for",
+                "if",
+                "while"
+            ],
+            "booleans": [
+                "not"
+            ],
+            "sensors": [
+                "obstacle",
+                "item"
+            ],
+            "start": [
+                "start"
+            ]
+        },
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
+        "clues" : [
+            "Les cochons se déplacent systématiquement après toi",
+            "Tu peux répéter 3 fois le même pattern pour récupérer les débris",
+            "Répéter 3 fois (Attendre, Avancer, Avancer, Ramasser, Reculer, Reculer, Tourner à droite, Attendre, Attendre) Attendre, Avancer, Avancer"
+        ]
+    }
+    ]
+}

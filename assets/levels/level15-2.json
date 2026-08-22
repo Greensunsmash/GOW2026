@@ -1,19 +1,12 @@
 {
     "islands": [
-        {
+    {
         "nb": 1,
+        "begin_dialogs":{"speaker":"SCIENTIFIQUE","text":"Ces cochons sont décidément partout..."},
         "layouts": [
             [
-                ["  .","..."," O."," O."],
-                ["  @","x !","   ","   "]
-            ],
-            [
-                ["  ."," O."," O.","..."],
-                ["  @","   ","   ","x !"]
-            ],
-            [
-                ["  ."," O.","..."," O."],
-                ["  @","   ","x !","   "]
+                ["     .  ", "........", "   .    ", "   .    "],
+                ["     @  ", "#    r #", "        ", "   x    "]   
             ]
         ],
         "blockset": {
@@ -46,26 +39,26 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
+        "goal": [{"name": "arrival"}],
         "clues": [
-            "Comment se déplacer en ligne droite jusqu'à un débris ?",
-            "Tant que (Pas (Se trouve sur un débris)) (Avancer), Ramasser, Tourner à gauche, Avancer, Avancer"
+            "Faufile toi dès que possible derrière le cochon.",
+            "Répéter 4 fois (Attendre), Avancer, Tourner à gauche, Avancer, Avancer, Tourner à droite, Avancer, Avancer"
         ]
-        },
-        {
+    },
+    {
         "nb": 2,
         "layouts": [
             [
-                [". .","..."," O."," O."],
-                ["x @","  !","   ","   "]
+                ["     . ", "....... ", "   .    ", "   .    "],
+                ["     @ ", "#   r # ", "        ", "   x    "]   
             ],
             [
-                [". .",".O.",".O.","..."],
-                ["x @","   ","   ","  !"]
+                ["     . ", "....... ", "   .    ", "   .    "],
+                ["     @ ", "#  r  # ", "        ", "   x    "]   
             ],
             [
-                [". .",".O.","..."," O."],
-                ["x @","   ","  !","   "]
+                ["     . ", "....... ", "   .    ", "   .    "],
+                ["     @ ", "#r    # ", "        ", "   x    "]   
             ]
         ],
         "blockset": {
@@ -98,11 +91,13 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
+        "goal": [{"name": "arrival"}],
         "clues": [
-            "Il faut compter de combien le robot avance, afin de reculer d'autant.",
-            "On met x à 0, Tant que (Pas (Se trouve sur un débris)) (Avancer, On met x à (Variable x + 1)), Ramasser, Tourner à gauche, Avancer, Avancer, Tourner à droite, Répéter (Variable x) fois (Reculer)"
+            "Trouve le bon moment pour passer derrière le cochon.",
+            "Tu peux le détecter à l'aide du capteur face à un obstacle.",
+            "Attends tant qu'il n'est pas passé devant toi.",
+            "Tant que (Pas (Face à un obstacle)) (Attendre), Attendre, Attendre, Avancer, Tourner à gauche, Avancer, Avancer, Tourner à droite, Avancer, Avancer"
         ]
-        }
-    ]
+    }
+]
 }

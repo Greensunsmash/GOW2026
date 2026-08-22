@@ -2,10 +2,13 @@
     "islands": [
         {
         "nb": 1,
+        "begin_dialogs" : [
+            {"speaker" : "SCIENTIFIQUE", "text":"C'est vraiment un phénomène étrange..."}
+        ],
         "layouts": [
             [
-                [".    ", ".   ", ".   ", "...."],
-                ["@    ", "    ", "    ", "   x"] 
+                [".",".",".","O",".",".","."],
+                ["#","x","@"," "," ","!","#"]
             ]
         ],
         "blockset": {
@@ -20,14 +23,10 @@
             "structures": [
                 "for",
                 "if",
-                "while",
-                "elif"
+                "while"
             ],
             "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
+                "not"
             ],
             "sensors": [
                 "obstacle",
@@ -42,10 +41,11 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"}],
-        "block_limitation": 6,
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
         "clues" : [
-            "Cette île me fait étrangement penser à une autre."
+            "Analyse le comportement durant la transformation, et sa durée.",
+            "Le robot se transforme en cochon et suis son comportement. Il se déplace, et fait demi tour face à une obstacle. La transformation dure 3 tours.",
+            "Répéter 4 fois (Avancer), Ramasser le débris, Répéter 5 fois (Avancer)"
         ]
         },
         {
@@ -55,8 +55,8 @@
         ],
         "layouts": [
             [
-                [".      .",".      .",".      .","...O...."],
-                ["@      x","        ","        ","        "]  
+                ["    .     ","    .     ","    .     ","    O.    ","   ...O...","...O....  ","    .O    ","     .    ","     .    ","     .    "],
+                ["    #     ","    !     ","          ","     #    ","   #    !#","#!   @x#  ","    #     ","          ","     !    ","     #    "]
             ]
         ],
         "blockset": {
@@ -71,14 +71,10 @@
             "structures": [
                 "for",
                 "if",
-                "while",
-                "elif"
+                "while"
             ],
             "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
+                "not"
             ],
             "sensors": [
                 "obstacle",
@@ -93,60 +89,11 @@
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"}],
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
         "block_limitation": 8,
         "clues" : [
             "L'île précédente ressemblait étrangement à une ancienne, peut-être que celle-ci est la suite altérée ?",
             "Répète 2 fois (l'ancien programme, tourner à gauche)."
-        ]
-        },
-        {
-        "nb": 3,
-        "layouts": [
-            [
-                ["         .","         O","         .","         .","         .","         .","   ....  .","   .  ....","   .  O   ","....  .   ",".         ",".         ",".         "],
-                ["         @","          ","          ","          ","          ","          ","          ","          ","          ","      #   ","          ","          ","x         "]
-            ]
-        ],
-        "blockset": {
-            "instructions": [
-                "forward",
-                "backward",
-                "left",
-                "right",
-                "pickup",
-                "wait"
-            ],
-            "structures": [
-                "for",
-                "if",
-                "while",
-                "elif"
-            ],
-            "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
-            ],
-            "sensors": [
-                "obstacle",
-                "item"
-            ],
-            "variables": [
-                "var_create",
-                "plus",
-                "minus"
-            ],
-            "start": [
-                "start"
-            ]
-        },
-        "goal": [{"name": "arrival"}],
-        "block_limitation": 10,
-        "clues" : [
-            "La première île ressemblait étrangement à une ancienne, peut-être que celle-ci est la suite altérée ?",
-            "Répète 2 fois (Répèter 2 fois (le premier programme, tourner à gauche), tourner à droite)."
         ]
         }
     ]

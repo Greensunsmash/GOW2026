@@ -2,14 +2,21 @@
     "islands": [
     {
         "nb": 1,
-        "begin_dialogs": [
-            {"speaker": "SCIENTIFIQUE", "text":"Je détecte une présence dans les environs. Y aurait-il d'autres créatures vivantes ?"},
-            {"speaker": "SCIENTIFIQUE", "text":"Reste prudent."}
+        "begin_dialogs" : [
+            {"speaker": "SCIENTIFIQUE", "text":"Continuons notre chemin en évitant tout ces cochons."}
         ],
         "layouts": [
             [
-                [".......",".......",".......",".......",".......","   .   "],
-                ["   @   ","       "," #  r# ","       ","       ","   x   "]
+                [".",".",".",".",".","."],
+                ["u","@"," "," ","x","#"]
+            ],
+            [
+                [".",".",".",".",".",".","."],
+                ["u","@"," "," "," ","x","#"]
+            ],
+            [
+                [".",".",".",".",".",".",".","."],
+                ["u","@"," "," "," "," ","x","#"]
             ]
         ],
         "blockset": {
@@ -18,28 +25,20 @@
                 "backward",
                 "left",
                 "right",
-                "pickup"
+                "pickup",
+                "wait"
             ],
             "structures": [
                 "for",
                 "if",
-                "while",
-                "elif"
+                "while"
             ],
             "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
+                "not"
             ],
             "sensors": [
                 "obstacle",
                 "item"
-            ],
-            "variables": [
-                "var_create",
-                "plus",
-                "minus"
             ],
             "start": [
                 "start"
@@ -47,21 +46,16 @@
         },
         "goal": [{"name": "arrival"}],
         "clues" : [
-            "Comment se comporte le cochon ?",
-            "A chacune de tes actions, le cochon se déplace."
+            "Tu sais le faire, ne laisse pas le cochon te pertuber (ni te rattraper).",
+            "Avance tant qu'il n'y a pas d'obstacle en face."
         ]
     },
     {
         "nb": 2,
-        "begin_dialogs":[
-            {"speaker": "SCIENTIFIQUE", "text":"Un cochon ? Mais qu'est ce qu'il fait là ?"},
-            {"speaker": "SCIENTIFIQUE", "text":"Bon fais attention, si tu te cognes contre lui ou s'il te fonce dessus, on sera dans de beaux draps."},
-            {"speaker": "SCIENTIFIQUE", "text":"Utilises le bloc \"Attendre\" pour ne rien faire pendant un tour."}
-        ],
         "layouts": [
             [
-                ["  .  ","  .  "," ....","  .  ","  .  "],
-                ["  @  ","     "," # r#","     ","  x  "]
+                [" .  "," .. "," .. "," .. ","...."," .. "," .. "," .. "," .  "],
+                [" #  "," u# ","  u "," @  "," ! x","    ","    "," d# "," #  "]
             ]
         ],
         "blockset": {
@@ -76,129 +70,22 @@
             "structures": [
                 "for",
                 "if",
-                "while",
-                "elif"
+                "while"
             ],
             "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
+                "not"
             ],
             "sensors": [
                 "obstacle",
                 "item"
             ],
-            "variables": [
-                "var_create",
-                "plus",
-                "minus"
-            ],
             "start": [
                 "start"
             ]
         },
-        "goal": [{"name": "arrival"}],
-        "clues" : [
-            "Le bloc \"Attendre\" peut te permettre d'éviter le cochon."
-        ]
-    },
-    {
-        "nb": 3,
-        "layouts": [
-            [
-                ["     .     ","  .......  "," ......... ","...........","     .    "],
-                ["     @     ","  #r   l#  "," #r     l# ","#r       l#","     x    "]
-            ]
-        ],
-        "blockset": {
-            "instructions": [
-                "forward",
-                "backward",
-                "left",
-                "right",
-                "pickup",
-                "wait"
-            ],
-            "structures": [
-                "for",
-                "if",
-                "while",
-                "elif"
-            ],
-            "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
-            ],
-            "sensors": [
-                "obstacle",
-                "item"
-            ],
-            "variables": [
-                "var_create",
-                "plus",
-                "minus"
-            ],
-            "start": [
-                "start"
-            ]
-        },
-        "goal": [{"name": "arrival"}],
-        "clues" : [
-            "Des fois, il faut savoir arréter de réfléchir et courir."
-        ]
-    },
-    {
-        "nb": 4,
-        "end_dialogs": [
-            {"speaker": "SCIENTIFIQUE", "text":"Mais pourquoi il y en a autant ? C'est vraiment étrange..."},
-            {"speaker": "SCIENTIFIQUE", "text":"Bon, dans tout les cas, continuons de chercher le démarreur cosmique."}
-        ],
-        "layouts": [
-            [
-                ["     .     ","  .......  "," ......... ","...........","...........","     .    "],
-                ["     @     ","  #r   l#  "," #r     l# ","#         #","#r       l#","     x    "]
-            ]
-        ],
-        "blockset": {
-            "instructions": [
-                "forward",
-                "backward",
-                "left",
-                "right",
-                "pickup",
-                "wait"
-            ],
-            "structures": [
-                "for",
-                "if",
-                "while",
-                "elif"
-            ],
-            "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
-            ],
-            "sensors": [
-                "obstacle",
-                "item"
-            ],
-            "variables": [
-                "var_create",
-                "plus",
-                "minus"
-            ],
-            "start": [
-                "start"
-            ]
-        },
-        "goal": [{"name": "arrival"}],
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
         "clues": [
-            "A part bien compter, il n'y a pas de secret."
+            "Ne te laisse pas attraper et tout devrait bien se passer."
         ]
     }
     ]

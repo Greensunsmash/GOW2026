@@ -3,21 +3,15 @@
     {
         "nb": 1,
         "begin_dialogs" : [
-            {"speaker": "SCIENTIFIQUE", "text":"Tiens, j'ai 2 blocs qui t'aideront à trouver le démarreur cosmique."}, 
-            {"speaker": "SCIENTIFIQUE", "text":"Tout d'abord, voici \"Tant que ... est vrai, faire\". Cela te permet de répéter des instructions tant que la condition est vraie."}
+            {"speaker": "SCIENTIFIQUE", "text":"Tiens, il semblerait que l'environnement est différent ici."}, 
+            {"speaker": "SCIENTIFIQUE", "text":"Je détecte une présence dans les environs. Y aurait-il d'autres créatures vivantes ?"},
+            {"speaker": "SCIENTIFIQUE", "text":"Reste prudent."}
+            
         ],
         "layouts": [
             [
-                [". ",". ",". ",". ","..",". "],
-                ["@ ","  ","  ","  "," x","# "]
-            ],
-            [
-                [". ",". ",". ",". ",". ",". ","..",". "],
-                ["@ ","  ","  ","  ","  ","  "," x","# "]
-            ],
-            [
-                [". ",". ","..",". "],
-                ["@ ","  "," x","# "]
+                [".......",".......",".......",".......",".......","   .   "],
+                ["   @   ","       "," #  r# ","       ","       ","   x   "]
             ]
         ],
         "blockset": {
@@ -34,35 +28,28 @@
                 "while"
             ],
             "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
+                "not"
             ],
             "sensors": [
                 "obstacle",
                 "item"
-            ],
-            "variables": [
-                "var_create",
-                "plus",
-                "minus"
             ],
             "start": [
                 "start"
             ]
         },
         "goal": [{"name": "arrival"}],
-        "block_limitation": 5,
         "clues": [
-            "Utilise le bloc \"Tant que ... est vraie, faire\" pour te déplacer jusqu'au rocher.",
-            "Tant que tu n'as pas d'obstacle en face avancer, puis tourne à droite et avance."
+            "Le cochon se déplace systématiquement après toi.",
+            "Avancer, Reculer, Répéter 5 fois (Avancer)"
         ]
     },
     {
         "nb": 2,
         "begin_dialogs" : [
-            {"speaker": "SCIENTIFIQUE", "text":"Bravo c'est ça ! Et voilà le bloc \"Si Sinon\". C'est comme le bloc \"Si\", mais avec une deuxième possibilité."}
+            {"speaker": "SCIENTIFIQUE", "text":"Un cochon ? Mais qu'est ce qu'il fait là ?"},
+            {"speaker": "SCIENTIFIQUE", "text":"Bon fais attention, il faut éviter de t'y cogner."},
+            {"speaker": "SCIENTIFIQUE", "text":"Utilises le bloc \"Attendre\" pour ne rien faire pendant un tour."}
         ],
         "layouts": [
             [
@@ -109,129 +96,9 @@
         },
         "goal": [{"name": "arrival"}],
         "clues": [
-            "Tu as deux îles bien différentes, le bloc \"Si Sinon\" est fait pour ça.",
-            "Comment distinguer les deux îles ?",
-            "Si tu es face à un obstacle, effectue le parcours nécessaire pour la première étape, sinon effectue celui du deuxième."
-        ]
-    },
-    {
-        "nb": 3,
-        "layouts": [
-            [
-                ["   .  "," . .  "," .....","....  ","   .  "],
-                ["   @  "," #    ","    x#","#     ","   #  "]
-            ],
-            [
-                [" .    "," ....."," ...  "," ...  ","....  ","   .  "],
-                [" #    ","    x#","   @  ","      ","#     ","   #  "]
-            ],
-            [
-                ["  .   "," ..   "," .....","...   ","  .   "],
-                ["  @   "," #    ","    x#","#     ","  #   "]
-            ]
-        ],
-        "blockset": {
-            "instructions": [
-                "forward",
-                "backward",
-                "left",
-                "right",
-                "pickup"
-            ],
-            "structures": [
-                "for",
-                "if",
-                "while",
-                "elif"
-            ],
-            "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
-            ],
-            "sensors": [
-                "obstacle",
-                "item"
-            ],
-            "variables": [
-                "var_create",
-                "plus",
-                "minus"
-            ],
-            "start": [
-                "start"
-            ]
-        },
-        "goal": [{"name": "arrival"}],
-        "clues" :[
-            "Quelle logique suivent les rochers ?",
-            "Comment rejoindre celui en face ?",
-            "Cette méthode peut-elle te permettre d'en atteindre un autre ?",
-            "Répète 4 fois (Tant que tu n'est pas face à un obstacle avance)."
-        ]
-    },
-    {
-        "nb": 4,
-        "begin_dialogs": [
-            {"speaker": "SCIENTIFIQUE", "text":"Bien joué ! Maîtrise ces blocs et ils te rendront de grands services."}
-        ],
-        "layouts": [
-            [
-                [" . .  "," ....."," . .  ","....  ","   .  "],
-                [" # @  ","    x#","      ","#     ","   #  "]
-            ],
-            [
-                ["   . ",".... ",".....",".    "],
-                ["   # ","#x   ","@   #","#    "]
-            ],
-            [
-                [" .      "," .......",".....   ","    .   "],
-                [" #      ","    @ x#","#       ","    #   "]
-            ],
-            [
-                ["  . ","....","  . "],
-                ["  # ","#x@#","  # "]
-            ]
-        ],
-        "blockset": {
-            "instructions": [
-                "forward",
-                "backward",
-                "left",
-                "right",
-                "pickup"
-            ],
-            "structures": [
-                "for",
-                "if",
-                "while",
-                "elif"
-            ],
-            "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
-            ],
-            "sensors": [
-                "obstacle",
-                "item"
-            ],
-            "variables": [
-                "var_create",
-                "plus",
-                "minus"
-            ],
-            "start": [
-                "start"
-            ]
-        },
-        "goal": [{"name": "arrival"}],
-        "clues": [
-            "Les étapes 2 et 4 suivent la même logique",
-            "Comment différencier les deux cas ?",
-            "Si il y a pas d'obstacle en face, utilise le programme précédent. Sinon, fait la même chose en utilisant tournant à droite."
+            "Le cochon se déplace systématiquement après toi.",
+            "Utiliser le bloc \"Attendre\" afin de pouvoir éviter le cochon",
+            "Avancer, Répéter 3 fois (Attendre), Répéter 3 fois (Avancer)"
         ]
     }
     ]

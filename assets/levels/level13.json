@@ -2,20 +2,25 @@
     "islands": [
     {
         "nb": 1,
-        "layouts": [
-            [
-                [".",".",".",".",".","."],
-                ["u","@"," "," ","x","#"]
+        "layouts":[
+                [
+                    [".",".","."],
+                    ["@","!","x"]
+                ],
+                [
+                    [".",".",".","."],
+                    ["@","!","!","x"]
+                ],
+                [
+                    [".",".",".",".","."],
+                    ["@","!","!","!","x"]
+                ],
+                [
+                    [".",".",".",".",".",".",".",".","."],
+                    ["@","!","!","!","!","!","!","!","x"]
+                ]
+
             ],
-            [
-                [".",".",".",".",".",".","."],
-                ["u","@"," "," "," ","x","#"]
-            ],
-            [
-                [".",".",".",".",".",".",".","."],
-                ["u","@"," "," "," "," ","x","#"]
-            ]
-        ],
         "blockset": {
             "instructions": [
                 "forward",
@@ -28,71 +33,14 @@
             "structures": [
                 "for",
                 "if",
-                "while",
-                "elif"
+                "while"
             ],
             "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
+                "not"
             ],
             "sensors": [
                 "obstacle",
                 "item"
-            ],
-            "variables": [
-                "var_create",
-                "plus",
-                "minus"
-            ],
-            "start": [
-                "start"
-            ]
-        },
-        "goal": [{"name": "arrival"}],
-        "clues" : [
-            "Tu sais le faire, ne laisse pas le cochon te pertuber (ni te rattraper).",
-            "Avance tant qu'il n'y a pas d'obstacle en face."
-        ]
-    },
-    {
-        "nb": 2,
-        "layouts": [
-            [
-                ["  .  ","  .  ","  .  ",".....",".....",".....","  .  "," ..  "],
-                ["  u  ","  @  ","     ","# l #","#  l#","#  r#","     "," x   "]
-            ]
-        ],
-        "blockset": {
-            "instructions": [
-                "forward",
-                "backward",
-                "left",
-                "right",
-                "pickup",
-                "wait"
-            ],
-            "structures": [
-                "for",
-                "if",
-                "while",
-                "elif"
-            ],
-            "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
-            ],
-            "sensors": [
-                "obstacle",
-                "item"
-            ],
-            "variables": [
-                "var_create",
-                "plus",
-                "minus"
             ],
             "start": [
                 "start"
@@ -100,19 +48,32 @@
         },
         "goal": [{"name": "arrival"}],
         "clues": [
-            "Ne te laisse pas attraper et tout devrait bien se passer."
-        ]
+                "Comment savoir quand est-ce qu'on atteint le drapeau ?",
+                "Cette fois, il faudra utiliser le capteur \"Se trouve sur un débris\".",
+                "Attention, au départ Marco Robo ne se trouve pas sur un débris",
+                "Avancer, Tant que (Se trouve sur un débris) (Ramasser, Avancer)"
+            ]
     },
     {
-        "nb": 3,
-        "end_dialogs" : [
-            {"speaker": "SCIENTIFIQUE", "text":"Ils sont de plus en plus nombreux."},
-            {"speaker": "SCIENTIFIQUE", "text":"Je n'arrive pas à comprendre pourquoi..."}
+        "nb": 2,
+        "begin_dialogs" : [
+            {"speaker": "SCIENTIFIQUE", "text":"Si tu veux pouvoir plus progresser, il va te falloir apprendre les variables."},
+            {"speaker": "SCIENTIFIQUE", "text":"Une variable est une valeur qu'on peut modifier, augmenter ou diminuer, afin par exemple de compter."},
+            {"speaker": "SCIENTIFIQUE", "text":"Tu peux notamment l'augmenter à chaque fois que tu te déplaces, pour compter le nombre de déplacements."},
+            {"speaker": "SCIENTIFIQUE", "text":"Bon courage !"}
         ],
         "layouts": [
             [
-                [" .  "," .. "," .. "," .. ","...."," .. "," .. "," .. "," .  "],
-                [" #  "," u# ","  u "," @  "," ! x","    ","    "," d# "," #  "]
+                [".", "..", ". ", ". "],
+                ["@", "!x", "! ", "  "]
+            ],
+            [
+                [". ", "..", ". ", ". ", ". "],
+                ["@ ", "!x", "! ", "! ", "  "]
+            ],
+            [
+                [". ", "..", ". "],
+                ["@ ", "!x", "  "]
             ]
         ],
         "blockset": {
@@ -127,14 +88,10 @@
             "structures": [
                 "for",
                 "if",
-                "while",
-                "elif"
+                "while"
             ],
             "booleans": [
-                "not",
-                "inf",
-                "sup",
-                "eq"
+                "not"
             ],
             "sensors": [
                 "obstacle",
@@ -151,7 +108,69 @@
         },
         "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
         "clues": [
-            "A part bien compter, il n'y a pas de secret."
+            "Appuie sur créer une variable pour pouvoir les utiliser.",
+            "Tu peux augmenter une variable x en faisant \"On met la valeur de x à (1 + \"Variable x\")\".",
+            "Utilise une boucle tant que afin de te déplacer et d'augmenter correctement la valeur de ta variable",
+            "Le nombre de débris correspond au nombre de déplacement en arrière que tu dois faire une fois arrivé au bout de la ligne.",
+            "On met la valeur de x à 0, Avancer, Tant que (Se trouve sur un débris) (On met la valeur de x à (1 + Variable x), Ramasser, Avancer), Répéter (Variable x) fois (Reculer), Tourner à droite, Avancer"
+        ]
+    },
+    {
+        "nb": 3,
+        "begin_dialogs" : [
+            {"speaker": "SCIENTIFIQUE", "text":"Bravo ! Continue comme ça !"}
+        ],
+        "layouts": [
+            [
+                [".",".",".",".","."],
+                ["x","@","!","!"," "]
+            ],
+            [
+                [".",".",".",".",".","."],
+                ["x","@","!","!","!"," "]
+            ],
+            [
+                [".",".",".","."],
+                ["x","@","!"," "]
+            ]
+        ],
+        "blockset": {
+            "instructions": [
+                "forward",
+                "backward",
+                "left",
+                "right",
+                "pickup",
+                "wait"
+            ],
+            "structures": [
+                "for",
+                "if",
+                "while"
+            ],
+            "booleans": [
+                "not"
+            ],
+            "sensors": [
+                "obstacle",
+                "item"
+            ],
+            "variables": [
+                "var_create",
+                "plus",
+                "minus"
+            ],
+            "start": [
+                "start"
+            ]
+        },
+        "goal": [{"name": "arrival"},{"name": "pickup","args": {"itemType": "!"}}],
+        "clues": [
+            "Appuie sur créer une variable pour pouvoir les utiliser.",
+            "Tu peux augmenter une variable x en faisant \"On met la valeur de x à (1 + \"Variable x\")\".",
+            "Utilise une boucle tant que afin de te déplacer et d'augmenter correctement la valeur de ta variable",
+            "En ajoutant 2 au nombre de débris, tu obtiens le nombre de déplacement en arrière que tu dois faire une fois arrivé au bout de la ligne.",
+            "On met la valeur de x à 2, Avancer, Tant que (Se trouve sur un débris) (On met la valeur de x à (1 + Variable x), Ramasser, Avancer), Répéter (Variable x) fois (Reculer), Tourner à droite, Avancer"
         ]
     }
     ]
