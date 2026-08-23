@@ -51,7 +51,8 @@
         {
         "nb": 2,
         "begin_dialogs": [
-            {"speaker": "SCIENTIFIQUE", "text":"C'est étrange, j'ai une impression de déjà-vu..."}
+            {"speaker": "SCIENTIFIQUE", "text":"Je ne comprends pas vraiment comment c'est possible."},
+            {"speaker": "SCIENTIFIQUE", "text":"Méfie toi, il se peut qu'il y ait plus que des cochons ici."}
         ],
         "layouts": [
             [

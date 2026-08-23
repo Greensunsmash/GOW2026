@@ -42,7 +42,6 @@ export class LevelSelectScene extends BaseScene {
 
     async init(onLevelSelect: (levelName: string) => Promise<void>, onReset: () => void, levelCompleted? : string) {
         this.scene.getEngine().displayLoadingUI();
-        //console.log("init levelselectscene");
         this.onLevelSelect = onLevelSelect;
 
         
@@ -53,7 +52,6 @@ export class LevelSelectScene extends BaseScene {
         this.waterCamera.layerMask = LayerMasks.SCENE_ONLY;
 
         const sun = new DirectionalLight("sun", new Vector3(-0.5, -1, -0.5), this.scene);
-        //sun.layerMask = LayerMasks.SCENE_ONLY;
         sun.diffuse = new Color3(1.0, 0.98, 0.9); // Un joli blanc cassé un peu chaud
         sun.intensity = 10;
         sun.position = new Vector3(0, 10, 0);
@@ -177,6 +175,29 @@ export class LevelSelectScene extends BaseScene {
             SoundManager.playAmbient("LevelMusic", true);
         }
 
+        if (levelCompleted) {
+            switch (levelCompleted) {
+                case "level2.json":
+                    await RealDialog.show(this.advancedTexture, this, "Tiens, je détecte 2 archpipels proches de toi.", "SCIENTIFIQUE", true, false, false);
+                    await RealDialog.show(this.advancedTexture, this, "Je t'indiquerai à chaque fois quel est celui qui nous rapproche le plus, mais tu es libre d'explorer n'importe quel archipel.", "SCIENTIFIQUE", true, false, false);
+                    break;
+                case "level9.json":
+                    await RealDialog.show(this.advancedTexture, this, "Je suis contente qu'on se soit enfin retrouvé !", "SCIENTIFIQUE", true, false, false);
+                    await RealDialog.show(this.advancedTexture, this, "Malheureusement, on ne va pas pouvoir repartir maintenant.", "SCIENTIFIQUE", true, false, false);
+                    await RealDialog.show(this.advancedTexture, this, "Lors du crash, le démarreur cosmique s'est décroché. Sans lui, impossible de démarrer la fusée.", "SCIENTIFIQUE", true, false, false);
+                    await RealDialog.show(this.advancedTexture, this, "Je n'arrive pas à le localiser précisémment, mais je peux te guider dans la direction du signal.", "SCIENTIFIQUE", true, false, false);
+                    break;
+                case "level17.json":
+                    await RealDialog.show(this.advancedTexture, this, "Je détecte le démarreur démarreur cosmique ! On est vraiment proche de l'atteindre !", "SCIENTIFIQUE", true, false, false);
+                    await RealDialog.show(this.advancedTexture, this, "Il y a 2 archipels possibles que tu peux emprunter, les deux nous rapprocherons autant.", "SCIENTIFIQUE", true, false, false);
+                    await RealDialog.show(this.advancedTexture, this, "Mais reste sur tes gardes, je crains qu'on ne fasse de mauvaises rencontres.", "SCIENTIFIQUE", true, false, false);
+                    break;
+                case "level20.json":
+                    await RealDialog.show(this.advancedTexture, this, "Bravo ! Grâce à toi, on sait où est le démarreur cosmique.", "SCIENTIFIQUE", true, false, false);
+                    await RealDialog.show(this.advancedTexture, this, "On va enfin pouvoir rentrer chez nous !", "SCIENTIFIQUE", true, false, false);
+            }
+        }
+        
         if (this.levelIndex.length == Save.getCompletedLevels().length) {
             new OneButtonModal(
                 this.advancedTexture,

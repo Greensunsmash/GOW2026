@@ -53,6 +53,9 @@
     },
     {
         "nb": 2,
+        "begin_dialogs" : [
+            {"speaker": "SCIENTIFIQUE", "text":"Tu avances bien ! N'oublie pas, il est possible de réutiliser plusieurs fois une variable en changeant sa valeur entre temps."}
+        ],
         "end_dialogs": [
             {"speaker": "SCIENTIFIQUE", "text":"Bien joué, tu débrouilles très bien !"}
         ],
