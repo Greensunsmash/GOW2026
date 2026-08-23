@@ -52,6 +52,9 @@
     },
     {
         "nb": 2,
+        "begin_dialogs" : [
+            {"speaker": "SCIENTIFIQUE", "text":"Je me demande bien ce que font des cochons ici..."}
+        ],
         "layouts": [
             [
                 [" .  "," .. "," .. "," .. ","...."," .. "," .. "," .. "," .  "],

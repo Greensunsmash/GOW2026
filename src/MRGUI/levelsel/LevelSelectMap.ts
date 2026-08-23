@@ -142,11 +142,24 @@ export class LevelSelectMap extends GUI.Rectangle {
         this.content.topInPixels = Math.max(-maxTop, Math.min(maxTop, this.content.topInPixels));
     }
 
-    public target(x:number, y:number) {
-        console.log(x, y, this.startLeft, this.startTop)
-        this.content.leftInPixels = this.startLeft + x;
-        this.content.topInPixels = this.startTop + y;
-    }
+    public target(x: number, y: number): void {
+    if (!this._currentMeasure) return;
+
+    const width = this.content.widthInPixels;
+    const height = this.content.heightInPixels;
+
+    // Position du niveau par rapport au centre de la map
+    const targetX = x - width / 2;
+    const targetY = height / 2 - y;
+
+    // On déplace la map dans le sens opposé pour
+    // mettre le niveau au centre de la fenêtre.
+    this.content.leftInPixels = -targetX * this.content.scaleX;
+    this.content.topInPixels = -targetY * this.content.scaleY;
+
+    this.clampContentPosition();
+    this.triggerPanCallback();
+}
 
     public zoom(delta: number) {
         if (!this._currentMeasure) return;
