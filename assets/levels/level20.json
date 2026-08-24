@@ -8,6 +8,10 @@
             {"speaker":"SIRC", "text":"Je t'avais pourtant transformé."},
             {"speaker":"SIRC", "text":"Tant pis, je vais devoir utiliser d'autres méthodes..."}
         ],
+        "end_dialogs": [
+            {"speaker":"SIRC", "text":"Tu as vraiment cru que j'allais te laisser aller jusqu'au bout ?"},
+            {"speaker":"SIRC", "text":"Ici, c'est moi qui contrôle."}
+        ],
         "layouts": [
             [
                 [".......",".......",".......",".......","......."],
@@ -55,8 +59,10 @@
         {
         "nb": 2,
         "begin_dialogs": [
-            {"speaker":"SIRC", "text":"Tu crois que ça va se passer comme tu veux ?"},
-            {"speaker":"SIRC", "text":"Ici, c'est pas toi qui contrôle."}
+            {"speaker":"SIRC", "text":"Essayes d'esquiver ça maintenant."}
+        ],
+        "end_dialogs": [
+            {"speaker":"SIRC", "text":"Tu ne peux rien faire face à moi, abandonne"}
         ],
         "layouts": [
             [
@@ -103,7 +109,7 @@
         {
         "nb": 3,
         "begin_dialogs": [
-            {"speaker":"SIRC", "text":"Tsss, quand vas-tu abandonner ?"}
+            {"speaker":"SIRC", "text":"Je te laisser errer sur cette île. Ciao."}
         ],
         "layouts": [
             [
@@ -148,6 +154,9 @@
         },
         {
         "nb": 4,
+        "begin_dialogs": [
+            {"speaker":"SIRC", "text":"Hein ? Comment t'en es-tu sorti ?"}
+        ],
         "end_dialogs": [
             {"speaker":"SIRC", "text":"Urg..."},
             {"speaker":"SIRC", "text":"D'accord, tu as gagné."},
