@@ -1,5 +1,5 @@
 {
-    "LevelMusic" : [["null", 0.2]],
+    "LevelMusic" : [["titleScreen.mp3", 1]],
     "World1Music" : [["world1.mp3", 1]],
     "World2Music" : [["world2.mp3",0.4]],
     "World3Music" : [["world3.mp3", 0.7]],
