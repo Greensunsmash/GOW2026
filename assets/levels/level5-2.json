@@ -96,7 +96,7 @@
             "layouts":[
                 [
                     [" ....."," ....."," .....","......"," ....."],
-                    [" ! # !","  ! ! "," # @ #","x ! ! "," ! # !"]
+                    ["  !#! "," !   !"," # @ #","x!   !","  !#! "]
                 ]
             ],
             "blockset": {
@@ -129,7 +129,7 @@
                     }
                 }
             ],
-            "block_limitation": 21,
+            "block_limitation": 16,
             "clues": [
                 "Il faut trouver un pattern à répéter 4 fois",
                 "Il faut déterminer où se termine le parcours, et où et comment il peut donc commencer",

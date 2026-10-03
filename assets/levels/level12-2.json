@@ -2,10 +2,6 @@
     "islands": [
     {
         "nb": 1,
-        "begin_dialogs": [
-            {"speaker": "SCIENTIFIQUE", "text":"Je détecte une présence dans les environs. Y aurait-il d'autres créatures vivantes ?"},
-            {"speaker": "SCIENTIFIQUE", "text":"Reste prudent."}
-        ],
         "layouts": [
             [
                 [" ... ",".....",".....","....."," ... "],

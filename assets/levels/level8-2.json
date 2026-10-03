@@ -30,7 +30,8 @@
                 ],
                 "structures": [
                     "for",
-                    "if"
+                    "if",
+                    "while"
                 ],
                 "booleans": [
                     "not"

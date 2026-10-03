@@ -7,9 +7,9 @@
     {"worldNo": 1, "file": "level3-2.json",  "name": "Multiples interférences",                    "x": 1300, "y": 1400, "mainNext": [], "bonus" : []},
     {"worldNo": 1, "file": "level4.json", "name": "Attention aux obstacles",                        "x": 1700, "y": 700, "mainNext": ["level5.json"], "bonus":[]},
     {"worldNo": 1, "file": "level5.json", "name": "Fini les débris",                              "x": 2200, "y": 800, "mainNext": ["level6.json"], "bonus":["level5-2.json"]},
-    {"worldNo": 1, "file": "level5-2.json", "name": "Motifs de ouf",          "x": 2100, "y": 500, "mainNext": [], "bonus":[]},
+    {"worldNo": 1, "file": "level5-2.json", "name": "Tout nettoyer",          "x": 2100, "y": 500, "mainNext": [], "bonus":[]},
     {"worldNo": 1, "file": "level6.json",  "name": "Attrapez-les tous",                    "x": 2600, "y": 600, "mainNext": ["level7.json"], "bonus" : []},
-    {"worldNo": 1, "file": "level7.json",  "name": "Pas d'inspi",                       "x": 3000, "y": 800, "mainNext": ["level8.json"], "bonus" : []},
+    {"worldNo": 1, "file": "level7.json",  "name": "Tant d'obstacles",                       "x": 3000, "y": 800, "mainNext": ["level8.json"], "bonus" : []},
     {"worldNo": 1, "file": "level8.json",  "name": "Pas de soucis",               "x": 3600, "y": 700, "mainNext": ["level9.json"], "bonus" : ["level8-2.json"]},
     {"worldNo": 1, "file": "level8-2.json",  "name": "Freinage d'urgence",               "x": 3500, "y": 1300, "mainNext": [], "bonus" : ["level8-3.json"]},
     {"worldNo": 1, "file": "level8-3.json",  "name": "Débris en folie",               "x": 2800, "y": 1500, "mainNext": [], "bonus" : []},
@@ -27,7 +27,7 @@
     {"worldNo": 2, "file": "level18.json", "name": "P'tit pas de coté",                     "x": 1000, "y": 3000, "mainNext": ["level20.json"], "bonus" : ["level18-2.json"]},
     {"worldNo": 2, "file": "level18-2.json", "name": "Pas chassé",                     "x": 500, "y": 2300, "mainNext": [], "bonus" : []},
     {"worldNo": 2, "file": "level19.json", "name": "Trouver sa voie",                       "x": 2200, "y": 3300, "mainNext": ["level20.json"], "bonus" : ["level19-2.json"]},
-    {"worldNo": 2, "file": "level19-2.json", "name": "Trouver sa voie",                       "x": 2400, "y": 2800, "mainNext": [], "bonus" : []},
+    {"worldNo": 2, "file": "level19-2.json", "name": "Frayer son chemin",                       "x": 2400, "y": 2800, "mainNext": [], "bonus" : []},
     {"worldNo": 2, "file": "level20.json", "name": "La rencontre",                          "x": 1600, "y": 3600, "mainNext": ["level21.json"], "bonus" : []},
 
     {"worldNo": 3, "file": "level21.json", "name": "La fin",                                "x": 3300, "y": 3800}

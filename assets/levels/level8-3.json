@@ -35,7 +35,8 @@
                 ],
                 "structures": [
                     "if",
-                    "for"
+                    "for",
+                    "while"
                 ],
                 "booleans": [
                     "not"
@@ -100,7 +101,8 @@
                 ],
                 "structures": [
                     "if",
-                    "for"
+                    "for",
+                    "while"
                 ],
                 "booleans": [
                     "not"
