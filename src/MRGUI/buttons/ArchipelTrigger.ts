@@ -1,6 +1,7 @@
 import { Button, Image, Rectangle } from "@babylonjs/gui";
 import { Colors } from "../../Shared/Colors";
 import { ASSETS_ROOT } from "../../Shared/Constants";
+import { SoundManager } from "../../Shared/Sounds"
 
 export class ArchipelTrigger extends Button {
     private outerCircle: Rectangle;
