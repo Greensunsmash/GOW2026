@@ -1,6 +1,6 @@
 {
     "pickBloc" : [["null",1]],
-    "emptyReleaseBloc" : [["null",1]],
+    "emptyReleaseBloc" : [["tick.ogg",1]],
     "releaseBloc" : [["clip.ogg",1]],
     "pigTransformation" : [["transform.ogg",0.2]],
     "backToNormal" : [["null",1]],
